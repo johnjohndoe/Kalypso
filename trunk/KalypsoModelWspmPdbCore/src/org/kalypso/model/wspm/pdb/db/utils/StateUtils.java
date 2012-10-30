@@ -102,7 +102,7 @@ public final class StateUtils
    */
   public static String[] getStateNames( final Session session )
   {
-    final Query query = session.createQuery( String.format( "select %s from %s", State.PROPERTY_NAME, State.class.getName() ) );
+    final Query query = session.createQuery( String.format( "select %s from %s", State.PROPERTY_NAME, State.class.getName() ) ); //$NON-NLS-1$
     final List<String> list = query.list();
     return list.toArray( new String[list.size()] );
   }

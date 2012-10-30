@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db.constants;
 
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
+
 /**
  * @author Gernot Belger
  */
@@ -66,9 +68,9 @@ public interface StateConstants
   enum ZeroState
   {
     /** ON */
-    T( "Urzustand, nicht überschreibbar" ),
+    T( Messages.getString("StateConstants_0") ), //$NON-NLS-1$
     /** OFF */
-    F( "abgleiteter Zustand, überschreibbar" );
+    F( Messages.getString("StateConstants_1") ); //$NON-NLS-1$
 
     private final String m_label;
 

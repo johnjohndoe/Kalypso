@@ -59,6 +59,7 @@ import org.kalypso.gml.ui.coverage.ImportCoverageData;
 import org.kalypso.gml.ui.coverage.ImportCoveragesOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 import org.kalypso.model.wspm.pdb.ui.internal.checkout.ConnectionChooserPage;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -119,7 +120,7 @@ public class PdbImportCoveragesWizard extends Wizard
     m_dataContainer = dataContainer;
     m_data = new ImportCoverageData();
 
-    setWindowTitle( "Höhendaten aus externen Speicherort hinzufügen" );
+    setWindowTitle( Messages.getString("PdbImportCoveragesWizard_0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 

@@ -46,6 +46,7 @@ import org.kalypso.commons.java.util.IModelObject;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -53,7 +54,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 public interface IEditEventPageData extends IModelObject
 {
   /** Special state value representing the null state. */
-  State NO_EVENT_STATE = new State( 0, "<kein Zustand>", null, null, null, null );
+  State NO_EVENT_STATE = new State( 0, Messages.getString("IEditEventPageData_0"), null, null, null, null ); //$NON-NLS-1$
 
   String PROPERTY_STATES = "states"; //$NON-NLS-1$
 

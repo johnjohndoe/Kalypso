@@ -32,6 +32,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -51,7 +52,7 @@ public class QueryDocumentsOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return "Query documents";
+    return Messages.getString("QueryDocumentsOperation_0"); //$NON-NLS-1$
   }
 
   @Override
@@ -60,14 +61,14 @@ public class QueryDocumentsOperation implements IPdbOperation
     try
     {
       final Criteria criteria = session.createCriteria( Document.class );
-      criteria.add( Restrictions.like( Document.PROPERTY_FILENAME, String.format( "%s%%", m_path ) ) );
+      criteria.add( Restrictions.like( Document.PROPERTY_FILENAME, String.format( "%s%%", m_path ) ) ); //$NON-NLS-1$
       final List<Document> dbDocuments = criteria.list();
       final Map<BigDecimal, List<Document>> dbHash = createDbHash( dbDocuments );
       m_result = dbHash;
     }
     catch( final HibernateException e )
     {
-      throw new PdbConnectException( "Query for documents failed", e );
+      throw new PdbConnectException( Messages.getString("QueryDocumentsOperation_2"), e ); //$NON-NLS-1$
     }
   }
 

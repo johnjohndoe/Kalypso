@@ -46,8 +46,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -64,12 +62,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -90,11 +85,7 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
 
   private WaterlevelsForStation[] m_input;
 
-  private ImageHyperlink m_showPreviewLink;
-
   private Composite m_buttonsPanel;
-
-  private Label m_showPreviewLabel;
 
   protected ImportWaterlevelsPreviewPage( final String pageName, final ImportWaterLevelsData data )
   {
@@ -113,56 +104,8 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     setControl( panel );
     GridLayoutFactory.swtDefaults().applyTo( panel );
 
-    createShowPreviewControl( panel );
     createWaterTable( panel );
     createSelectButtons( panel );
-
-    /* initially hide link */
-    showPreviewControl( false );
-  }
-
-  private void createShowPreviewControl( final Composite parent )
-  {
-    final Action action = new Action()
-    {
-      @Override
-      public void runWithEvent( final org.eclipse.swt.widgets.Event event )
-      {
-        doShowPreview();
-      }
-    };
-
-    m_showPreviewLabel = new Label( parent, SWT.WRAP );
-    m_showPreviewLabel.setText( "Die Shapedatei enthält sehr viele Wasserspiegel, die Vorschau wurde deshalb unterdrückt.\nDrücken Sie 'Weiter' um alle Wasserspiegel zu importieren." );
-    m_showPreviewLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 1, 2 ) );
-
-    m_showPreviewLink = ActionHyperlink.createHyperlink( null, parent, SWT.PUSH, action );
-    m_showPreviewLink.setUnderlined( true );
-    m_showPreviewLink.setText( "Show Preview" );
-    m_showPreviewLink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-  }
-
-  private void showPreviewControl( final boolean visible )
-  {
-    /* show preview */
-    final GridData labelData = (GridData)m_showPreviewLabel.getLayoutData();
-    labelData.exclude = !visible;
-    m_showPreviewLabel.setVisible( visible );
-
-    final GridData previewData = (GridData)m_showPreviewLink.getLayoutData();
-    previewData.exclude = !visible;
-    m_showPreviewLink.setVisible( visible );
-
-    /* hide table and buttons at same moment */
-    final GridData buttonsData = (GridData)m_buttonsPanel.getLayoutData();
-    buttonsData.exclude = visible;
-    m_buttonsPanel.setVisible( !visible );
-
-    final GridData tableData = (GridData)m_viewer.getControl().getLayoutData();
-    tableData.exclude = visible;
-    m_viewer.getControl().setVisible( !visible );
-
-    ((Composite)getControl()).layout();
   }
 
   private void createWaterTable( final Composite panel )
@@ -188,9 +131,9 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     validColumn.setLabelProvider( new WaterLevelImportStatusLabelProvider() );
 
     createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.STATION, WaterlevelsForStation.PROPERTY_STATION, "%s", SWT.RIGHT ); //$NON-NLS-1$
-    createWaterlevelColumn( m_viewer, "Anzahl WSP-Punkte", WaterlevelsForStation.PROPERTY_WATERLEVEL_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$
-    createWaterlevelColumn( m_viewer, "WSP-Punkte (ausgedünnt)", WaterlevelsForStation.PROPERTY_WATERLEVEL_SIMPLIFIED_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$
-    createWaterlevelColumn( m_viewer, "WSP-Segmente", WaterlevelsForStation.PROPERTY_WATERLEVEL_SEGMENT_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$
+    createWaterlevelColumn( m_viewer, Messages.getString("ImportWaterlevelsPreviewPage.3"), WaterlevelsForStation.PROPERTY_WATERLEVEL_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$ //$NON-NLS-2$
+    createWaterlevelColumn( m_viewer, Messages.getString("ImportWaterlevelsPreviewPage.4"), WaterlevelsForStation.PROPERTY_WATERLEVEL_SIMPLIFIED_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$ //$NON-NLS-2$
+    createWaterlevelColumn( m_viewer, Messages.getString("ImportWaterlevelsPreviewPage.5"), WaterlevelsForStation.PROPERTY_WATERLEVEL_SEGMENT_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$ //$NON-NLS-2$
     // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.WATERLEVEL, WaterlevelsForStation.PROPERTY_WATERLEVEL, "%s" ); //$NON-NLS-1$
     // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.DISCHARGE, WaterlevelsForStation.PROPERTY_DISCHARGE, "%s" ); //$NON-NLS-1$
     // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.MEASUREMENT, WaterlevelsForStation.PROPERTY_MEASURMENT_DATE, "%s" ); //$NON-NLS-1$
@@ -309,11 +252,7 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     }
     checkedWaterlevels.addAll( goodWaterlevels );
 
-    /* */
-    if( m_input.length < 10000 )
-      setPreviewInput();
-    else
-      showPreviewControl( true );
+    setPreviewInput();
   }
 
   private WaterlevelsForStation[] readWaterLevels( )
@@ -327,24 +266,10 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     return operation.getWaterlevels();
   }
 
-  protected void doShowPreview( )
-  {
-    if( m_input == null )
-      return;
-
-    final String message = String.format( "Showing preview for %,d waterlevels will be very slow. Continue?", m_input.length );
-    if( !MessageDialog.openConfirm( getShell(), getWizard().getWindowTitle(), message ) )
-      return;
-
-    setPreviewInput();
-  }
-
   private void setPreviewInput( )
   {
     if( m_input == null )
       return;
-
-    showPreviewControl( false );
 
     m_viewer.setInput( m_input );
 

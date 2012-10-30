@@ -244,10 +244,10 @@ public class WaterlevelComposite extends Composite
 
   private void createStateControls( final Composite parent )
   {
-    final String tooltip = "Falls angegeben, wird der Wasserspiegel diesem Zustand zugeordnet, sonst nur dem Gewässer.";
+    final String tooltip = Messages.getString("WaterlevelComposite.10"); //$NON-NLS-1$
 
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "State" );
+    label.setText( Messages.getString("WaterlevelComposite.11") ); //$NON-NLS-1$
     label.setToolTipText( tooltip );
 
     m_stateField = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
@@ -274,7 +274,7 @@ public class WaterlevelComposite extends Composite
     binder.setModelToTargetConverter( nullToSpecial );
     binder.setTargetToModelConverter( specialToNull );
 
-    binder.addTargetAfterConvertValidator( new NotNullValidator<>( Object.class, IStatus.INFO, "State is not set" ) );
+    binder.addTargetAfterConvertValidator( new NotNullValidator<>( Object.class, IStatus.INFO, Messages.getString("WaterlevelComposite.12") ) ); //$NON-NLS-1$
 
     m_binding.bindValue( binder );
   }
@@ -310,8 +310,8 @@ public class WaterlevelComposite extends Composite
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to retreive existing events from database", e );
-      StatusDialog.open( getShell(), status, "Edit Waterlevel Event" );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("WaterlevelComposite.13"), e ); //$NON-NLS-1$
+      StatusDialog.open( getShell(), status, Messages.getString("WaterlevelComposite.14") ); //$NON-NLS-1$
     }
   }
 }

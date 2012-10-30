@@ -71,6 +71,7 @@ import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.GafKind;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * This writer serializes profile data into the gaf format.
@@ -117,8 +118,8 @@ public class GafWriter
       writer = new PrintWriter( file );
 
       /* Monitor. */
-      monitor.beginTask( "Exporting profiles to GAF file", 100 * crossSections.size() );
-      monitor.subTask( "Writing profiles..." );
+      monitor.beginTask( Messages.getString("GafWriter_0"), 100 * crossSections.size() ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("GafWriter_1") ); //$NON-NLS-1$
 
       /* Sort the cross sections. */
       final CrossSection[] sortedCrossSections = crossSections.toArray( new CrossSection[] {} );
@@ -137,11 +138,11 @@ public class GafWriter
       /* write additional lines in separate file */
       writeAdditionalLines( file );
 
-      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "The GAF export was successfull." );
+      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("GafWriter_2") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( "The GAF export has failed: %s", ex.getLocalizedMessage() ), ex );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString("GafWriter_3"), ex.getLocalizedMessage() ), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -225,15 +226,15 @@ public class GafWriter
     final double station = crossSection.getStation().doubleValue();
     final String id = point.getName();
 
-    String y = "-1";
+    String y = "-1"; //$NON-NLS-1$
     final BigDecimal width = point.getWidth();
     if( width != null )
-      y = String.format( "%.4f", width.doubleValue() );
+      y = String.format( "%.4f", width.doubleValue() ); //$NON-NLS-1$
 
-    String z = "-1";
+    String z = "-1"; //$NON-NLS-1$
     final BigDecimal height = point.getHeight();
     if( height != null )
-      z = String.format( "%.4f", height.doubleValue() );
+      z = String.format( "%.4f", height.doubleValue() ); //$NON-NLS-1$
 
     final int rk = Integer.parseInt( point.getRoughness().getId().getName() );
     final int bk = Integer.parseInt( point.getVegetation().getId().getName() );

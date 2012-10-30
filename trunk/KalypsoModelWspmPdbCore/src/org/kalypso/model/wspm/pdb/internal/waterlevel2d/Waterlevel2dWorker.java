@@ -33,6 +33,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.ISectionProvider;
 import org.kalypso.model.wspm.pdb.wspm.WaterlevelsForStation;
 
@@ -68,7 +69,7 @@ public class Waterlevel2dWorker
     /* hash by station */
     final Map<BigDecimal, Collection<WaterlevelFixation>> waterlevelsByStation = hashWaterlevelsByStation();
 
-    monitor.beginTask( "Building 2d waterlevels", m_sections.length );
+    monitor.beginTask( Messages.getString("Waterlevel2dWorker_0"), m_sections.length ); //$NON-NLS-1$
 
     for( final ISectionProvider sectionProvider : m_sections )
     {
@@ -88,7 +89,7 @@ public class Waterlevel2dWorker
 
     monitor.done();
 
-    return m_log.asMultiStatusOrOK( "Build 2D-Waterlevels" );
+    return m_log.asMultiStatusOrOK( Messages.getString("Waterlevel2dWorker_1") ); //$NON-NLS-1$
   }
 
   private IStatus createWaterlevel( final ISectionProvider sectionProvider, final Collection<WaterlevelFixation> waterlevels )

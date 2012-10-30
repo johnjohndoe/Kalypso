@@ -223,7 +223,7 @@ public class Gaf2Db implements IPdbOperation
     if( part.getKind() == GafKind.W )
     {
       final String gafFileName = m_profiles.getGafFilename();
-      csPart.setDescription( String.format( "aus '%s'", gafFileName ) );
+      csPart.setDescription( String.format( Messages.getString("Gaf2Db.5"), gafFileName ) ); //$NON-NLS-1$
     }
     else
       csPart.setDescription( StringUtils.EMPTY );
@@ -247,7 +247,7 @@ public class Gaf2Db implements IPdbOperation
         return type;
     }
 
-    throw new IllegalArgumentException( String.format( "Unknown part category: %s", partKind ) );
+    throw new IllegalArgumentException( String.format( "Unknown part category: %s", partKind ) ); //$NON-NLS-1$
   }
 
   private void commitPoint( final GafPart gafPart, final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index, final PDBNameGenerator nameGenerator, final GafPart projectionPart )

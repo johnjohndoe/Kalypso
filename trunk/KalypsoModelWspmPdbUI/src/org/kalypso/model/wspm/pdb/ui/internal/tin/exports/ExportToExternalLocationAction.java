@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.coverage.ImportCoverageData;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.tin.imports.PdbImportConnectionChooserData;
 
 /**
@@ -74,7 +75,7 @@ public class ExportToExternalLocationAction extends Action
    */
   public ExportToExternalLocationAction( final Shell shell, final ImportCoverageData data )
   {
-    super( "Höhendaten hochladen" );
+    super( Messages.getString("ExportToExternalLocationAction_0") ); //$NON-NLS-1$
 
     m_shell = shell;
     m_data = data;

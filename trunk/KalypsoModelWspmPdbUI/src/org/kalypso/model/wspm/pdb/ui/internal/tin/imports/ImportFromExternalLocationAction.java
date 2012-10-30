@@ -52,6 +52,7 @@ import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.gml.ui.coverage.ImportCoverageUtilities;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -80,7 +81,7 @@ public class ImportFromExternalLocationAction extends Action
    */
   public ImportFromExternalLocationAction( final Shell shell, final CoverageManagementWidget widget )
   {
-    super( "Höhendaten aus externen Speicherort hinzufügen" );
+    super( Messages.getString("ImportFromExternalLocationAction_0") ); //$NON-NLS-1$
 
     m_shell = shell;
     m_widget = widget;

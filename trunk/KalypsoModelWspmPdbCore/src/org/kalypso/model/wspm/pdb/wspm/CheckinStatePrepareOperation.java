@@ -43,6 +43,7 @@ import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 import org.kalypso.model.wspm.pdb.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.ICoefficients;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 
@@ -87,7 +88,7 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
       final String waterCode = m_data.getWaterBody().getName();
       final WaterBody waterBody = WaterBodyUtils.findWaterBody( m_session, waterCode );
       if( waterBody == null )
-        throw new PdbConnectException( String.format( "Water body '%s' was not found in database", waterCode ) );
+        throw new PdbConnectException( String.format( Messages.getString("CheckinStatePrepareOperation_0"), waterCode ) ); //$NON-NLS-1$
 
       /* gather data for operation */
       final String username = connection.getSettings().getUsername();
@@ -99,7 +100,7 @@ public class CheckinStatePrepareOperation implements ICoreRunnableWithProgress
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Fehler beim Zugriff auf die Datenbank", e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("CheckinStatePrepareOperation_1"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

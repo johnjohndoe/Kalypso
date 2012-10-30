@@ -115,7 +115,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor );
-    progress.beginTask( "Loading waterlevels", 100 );
+    progress.beginTask( Messages.getString("ReadWaterLevelsOperation.6"), 100 ); //$NON-NLS-1$
 
     reloadSections( m_data, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
 
@@ -145,7 +145,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
       }
     };
 
-    final PdbExecutorOperation runnable = new PdbExecutorOperation( connection, operation, "Failed to load cross section from database" );
+    final PdbExecutorOperation runnable = new PdbExecutorOperation( connection, operation, Messages.getString("ReadWaterLevelsOperation.7") ); //$NON-NLS-1$
     runnable.execute( monitor );
   }
 
@@ -157,7 +157,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
       final int numRecords = shapeFile.getNumRecords();
 
-      final String taskName = String.format( "Reading shape file '%s'", m_data.getShapeName() );
+      final String taskName = String.format( Messages.getString("ReadWaterLevelsOperation.8"), m_data.getShapeName() ); //$NON-NLS-1$
       monitor.beginTask( taskName, numRecords );
 
       final int progressStep = Math.max( 1, numRecords / 1000 );
@@ -175,7 +175,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
         if( row % progressStep == 0 )
         {
           ProgressUtilities.worked( monitor, progressStep );
-          monitor.subTask( String.format( "row %,d", row ) );
+          monitor.subTask( String.format( Messages.getString("ReadWaterLevelsOperation.9"), row ) ); //$NON-NLS-1$
         }
       }
     }
@@ -409,7 +409,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     final Event event = m_data.getEvent();
     final String eventName = event.getName();
 
-    monitor.beginTask( "Building 2D Waterlevels", m_waterlevels.size() );
+    monitor.beginTask( Messages.getString("ReadWaterLevelsOperation.10"), m_waterlevels.size() ); //$NON-NLS-1$
 
     for( final WaterlevelsForStation waterlevel : m_waterlevels.values() )
     {

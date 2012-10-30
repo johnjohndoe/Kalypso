@@ -47,6 +47,7 @@ import org.kalypso.gml.ui.coverage.ImportCoverageData;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -68,7 +69,7 @@ public class ExportToExternalLocationCmAction extends CoverageManagementAction
    */
   public ExportToExternalLocationCmAction( )
   {
-    super( "Zusätzlich in externen Speicherort ablegen" );
+    super( Messages.getString("ExportToExternalLocationCmAction_0") ); //$NON-NLS-1$
   }
 
   @Override

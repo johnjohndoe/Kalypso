@@ -31,6 +31,7 @@ import org.kalypso.model.wspm.core.profil.ProfileObjectRecordWidthComparator;
 import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.ProfileObjectHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.opengis.geometry.MismatchedDimensionException;
@@ -106,7 +107,7 @@ class ProjectOriginalWaterlevelWorker
     /* sort records by width */
     m_result = sortBywidth( waterlevel2D );
 
-    return log.asMultiStatusOrOK( "Project waterlevel points to section" );
+    return log.asMultiStatusOrOK( Messages.getString("ProjectOriginalWaterlevelWorker_0") ); //$NON-NLS-1$
   }
 
   private IProfileObject sortBywidth( final GenericProfileHorizon waterlevel2d )

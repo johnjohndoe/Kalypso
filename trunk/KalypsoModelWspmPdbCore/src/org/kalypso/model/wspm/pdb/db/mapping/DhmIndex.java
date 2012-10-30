@@ -54,6 +54,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.constants.DhmIndexConstants;
 
@@ -63,7 +64,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author Monika Thuel
  */
 @Entity
-@Table(name = "dhm_index", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = "filename"))
+@Table( name = "dhm_index", schema = "pdb", uniqueConstraints = @UniqueConstraint( columnNames = "filename" ) )
 public class DhmIndex extends AbstractModelObject implements Serializable, DhmIndexConstants, IElementWithDates
 {
   private long m_id;
@@ -99,19 +100,19 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public DhmIndex( )
   {
     m_id = 0;
-    m_name = "";
+    m_name = StringUtils.EMPTY;
     m_location = null;
-    m_filename = "";
-    m_mimeType = "";
+    m_filename = StringUtils.EMPTY;
+    m_mimeType = StringUtils.EMPTY;
     m_creationDate = new Date();
     m_editingDate = new Date();
-    m_editingUser = "";
+    m_editingUser = StringUtils.EMPTY;
     m_measurementDate = new Date();
-    m_source = "";
-    m_editor = "";
-    m_measurementAccuracy = "";
-    m_description = "";
-    m_copyright = "";
+    m_source = StringUtils.EMPTY;
+    m_editor = StringUtils.EMPTY;
+    m_measurementAccuracy = StringUtils.EMPTY;
+    m_description = StringUtils.EMPTY;
+    m_copyright = StringUtils.EMPTY;
   }
 
   public DhmIndex( final long id, final String name, final com.vividsolutions.jts.geom.Polygon location, final String filename, final String mimetype, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String editor, final String measurementAccuracy, final String description, final String copyright )
@@ -133,9 +134,9 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   }
 
   @Id
-  @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dhmindex_id_seq")
-  @SequenceGenerator(name = "dhmindex_id_seq", sequenceName = "pdb.seq_pdb")
+  @Column( name = "id", unique = true, nullable = false, precision = 20, scale = 0 )
+  @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "dhmindex_id_seq" )
+  @SequenceGenerator( name = "dhmindex_id_seq", sequenceName = "pdb.seq_pdb" )
   public long getId( )
   {
     return m_id;
@@ -150,7 +151,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     firePropertyChange( PROPERTY_ID, oldValue, m_id );
   }
 
-  @Column(name = "name", nullable = false, length = 100)
+  @Column( name = "name", nullable = false, length = 100 )
   public String getName( )
   {
     return m_name;
@@ -165,7 +166,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     firePropertyChange( PROPERTY_NAME, oldValue, m_name );
   }
 
-  @Column(name = "location", columnDefinition = "Geometry")
+  @Column( name = "location", columnDefinition = "Geometry" )
   public com.vividsolutions.jts.geom.Polygon getLocation( )
   {
     return m_location;
@@ -180,7 +181,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     firePropertyChange( PROPERTY_LOCATION, oldValue, m_location );
   }
 
-  @Column(name = "filename", nullable = false, length = 2048)
+  @Column( name = "filename", nullable = false, length = 2048 )
   public String getFilename( )
   {
     return m_filename;
@@ -195,7 +196,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     firePropertyChange( PROPERTY_FILENAME, oldValue, m_filename );
   }
 
-  @Column(name = "mimetype", length = 50)
+  @Column( name = "mimetype", length = 50 )
   public String getMimeType( )
   {
     return m_mimeType;
@@ -211,8 +212,8 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   }
 
   @Override
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "creation_date", nullable = false, length = 22)
+  @Temporal( TemporalType.TIMESTAMP )
+  @Column( name = "creation_date", nullable = false, length = 22 )
   public Date getCreationDate( )
   {
     return m_creationDate;
@@ -227,8 +228,8 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   }
 
   @Override
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "editing_date", nullable = false, length = 22)
+  @Temporal( TemporalType.TIMESTAMP )
+  @Column( name = "editing_date", nullable = false, length = 22 )
   public Date getEditingDate( )
   {
     return m_editingDate;
@@ -245,7 +246,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   }
 
   @Override
-  @Column(name = "editing_user", nullable = false, length = 50)
+  @Column( name = "editing_user", nullable = false, length = 50 )
   public String getEditingUser( )
   {
     return m_editingUser;
@@ -262,8 +263,8 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   }
 
   @Override
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "measurement_date", length = 22)
+  @Temporal( TemporalType.TIMESTAMP )
+  @Column( name = "measurement_date", length = 22 )
   public Date getMeasurementDate( )
   {
     return m_measurementDate;
@@ -279,7 +280,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     firePropertyChange( PROPERTY_MEASUREMENTDATE, oldValue, m_measurementDate );
   }
 
-  @Column(name = "source", length = 255)
+  @Column( name = "source", length = 255 )
   public String getSource( )
   {
     return m_source;
@@ -294,7 +295,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     firePropertyChange( PROPERTY_SOURCE, oldValue, m_source );
   }
 
-  @Column(name = "editor", length = 255)
+  @Column( name = "editor", length = 255 )
   public String getEditor( )
   {
     return m_editor;
@@ -309,7 +310,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     firePropertyChange( PROPERTY_EDITOR, oldValue, m_editor );
   }
 
-  @Column(name = "measurement_accuracy", length = 50)
+  @Column( name = "measurement_accuracy", length = 50 )
   public String getMeasurementAccuracy( )
   {
     return m_measurementAccuracy;
@@ -324,7 +325,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     firePropertyChange( PROPERTY_MEASUREMENTACCURACY, oldValue, m_measurementAccuracy );
   }
 
-  @Column(name = "description", length = 255)
+  @Column( name = "description", length = 255 )
   public String getDescription( )
   {
     return m_description;
@@ -339,7 +340,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     firePropertyChange( PROPERTY_DESCRIPTION, oldValue, m_description );
   }
 
-  @Column(name = "copyright", length = 255)
+  @Column( name = "copyright", length = 255 )
   public String getCopyright( )
   {
     return m_copyright;
@@ -354,7 +355,7 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
     firePropertyChange( PROPERTY_COPYRIGHT, oldValue, m_copyright );
   }
 
-  @Column(name = "srid", nullable = false, length = 15)
+  @Column( name = "srid", nullable = false, length = 15 )
   public String getSrid( )
   {
     return m_srid;

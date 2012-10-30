@@ -194,7 +194,7 @@ public class CheckinHorizonPartOperation
     final String[] keys = metadata.getKeys();
     for( final String key : keys )
     {
-      if( key.startsWith( "PART_" ) )
+      if( key.startsWith( "PART_" ) ) //$NON-NLS-1$
         continue;
 
       final String value = metadata.getMetadata( key );

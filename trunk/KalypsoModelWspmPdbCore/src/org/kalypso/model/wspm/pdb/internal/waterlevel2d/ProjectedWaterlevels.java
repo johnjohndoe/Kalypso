@@ -39,6 +39,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCode;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
@@ -78,7 +79,7 @@ public class ProjectedWaterlevels
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatus( "Compute 2D-Waterlevels" );
+    return m_log.asMultiStatus( Messages.getString("ProjectedWaterlevels_0") ); //$NON-NLS-1$
   }
 
   public IProfileObject[] createParts( ) throws MismatchedDimensionException, FactoryException, TransformException
@@ -94,7 +95,7 @@ public class ProjectedWaterlevels
     /* ignore empty waterlevels */
     if( originalWaterlevel.getRecords().size() == 0 )
     {
-      m_log.add( IStatus.WARNING, "Skipping waterlevels: no geometries available", null, m_station );
+      m_log.add( IStatus.WARNING, Messages.getString("ProjectedWaterlevels_1"), null, m_station ); //$NON-NLS-1$
       return new IProfileObject[] {};
     }
 
@@ -250,7 +251,7 @@ public class ProjectedWaterlevels
       }
       catch( final MGeometryException | MismatchedDimensionException | FactoryException | TransformException e )
       {
-        m_log.add( IStatus.WARNING, "Failed to create segmented 2d waterlevel", e );
+        m_log.add( IStatus.WARNING, Messages.getString("ProjectedWaterlevels_2"), e ); //$NON-NLS-1$
       }
     }
 

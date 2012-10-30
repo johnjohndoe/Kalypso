@@ -154,7 +154,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
     /* Choose water body */
     final IPdbConnection connection = m_data.getConnection();
-    final ChooseWaterPage waterPage = new ChooseWaterPage( "waterPage", connection, m_waterValue );
+    final ChooseWaterPage waterPage = new ChooseWaterPage( "waterPage", connection, m_waterValue ); //$NON-NLS-1$
     waterPage.setDescription( Messages.getString( "ImportWaterLevelsWizard.3" ) ); //$NON-NLS-1$
     addPage( waterPage );
 
@@ -257,7 +257,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   {
     final SaveEventOperation operation = createCheckinOperation( connection, event );
 
-    final PdbExecutorOperation runnable = new PdbExecutorOperation( connection, operation, "Failed to upload waterlevels" );
+    final PdbExecutorOperation runnable = new PdbExecutorOperation( connection, operation, Messages.getString("ImportWaterLevelsWizard.6") ); //$NON-NLS-1$
 
     return RunnableContextHelper.execute( getContainer(), true, false, runnable );
   }

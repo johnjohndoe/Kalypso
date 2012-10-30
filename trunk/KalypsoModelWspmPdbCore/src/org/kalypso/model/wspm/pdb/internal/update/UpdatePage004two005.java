@@ -84,7 +84,7 @@ public class UpdatePage004two005 extends WizardPage implements IUpdateScriptPage
     super( "basePage" ); //$NON-NLS-1$
 
     setTitle( Messages.getString( "UpdatePageBaseInfo.0" ) ); //$NON-NLS-1$
-    setDescription( "Please enter some additonally needed basic database properties" );
+    setDescription( Messages.getString("UpdatePage004two005.0") ); //$NON-NLS-1$
   }
 
   @Override
@@ -128,12 +128,12 @@ public class UpdatePage004two005 extends WizardPage implements IUpdateScriptPage
     final Group group = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( group );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    final String documentBaseLabel = "Elevation Model Index";
+    final String documentBaseLabel = Messages.getString("UpdatePage004two005.1"); //$NON-NLS-1$
     group.setText( documentBaseLabel );
 
     final Text field = fb.createFileField( group );
-    field.setMessage( "<Base File Path>" );
-    field.setToolTipText( "The base folder of the indexed elevation model files" );
+    field.setMessage( Messages.getString("UpdatePage004two005.2") ); //$NON-NLS-1$
+    field.setToolTipText( Messages.getString("UpdatePage004two005.3") ); //$NON-NLS-1$
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final Button searchButton = fb.createFileSearchButton( group, field );

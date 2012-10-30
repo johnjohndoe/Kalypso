@@ -261,7 +261,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @Override
   public String toString( )
   {
-    return String.format( "%s [%s]", getLabel(), getName() );
+    return String.format( "%s [%s]", getLabel(), getName() ); //$NON-NLS-1$
   }
 
   /**

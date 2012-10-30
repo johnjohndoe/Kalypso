@@ -209,7 +209,7 @@ public class StateViewer extends Composite
     if( m_mode == Mode.NEW )
       return;
 
-    new Label( parent, SWT.NONE ).setText( "Ur-Zustand" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("StateViewer.7") ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     viewer.setContentProvider( new ArrayContentProvider() );

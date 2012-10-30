@@ -80,8 +80,8 @@ public class ConnectionInput
     try
     {
       final Criteria stateCriteria = session.createCriteria( State.class );
-      stateCriteria.setFetchMode( "crossSections", FetchMode.JOIN );
-      stateCriteria.setFetchMode( "events", FetchMode.JOIN );
+      stateCriteria.setFetchMode( "crossSections", FetchMode.JOIN ); //$NON-NLS-1$
+      stateCriteria.setFetchMode( "events", FetchMode.JOIN ); //$NON-NLS-1$
       return new HashSet<>( stateCriteria.list() );
     }
     catch( final HibernateException e )
