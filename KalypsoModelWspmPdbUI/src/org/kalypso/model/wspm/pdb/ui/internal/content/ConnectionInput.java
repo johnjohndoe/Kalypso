@@ -96,8 +96,8 @@ public class ConnectionInput
     try
     {
       final Criteria waterCriteria = session.createCriteria( WaterBody.class );
-      waterCriteria.setFetchMode( "crossSections", FetchMode.JOIN );
-      waterCriteria.setFetchMode( "events", FetchMode.JOIN );
+      // waterCriteria.setFetchMode( "crossSections", FetchMode.JOIN );
+      // waterCriteria.setFetchMode( "events", FetchMode.JOIN );
       return new HashSet<>( waterCriteria.list() );
     }
     catch( final HibernateException e )
