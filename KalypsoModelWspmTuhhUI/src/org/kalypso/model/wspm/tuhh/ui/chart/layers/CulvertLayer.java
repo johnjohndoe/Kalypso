@@ -41,11 +41,13 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
+import org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmBuildingDecorator;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
@@ -86,7 +88,10 @@ public class CulvertLayer extends AbstractProfilLayer
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    final ILegendEntry entry = new CulvertLegendEntry( this, m_culvert );
+    final String description = m_culvert.getTypeLabel();
+    final ImageDescriptor image = WspmBuildingDecorator.getBuildingImage( m_culvert );
+
+    final ILegendEntry entry = new ImageLegendEntry( this, description, image );
 
     return new ILegendEntry[] { entry };
   }
@@ -99,12 +104,12 @@ public class CulvertLayer extends AbstractProfilLayer
     final CulvertPainter painter = new CulvertPainter( m_culvert );
 
     final IFigure<IAreaStyle> tubeFigure = painter.createFigure( getCoordinateMapper() );
-
     if( tubeFigure == null )
       return;
 
     final IPaintable hoverFigure = tubeFigure;
     final String tooltip = "TUBE!";
+    // TODO: create real geometry for hit-test
 
     m_editInfo = new EditInfo( this, hoverFigure, null, null, tooltip, null );
 

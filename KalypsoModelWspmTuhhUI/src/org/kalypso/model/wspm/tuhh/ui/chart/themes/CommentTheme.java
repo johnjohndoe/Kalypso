@@ -40,22 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.ImageLegendEntry;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
+
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 
 /**
  * @author Gernot Belger
  */
 public class CommentTheme extends AbstractPlaceholderProfileTheme
 {
-  public static final String TITLE = Messages.getString("CommentTheme_0"); //$NON-NLS-1$
+  public static final String TITLE = Messages.getString( "CommentTheme_0" ); //$NON-NLS-1$
 
   private static final String[] COMPONENTS = new String[] { IWspmConstants.POINT_PROPERTY_COMMENT };
 
   public CommentTheme( final IProfile profil )
   {
     super( profil, IWspmConstants.LAYER_COMMENT, TITLE, new IProfilChartLayer[0], COMPONENTS );
+  }
+
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    final ImageDescriptor commentImage = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.LAYER_COMMENT );
+
+    final ImageLegendEntry entry = new ImageLegendEntry( this, TITLE, commentImage );
+
+    return new ILegendEntry[] { entry };
   }
 }

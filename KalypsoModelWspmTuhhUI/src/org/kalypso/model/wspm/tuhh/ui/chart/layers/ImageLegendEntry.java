@@ -23,31 +23,28 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
-import org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmBuildingDecorator;
 
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 
 /**
  * @author Gernot Belger
  */
-public class CulvertLegendEntry extends LegendEntry
+public class ImageLegendEntry extends LegendEntry
 {
-  private final ICulvertBuilding m_culvert;
+  private final ImageDescriptor m_image;
 
-  public CulvertLegendEntry( final CulvertLayer layer, final ICulvertBuilding culvert )
+  public ImageLegendEntry( final IChartLayer parent, final String description, final ImageDescriptor image )
   {
-    super( layer, culvert.getTypeLabel() );
+    super( parent, description );
 
-    m_culvert = culvert;
+    m_image = image;
   }
 
   @Override
   public void paintSymbol( final GC gc, final Point size )
   {
-    final ImageDescriptor descriptor = WspmBuildingDecorator.getBuildingImage( m_culvert );
-
-    final Image image = descriptor.createImage();
+    final Image image = m_image.createImage();
 
     try
     {

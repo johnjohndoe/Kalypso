@@ -40,10 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.ImageLegendEntry;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
+
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 
 /**
  * @author Dirk Kuch
@@ -55,5 +61,15 @@ public class CodeTheme extends AbstractPlaceholderProfileTheme
   public CodeTheme( final IProfile profil )
   {
     super( profil, IWspmLayers.LAYER_CODE, TITLE, new IProfilChartLayer[] {}, new String[] { IWspmPointProperties.POINT_PROPERTY_CODE } );
+  }
+
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    final ImageDescriptor sinusImage = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.LAYER_CODE );
+
+    final ImageLegendEntry entry = new ImageLegendEntry( this, getTitle(), sinusImage );
+
+    return new ILegendEntry[] { entry };
   }
 }

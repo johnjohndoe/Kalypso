@@ -95,6 +95,7 @@ import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
@@ -255,12 +256,12 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     final IProfilChartLayer[] twoDLayers = TuhhLayers.create2DWaterLevelLayers( profile, m_domainAxis, m_targetAxisLeft, m_styleProvider );
     Collections.addAll( layersToAdd, twoDLayers );
 
-    /* profile deviders (trennflächen) */
-    layersToAdd.add( TuhhLayers.createDeviderLayer( profile, cmScreen, m_styleProvider ) );
-
     /* ground layer */
     if( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE ) != null )
       layersToAdd.add( TuhhLayers.createGelaendeLayer( profile, cmLeft, m_styleProvider ) );
+
+    /* profile deviders (trennflächen) */
+    layersToAdd.add( TuhhLayers.createDeviderLayer( profile, cmScreen, m_styleProvider ) );
 
     /* second profile layers */
     final SecondProfileDataManager secondProfileManager = SecondProfileDataManager.instance();
@@ -311,7 +312,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     return layersToAdd.toArray( new IProfilChartLayer[layersToAdd.size()] );
   }
 
-  private IProfilChartLayer createBuildingLayer( final IProfile profile, final IProfileObject building, final CoordinateMapper cmLeft, final CoordinateMapper cmScreen )
+  private IProfilChartLayer createBuildingLayer( final IProfile profile, final IProfileObject building, final ICoordinateMapper cmLeft, final ICoordinateMapper cmScreen )
   {
     if( building instanceof BuildingBruecke )
       return TuhhLayers.createBridgeLayer( profile, cmLeft, m_styleProvider );

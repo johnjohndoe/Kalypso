@@ -40,11 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.ImageLegendEntry;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
+
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 
 /**
  * @author kimwerner
@@ -64,4 +70,15 @@ public class GeoCoordinateTheme extends AbstractPlaceholderProfileTheme
   {
     return new IProfilChartLayer[] { new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ), new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) };
   }
+
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    final ImageDescriptor coordinatesImage = KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_MAP_COORDS );
+
+    final ImageLegendEntry entry = new ImageLegendEntry( this, TITLE, coordinatesImage );
+
+    return new ILegendEntry[] { entry };
+  }
+
 }
