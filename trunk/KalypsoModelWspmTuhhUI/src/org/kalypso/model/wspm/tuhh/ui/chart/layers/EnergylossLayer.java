@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.EnergylossPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -55,7 +57,6 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
-import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 
 /**
  * @author kimwerner
@@ -85,15 +86,11 @@ public class EnergylossLayer extends AbstractProfilLayer
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    final LegendEntry le = new LegendEntry( this, "NullComponent" ) //$NON-NLS-1$
-    {
-      @Override
-      public void paintSymbol( final GC gc, final Point size )
-      {
-        // TODO get nice icon
-      }
-    };
-    return new ILegendEntry[] { le };
+    final ImageDescriptor sinusImage = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.LAYER_ENERGYLOSS );
+
+    final ImageLegendEntry entry = new ImageLegendEntry( this, getTitle(), sinusImage );
+
+    return new ILegendEntry[] { entry };
   }
 
   @Override
