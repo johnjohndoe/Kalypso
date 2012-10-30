@@ -142,7 +142,7 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
     }
 
     /* calculate ratio */
-    final int ratio = numberOfWaterlevels / m_waterlevels2d.length;
+    final int ratio = m_waterlevels2d.length == 0 ? 10 : numberOfWaterlevels / m_waterlevels2d.length;
 
     // REMARK: heuristic: if we have too many waterlevels, its a 2d waterlevel and we do not add fixations
     if( ratio > 3 )
