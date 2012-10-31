@@ -74,6 +74,9 @@ public class UpdateEditDataOperation implements ICoreRunnableWithProgress
     m_oldSegmentHash = hashSegments( m_oldData.getSegments() );
     m_newProfileHash = hashProfiles( m_newData );
 
+    /* fix: prepare for exception */
+    m_newSegmentHash = new HashMap<>();
+
     final SegmentData[] segments = createSegments( profiles, banks, numberBanklinePoints );
 
     /* hash it for later */

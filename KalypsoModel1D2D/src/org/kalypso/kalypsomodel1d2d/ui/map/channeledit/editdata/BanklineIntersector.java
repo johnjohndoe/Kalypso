@@ -46,8 +46,8 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ChannelEditUtil;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.transformation.transformer.GeoTransformerException;
@@ -63,7 +63,7 @@ import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
  * Intersects profiles with banklines and creates the segmented bank line.
- *
+ * 
  * @author Gernot Belger
  */
 class BanklineIntersector
@@ -145,14 +145,14 @@ class BanklineIntersector
 
   /**
    * converts a WSPM profile into an linestring
-   *
+   * 
    * @param profile
    *          Input profile to be converted.
    */
   private static LineString convertProfilesToLineStrings( final IProfileData upProfile ) throws GM_Exception
   {
-      final GM_Curve profCurve = upProfile.getOriginalProfileGeometry();
-      return (LineString)JTSAdapter.export( profCurve );
+    final GM_Curve profCurve = upProfile.getOriginalProfileGeometry();
+    return (LineString)JTSAdapter.export( profCurve );
   }
 
   private LineString replaceEndpointZ( final LineString bankLine, final double startZ, final double endZ )
@@ -219,20 +219,25 @@ class BanklineIntersector
         {
           /* convert current bankLine in Curve */
           final GM_Curve bankCurve = bankEntry.getKey();
-          final LineString bankLine = (LineString) JTSAdapter.export( bankCurve );
+          final LineString bankLine = (LineString)JTSAdapter.export( bankCurve );
 
-          final Geometry upIntersection = bankLine.intersection( upProfile );
-          final Geometry downIntersection = bankLine.intersection( downProfile );
-
-          /* intersect it with the first (previous) profile of this segment */
-          if( upIntersection instanceof Point && downIntersection instanceof Point )
+          if( bankLine != null )
           {
-            final Pair<Point, Point> points = Pair.of( (Point) upIntersection, (Point) downIntersection );
-            return Pair.of( bankLine, points );
+            final Geometry upIntersection = bankLine.intersection( upProfile );
+            final Geometry downIntersection = bankLine.intersection( downProfile );
+
+            /* intersect it with the first (previous) profile of this segment */
+            if( upIntersection instanceof Point && downIntersection instanceof Point )
+            {
+              final Pair<Point, Point> points = Pair.of( (Point)upIntersection, (Point)downIntersection );
+              return Pair.of( bankLine, points );
+            }
           }
         }
         catch( final GM_Exception e )
         {
+          // TODO: error handling?
+
           e.printStackTrace();
         }
       }
