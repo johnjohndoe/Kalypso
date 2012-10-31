@@ -55,7 +55,6 @@ import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -74,13 +73,13 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
 
   private final GM_TriangulatedSurface[] m_subtrahentSurfaces;
 
-  private final TYPE[] m_resultTypes;
+  private final ResultType[] m_resultTypes;
 
   private final org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType.TYPE m_differenceType;
 
   private GM_Position m_nodePos;
 
-  public DifferenceResultModel1d2dHandler( final File outputFile, final GM_TriangulatedSurface[] minuendSurfaces, final GM_TriangulatedSurface[] subtrahentSurfaces, final TYPE[] types, final org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType.TYPE differenceType )
+  public DifferenceResultModel1d2dHandler( final File outputFile, final GM_TriangulatedSurface[] minuendSurfaces, final GM_TriangulatedSurface[] subtrahentSurfaces, final ResultType[] types, final org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType.TYPE differenceType )
   {
     m_minuendSurfaces = minuendSurfaces;
     m_subtrahentSurfaces = subtrahentSurfaces;
@@ -95,14 +94,10 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
     }
     catch( final IOException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#end()
-   */
   @Override
   public void end( )
   {
@@ -123,79 +118,47 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#getCreatedFeatures()
-   */
   public List<Feature> getCreatedFeatures( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dJunctionInformation(java.lang.String,
-   *      int, java.util.List)
-   */
   @Override
   public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList )
   {
     m_formatter.format( "%s%n", line ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int,
-   *      int, int)
-   */
   @Override
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
     m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int,
-   *      int)
-   */
   @Override
   public void handleElement( final String lineString, final int id, final int currentRougthnessClassID, final int previousRoughnessClassID, final int eleminationNumber )
   {
     m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleError(java.lang.String,
-   *      org.kalypso.kalypsomodel1d2d.conv.EReadError)
-   */
   @Override
   public void handleError( final String lineString, final EReadError errorHints )
   {
     m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleFlowResitance(java.lang.String, int,
-   *      double, double, double)
-   */
   @Override
   public void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
   {
     m_formatter.format( "%s%n", line ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleJunction(java.lang.String, int, int, int,
-   *      int)
-   */
   @Override
   public void handleJunction( final String line, final int junctionID, final int element1dID, final int boundaryLine2dID, final int node1dID )
   {
     m_formatter.format( "%s%n", line ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
-   *      double)
-   */
   @Override
   public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
   {
@@ -207,8 +170,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNodeInformation(java.lang.String, int, int,
-   *      double, double, double, double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNodeInformation(java.lang.String, int, int, double, double, double, double)
    */
   @Override
   public void handleNodeInformation( final String line, final int id, final int dry, final double value1, final double value2, final double value3, final double value4 )
@@ -217,19 +179,18 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double,
-   *      double, double, double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double, double, double, double)
    */
   @Override
   public void handleResult( final String lineString, final int id, double vx, double vy, double depth, double waterlevel )
   {
     Assert.isLegal( id == m_lastnodeID );
 
-    final Map<TYPE, Double> valueMap = calculateDifferences( m_minuendSurfaces, m_subtrahentSurfaces, m_nodePos, m_resultTypes );
+    final Map<ResultType, Double> valueMap = calculateDifferences( m_minuendSurfaces, m_subtrahentSurfaces, m_nodePos, m_resultTypes );
 
     // get the vector values of the difference vector (minuend - subtrahent)
-    final Double diffVx = valueMap.get( ResultType.TYPE.VELOCITY_X );
-    final Double diffVy = valueMap.get( ResultType.TYPE.VELOCITY_Y );
+    final Double diffVx = valueMap.get( ResultType.VELOCITY_X );
+    final Double diffVy = valueMap.get( ResultType.VELOCITY_Y );
 
     // get the vector values of all vectors (we assume, that surface 0 is X-direction and surface 1 is Y-direction)
     final double secondaryX = m_subtrahentSurfaces[0].getValue( m_nodePos );
@@ -287,10 +248,10 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
       vy = 0.0;
 
     /* other values */
-    final Double diffDepth = valueMap.get( ResultType.TYPE.DEPTH );
+    final Double diffDepth = valueMap.get( ResultType.DEPTH );
     depth = diffDepth == null ? depth : diffDepth;
 
-    final Double diffWaterlevel = valueMap.get( ResultType.TYPE.WATERLEVEL );
+    final Double diffWaterlevel = valueMap.get( ResultType.WATERLEVEL );
     waterlevel = diffWaterlevel == null ? waterlevel : diffWaterlevel;
 
     m_formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", id, vx, vy, depth, waterlevel ); //$NON-NLS-1$
@@ -299,7 +260,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   /**
    * Calculates the difference values of all given result types for the current position and returns them as a map. The
    * differences is computed as follows: minuend - subtrahent
-   *
+   * 
    * @param minuendSurfaces
    *          the tins from which it will be substracted
    * @param subtrahentSurfaces
@@ -309,9 +270,9 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    * @param resultTypes
    *          the given result tpyes
    */
-  private static Map<TYPE, Double> calculateDifferences( final GM_TriangulatedSurface[] minuendSurfaces, final GM_TriangulatedSurface[] subtrahentSurfaces, final GM_Position pos, final TYPE[] resultTypes )
+  private static Map<ResultType, Double> calculateDifferences( final GM_TriangulatedSurface[] minuendSurfaces, final GM_TriangulatedSurface[] subtrahentSurfaces, final GM_Position pos, final ResultType[] resultTypes )
   {
-    final Map<TYPE, Double> valueMap = new HashMap<>();
+    final Map<ResultType, Double> valueMap = new HashMap<>();
 
     for( int i = 0; i < resultTypes.length; i++ )
     {

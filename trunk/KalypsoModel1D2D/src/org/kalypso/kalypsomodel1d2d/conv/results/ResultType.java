@@ -42,24 +42,19 @@ package org.kalypso.kalypsomodel1d2d.conv.results;
 
 /**
  * @author Thomas Jung
- * 
- * defines the possible result types
- * 
+ *         defines the possible result types
  */
-public class ResultType
+public enum ResultType
 {
-  public enum TYPE
-  {
-    DEPTH,
-    WATERLEVEL,
-    SHEARSTRESS,
-    VELOCITY,
-    VELOCITY_X,
-    VELOCITY_Y,
-    DIFFERENCE,
-    TERRAIN,
-    WAVEHSIG,
-    WAVEDIR,
-    WAVEPER;
-  }
+  DEPTH,
+  WATERLEVEL,
+  SHEARSTRESS,
+  VELOCITY,
+  VELOCITY_X,
+  VELOCITY_Y,
+  DIFFERENCE,
+  TERRAIN,
+  WAVEHSIG,
+  WAVEDIR,
+  WAVEPER;
 }

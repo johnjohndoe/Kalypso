@@ -622,7 +622,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     for( final IFE1D2DElement anElement : elements )
     {
       final IFE1D2DNode[] nodes = anElement.getNodes();
-      for( IFE1D2DNode node : nodes )
+      for( final IFE1D2DNode node : nodes )
       {
         if( node.equals( downNode ) )
         {
@@ -673,8 +673,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
 
       final GM_Position[] lPositions = lCurve.getAsLineString().getPositions();
-      for( int i = 0; i < lPositions.length; ++i )
-        lSetPositions.add( lPositions[i] );
+      for( final GM_Position lPosition : lPositions )
+        lSetPositions.add( lPosition );
     }
     final List<GM_Position> lListPos = new ArrayList<>();
     lListPos.addAll( lSetPositions );
@@ -1282,9 +1282,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return insertedNode;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double)
-   */
   @Override
   public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
   {

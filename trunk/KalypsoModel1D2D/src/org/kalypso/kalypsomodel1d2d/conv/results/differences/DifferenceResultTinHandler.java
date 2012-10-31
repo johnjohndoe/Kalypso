@@ -60,7 +60,6 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.MinMaxCatcher;
@@ -83,7 +82,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class DifferenceResultTinHandler
 {
   // FIXME: shoud not this come from outside?
-  private final TYPE m_parameter = ResultType.TYPE.DIFFERENCE;
+  private final ResultType m_parameter = ResultType.DIFFERENCE;
 
   private final GM_TriangulatedSurface m_master;
 
@@ -137,7 +136,7 @@ public class DifferenceResultTinHandler
     }
   }
 
-  private void generateDifferences( final GM_TriangulatedSurface surface, final ResultType.TYPE parameter, final IProgressMonitor monitor )
+  private void generateDifferences( final GM_TriangulatedSurface surface, final ResultType parameter, final IProgressMonitor monitor )
   {
     final String crs = surface.getCoordinateSystem();
 

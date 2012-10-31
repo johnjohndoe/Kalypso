@@ -58,7 +58,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.sim.ProcessResult2DOperation;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -75,7 +75,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Thomas Jung
- *
  */
 public class NodeResultsHandler2DTest
 {
@@ -101,9 +100,9 @@ public class NodeResultsHandler2DTest
       outputDir.mkdir();
 
       log.log( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "calling ProcessResultsJob" ) ); //$NON-NLS-1$
-      final List<TYPE> parameters = new ArrayList<>();
-      parameters.add( TYPE.DEPTH );
-      parameters.add( TYPE.WATERLEVEL );
+      final List<ResultType> parameters = new ArrayList<>();
+      parameters.add( ResultType.DEPTH );
+      parameters.add( ResultType.WATERLEVEL );
 
       final ProcessResult2DOperation job = new ProcessResult2DOperation( resultFileObject, outputDir, null, null, null, parameters, ResultManager.STEADY_DATE, null );
       final IStatus result = job.execute( new NullProgressMonitor() );

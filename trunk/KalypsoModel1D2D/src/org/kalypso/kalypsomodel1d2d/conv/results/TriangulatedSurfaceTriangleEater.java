@@ -57,9 +57,9 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 {
   private final GM_TriangulatedSurface m_surface;
 
-  private final ResultType.TYPE m_parameter;
+  private final ResultType m_parameter;
 
-  public TriangulatedSurfaceTriangleEater( final GM_TriangulatedSurface surface, final ResultType.TYPE parameter )
+  public TriangulatedSurfaceTriangleEater( final GM_TriangulatedSurface surface, final ResultType parameter )
   {
     m_surface = surface;
     m_parameter = parameter;

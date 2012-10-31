@@ -103,14 +103,14 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * This runnable will be called while running the 2d-exe and will check for new .2d result files.<br>
  * Every new 2d result file we be processed in order to return it to the kalypso client.
- *
+ * 
  * @author Gernot Belger
  */
 public class ResultManager implements ISimulation1D2DConstants
 {
   private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
 
-  private final List<ResultType.TYPE> m_parameters = new ArrayList<>();
+  private final List<ResultType> m_parameters = new ArrayList<>();
 
   private final IGeoLog m_geoLog;
 
@@ -139,7 +139,7 @@ public class ResultManager implements ISimulation1D2DConstants
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IScenarioDataProvider caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     // FIXME: avoid throwing exception in constructor; clients should provide the models, not the caseDataProvider
-    this( fileObjectRMA, fileObjectSWAN, (IFEDiscretisationModel1d2d) caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() ), ((IControlModelGroup) caseDataProvider.getModel( IControlModelGroup.class.getName() )).getModel1D2DCollection().getActiveControlModel(), (IFlowRelationshipModel) caseDataProvider.getModel( IFlowRelationshipModel.class.getName() ), (IScenarioResultMeta) caseDataProvider.getModel( IScenarioResultMeta.class.getName() ), geoLog );
+    this( fileObjectRMA, fileObjectSWAN, (IFEDiscretisationModel1d2d)caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() ), ((IControlModelGroup)caseDataProvider.getModel( IControlModelGroup.class.getName() )).getModel1D2DCollection().getActiveControlModel(), (IFlowRelationshipModel)caseDataProvider.getModel( IFlowRelationshipModel.class.getName() ), (IScenarioResultMeta)caseDataProvider.getModel( IScenarioResultMeta.class.getName() ), geoLog );
   }
 
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IFEDiscretisationModel1d2d discretisationModel1d2d, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowRelModel, final IScenarioResultMeta scenarioMetaData, final IGeoLog geoLog )
@@ -154,10 +154,10 @@ public class ResultManager implements ISimulation1D2DConstants
 
     m_geoLog = geoLog;
 
-    m_parameters.add( ResultType.TYPE.DEPTH );
-    m_parameters.add( ResultType.TYPE.WATERLEVEL );
-    m_parameters.add( ResultType.TYPE.VELOCITY );
-    m_parameters.add( ResultType.TYPE.TERRAIN );
+    m_parameters.add( ResultType.DEPTH );
+    m_parameters.add( ResultType.WATERLEVEL );
+    m_parameters.add( ResultType.VELOCITY );
+    m_parameters.add( ResultType.TERRAIN );
 
     if( controlModel == null )
       m_timeSteps = null;
@@ -170,7 +170,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IScenarioDataProvider caseDataProvider, final IGeoLog geoLog, final ICalcUnitResultMeta calcUnitResultMeta ) throws CoreException
   {
-    this( fileObjectRMA, fileObjectSWAN, (IFEDiscretisationModel1d2d) caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() ), ((IControlModelGroup) caseDataProvider.getModel( IControlModelGroup.class.getName() )).getModel1D2DCollection().getActiveControlModel(), (IFlowRelationshipModel) caseDataProvider.getModel( IFlowRelationshipModel.class.getName() ), (IScenarioResultMeta) caseDataProvider.getModel( IScenarioResultMeta.class.getName() ), geoLog );
+    this( fileObjectRMA, fileObjectSWAN, (IFEDiscretisationModel1d2d)caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() ), ((IControlModelGroup)caseDataProvider.getModel( IControlModelGroup.class.getName() )).getModel1D2DCollection().getActiveControlModel(), (IFlowRelationshipModel)caseDataProvider.getModel( IFlowRelationshipModel.class.getName() ), (IScenarioResultMeta)caseDataProvider.getModel( IScenarioResultMeta.class.getName() ), geoLog );
 
     m_calcUnitMeta = calcUnitResultMeta;
   }
@@ -279,7 +279,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
           // FIXME: dubios, closing the global available file system... TODO: check...
           // ... and why is the swan dir not also closed... ??
-          final StandardFileSystemManager fileSystemManager = (StandardFileSystemManager) m_resultDirRMA.getFileSystem().getFileSystemManager();
+          final StandardFileSystemManager fileSystemManager = (StandardFileSystemManager)m_resultDirRMA.getFileSystem().getFileSystemManager();
           fileSystemManager.close();
         }
         catch( final IOException e )
@@ -358,11 +358,13 @@ public class ResultManager implements ISimulation1D2DConstants
   {
     try
     {
-      FileObject lFileObjectSWANResult = fileResSWAN;
       final String filename = file.getName().getBaseName();
+
+      FileObject lFileObjectSWANResult = fileResSWAN;
 
       if( ISimulation1D2DConstants.MODEL_2D.equals( filename ) )
         return Status.OK_STATUS;
+
       Date stepDate = null;
       String resultFileName = FileUtilities.nameWithoutExtension( filename );
 
@@ -412,7 +414,7 @@ public class ResultManager implements ISimulation1D2DConstants
       // TODO: set this status as step result status?
 
       // only process terrain once for all steps
-      m_parameters.remove( ResultType.TYPE.TERRAIN );
+      m_parameters.remove( ResultType.TERRAIN );
 
       return result;
     }
@@ -473,7 +475,7 @@ public class ResultManager implements ISimulation1D2DConstants
     final int step = Integer.parseInt( name.substring( 1 ) );
 
     final IComponent componentTime = ComponentUtilities.findComponentByID( m_timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) m_timeSteps.get( step ).getValue( componentTime );
+    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar)m_timeSteps.get( step ).getValue( componentTime );
     return DateUtilities.toDate( stepCal );
   }
 
@@ -596,7 +598,7 @@ public class ResultManager implements ISimulation1D2DConstants
     final TupleResult timeSteps = obs.getResult();
 
     final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) timeSteps.get( step ).getValue( componentTime );
+    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar)timeSteps.get( step ).getValue( componentTime );
     return DateUtilities.toDate( stepCal );
   }
 

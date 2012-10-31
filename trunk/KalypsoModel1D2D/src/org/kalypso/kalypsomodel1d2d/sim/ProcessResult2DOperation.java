@@ -67,7 +67,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -81,7 +80,6 @@ import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.conv.results.SWANResultsReader;
 import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter.QNameAndString;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater;
@@ -108,8 +106,9 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
- * TODO: remove processing of the map This job processed one 2d-result file. *
- *
+ * TODO: remove processing of the map<br/>
+ * This job processed one 2d-result file. *
+ * 
  * @author Gernot Belger
  */
 public class ProcessResult2DOperation implements ICoreRunnableWithProgress
@@ -120,7 +119,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
 
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
 
-  private List<TYPE> m_parameters;
+  private List<ResultType> m_parameters;
 
   private IStepResultMeta m_stepResultMeta;
 
@@ -154,17 +153,17 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
    * @param stepDate
    *          The date which is determined by the result file name (i.e. step-number) and the control timeseries.
    */
-  public ProcessResult2DOperation( final FileObject file, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
+  public ProcessResult2DOperation( final FileObject file, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
   {
     init( file, null, outputDir, flowModel, controlModel, discModel, parameter, stepDate, unitResultMeta, true );
-
   }
-  public ProcessResult2DOperation( final FileObject file, final FileObject fileResSWAN, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta, final boolean doFullEvaluate )
+
+  public ProcessResult2DOperation( final FileObject file, final FileObject fileResSWAN, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta, final boolean doFullEvaluate )
   {
     init( file, fileResSWAN, outputDir, flowModel, controlModel, discModel, parameter, stepDate, unitResultMeta, doFullEvaluate );
   }
 
-  private void init( final FileObject file, final FileObject fileResSWAN, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta, final boolean boolDoFullEvaluate )
+  private void init( final FileObject file, final FileObject fileResSWAN, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta, final boolean boolDoFullEvaluate )
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -187,15 +186,15 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
     if( m_parameters == null )
     {
       m_parameters = new LinkedList<>();
-      m_parameters.add( ResultType.TYPE.DEPTH );
-      m_parameters.add( ResultType.TYPE.TERRAIN );
-      m_parameters.add( ResultType.TYPE.VELOCITY );
-      m_parameters.add( ResultType.TYPE.WATERLEVEL );
+      m_parameters.add( ResultType.DEPTH );
+      m_parameters.add( ResultType.TERRAIN );
+      m_parameters.add( ResultType.VELOCITY );
+      m_parameters.add( ResultType.WATERLEVEL );
       if( fileResSWAN != null )
       {
-        m_parameters.add( ResultType.TYPE.WAVEHSIG );
-        m_parameters.add( ResultType.TYPE.WAVEDIR );
-        m_parameters.add( ResultType.TYPE.WAVEPER );
+        m_parameters.add( ResultType.WAVEHSIG );
+        m_parameters.add( ResultType.WAVEDIR );
+        m_parameters.add( ResultType.WAVEPER );
       }
     }
   }
@@ -247,16 +246,13 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
 
   private void read2D( ) throws Exception
   {
-    InputStream contentStream = null;
-    try
+    try( InputStream contentStream = VFSUtilities.getInputStreamFromFileObject( m_inputFile ) )
     {
       /* Read into NodeResults */
-      contentStream = VFSUtilities.getInputStreamFromFileObject( m_inputFile );
       read2DIntoGmlResults( contentStream );
     }
     finally
     {
-      IOUtils.closeQuietly( contentStream );
       m_inputFile.close();
     }
   }
@@ -328,16 +324,15 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.16" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
+    // FIXME: bad!
     final Runtime runtime = Runtime.getRuntime();
     runtime.gc();
-
-    final TimeLogger logger = new TimeLogger( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.17" ) ); //$NON-NLS-1$
 
     final File gmlZipResultFile = new File( m_outputDir, "results.gz" ); //$NON-NLS-1$
 
     try
     {
-      /* GMLWorkspace fÃ¼r Ergebnisse anlegen */
+      /* GMLWorkspace für Ergebnisse anlegen */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlZipResultFile.toURI().toURL(), null );
       final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" ); //$NON-NLS-1$
 
@@ -351,10 +346,10 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
       final MultiTriangleEater multiEater = new MultiTriangleEater();
       if( m_boolDoFullEvaluate )
       {
-        for( final ResultType.TYPE parameter : m_parameters )
+        for( final ResultType parameter : m_parameters )
         {
           /* GML(s) */
-          if( parameter == ResultType.TYPE.TERRAIN && !ResultMeta1d2dHelper.containsTerrain( m_stepResultMeta ) )
+          if( parameter == ResultType.TERRAIN && !ResultMeta1d2dHelper.containsTerrain( m_stepResultMeta ) )
           {
             /* create TIN-Dir for FEM terrain model */
             // TODO: obscure, why go outside our output dir... TODO: refaktor it!
@@ -392,13 +387,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
       final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_flowModel, m_controlModel, m_discModel, m_resultMinMaxCatcher, lsHandler, m_mapResults );
       conv.setRMA10SModelElementHandler( handler );
 
-      logger.takeInterimTime();
-      logger.printCurrentInterim( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.54", m_inputFile.getName() ) ); //$NON-NLS-1$
-
       conv.parse( is );
-
-      logger.takeInterimTime();
-      logger.printCurrentInterim( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.56" ) ); //$NON-NLS-1$
 
       // finish MultiEater and engage serializer
       KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.58" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -429,70 +418,51 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
         }
       }
 
-      logger.takeInterimTime();
-      logger.printCurrentInterim( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.67" ) ); //$NON-NLS-1$
-
-      BigDecimal min;
-      BigDecimal max;
-
       if( m_boolDoFullEvaluate )
       {
-        for( final ResultType.TYPE parameter : m_parameters )
+        for( final ResultType parameter : m_parameters )
         {
-          /* GML(s) */
+          // FIXME: strange, use same scale/precision for all parameters...
+          final BigDecimal min = m_resultMinMaxCatcher.getScaledMin( parameter );
+          final BigDecimal max = m_resultMinMaxCatcher.getScaledMax( parameter );
 
           /* result db */
-
           switch( parameter )
           {
             case TERRAIN:
               if( m_stepResultMeta != null && !ResultMeta1d2dHelper.containsTerrain( m_stepResultMeta ) )
               {
                 /* check if there exists already an entry for terrainTin */
-                final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) m_stepResultMeta.getOwner();
+                final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta)m_stepResultMeta.getOwner();
 
-                min = new BigDecimal( m_resultMinMaxCatcher.getMinTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-                max = new BigDecimal( m_resultMinMaxCatcher.getMaxTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
                 ResultMeta1d2dHelper.addDocument( calcUnitResult, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.68" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.69" ), IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               }
 
               break;
 
+            // FIXME: put parameter names into ResultType enum or similar
             case DEPTH:
               // TODO: Handle minimum at infinity
-              min = new BigDecimal( m_resultMinMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-              max = new BigDecimal( m_resultMinMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
               ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.71" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.1" ), IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               break;
 
             case VELOCITY:
-              min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-              max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
               ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.74" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.75" ), IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               break;
 
             case VELOCITY_X:
-              min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-              max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
               ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.77" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.78" ), IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY_X.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               break;
 
             case VELOCITY_Y:
-              min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-              max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
               ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.80" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.81" ), IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY_Y.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
               break;
 
             case WATERLEVEL:
-              min = new BigDecimal( m_resultMinMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-              max = new BigDecimal( m_resultMinMaxCatcher.getMaxWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
               ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.83" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.84" ), IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               break;
 
             case SHEARSTRESS:
-              min = new BigDecimal( m_resultMinMaxCatcher.getMinShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-              max = new BigDecimal( m_resultMinMaxCatcher.getMaxShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
               ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.86" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.87" ), IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               break;
 
@@ -515,14 +485,12 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
     {
       IOUtils.closeQuietly( is );
 
-      logger.takeInterimTime();
-      logger.printCurrentInterim( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.92" ) ); //$NON-NLS-1$
-
+      // FIXME: bad!
       runtime.gc();
     }
   }
 
-  private ITriangleEater createTinEater( final File tinResultFile, final TYPE parameter, final String crs ) throws CoreException
+  private ITriangleEater createTinEater( final File tinResultFile, final ResultType parameter, final String crs ) throws CoreException
   {
     final List<QNameAndString> properties = new ArrayList<>();
 
