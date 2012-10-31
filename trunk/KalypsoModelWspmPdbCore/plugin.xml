@@ -23,8 +23,8 @@
             type="postgis">
       </script>
       <script
-            comment="Postgis 0.0.4 -&gt; 0.0.5"
-            location="etc/scripts/update_V0.0.4_V0.0.5/postgis.sql"
+            comment="Postgis 0.0.4 -&gt; 12.11.0"
+            location="etc/scripts/update_V0.0.4_V12.11.0/postgis.sql"
             targetVersion="0.0.5"
             type="postgis">
          <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePage004two005"/>
@@ -48,8 +48,8 @@
             type="oracle">
       </script>
       <script
-            comment="Oracle 0.0.4 -&gt; 0.0.5"
-            location="etc/scripts/update_V0.0.4_V0.0.5/oracle.sql"
+            comment="Oracle 0.0.4 -&gt; 12.11.0"
+            location="etc/scripts/update_V0.0.4_V12.11.0/oracle.sql"
             targetVersion="0.0.5"
             type="oracle">
          <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePage004two005"/>

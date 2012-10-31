@@ -5,16 +5,16 @@ UPDATE INFO set value='updating 0.0.4 to 0.0.5'  where key ='Version';
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: create CS_Part_Param'  where key ='Version';
 CREATE TABLE CS_Part_Parameter
     (
-     ID numeric (20)  NOT NULL ,
-     Key varchar (50)  NOT NULL ,
-     Value varchar (255)  NOT NULL ,
-     Cross_Section_Part_ID numeric (20)  NOT NULL
+     ID NUMBER (20)  NOT NULL ,
+     Key VARCHAR2 (50)  NOT NULL ,
+     Value VARCHAR2 (255)  NOT NULL ,
+     Cross_Section_Part_ID NUMBER (20)  NOT NULL
     )
 ;
 
 
 ALTER TABLE CS_Part_Parameter
-    ADD CONSTRAINT "CS_Part_Parameter PK" PRIMARY KEY ( ID ) ;
+    ADD CONSTRAINT "CS_Part_Parameter PK" PRIMARY KEY ( ID  ) ;
 
 ALTER TABLE CS_Part_Parameter
     ADD CONSTRAINT "CS_Part_Parameter UK" UNIQUE ( Key ,
@@ -25,9 +25,9 @@ ALTER TABLE CS_Part_Parameter
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: create CS_Part_Type'  where key ='Version';
 CREATE TABLE CS_Part_Type
     (
-     Category varchar (50)  NOT NULL ,
-     Description varchar (255) ,
-     Style_Array_ID numeric (20)  NOT NULL
+     Category VARCHAR2 (50)  NOT NULL ,
+     Description VARCHAR2 (255) ,
+     Style_Array_ID NUMBER (20)  NOT NULL
     )
 ;
 
@@ -39,27 +39,22 @@ ALTER TABLE CS_Part_Type
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: create DHM_Index'  where key ='Version';
 CREATE TABLE DHM_Index
     (
-     ID numeric (20)  NOT NULL ,
-     Name varchar (100)  NOT NULL ,
-     Location Geometry  NOT NULL ,
-     FileName varchar (2048)  NOT NULL ,
-     MimeType varchar (50)  NOT NULL ,
+     ID NUMBER (20)  NOT NULL ,
+     Name VARCHAR2 (100)  NOT NULL ,
+     Location MDSYS.SDO_GEOMETRY  NOT NULL ,
+     FileName VARCHAR2 (2048)  NOT NULL ,
+     MimeType VARCHAR2 (50)  NOT NULL ,
      Creation_Date TIMESTAMP (0)  NOT NULL ,
      Editing_Date TIMESTAMP (0)  NOT NULL ,
-     Editing_User varchar (50)  NOT NULL ,
+     Editing_User VARCHAR2 (50)  NOT NULL ,
      Measurement_Date TIMESTAMP (0) ,
-     Source varchar (255) ,
-     Editor varchar (255) ,
-     Measurement_Accuracy varchar (50) ,
-     Description varchar (255) ,
-     Copyright varchar (255),
-     SRID varchar (15)   NOT NULL
+     Source VARCHAR2 (255) ,
+     Editor VARCHAR2 (255) ,
+     Measurement_Accuracy VARCHAR2 (50) ,
+     Description VARCHAR2 (255) ,
+     Copyright VARCHAR2 (255),
+     SRID VARCHAR2 (15)  NOT NULL
     )
-    WITH
-    (
-    OIDS=TRUE
-    )
-
 ;
 
 
@@ -92,19 +87,19 @@ ALTER TABLE Event RENAME TO bcp_Event
 
 CREATE TABLE Event
     (
-     ID numeric (20)  NOT NULL ,
-     Name varchar (100)  NOT NULL ,
+     ID NUMBER (20)  NOT NULL ,
+     Name VARCHAR2 (100)  NOT NULL ,
      Creation_Date TIMESTAMP (0)  NOT NULL ,
      Editing_Date TIMESTAMP (0)  NOT NULL ,
-     Editing_User varchar (50)  NOT NULL ,
+     Editing_User VARCHAR2 (50)  NOT NULL ,
      Measurement_Date TIMESTAMP (0) ,
-     Source varchar (255) ,
-     Type varchar (50) ,
-     WL_Type varchar (25)  NOT NULL ,
-     Description varchar (255) ,
-     Water_Body numeric (20)  NOT NULL ,
-     State_ID numeric (20) ,
-     Style_Array_ID numeric (20)
+     Source VARCHAR2 (255) ,
+     Type VARCHAR2 (50) ,
+     WL_Type VARCHAR2 (25)  NOT NULL ,
+     Description VARCHAR2 (255) ,
+     Water_Body NUMBER (20)  NOT NULL ,
+     State_ID NUMBER (20) ,
+     Style_Array_ID NUMBER (20)
     )
 ;
 
@@ -135,11 +130,11 @@ ALTER TABLE Event
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: create Style'  where key ='Version';
 CREATE TABLE Style
     (
-     ID numeric (20)  NOT NULL ,
-     Consecutive_Num numeric (11)  NOT NULL ,
-     Name varchar (50)  NOT NULL ,
-     Description varchar (255) ,
-     Style_Array_ID numeric (20)  NOT NULL
+     ID NUMBER (20)  NOT NULL ,
+     Consecutive_Num NUMBER (11)  NOT NULL ,
+     Name VARCHAR2 (50)  NOT NULL ,
+     Description VARCHAR2 (255) ,
+     Style_Array_ID NUMBER (20)  NOT NULL
     )
 ;
 
@@ -152,7 +147,7 @@ ALTER TABLE Style
 
 
 ALTER TABLE Style
-    ADD CONSTRAINT "Style numeric in Array UK" UNIQUE ( Consecutive_Num ,
+    ADD CONSTRAINT "Style Number in Array UK" UNIQUE ( Consecutive_Num ,
      Style_Array_ID ) ;
 
 
@@ -161,8 +156,8 @@ ALTER TABLE Style
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: create Style_Array'  where key ='Version';
 CREATE TABLE Style_Array
     (
-     ID numeric (20)  NOT NULL ,
-     Name varchar (50)  NOT NULL
+     ID NUMBER (20)  NOT NULL ,
+     Name VARCHAR2 (50)  NOT NULL
     )
 ;
 
@@ -175,10 +170,10 @@ ALTER TABLE Style_Array
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: create Style_Param'  where key ='Version';
 CREATE TABLE Style_Parameter
     (
-     ID numeric (20)  NOT NULL ,
-     Key varchar (50)  NOT NULL ,
-     Value varchar (255)  NOT NULL ,
-     Style_ID numeric (20)  NOT NULL
+     ID NUMBER (20)  NOT NULL ,
+     Key VARCHAR2 (50)  NOT NULL ,
+     Value VARCHAR2 (255)  NOT NULL ,
+     Style_ID NUMBER (20)  NOT NULL
     )
 ;
 
@@ -188,7 +183,10 @@ ALTER TABLE Style_Parameter
 
 
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: alter CS_Part'  where key ='Version';
-ALTER TABLE pdb.Cross_Section_Part ADD column Event_ID numeric(20)
+ALTER TABLE Cross_Section_Part ADD
+    (
+     Event_ID NUMBER (20)
+    )
 ;
 
 
@@ -412,10 +410,16 @@ ALTER TABLE Waterlevel_Fixation
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: insert geometry info'  where key ='Version';
 
 -- register_geometries
--- PostGis
-INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, "type")
-VALUES ( '', 'pdb', 'dhm_index', 'location', 3, ${SRID}, 'POLYGON' );
-CREATE INDEX IX_DHM_INDEX__LOCATION ON DHM_INDEX USING GIST ( LOCATION );
+-- Oracle
+INSERT INTO USER_SDO_GEOM_METADATA (TABLE_NAME,COLUMN_NAME,DIMINFO,SRID)
+VALUES('DHM_INDEX','LOCATION',
+MDSYS.SDO_DIM_ARRAY
+(MDSYS.SDO_DIM_ELEMENT('${srsXName}',${srsMinX},${srsMaxX},${srsTolX}),
+MDSYS.SDO_DIM_ELEMENT('${srsYName}',${srsMinY},${srsMaxY},${srsTolY}),
+MDSYS.SDO_DIM_ELEMENT('${srsZName}',${srsMinZ},${srsMaxZ},${srsTolZ})
+), ${SRID}
+);
+CREATE INDEX IX_DHM_INDEX__LOCATION ON "DHM_INDEX"("LOCATION") INDEXTYPE IS MDSYS.SPATIAL_INDEX ;
 
 
 -- drop temp table 'bcp_event'
@@ -424,26 +428,27 @@ DROP TABLE BCP_EVENT;
 
 -- set root path for DHM files
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: set root path for DHM files (''DEMServer'')'  where key ='Version';
-INSERT INTO INFO("key", "value") VALUES ('DEMServer', '${DEMServer}');
+INSERT INTO INFO("KEY", "VALUE") VALUES ('DEMServer', '${DEMServer}');
 
 
 -- grant rights to new tables
 UPDATE INFO set value='updating 0.0.4 to 0.0.5: grant rights'  where key ='Version';
-GRANT SELECT ON TABLE pdb.CS_Part_Parameter TO GROUP pdb_user;
-GRANT SELECT ON TABLE pdb.CS_Part_Type TO GROUP pdb_user;
-GRANT SELECT ON TABLE pdb.DHM_Index TO GROUP pdb_user;
-GRANT SELECT ON TABLE pdb.Event TO GROUP pdb_user;
-GRANT SELECT ON TABLE pdb.Style TO GROUP pdb_user;
-GRANT SELECT ON TABLE pdb.Style_Array TO GROUP pdb_user;
-GRANT SELECT ON TABLE pdb.Style_Parameter TO GROUP pdb_user;
 
-GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.CS_Part_Parameter TO GROUP pdb_admin;
-GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.CS_Part_Type TO GROUP pdb_admin;
-GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.DHM_Index TO GROUP pdb_admin;
-GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.Event TO GROUP pdb_admin;
-GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.Style TO GROUP pdb_admin;
-GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.Style_Array TO GROUP pdb_admin;
-GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.Style_Parameter TO GROUP pdb_admin;
+GRANT SELECT ON CS_PART_PARAMETER TO PDB_USER;
+GRANT SELECT ON CS_PART_TYPE TO PDB_USER;
+GRANT SELECT ON DHM_INDEX TO PDB_USER;
+GRANT SELECT ON EVENT TO PDB_USER;
+GRANT SELECT ON STYLE TO PDB_USER;
+GRANT SELECT ON STYLE_ARRAY TO PDB_USER;
+GRANT SELECT ON STYLE_PARAMETER TO PDB_USER;
+
+GRANT SELECT, UPDATE, INSERT, DELETE ON CS_PART_PARAMETER TO PDB_ADMIN;
+GRANT SELECT, UPDATE, INSERT, DELETE ON CS_PART_TYPE TO PDB_ADMIN;
+GRANT SELECT, UPDATE, INSERT, DELETE ON DHM_INDEX TO PDB_ADMIN;
+GRANT SELECT, UPDATE, INSERT, DELETE ON EVENT TO PDB_ADMIN;
+GRANT SELECT, UPDATE, INSERT, DELETE ON STYLE TO PDB_ADMIN;
+GRANT SELECT, UPDATE, INSERT, DELETE ON STYLE_ARRAY TO PDB_ADMIN;
+GRANT SELECT, UPDATE, INSERT, DELETE ON STYLE_PARAMETER TO PDB_ADMIN;
 
 -- Version endgültig setzen
-UPDATE INFO set value='0.0.5'  where key ='Version';
+UPDATE INFO set value='12.11.0'  where key ='Version';

@@ -74,7 +74,7 @@ public class PdbInfo
 {
   public static final int UNKNOWN_SRID = -1;
 
-  public static final Version CURRENT_VERSION = new Version( "0.0.5" ); //$NON-NLS-1$
+  public static final Version CURRENT_VERSION = new Version( "12.11.0" ); //$NON-NLS-1$
 
   public final static String PROPERTY_VERSION = "Version"; //$NON-NLS-1$
 
