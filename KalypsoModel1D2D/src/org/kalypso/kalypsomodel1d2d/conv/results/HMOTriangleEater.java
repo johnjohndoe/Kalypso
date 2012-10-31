@@ -56,7 +56,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 
 /**
  * @author Thomas Jung
- *
  */
 public class HMOTriangleEater implements ITriangleEater
 {
@@ -68,9 +67,9 @@ public class HMOTriangleEater implements ITriangleEater
 
   private final File m_output;
 
-  private final ResultType.TYPE m_parameter;
+  private final ResultType m_parameter;
 
-  public HMOTriangleEater( final File filename, final ResultType.TYPE parameter )
+  public HMOTriangleEater( final File filename, final ResultType parameter )
   {
     m_output = filename;
     m_parameter = parameter;

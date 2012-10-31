@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.math.BigDecimal;
+
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class NodeResultMinMaxCatcher
 {
@@ -243,4 +245,97 @@ public class NodeResultMinMaxCatcher
     return m_maxWavePer;
   }
 
+  public final BigDecimal getScaledMin( final ResultType type )
+  {
+    final double min = getMin( type );
+    if( Double.isNaN( min ) )
+      return null;
+
+    return new BigDecimal( min ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+  }
+
+  public final BigDecimal getScaledMax( final ResultType type )
+  {
+    final double max = getMax( type );
+    if( Double.isNaN( max ) )
+      return null;
+
+    return new BigDecimal( max ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+  }
+
+  private double getMin( final ResultType type )
+  {
+    switch( type )
+    {
+      case DEPTH:
+        return getMinDepth();
+
+      case DIFFERENCE:
+        throw new UnsupportedOperationException();
+
+      case SHEARSTRESS:
+        return getMinShearStress();
+
+      case TERRAIN:
+        return getMinTerrain();
+
+      case VELOCITY:
+        // FIXME: strange: same min/max for x and y values?
+      case VELOCITY_X:
+      case VELOCITY_Y:
+        return getMinVelocityAbs();
+
+      case WATERLEVEL:
+        return getMinWaterlevel();
+
+      case WAVEDIR:
+        throw new UnsupportedOperationException();
+
+      case WAVEHSIG:
+        throw new UnsupportedOperationException();
+
+      case WAVEPER:
+        throw new UnsupportedOperationException();
+    }
+
+    throw new IllegalStateException();
+  }
+
+  private double getMax( final ResultType type )
+  {
+    switch( type )
+    {
+      case DEPTH:
+        return getMaxDepth();
+
+      case DIFFERENCE:
+        throw new UnsupportedOperationException();
+
+      case SHEARSTRESS:
+        return getMaxShearStress();
+
+      case TERRAIN:
+        return getMaxTerrain();
+
+      case VELOCITY:
+        // FIXME: strange: same min/max for x and y values?
+      case VELOCITY_X:
+      case VELOCITY_Y:
+        return getMaxVelocityAbs();
+
+      case WATERLEVEL:
+        return getMaxWaterlevel();
+
+      case WAVEDIR:
+        throw new UnsupportedOperationException();
+
+      case WAVEHSIG:
+        throw new UnsupportedOperationException();
+
+      case WAVEPER:
+        throw new UnsupportedOperationException();
+    }
+
+    throw new IllegalStateException();
+  }
 }

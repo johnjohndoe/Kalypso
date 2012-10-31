@@ -71,7 +71,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
@@ -105,7 +105,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( Messages.getString("Import2DResultsOperation_0"), 1 + m_files.length * 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "Import2DResultsOperation_0" ), 1 + m_files.length * 2 ); //$NON-NLS-1$
 
     final File outputDir = FileUtilities.createNewTempDir( "resultImport2d" ); //$NON-NLS-1$
 
@@ -128,8 +128,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
       monitor.done();
     }
 
-
-    return m_stati.asMultiStatusOrOK( Messages.getString("Import2DResultsOperation_1"), String.format( Messages.getString("Import2DResultsOperation_2"), m_files.length ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    return m_stati.asMultiStatusOrOK( Messages.getString( "Import2DResultsOperation_1" ), String.format( Messages.getString( "Import2DResultsOperation_2" ), m_files.length ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void importFiles( final IProgressMonitor monitor, final File outputDir, final ICalcUnitResultMeta calcMeta ) throws InvocationTargetException
@@ -139,7 +138,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
     for( final File file : m_files )
     {
       final String filename = file.getName();
-      monitor.subTask( String.format( Messages.getString("Import2DResultsOperation_3"), filename ) ); //$NON-NLS-1$
+      monitor.subTask( String.format( Messages.getString( "Import2DResultsOperation_3" ), filename ) ); //$NON-NLS-1$
       try
       {
         final FileObject file2d = manager.resolveFile( file.toURI().toString() );
@@ -147,7 +146,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
       }
       catch( final FileSystemException e )
       {
-        m_stati.add( IStatus.ERROR, Messages.getString("Import2DResultsOperation_4"), e, filename ); //$NON-NLS-1$
+        m_stati.add( IStatus.ERROR, Messages.getString( "Import2DResultsOperation_4" ), e, filename ); //$NON-NLS-1$
       }
     }
   }
@@ -197,7 +196,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
 
     final IFeatureBindingCollection<IResultMeta> children = scenarioResultMeta.getChildren();
     final ICalcUnitResultMeta newMeta = children.addNew( ICalcUnitResultMeta.QNAME, calcUnitMetaName, ICalcUnitResultMeta.class );
-    final String description = String.format( Messages.getString("Import2DResultsOperation_5"), calcUnitMetaName ); //$NON-NLS-1$
+    final String description = String.format( Messages.getString( "Import2DResultsOperation_5" ), calcUnitMetaName ); //$NON-NLS-1$
     newMeta.setDescription( description );
     newMeta.setName( calcUnitMetaName );
     newMeta.setPath( new Path( calcUnitMetaName ) );
@@ -233,7 +232,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
     final IControlModel1D2D controlModel = null;
     final IFEDiscretisationModel1d2d discModel = null;
 
-    final List<TYPE> parameter = null; // read all default parameters
+    final List<ResultType> parameter = null; // read all default parameters
 
     final ProcessResult2DOperation operation = new ProcessResult2DOperation( inputFile, null, resultDir, flowModel, controlModel, discModel, parameter, stepDate, calcMeta, true );
     final IStatus fileStatus = operation.execute( monitor );
@@ -270,9 +269,8 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
   /**
    * parse the time string from the "2d" result file with according format, interprets the date given in Kalypso-RMA
    * format, checks the need for additional day in case of leap year
-   *
+   * 
    * @return {@link Date} interpreted from given line, in case of invalid format or bad string - null
-   *
    */
   public static Date interpreteRMA2TimeLine( final String line )
   {

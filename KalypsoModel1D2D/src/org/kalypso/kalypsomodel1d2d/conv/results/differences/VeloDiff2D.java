@@ -59,7 +59,7 @@ import org.kalypso.kalypsomodel1d2d.conv.DifferenceResultModel1d2dHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.sim.ProcessResult2DOperation;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -77,7 +77,7 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
  * necessary arguments are:<br>
  * <br>
  * result file 1, result file 2, template file, output file, parameter<br>
- *
+ * 
  * @author Thomas Jung
  */
 public class VeloDiff2D
@@ -107,12 +107,12 @@ public class VeloDiff2D
       }
 
       /* process results and generate result tins */
-      final List<TYPE> parameters = new ArrayList<>();
+      final List<ResultType> parameters = new ArrayList<>();
 
       if( args[4].equals( "velo" ) ) //$NON-NLS-1$
       {
-        parameters.add( TYPE.VELOCITY_X );
-        parameters.add( TYPE.VELOCITY_Y );
+        parameters.add( ResultType.VELOCITY_X );
+        parameters.add( ResultType.VELOCITY_Y );
       }
       else
       {
@@ -165,13 +165,13 @@ public class VeloDiff2D
     }
   }
 
-  private static void generateDifferences( final List<TYPE> parameters, final File outputDir1, final File outputDir2, final File templateFile, final File outputFile, final org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType.TYPE resultDifferenceType ) throws Exception
+  private static void generateDifferences( final List<ResultType> parameters, final File outputDir1, final File outputDir2, final File templateFile, final File outputFile, final org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType.TYPE resultDifferenceType ) throws Exception
   {
     final InputStream is = new FileInputStream( templateFile );
     try
     {
       /* generate differences */
-      final TYPE[] types = parameters.toArray( new TYPE[parameters.size()] );
+      final ResultType[] types = parameters.toArray( new ResultType[parameters.size()] );
 
       final GM_TriangulatedSurface[] minuendSurfaces = new GM_TriangulatedSurface[types.length];
       final GM_TriangulatedSurface[] subtrahentSurfaces = new GM_TriangulatedSurface[types.length];
@@ -201,7 +201,7 @@ public class VeloDiff2D
     }
   }
 
-  private static void processResults( final FileObject result2dFile1, final FileObject result2dFile2, final List<TYPE> parameters, final File outputDir1, final File outputDir2 )
+  private static void processResults( final FileObject result2dFile1, final FileObject result2dFile2, final List<ResultType> parameters, final File outputDir1, final File outputDir2 )
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final ProcessResult2DOperation job1 = new ProcessResult2DOperation( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
@@ -212,12 +212,12 @@ public class VeloDiff2D
     job2.execute( new NullProgressMonitor() );
   }
 
-  private static GM_TriangulatedSurface getSurfaces( final File outputDir, final TYPE resultType ) throws Exception
+  private static GM_TriangulatedSurface getSurfaces( final File outputDir, final ResultType resultType ) throws Exception
   {
     File gmlFile = null;
 
     final File tinFolder = new File( outputDir, "Tin" ); //$NON-NLS-1$
-    if( resultType.equals( TYPE.VELOCITY_X ) )
+    if( resultType.equals( ResultType.VELOCITY_X ) )
       gmlFile = new File( tinFolder, "tin_VELOCITY_X.gml" ); //$NON-NLS-1$
     else
       gmlFile = new File( tinFolder, "tin_VELOCITY_Y.gml" ); //$NON-NLS-1$
@@ -228,7 +228,7 @@ public class VeloDiff2D
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
 
     final Feature rootFeature = workspace.getRootFeature();
-    final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "triangulatedSurfaceMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final GM_TriangulatedSurface surface = (GM_TriangulatedSurface)rootFeature.getProperty( new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "triangulatedSurfaceMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return surface;
   }

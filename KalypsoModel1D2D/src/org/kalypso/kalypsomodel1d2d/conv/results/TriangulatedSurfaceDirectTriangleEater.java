@@ -72,12 +72,12 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * This eater writes the triangles into an GML-File as TriangualtedSurface.<br>
  * The triangles directly get written without storing them into an intermediate GML-Workspace.
- *
+ * 
  * @author Thomas Jung
  */
 public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
 {
-  private final ResultType.TYPE m_parameter;
+  private final ResultType m_parameter;
 
   private final File m_tinResultFile;
 
@@ -89,7 +89,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
 
   private OutputStream m_os;
 
-  public TriangulatedSurfaceDirectTriangleEater( final File tinResultFile, final ResultType.TYPE parameter, final String crs, final QNameAndString[] props ) throws CoreException
+  public TriangulatedSurfaceDirectTriangleEater( final File tinResultFile, final ResultType parameter, final String crs, final QNameAndString[] props ) throws CoreException
   {
     m_parameter = parameter;
     m_tinResultFile = tinResultFile;
@@ -123,7 +123,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
   }
 
-  public static GM_Triangle createTriangle( final INodeResult[] nodes, final ResultType.TYPE parameter )
+  public static GM_Triangle createTriangle( final INodeResult[] nodes, final ResultType parameter )
   {
     if( nodes.length < 3 )
       return null;
@@ -138,7 +138,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     return null;
   }
 
-  private static GM_Position[] processNodes( final INodeResult[] nodes, final ResultType.TYPE parameter )
+  private static GM_Position[] processNodes( final INodeResult[] nodes, final ResultType parameter )
   {
     final GM_Position pos[] = new GM_Position[3];
 
@@ -152,7 +152,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
 
       // TODO: make this configurable
       // exclude triangles with water levels below terrain surface
-      if( parameter == ResultType.TYPE.WATERLEVEL && z < point.getZ() )
+      if( parameter == ResultType.WATERLEVEL && z < point.getZ() )
         return null;
 
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
@@ -160,7 +160,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     return pos;
   }
 
-  private static double getZValue( final INodeResult nodeResult, final ResultType.TYPE parameter )
+  private static double getZValue( final INodeResult nodeResult, final ResultType parameter )
   {
     switch( parameter )
     {
@@ -207,7 +207,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
       m_writer.finished();
 
       if( m_os instanceof ZipOutputStream )
-        ((ZipOutputStream) m_os).closeEntry();
+        ((ZipOutputStream)m_os).closeEntry();
       m_os.close();
     }
     catch( final Exception e )
@@ -247,7 +247,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
       {
         m_os = new ZipOutputStream( new FileOutputStream( tinFileBase + ".zip" ) ); //$NON-NLS-1$
         m_zipEntry = new ZipEntry( "tin_" + m_parameter.name() + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-        ((ZipOutputStream) m_os).putNextEntry( m_zipEntry );
+        ((ZipOutputStream)m_os).putNextEntry( m_zipEntry );
       }
       else if( "gz".equals( extension ) ) //$NON-NLS-1$
         m_os = new GZIPOutputStream( new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gz" ) ) ) ); //$NON-NLS-1$
