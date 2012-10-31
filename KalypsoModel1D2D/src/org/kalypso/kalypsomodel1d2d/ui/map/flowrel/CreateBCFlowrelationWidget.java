@@ -63,14 +63,13 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * 
  * @author Gernot Belger
  */
 public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
 {
   public CreateBCFlowrelationWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.1"), IBoundaryCondition.QNAME ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.1" ), IBoundaryCondition.QNAME ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
@@ -95,29 +94,29 @@ public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
 
   public static IBoundaryConditionDescriptor[] createTimeserieDescriptors( final Feature modelElement, final IFolder scenarioFolder )
   {
-    final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.2"), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ); //$NON-NLS-1$
-    final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.3"), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ); //$NON-NLS-1$
-    final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.4"), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D ); //$NON-NLS-1$
-    final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.5"), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D ); //$NON-NLS-1$
-    final WQStepDescriptor wqDescriptor = new WQStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.6") ); //$NON-NLS-1$
-    final WaveStepDescriptor waveDescriptor = new WaveStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.WaveBC0") );  //$NON-NLS-1$
+    final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.2" ), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, 2 ); //$NON-NLS-1$
+    final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.3" ), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE, 3 ); //$NON-NLS-1$
+    final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.4" ), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D, 3 ); //$NON-NLS-1$
+    final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.5" ), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D, 3 ); //$NON-NLS-1$
+    final WQStepDescriptor wqDescriptor = new WQStepDescriptor( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.6" ) ); //$NON-NLS-1$
+    final WaveStepDescriptor waveDescriptor = new WaveStepDescriptor( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.WaveBC0" ) ); //$NON-NLS-1$
 
     final IFolder importFolder = KalypsoModel1D2DHelper.getTimeeseriesFolder( scenarioFolder );
-    final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.7"), importFolder ); //$NON-NLS-1$
+    final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.7" ), importFolder ); //$NON-NLS-1$
 
     // TODO: ask ingenieurs what is right here:
     if( modelElement instanceof IElement1D )
       return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser };
-    //    return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser, wqDescriptor };
+    // return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser, wqDescriptor };
 
     if( modelElement instanceof IPolyElement )
       return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
-    //    return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser, wqDescriptor };
+    // return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser, wqDescriptor };
 
     // TODO: probably comment the next two lines out
     if( modelElement instanceof IFE1D2DNode )
       return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
-    //    return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
+    // return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
 
     if( modelElement instanceof IFELine )
       return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor, waveDescriptor };
@@ -125,10 +124,6 @@ public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
     return new IBoundaryConditionDescriptor[] {};
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
-   *      org.kalypsodeegree.model.geometry.GM_Point, double)
-   */
   @Override
   protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {

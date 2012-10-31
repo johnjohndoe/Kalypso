@@ -61,9 +61,6 @@ public class NodalBCDescriptorPage extends WizardPage
     m_descriptors = descriptors;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -87,7 +84,7 @@ public class NodalBCDescriptorPage extends WizardPage
     {
       if( control.getData() == selectedDescriptor )
       {
-        ((StackLayout) m_composite.getLayout()).topControl = control;
+        ((StackLayout)m_composite.getLayout()).topControl = control;
 
         selectedDescriptor.activate();
 
@@ -101,7 +98,7 @@ public class NodalBCDescriptorPage extends WizardPage
 
   public IBoundaryConditionDescriptor getDescriptor( )
   {
-    return (IBoundaryConditionDescriptor) ((StackLayout) m_composite.getLayout()).topControl.getData();
+    return (IBoundaryConditionDescriptor)((StackLayout)m_composite.getLayout()).topControl.getData();
   }
 
 }
