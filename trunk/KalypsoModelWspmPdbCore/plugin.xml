@@ -56,7 +56,7 @@
       </script>
       <script
             comment="Oracle - Create DB"
-            location="etc/scripts/create/V0.0.4/oracle.sql"
+            location="etc/scripts/create/V12..11.0/oracle.sql"
             targetVersion="0.0.0"
             type="oracle">
          <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo"/>
@@ -64,7 +64,7 @@
       </script>
       <script
             comment="Postgis - Create DB"
-            location="etc/scripts/create/V0.0.4/postgis.sql"
+            location="etc/scripts/create/V12.11.0/postgis.sql"
             targetVersion="0.0.0"
             type="postgis">
          <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo"/>
