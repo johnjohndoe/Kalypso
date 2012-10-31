@@ -202,7 +202,9 @@
         <!--
         <image commandId="org.kalypso.model.1d2d.workflow.TransGroup" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ContilineGen" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.BCDef" icon="icons/workflow/"/>
+        -->
+        <image commandId="org.kalypso.model.1d2d.workflow.BCDef" icon="icons/workflow/BCDef.png"/>
+        <!--
         <image commandId="org.kalypso.model.1d2d.workflow.SetEltLineJunction" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.SetEltLineTrans" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.CalculationUnit" icon="icons/workflow/"/>
