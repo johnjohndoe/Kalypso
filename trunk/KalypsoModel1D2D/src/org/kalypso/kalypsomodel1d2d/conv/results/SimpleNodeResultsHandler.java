@@ -177,7 +177,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   @Override
-  public void handleFlowResitance( final String lineString, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
+  public void handleFlowResistance( final String lineString, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
   {
   }
 

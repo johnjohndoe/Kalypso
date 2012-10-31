@@ -162,9 +162,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     m_mapSWANResults = mapSWANResults;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#end()
-   */
   @Override
   public void end( )
   {
@@ -174,6 +171,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // create the triangles for each element
     for( final ElementResult element : m_elemIndex.values() )
     {
+      // FIXE: move this code into a separate helper class!
+
       element.createCenterNode(); // split the element
       splitElement( element );
 
@@ -218,9 +217,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return null;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int, int, int)
-   */
   @Override
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
@@ -239,20 +235,21 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       return; // maybe this is a good place to mark the 1d-nodes....
 
     // get the information which nodes are mid-side nodes
-    final INodeResult result = m_nodeIndex.get( middleNodeID );
+    final INodeResult midsideNode = m_nodeIndex.get( middleNodeID );
 
     // check for illegal arcs
-    if( result == null )
+    if( midsideNode == null )
     {
       m_arcIndex.remove( id );
       return;
     }
+// strange check, why -1? if we got a midiseNode, isnt' it always a midside node?
     if( middleNodeID != -1 )
     {
-      result.setMidSide( true );
+      midsideNode.setMidSide( true );
     }
     else
-      result.setMidSide( false );
+      midsideNode.setMidSide( false );
   }
 
   private void writeArcInfoAtElement( final int elementID, final ArcResult arcResult )
@@ -277,7 +274,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   @Override
-  public void handleFlowResitance( final String lineString, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
+  public void handleFlowResistance( final String lineString, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
   {
     /*
      * IT IS NECESSARY, THAT THE FLOW RESISTANCE VALUES ARE STANDING BELOW THE ELEMENTS IN THE 2D-RESULT FILE!!
@@ -296,9 +293,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int, int)
-   */
   @Override
   public void handleElement( final String lineString, final int id, final int currentRougthnessClassID, final int previousRoughnessClassID, final int eleminationNumber )
   {
@@ -1301,6 +1295,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* Fill node result with data */
       result.setName( "" + id ); //$NON-NLS-1$
 
+      // Init with false, will later be set to true for midside nodes
+      result.setMidSide( false );
+
       // TODO: description: beschreibt, welche Rechenvariante und so weiter... oder noch besser an der collection
       // result.setDescription( "" + id );
 
@@ -1334,23 +1331,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double, double)
-   */
   @Override
   public void handleNode( final String line, final int id, final double easting, final double northing, final double elevation, final double stationName )
   {
-    this.handleNode( line, id, easting, northing, elevation );
+    handleNode( line, id, easting, northing, elevation );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerError(java.lang.String, org.kalypso.kalypsomodel1d2d.conv.EReadError)
-   */
   @Override
   public void handleError( final String lineString, final EReadError errorHints )
   {
     // TODO Auto-generated method stub
-
   }
 
   @Override
@@ -1379,9 +1369,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double, double, double, double)
-   */
   @Override
   public void handleResult( final String lineString, final int id, final double vx, final double vy, final double virtualDepth, final double waterlevel )
   {
@@ -1434,9 +1421,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, java.util.Date)
-   */
   @Override
   public void handleTime( final String line, final Date time )
   {
@@ -1452,18 +1436,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return m_time;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleJunction(java.lang.String, int, int, int, int)
-   */
   @Override
   public void handleJunction( final String parseLine, final int junctionID, final int element1dID, final int boundaryLine2dID, final int node1dID )
   {
     // TODO: implement
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNodeInformation(java.lang.String, int, int, double, double, double, double)
-   */
   @Override
   public void handleNodeInformation( final String line, final int id, final int dry, final double value1, final double value2, final double value3, final double value4 )
   {
@@ -1493,7 +1471,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   @Override
   public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList )
   {
-
     try
     {
       // get all junction profile curves
