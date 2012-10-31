@@ -148,7 +148,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   }
 
   @Override
-  public void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
+  public void handleFlowResistance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
   {
     m_formatter.format( "%s%n", line ); //$NON-NLS-1$
   }

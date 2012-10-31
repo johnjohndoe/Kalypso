@@ -464,7 +464,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   }
 
   @Override
-  public void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
+  public void handleFlowResistance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
   {
   }
 
