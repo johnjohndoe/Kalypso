@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.differences;
 
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
@@ -53,7 +52,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.MathOperator;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -69,7 +68,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Wizard to show length sections to the chart view.
- *
+ * 
  * @author Thomas Jung
  */
 public class GenerateDifferenceResultTinWizard extends Wizard
@@ -93,7 +92,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;
     m_modelProvider = modelProvider;
-    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.3") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.3" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
@@ -105,12 +104,12 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     final NonTinDocumentResultViewerFilter resultFilter = new NonTinDocumentResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
-    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.4"), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
-    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.5"), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
+    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.4" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
+    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.5" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
 
     final DocumentResultViewerFilter resultFilter2 = new DocumentResultViewerFilter();
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6"), null, resultFilter2, comparator, themeConstructionFactory, null ); //$NON-NLS-1$
+    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6" ), null, resultFilter2, comparator, themeConstructionFactory, null ); //$NON-NLS-1$
 
     selectMasterResultWizardPage.setResultMeta( m_resultModel );
     selectSlaveResultWizardPage.setResultMeta( m_resultModel );
@@ -131,59 +130,59 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
     /* check user input */
     // master
-    final SelectResultWizardPage masterResultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_MASTER_RESULTS_NAME );
+    final SelectResultWizardPage masterResultPage = (SelectResultWizardPage)getPage( PAGE_SELECT_MASTER_RESULTS_NAME );
     final IResultMeta[] masterResults = masterResultPage.getSelectedResults();
 
     if( masterResults.length == 0 || !(masterResults[0] instanceof IDocumentResultMeta) )
     {
-      MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.7"), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.8") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.7" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
     else
     {
       if( masterResults[0] instanceof IDocumentResultMeta )
       {
-        masterDocType = ((IDocumentResultMeta) masterResults[0]).getDocumentType();
+        masterDocType = ((IDocumentResultMeta)masterResults[0]).getDocumentType();
       }
     }
 
     // slave
-    final SelectResultWizardPage slaveResultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_SLAVE_RESULTS_NAME );
+    final SelectResultWizardPage slaveResultPage = (SelectResultWizardPage)getPage( PAGE_SELECT_SLAVE_RESULTS_NAME );
     final IResultMeta[] slaveResults = slaveResultPage.getSelectedResults();
 
     if( slaveResults.length == 0 || !(slaveResults[0] instanceof IDocumentResultMeta) )
     {
-      MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.9"), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.10") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.9" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
     else
     {
       if( slaveResults[0] instanceof IDocumentResultMeta )
       {
-        slaveDocType = ((IDocumentResultMeta) slaveResults[0]).getDocumentType();
+        slaveDocType = ((IDocumentResultMeta)slaveResults[0]).getDocumentType();
       }
     }
 
     if( !slaveDocType.equals( masterDocType ) )
     {
-      if( !MessageDialog.openQuestion( getShell(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.11"), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.12") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      if( !MessageDialog.openQuestion( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.11" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.12" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return false;
     }
 
-    final SelectResultWizardPage destinationResultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_DESTINATION_RESULTS_NAME );
+    final SelectResultWizardPage destinationResultPage = (SelectResultWizardPage)getPage( PAGE_SELECT_DESTINATION_RESULTS_NAME );
     final IResultMeta[] destinationResults = destinationResultPage.getSelectedResults();
 
     // destination
     if( destinationResults.length == 0 )
     {
-      MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.13"), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.14") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.13" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
     else
     {
       IResultMeta destResult = null;
 
-      //TODO: allow the user to set an individual result name and store information about master and slave in the ResultMeta entry
+      // TODO: allow the user to set an individual result name and store information about master and slave in the ResultMeta entry
 
       // take the first selected step result
       for( final IResultMeta resultMeta : destinationResults )
@@ -196,7 +195,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
       if( destResult == null )
       {
-        MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.15"), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.16") ); //$NON-NLS-1$ //$NON-NLS-2$
+        MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.15" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.16" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return false;
       }
     }
@@ -208,14 +207,14 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     if( !status.isOK() )
     {
       //ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.37"), status ); //$NON-NLS-1$
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
       StatusDialog.open( getShell(), status, getWindowTitle() );
     }
     else
     {
       try
       {
-        ((ICommandPoster) m_modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+        ((ICommandPoster)m_modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
         m_modelProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
       }
       catch( final Exception e )

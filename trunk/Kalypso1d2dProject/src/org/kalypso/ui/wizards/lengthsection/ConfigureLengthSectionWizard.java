@@ -49,7 +49,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandlerParameters;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -60,7 +60,7 @@ import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 
 /**
  * Wizard to show length sections to the chart view.
- *
+ * 
  * @author Thomas Jung
  */
 public class ConfigureLengthSectionWizard extends Wizard
@@ -107,7 +107,7 @@ public class ConfigureLengthSectionWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final SelectResultWizardPage resultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
+    final SelectResultWizardPage resultPage = (SelectResultWizardPage)getPage( PAGE_SELECT_RESULTS_NAME );
     final IResultMeta[] results = resultPage.getSelectedResults();
 
     // TODO: should not be able to finish wizard without results
@@ -124,7 +124,7 @@ public class ConfigureLengthSectionWizard extends Wizard
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
     ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.26" ), status ); //$NON-NLS-1$
 
     if( status.matches( IStatus.ERROR ) || status.matches( IStatus.WARNING ) )

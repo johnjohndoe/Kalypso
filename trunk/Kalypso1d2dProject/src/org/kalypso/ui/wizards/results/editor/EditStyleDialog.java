@@ -82,7 +82,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite;
@@ -110,7 +110,6 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author Thomas Jung
- *
  */
 public class EditStyleDialog extends TitleAreaDialog
 {
@@ -163,9 +162,9 @@ public class EditStyleDialog extends TitleAreaDialog
     m_minValue = minValue;
     m_fileName = FileUtilities.nameWithoutExtension( m_sldFile.getName() );
 
-    m_sldFolder = (IFolder) m_sldFile.getParent();
+    m_sldFolder = (IFolder)m_sldFile.getParent();
 
-    final IDialogSettings dialogSettings = KalypsoModel1D2DPlugin.getDefault().getDialogSettings();
+    final IDialogSettings dialogSettings = Kalypso1d2dProjectPlugin.getDefault().getDialogSettings();
     m_dialogSettings = dialogSettings.getSection( SETTINGS_SECTION );
     if( m_dialogSettings == null )
       m_dialogSettings = dialogSettings.addNewSection( SETTINGS_SECTION );
@@ -216,7 +215,7 @@ public class EditStyleDialog extends TitleAreaDialog
     fileNameText.addKeyListener( new KeyAdapter()
     {
 
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -231,14 +230,14 @@ public class EditStyleDialog extends TitleAreaDialog
     fileNameText.addFocusListener( new FocusListener()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public void focusGained( final FocusEvent e )
       {
         checkFileNameText( commonComposite, fileNameText );
       }
 
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public void focusLost( final FocusEvent e )
       {
         checkFileNameText( commonComposite, fileNameText );
@@ -249,7 +248,7 @@ public class EditStyleDialog extends TitleAreaDialog
     {
 
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public void modifyText( final ModifyEvent e )
       {
         checkFileNameText( commonComposite, fileNameText );
@@ -263,7 +262,7 @@ public class EditStyleDialog extends TitleAreaDialog
     /* choose the composite, depending on the style */
     if( m_symbolizer[0] instanceof SurfaceLineSymbolizer )
     {
-      final SurfaceLineSymbolizer symb = (SurfaceLineSymbolizer) m_symbolizer[0];
+      final SurfaceLineSymbolizer symb = (SurfaceLineSymbolizer)m_symbolizer[0];
       final LineColorMap colorMap = symb.getColorMap();
       if( colorMap.getColorMap().length > 0 )
       {
@@ -281,7 +280,7 @@ public class EditStyleDialog extends TitleAreaDialog
     }
     else if( m_symbolizer[0] instanceof SurfacePolygonSymbolizer )
     {
-      final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) m_symbolizer[0];
+      final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer)m_symbolizer[0];
       final PolygonColorMap colorMap = symb.getColorMap();
       final PolygonColorMapEntry[] colorMapEntries = colorMap.getColorMap();
       if( colorMapEntries.length > 0 )
@@ -312,7 +311,7 @@ public class EditStyleDialog extends TitleAreaDialog
     }
     else if( m_symbolizer[0] instanceof PointSymbolizer )
     {
-      final PointSymbolizer symb = (PointSymbolizer) m_symbolizer[0];
+      final PointSymbolizer symb = (PointSymbolizer)m_symbolizer[0];
       final Object[] mag = symb.getGraphic().getMarksAndExtGraphics();
       final Object object = mag[0];
       /*
@@ -326,7 +325,7 @@ public class EditStyleDialog extends TitleAreaDialog
       m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepName );
       if( object instanceof Mark )
       {
-        m_mark = (Mark) object;
+        m_mark = (Mark)object;
         try
         {
           m_fill = m_mark.getFill();
@@ -340,18 +339,18 @@ public class EditStyleDialog extends TitleAreaDialog
             final CssParameter cssValueAmountClasses = m_fill.getParameter( "amountClasses" ); //$NON-NLS-1$
             Color fromColor = resolveColor( m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MIN_PREFIX + nodeStyleType ) );
             Color toColor = resolveColor( m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MAX_PREFIX + nodeStyleType ) );
-            Double amountOfClasses = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType );
+            Double amountOfClasses = (Double)m_mapSldSettingsIntern.get( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType );
             try
             {
               /*
                * replacing the information needed for color settings from the loaded sld. initially set from the static
                * map in the helper. if this data was provided in sld, set it also in to the map
                */
-              fromColor = (Color) extractCssValue( cssFillMin );
-              toColor = (Color) extractCssValue( cssFillMax );
-              final Double extValueMin = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MIN_PREFIX + nodeStyleType );
-              final Double extValueMax = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MAX_PREFIX + nodeStyleType );
-              amountOfClasses = (Double) extractCssValue( cssValueAmountClasses );
+              fromColor = (Color)extractCssValue( cssFillMin );
+              toColor = (Color)extractCssValue( cssFillMax );
+              final Double extValueMin = (Double)m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MIN_PREFIX + nodeStyleType );
+              final Double extValueMax = (Double)m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MAX_PREFIX + nodeStyleType );
+              amountOfClasses = (Double)extractCssValue( cssValueAmountClasses );
               m_mapSldSettingsIntern.put( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType, amountOfClasses );
               m_maxValue = new BigDecimal( extValueMax );
               m_minValue = new BigDecimal( extValueMin );
@@ -382,21 +381,21 @@ public class EditStyleDialog extends TitleAreaDialog
                 newMaxColor.setName( "maxColor" ); //$NON-NLS-1$
                 m_fill.addCssParameter( "maxColor", newMaxColor ); //$NON-NLS-1$
 
-                final Double newAmountClasses = ((Integer) getAmountOfClassesForInterpolation()).doubleValue();
+                final Double newAmountClasses = ((Integer)getAmountOfClassesForInterpolation()).doubleValue();
                 final CssParameter cssNewValueAmountClasses = m_fill.getParameter( "amountClasses" ); //$NON-NLS-1$
                 cssNewValueAmountClasses.setValue( "" + newAmountClasses ); //$NON-NLS-1$
                 m_fill.addCssParameter( "amountClasses", cssNewValueAmountClasses ); //$NON-NLS-1$
 
-                final Color extractedCssValueMinColor = (Color) extractCssValue( newMinColor );
+                final Color extractedCssValueMinColor = (Color)extractCssValue( newMinColor );
                 m_mapSldSettingsIntern.put( NodeResultHelper.COLOR_MIN_PREFIX + nodeStyleType, extractedCssValueMinColor );
-                final Color extractedCssValueMaxColor = (Color) extractCssValue( newMaxColor );
+                final Color extractedCssValueMaxColor = (Color)extractCssValue( newMaxColor );
                 m_mapSldSettingsIntern.put( NodeResultHelper.COLOR_MAX_PREFIX + nodeStyleType, extractedCssValueMaxColor );
                 m_mapSldSettingsIntern.put( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType, newAmountClasses );
                 /*
                  * this map placed also in the settings of actual result step, works as a cache of interpolated color,
                  * by changing of color settings should be reseted
                  */
-                m_mapActualColorsCache = (Map<Integer, Color>) m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MAP_PREFIX + nodeStyleType );
+                m_mapActualColorsCache = (Map<Integer, Color>)m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MAP_PREFIX + nodeStyleType );
                 if( m_mapActualColorsCache != null )
                   m_mapActualColorsCache.clear();
               }
@@ -414,8 +413,8 @@ public class EditStyleDialog extends TitleAreaDialog
         }
       }
 
-      final Double extValueMin = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MIN_PREFIX + nodeStyleType );
-      final Double extValueMax = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MAX_PREFIX + nodeStyleType );
+      final Double extValueMin = (Double)m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MIN_PREFIX + nodeStyleType );
+      final Double extValueMax = (Double)m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MAX_PREFIX + nodeStyleType );
       m_maxValue = new BigDecimal( extValueMax ).setScale( 2, BigDecimal.ROUND_HALF_UP );
       m_minValue = new BigDecimal( extValueMin ).setScale( 2, BigDecimal.ROUND_HALF_UP );
       final VectorEditorComposite comp = new VectorEditorComposite( commonComposite, SWT.NONE, symb, m_minValue, m_maxValue );
@@ -450,7 +449,7 @@ public class EditStyleDialog extends TitleAreaDialog
       {
         return resolveColor( element );
       }
-      if( element instanceof String && ((String) element).startsWith( "#" ) ) //$NON-NLS-1$
+      if( element instanceof String && ((String)element).startsWith( "#" ) ) //$NON-NLS-1$
       {
         Color color = null;
         try
@@ -466,7 +465,7 @@ public class EditStyleDialog extends TitleAreaDialog
       {
         try
         {
-          return NumberUtils.parseQuietDouble( (String) element );
+          return NumberUtils.parseQuietDouble( (String)element );
         }
         catch( final Exception e1 )
         {
@@ -486,17 +485,17 @@ public class EditStyleDialog extends TitleAreaDialog
   {
     if( colorObj instanceof Color )
     {
-      return (Color) colorObj;
+      return (Color)colorObj;
     }
     else if( colorObj instanceof String )
     {
       try
       {
-        return Color.decode( ((String) colorObj).trim() );
+        return Color.decode( ((String)colorObj).trim() );
       }
       catch( final NumberFormatException e )
       {
-        return (Color) colorObj;
+        return (Color)colorObj;
       }
     }
     else
@@ -553,7 +552,7 @@ public class EditStyleDialog extends TitleAreaDialog
       final IUrlResolver2 resolver = new IUrlResolver2()
       {
         @Override
-        @SuppressWarnings("synthetic-access")
+        @SuppressWarnings( "synthetic-access" )
         public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
         {
           try
@@ -580,7 +579,7 @@ public class EditStyleDialog extends TitleAreaDialog
       final Style style = styles[0];
       if( style instanceof UserStyle )
       {
-        final UserStyle userStyle = (UserStyle) style;
+        final UserStyle userStyle = (UserStyle)style;
         final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
         // we assume, that there is only one feature type style and take the first we can get.
         final FeatureTypeStyle featureTypeStyle = featureTypeStyles[0];
@@ -651,7 +650,7 @@ public class EditStyleDialog extends TitleAreaDialog
 
   /**
    * checks the user typed string for the step width value
-   *
+   * 
    * @param comp
    *          composite of the text field
    * @param text

@@ -34,6 +34,10 @@ Require-Bundle: org.junit4;resolution:=optional,
 Bundle-ClassPath: .,
   lib/jmatio.jar
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
+Import-Package: org.eclipse.ui.views.contentoutline
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.conv,
  org.kalypso.kalypsomodel1d2d.conv.results,
@@ -53,6 +57,7 @@ Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.schema.functions,
  org.kalypso.kalypsomodel1d2d.services,
  org.kalypso.kalypsomodel1d2d.sim,
+ org.kalypso.kalypsomodel1d2d.ui,
  org.kalypso.kalypsomodel1d2d.ui.calculationUnitView,
  org.kalypso.kalypsomodel1d2d.ui.catalog,
  org.kalypso.kalypsomodel1d2d.ui.featurecontrols,
@@ -68,7 +73,6 @@ Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness,
  org.kalypso.kalypsomodel1d2d.ui.map.flowrel,
  org.kalypso.kalypsomodel1d2d.ui.map.grid,
- org.kalypso.kalypsomodel1d2d.ui.map.import2d,
  org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d,
  org.kalypso.kalypsomodel1d2d.ui.map.merge,
  org.kalypso.kalypsomodel1d2d.ui.map.temsys,
@@ -80,7 +84,3 @@ Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ewawi,
  org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.tripple,
  org.kalypso.kalypsomodel1d2d.ui.wizard.windmodel
-Bundle-Activator: org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin
-Bundle-Vendor: http://sourceforge.net/projects/kalypso/
-Import-Package: org.eclipse.ui.views.contentoutline
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7

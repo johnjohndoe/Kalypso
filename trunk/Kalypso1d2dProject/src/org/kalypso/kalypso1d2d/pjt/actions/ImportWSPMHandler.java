@@ -54,7 +54,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -76,8 +76,8 @@ public class ImportWSPMHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
     ITerrainModel terrainModel;
@@ -94,7 +94,7 @@ public class ImportWSPMHandler extends AbstractHandler
       final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
 
       final ImportWspmWizard importWizard = new ImportWspmWizard( discModel, networkModel, flowRelationModel );
-      importWizard.setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
+      importWizard.setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
 
       final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
       dialog.setRememberSize( true );
@@ -115,7 +115,7 @@ public class ImportWSPMHandler extends AbstractHandler
       }
 
       /* post empty command(s) in order to make pool dirty. */
-      final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
+      final MapView mapView = (MapView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
 
       // TODO: add a new layer containing the new profiles in the profile-network map?
       /* Zoom to new elements in fe-map? */

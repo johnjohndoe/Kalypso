@@ -9,6 +9,7 @@
       <Task context="ImportRoughness" URI="org.kalypso.model.1d2d.workflow.RoughLoad" />
       <Task context="ImportObservations" URI="org.kalypso.model.1d2d.workflow.TimeSerLoad" />
       <Task context="FenetMap" URI="org.kalypso.model.1d2d.workflow.ProfileImport" />
+      <Task context="FenetMap" URI="org.kalypso.model.1d2d.workflow.Net2DImport" />
     </TaskGroup>
     <TaskGroup URI="org.kalypso.model.1d2d.workflow.NetCstr" context="FenetMap">
       <TaskGroup URI="org.kalypso.model.1d2d.workflow.Net1DRivGroup" context="FenetMap">
@@ -20,7 +21,6 @@
         <Task type="SYNCHRONOUS" context="FlowRelationshipTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" />
       </TaskGroup>
       <TaskGroup URI="org.kalypso.model.1d2d.workflow.Net2DGroup" context="FenetMap">
-        <Task context="Import2dNet" URI="org.kalypso.model.1d2d.workflow.Net2DImport" />
         <Task type="SYNCHRONOUS" context="Context2dElementTheme" URI="org.kalypso.model.1d2d.workflow.EditNet2D" />
         <Task type="SYNCHRONOUS" context="FlowRelationshipTheme2D" URI="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" />
         <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.Chan2DGen" />
@@ -118,7 +118,6 @@
               <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation1D" />
             </con:ExtensionContext>
             <con:ExtensionContext id="Context2dElementTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
-              <con:WizardContext id="Import2dNet" wizardId="org.kalypso.wizards.import1d2d.ImportWizard" wizardType="NEW_WIZARD" parent="Context2dElementTheme" />
               <con:WizardContext id="Export2DNet" wizardId="org.kalypso.wizards.export2d.ExportWizard" wizardType="NEW_WIZARD" parent="Context2dElementTheme" />
               <con:Parameter name="type" value="themeContext" />
               <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />

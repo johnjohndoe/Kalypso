@@ -66,7 +66,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -74,11 +74,9 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 /**
  * Wizard page for displaying the result database in a checkbox-treeview Components are a {@link CheckboxTreeViewer} and
  * an {@link ResultMetaInfoViewer}. <br>
- *
  * optional: The result info viewer can be given a {@link IThemeConstructionFactory} for displaying special button /
  * combo components for sld handling displayed inside the info viewer.
- *
- *
+ * 
  * @author Thomas Jung
  */
 public class SelectResultWizardPage extends WizardPage
@@ -130,7 +128,7 @@ public class SelectResultWizardPage extends WizardPage
 
     try
     {
-      return new GeoLog( KalypsoModel1D2DPlugin.getDefault().getLog() );
+      return new GeoLog( Kalypso1d2dProjectPlugin.getDefault().getLog() );
     }
     catch( final Exception e )
     {
@@ -160,7 +158,7 @@ public class SelectResultWizardPage extends WizardPage
     final Object layoutData = parent.getLayoutData();
     if( layoutData instanceof GridData )
     {
-      final GridData pLayout = (GridData) layoutData;
+      final GridData pLayout = (GridData)layoutData;
       pLayout.widthHint = 700;
       pLayout.heightHint = 400;
       parent.layout();
@@ -189,14 +187,14 @@ public class SelectResultWizardPage extends WizardPage
 
     createToolbar( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
-    //TODO: allow user to set an individually name of the difference result
+    // TODO: allow user to set an individually name of the difference result
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleSelectionChanged( (IStructuredSelection) event.getSelection(), resultViewer );
+        handleSelectionChanged( (IStructuredSelection)event.getSelection(), resultViewer );
       }
     } );
 
@@ -205,7 +203,7 @@ public class SelectResultWizardPage extends WizardPage
       @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        final IResultMeta resultMeta = (IResultMeta) event.getElement();
+        final IResultMeta resultMeta = (IResultMeta)event.getElement();
         final boolean isChecked = event.getChecked();
         handleCheckStateChanged( resultMeta, isChecked );
       }
@@ -214,7 +212,7 @@ public class SelectResultWizardPage extends WizardPage
     /* Check elements if any defined */
     if( m_checkedElements != null )
     {
-      final ITreeContentProvider contentProvider = (ITreeContentProvider) m_treeViewer.getContentProvider();
+      final ITreeContentProvider contentProvider = (ITreeContentProvider)m_treeViewer.getContentProvider();
       for( final Object elementToCheck : m_checkedElements )
       {
         final Object parentToExpand = contentProvider.getParent( elementToCheck );
@@ -248,7 +246,7 @@ public class SelectResultWizardPage extends WizardPage
     final Object[] checkedElements = m_treeViewer.getCheckedElements();
     final IResultMeta[] resultArray = new IResultMeta[checkedElements.length];
     for( int i = 0; i < checkedElements.length; i++ )
-      resultArray[i] = (IResultMeta) checkedElements[i];
+      resultArray[i] = (IResultMeta)checkedElements[i];
     return resultArray;
   }
 
