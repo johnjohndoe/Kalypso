@@ -140,6 +140,9 @@
 	<!-- Images -->
 	<catalog:system systemId="urn:kalypso:map:theme:swtimage:calculationunittheme:default"
 		uri="images/calculationunittheme.gif" />
+
+	<catalog:system systemId="urn:kalypso:map:theme:swtimage:roughnessTheme:default"
+		uri="images/roughnessTheme.png" />
 	
 
 </catalog:catalog>

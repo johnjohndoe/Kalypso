@@ -9,14 +9,12 @@
       <Task context="ImportRoughness" URI="org.kalypso.model.1d2d.workflow.RoughLoad" />
       <Task context="ImportObservations" URI="org.kalypso.model.1d2d.workflow.TimeSerLoad" />
       <Task context="FenetMap" URI="org.kalypso.model.1d2d.workflow.ProfileImport" />
+      <Task context="Context1dElementTheme" URI="org.kalypso.model.1d2d.workflow.Net1DImportWspm" />
       <Task context="FenetMap" URI="org.kalypso.model.1d2d.workflow.Net2DImport" />
     </TaskGroup>
     <TaskGroup URI="org.kalypso.model.1d2d.workflow.NetCstr" context="FenetMap">
       <TaskGroup URI="org.kalypso.model.1d2d.workflow.Net1DRivGroup" context="FenetMap">
-        <TaskGroup URI="org.kalypso.model.1d2d.workflow.Net1DImport" context="FenetMap">
-          <Task context="Context1dElementTheme" URI="org.kalypso.model.1d2d.workflow.Net1DImportWspm" />
-          <Task context="FenetMapWithProfileView" URI="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" />
-        </TaskGroup>
+        <Task context="FenetMapWithProfileView" URI="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" />
         <Task type="SYNCHRONOUS" context="Context1dElementTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNet" />
         <Task type="SYNCHRONOUS" context="FlowRelationshipTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" />
       </TaskGroup>

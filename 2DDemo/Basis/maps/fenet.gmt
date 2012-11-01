@@ -46,6 +46,7 @@
       <templ:property name="deleteable">false</templ:property>
     </mapv:layer>
     <mapv:layer visible="true" name="%fenet.mapv.layer.Rauheiten" featurePath="#fid#root/element[PolyElement]" id="ID_10" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
+      <templ:legendicon>urn:kalypso:map:theme:swtimage:roughnessTheme:default</templ:legendicon>
       <templ:showChildren>true</templ:showChildren>
       <templ:style style="Roughness style" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.metadata/roughness.sld" xlink:type="simple"/>
       <templ:property name="deleteable">false</templ:property>

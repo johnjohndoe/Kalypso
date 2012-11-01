@@ -85,8 +85,7 @@
 			id="ID_10" featurePath="#fid#root/element[PolyElement]" linktype="gml"
 			xlink:type="simple" xlink:href="../models/discretisation.gml"
 			xlink:actuate="onRequest">
-			<!-- <templ:legendicon>urn:kalypso:map:theme:swtimage:style:Roughness 
-				style:rule:undefinierterStilID</templ:legendicon> -->
+			<templ:legendicon>urn:kalypso:map:theme:swtimage:roughnessTheme:default</templ:legendicon>
 			<templ:style style="Roughness style" linktype="sld"
 				xlink:type="simple" xlink:href="project:/.metadata/roughness.sld"
 				xlink:actuate="onRequest" />

@@ -171,48 +171,48 @@
         <image commandId="org.kalypso.model.1d2d.workflow.DataLoad" icon="icons/workflow/DataLoad.gif"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ElevLoad" icon="icons/workflow/ElevLoad.gif"/>
         <image commandId="org.kalypso.model.1d2d.workflow.WindDataLoad" icon="icons/workflow/WindDataLoad.png"/>
-        <!--
-        <image commandId="org.kalypso.model.1d2d.workflow.RoughLoad" icon="icons/workflow/"/>
-        -->
+        <image commandId="org.kalypso.model.1d2d.workflow.RoughLoad" icon="icons/workflow/RoughLoad.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.TimeSerLoad" icon="icons/workflow/TimeSerLoad.gif"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ProfileImport" icon="icons/workflow/ProfileImport.png"/>
         <!--
-        <image commandId="org.kalypso.model.1d2d.workflow.ProfileImport" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.NetCstr" icon="icons/workflow/"/>
         -->
         <image commandId="org.kalypso.model.1d2d.workflow.Net1DRivGroup" icon="icons/workflow/Net1DRivGroup.gif"/>
         <!--
-        <image commandId="org.kalypso.model.1d2d.workflow.Net1DImport" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.Net1DImportWspm" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" icon="icons/workflow/"/>
-        
-        <image commandId="org.kalypso.model.1d2d.workflow.Edit1DNet" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" icon="icons/workflow/"/>
         -->
+        <image commandId="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" icon="icons/workflow/AddProfileNetworkToMap.png"/>
+        <!--
+        <image commandId="org.kalypso.model.1d2d.workflow.Edit1DNet" icon="icons/workflow/"/>
+        -->
+        <image commandId="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" icon="icons/workflow/Edit1DNetParameters.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.Net2DGroup" icon="icons/workflow/Net2DGroup.gif"/>
         <image commandId="org.kalypso.model.1d2d.workflow.Net2DImport" icon="icons/workflow/Net2DImport.gif"/>
         <!--
         <image commandId="org.kalypso.model.1d2d.workflow.EditNet2D" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" icon="icons/workflow/"/>
         -->
+        <image commandId="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" icon="icons/workflow/EditFlowRelations2D.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.Chan2DGen" icon="icons/workflow/Chan2DGen.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.BandGen" icon="icons/workflow/BandGen.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.AssignElevs" icon="icons/workflow/AssignElevs.gif"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ShowWindData" icon="icons/workflow/ShowWindData.png"/>
         <!--
         <image commandId="org.kalypso.model.1d2d.workflow.TransGroup" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.ContilineGen" icon="icons/workflow/"/>
         -->
+        <image commandId="org.kalypso.model.1d2d.workflow.ContilineGen" icon="icons/workflow/ContilineGen.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.BCDef" icon="icons/workflow/BCDef.png"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.SetEltLineJunction" icon="icons/workflow/SetEltLineJunction.png"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.SetEltLineTrans" icon="icons/workflow/SetEltLineTrans.png"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.CalculationUnit" icon="icons/workflow/CalculationUnit.gif"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.RoughMod" icon="icons/workflow/RoughMod.png"/>
         <!--
-        <image commandId="org.kalypso.model.1d2d.workflow.SetEltLineJunction" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.SetEltLineTrans" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.CalculationUnit" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.RoughMod" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ClassDefGroup" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.RCDef" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.DataExport" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.NetExport" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.Processing" icon="icons/workflow/"/>
+        -->
+        <image commandId="org.kalypso.model.1d2d.workflow.DataExport" icon="icons/workflow/DataExport.gif"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.NetExport" icon="icons/workflow/NetExport.gif"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Processing" icon="icons/workflow/Processing.gif"/>
+        <!--
         <image commandId="org.kalypso.model.1d2d.workflow.CalcSet" icon="icons/workflow/"/>
         -->
         <image commandId="org.kalypso.model.1d2d.workflow.StartCalculationWithProblemsView" icon="icons/workflow/StartCalculationWithProblemsView.gif"/>
@@ -224,8 +224,8 @@
         <image commandId="org.kalypso.model.1d2d.workflow.ShowResultMap" icon="icons/workflow/"/>
         -->
         <image commandId="org.kalypso.model.1d2d.workflow.ManageResultHydrograph" icon="icons/workflow/ManageResultHydrograph.gif"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.ResultLengthSectionViewGroup" icon="icons/workflow/ResultLengthSectionViewGroup.gif"/>
         <!--
-        <image commandId="org.kalypso.model.1d2d.workflow.ResultLengthSectionViewGroup" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ConfigureResultLengthSectionView" icon="icons/workflow/"/>
         -->
         <image commandId="org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView" icon="icons/workflow/ShowResultLengthSectionView.gif"/>
