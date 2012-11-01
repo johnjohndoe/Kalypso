@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.rcm.binding.IMetadata;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
+import org.kalypso.model.rcm.internal.i18n.Messages;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
@@ -146,7 +147,7 @@ public class RainfallGenerationOp
       }
       catch( final Exception e )
       {
-        final String msg = String.format( "Niederschlagserzeugung für Generator '%s' mit der Meldung '%s' fehlgeschlagen.", generator.getName(), e.getLocalizedMessage() );
+        final String msg = String.format( Messages.getString("RainfallGenerationOp_0"), generator.getName(), e.getLocalizedMessage() ); //$NON-NLS-1$
         final IStatus status = m_generatorStati.add( IStatus.ERROR, msg, e );
         if( m_log != null )
           m_log.log( status );
@@ -156,7 +157,7 @@ public class RainfallGenerationOp
     }
 
     /* Monitor. */
-    progress.subTask( "Schreibe Zeitreihen" );
+    progress.subTask( Messages.getString("RainfallGenerationOp_1") ); //$NON-NLS-1$
 
     /* Combine observations and write into target file while applying the targetFilter. */
     final IObservation[] combinedObservations = combineObservations();
@@ -178,12 +179,12 @@ public class RainfallGenerationOp
     final IObservation[] obses = generate( generator, progress );
     if( obses == null )
     {
-      final String msg = String.format( "Niederschlagserzeugung für Generator '%s' liefert keine Ergebnisse und wird ingoriert", generatorLabel );
+      final String msg = String.format( Messages.getString("RainfallGenerationOp_2"), generatorLabel ); //$NON-NLS-1$
       m_generatorStati.add( IStatus.WARNING, msg );
     }
     else if( obses.length != m_results.length )
     {
-      final String msg = String.format( "Niederschlagserzeugung für Generator '%s': Anzahl Ergebnisszeitreihen ist falsch und wird ingoriert", generatorLabel );
+      final String msg = String.format( Messages.getString("RainfallGenerationOp_3"), generatorLabel ); //$NON-NLS-1$
       m_generatorStati.add( IStatus.WARNING, msg );
     }
     else
@@ -265,7 +266,7 @@ public class RainfallGenerationOp
       /* Get the metadata property. */
       final Object property = FeatureHelper.getPropertyLax( feature, catchmentProperty );
       if( property == null )
-        return "-";
+        return "-"; //$NON-NLS-1$
 
       return property.toString();
     }
@@ -331,7 +332,7 @@ public class RainfallGenerationOp
       final boolean hasValues = hasValues( observation );
       if( currentTimestep == null && hasValues )
       {
-        final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "All timeseries involved in rainfall generation must have a timestep." );
+        final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("RainfallGenerationOp_5") ); //$NON-NLS-1$
         throw new CoreException( status );
       }
 
@@ -341,7 +342,7 @@ public class RainfallGenerationOp
         final Duration combinedDuration = combinedTimestep.toStandardDuration();
         if( !currentDuration.equals( combinedDuration ) )
         {
-          final String message = String.format( "All timeseries involed in rainfall generation must have the same timestep. Found: %s and %s", combinedTimestep, currentTimestep );
+          final String message = String.format( Messages.getString("RainfallGenerationOp_6"), combinedTimestep, currentTimestep ); //$NON-NLS-1$
           final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, message );
           throw new CoreException( status );
         }

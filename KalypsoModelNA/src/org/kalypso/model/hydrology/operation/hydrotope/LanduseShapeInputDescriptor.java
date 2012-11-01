@@ -45,7 +45,8 @@ import java.nio.charset.Charset;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.InputDescriptor;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -72,7 +73,7 @@ public class LanduseShapeInputDescriptor extends AbstractShapeInputDescriptor<GM
     if( value != null )
       return value;
     final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor.4", m_corrSealingColumn ); //$NON-NLS-1$
-    throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+    throw new CoreException( new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message ) );
   }
 
   @Override

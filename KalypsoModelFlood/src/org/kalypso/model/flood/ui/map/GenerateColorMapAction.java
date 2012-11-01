@@ -85,7 +85,7 @@ class GenerateColorMapAction extends Action
     final IRunoffEvent runoffEvent = m_widget.getSelectedEvent();
     if( runoffEvent == null )
     {
-      MessageDialog.openInformation( shell, getText(), "Empty selection, please select a runoff event or tin." );
+      MessageDialog.openInformation( shell, getText(), Messages.getString("GenerateColorMapAction.0") ); //$NON-NLS-1$
       return;
     }
 
@@ -98,7 +98,7 @@ class GenerateColorMapAction extends Action
     final IFeatureBindingCollection<ITinReference> tins = runoffEvent.getTins();
     if( tins.size() == 0 && colorMap.getColorMap().length == 0 )
     {
-      MessageDialog.openInformation( shell, getText(), "Cannot create colormap without tin data. Please import at least one tin." );
+      MessageDialog.openInformation( shell, getText(), Messages.getString("GenerateColorMapAction.1") ); //$NON-NLS-1$
       return;
     }
 

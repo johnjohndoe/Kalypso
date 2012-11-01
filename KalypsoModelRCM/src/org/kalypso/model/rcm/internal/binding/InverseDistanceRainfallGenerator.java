@@ -59,6 +59,7 @@ import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
 import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
+import org.kalypso.model.rcm.internal.i18n.Messages;
 import org.kalypso.model.rcm.util.InverseDistanceUtilities;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
@@ -91,19 +92,19 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 {
-  static final QName FEATURE_INVERSE_DISTANCE_RAINFALL_GENERATOR = new QName( UrlCatalogRcm.NS_RCM, "InverseDistanceRainfallGenerator" );
+  static final QName FEATURE_INVERSE_DISTANCE_RAINFALL_GENERATOR = new QName( UrlCatalogRcm.NS_RCM, "InverseDistanceRainfallGenerator" ); //$NON-NLS-1$
 
-  static final QName MEMBER_ombrometerCollection = new QName( UrlCatalogRcm.NS_RCM, "ombrometerCollection" );
+  static final QName MEMBER_ombrometerCollection = new QName( UrlCatalogRcm.NS_RCM, "ombrometerCollection" ); //$NON-NLS-1$
 
-  static final QName PROPERTY_ombrometerFeaturePath = new QName( UrlCatalogRcm.NS_RCM, "ombrometerFeaturePath" );
+  static final QName PROPERTY_ombrometerFeaturePath = new QName( UrlCatalogRcm.NS_RCM, "ombrometerFeaturePath" ); //$NON-NLS-1$
 
-  static final QName PROPERTY_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" );
+  static final QName PROPERTY_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" ); //$NON-NLS-1$
 
-  static final QName PROPERTY_stationLocationPath = new QName( UrlCatalogRcm.NS_RCM, "stationLocationPath" );
+  static final QName PROPERTY_stationLocationPath = new QName( UrlCatalogRcm.NS_RCM, "stationLocationPath" ); //$NON-NLS-1$
 
-  static final QName PROPERTY_numberOmbrometers = new QName( UrlCatalogRcm.NS_RCM, "numberOmbrometers" );
+  static final QName PROPERTY_numberOmbrometers = new QName( UrlCatalogRcm.NS_RCM, "numberOmbrometers" ); //$NON-NLS-1$
 
-  static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
+  static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" ); //$NON-NLS-1$
 
   public InverseDistanceRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
@@ -118,11 +119,11 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
       monitor = new NullProgressMonitor();
 
     /* Monitor. */
-    monitor.beginTask( "Führe Generator Ombrometer (Inverse Distanz) aus...", 1000 );
-    monitor.subTask( "Prüfe Voraussetzungen..." );
+    monitor.beginTask( Messages.getString("InverseDistanceRainfallGenerator_7"), 1000 ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString("InverseDistanceRainfallGenerator_8") ); //$NON-NLS-1$
 
     /* Update the log. */
-    LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde gestartet.", null ) );
+    LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("InverseDistanceRainfallGenerator_9"), null ) ); //$NON-NLS-1$
 
     /* Get the needed properties. */
     final Feature ombrometerCollection = getProperty( MEMBER_ombrometerCollection, Feature.class );
@@ -140,7 +141,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 
     /* Monitor. */
     monitor.worked( 100 );
-    monitor.subTask( "Lade Ombrometer..." );
+    monitor.subTask( Messages.getString("InverseDistanceRainfallGenerator_10") ); //$NON-NLS-1$
 
     try
     {
@@ -167,7 +168,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Konvertiere..." );
+      monitor.subTask( Messages.getString("InverseDistanceRainfallGenerator_11") ); //$NON-NLS-1$
 
       /* Convert to zml observations . */
       final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
@@ -176,7 +177,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Erzeuge Ombrometerpunkte..." );
+      monitor.subTask( Messages.getString("InverseDistanceRainfallGenerator_12") ); //$NON-NLS-1$
 
       /* Get the station locations. */
       final GM_Point[] ombrometerStations = FeatureHelper.getProperties( ombrometerFeatures, stationLocationXPath, new GM_Point[ombrometerFeatures.length] );
@@ -195,21 +196,21 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
       }
 
       /* Monitor. */
-      monitor.subTask( "Hole Einzugsgebiete..." );
+      monitor.subTask( Messages.getString("InverseDistanceRainfallGenerator_13") ); //$NON-NLS-1$
 
       /* Get all catchment areas. */
       final GM_MultiSurface[] areas = RainfallGeneratorUtilities.findCatchmentAreas( catchmentFeatures, catchmentAreaXPath );
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Bearbeite Einzugsgebiete..." );
+      monitor.subTask( Messages.getString("InverseDistanceRainfallGenerator_14") ); //$NON-NLS-1$
 
       /* Iterate through all catchments. */
       final IObservation[] result = new IObservation[areas.length];
       for( int i = 0; i < areas.length; i++ )
       {
         /* Monitor. */
-        monitor.subTask( String.format( "Bearbeite Einzugsgebiet %d / %d...", i + 1, areas.length ) );
+        monitor.subTask( String.format( Messages.getString("InverseDistanceRainfallGenerator_15"), i + 1, areas.length ) ); //$NON-NLS-1$
 
         /* Get the catchment. */
         final GM_MultiSurface area = areas[i];
@@ -226,42 +227,42 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
         final double[] weights = InverseDistanceUtilities.getWeights( areaGeometry, ombrometerPoints, numberOmbrometers.intValue() );
 
         /* Combine the observations. */
-        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://inverse.distance" );
+        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://inverse.distance" ); //$NON-NLS-1$
 
         /* Monitor. */
         monitor.worked( 400 / areas.length );
       }
 
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.OK, KalypsoModelRcmActivator.PLUGIN_ID, "Berechnet", null ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.OK, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("InverseDistanceRainfallGenerator_17"), null ) ); //$NON-NLS-1$
 
       return result;
     }
     catch( final GM_Exception e )
     {
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( Messages.getString("InverseDistanceRainfallGenerator_18"), e.getLocalizedMessage() ), e ) ); //$NON-NLS-1$
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to convert Geometrie: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to convert Geometrie: " + e.toString(), e ) ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( Messages.getString("InverseDistanceRainfallGenerator_20"), e.getLocalizedMessage() ), e ) ); //$NON-NLS-1$
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to combine Observations: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to combine Observations: " + e.toString(), e ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( Messages.getString("InverseDistanceRainfallGenerator_22"), e.getLocalizedMessage() ), e ) ); //$NON-NLS-1$
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to create the rainfall: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("InverseDistanceRainfallGenerator_23") + e.toString(), e ) ); //$NON-NLS-1$
     }
     finally
     {
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde beendet.", null ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("InverseDistanceRainfallGenerator_24"), null ) ); //$NON-NLS-1$
 
       /* Monitor. */
       monitor.done();

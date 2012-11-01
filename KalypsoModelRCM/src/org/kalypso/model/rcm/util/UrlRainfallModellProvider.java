@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.rcm.IRainfallModelProvider;
 import org.kalypso.model.rcm.binding.IRainfallCatchmentModel;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
+import org.kalypso.model.rcm.internal.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -73,7 +74,7 @@ public class UrlRainfallModellProvider implements IRainfallModelProvider
   @Override
   public IRainfallCatchmentModel getRainfallCatchmentModell( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Definition wird geladen...", 100 );
+    monitor.beginTask( Messages.getString("UrlRainfallModellProvider_0"), 100 ); //$NON-NLS-1$
 
     IRainfallCatchmentModel rcm;
     try
@@ -83,7 +84,7 @@ public class UrlRainfallModellProvider implements IRainfallModelProvider
       final Feature rootFeature = rcmWorkspace.getRootFeature();
       if( !(rootFeature instanceof IRainfallCatchmentModel) )
       {
-        final String msg = String.format( "Root feature must be of type %s", IRainfallCatchmentModel.FEATURE_RAINFALL_CATCHMENT_MODEL );
+        final String msg = String.format( "Root feature must be of type %s", IRainfallCatchmentModel.FEATURE_RAINFALL_CATCHMENT_MODEL ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, msg );
         throw new CoreException( status );
       }
@@ -97,7 +98,7 @@ public class UrlRainfallModellProvider implements IRainfallModelProvider
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Gebietsmodell konnte nicht geladen werden", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("UrlRainfallModellProvider_2"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally

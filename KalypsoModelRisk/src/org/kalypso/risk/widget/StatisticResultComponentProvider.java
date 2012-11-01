@@ -95,19 +95,19 @@ final class StatisticResultComponentProvider implements IComponentUiHandlerProvi
 
       case "TotalPotentialDamage": //$NON-NLS-1$
       {
-        final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.6" ); //$NON-NLS-1$
+        final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.5" ); //$NON-NLS-1$
         return new ComponentUiDoubleHandler( componentIndex, false, true, true, headerName, SWT.RIGHT, ColumnWidthInfo.PACK, -1, NUMBER_FORMAT, nullFormat, null );
       }
 
       case "Landuse": //$NON-NLS-1$
       {
-        final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.5" ); //$NON-NLS-1$
+        final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.6" ); //$NON-NLS-1$
         return new ComponentUiStringHandler( componentIndex, false, true, true, headerName, SWT.NONE, ColumnWidthInfo.PACK, -1, "%s", nullFormat, null ); //$NON-NLS-1$
       }
 
       case "Group": //$NON-NLS-1$
       {
-        final String headerName = "Group";
+        final String headerName = Messages.getString("StatisticResultComponentProvider.0"); //$NON-NLS-1$
         return new ComponentUiStringHandler( componentIndex, false, true, true, headerName, SWT.NONE, ColumnWidthInfo.PACK, -1, "%s", nullFormat, null ); //$NON-NLS-1$
       }
 

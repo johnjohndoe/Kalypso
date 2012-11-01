@@ -42,11 +42,12 @@ package org.kalypso.model.hydrology.operation.hydrotope;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -124,7 +125,7 @@ public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurf
       if( landuseRef == null )
       {
         final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
-        throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+        throw new CoreException( new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message ) );
       }
 
       return m_output.importLanduse( m_importType, label, geometry, desc, corrSealing, landuseRef );

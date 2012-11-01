@@ -70,6 +70,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -99,14 +100,14 @@ public class Test_Intersection extends TestCase
 
     final GMLWorkspace outputWS = GmlSerializer.createGMLWorkspace( template, null );
 
-    final NaModell naModel = (NaModell) catchmentWS.getRootFeature();
+    final NaModell naModel = (NaModell)catchmentWS.getRootFeature();
 
-    final LanduseCollection landuseRoot = (LanduseCollection) landuseWS.getRootFeature();
-    final SoilTypeCollection pedology = (SoilTypeCollection) pedologyWS.getRootFeature();
-    final GeologyCollection geologyRoot = (GeologyCollection) geologyWS.getRootFeature();
-    final OverlayCollection overlay = (OverlayCollection) overlayWS.getRootFeature();
+    final LanduseCollection landuseRoot = (LanduseCollection)landuseWS.getRootFeature();
+    final SoilTypeCollection pedology = (SoilTypeCollection)pedologyWS.getRootFeature();
+    final GeologyCollection geologyRoot = (GeologyCollection)geologyWS.getRootFeature();
+    final OverlayCollection overlay = (OverlayCollection)overlayWS.getRootFeature();
 
-    final HydrotopeCollection naHydrotopes = (HydrotopeCollection) outputWS.getRootFeature();
+    final HydrotopeCollection naHydrotopes = (HydrotopeCollection)outputWS.getRootFeature();
 
     final HydrotopeInputIndexer indexer = new HydrotopeInputIndexer( "indexer" ); //$NON-NLS-1$
     indexer.addInput( new CatchmentHydrotopeInput( naModel ) );
@@ -130,7 +131,7 @@ public class Test_Intersection extends TestCase
     {
       final IHydrotope hydrotop = hydrotopes.addNew( IHydrotope.FEATURE_HYDROTOPE );
       final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
+      final GM_Point point = (GM_Point)JTSAdapter.wrap( geometry.getInteriorPoint() );
 
       final List<Catchment> catchmentList = catchments.query( envelope );
       Catchment catchment = null;
@@ -167,7 +168,7 @@ public class Test_Intersection extends TestCase
         final Object landuseClassLink = landuse.getLanduse();
         String value = ""; //$NON-NLS-1$
         if( landuseClassLink instanceof IXLinkedFeature )
-          value = ((IXLinkedFeature) landuseClassLink).getFeatureId();
+          value = ((IXLinkedFeature)landuseClassLink).getFeatureId();
         else
           value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
         hydrotop.setLanduse( value );
@@ -196,7 +197,7 @@ public class Test_Intersection extends TestCase
         final Object soiltypeClassLink = soilType.getSoilType();
         String value = ""; //$NON-NLS-1$
         if( soiltypeClassLink instanceof IXLinkedFeature )
-          value = ((IXLinkedFeature) soiltypeClassLink).getFeatureId();
+          value = ((IXLinkedFeature)soiltypeClassLink).getFeatureId();
         else
           value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
 
@@ -223,7 +224,8 @@ public class Test_Intersection extends TestCase
       else
         continue;
 
-      hydrotop.setGeometry( (GM_MultiSurface) JTSAdapter.wrap( JTSAdapter.jtsFactory.createMultiPolygon( new Polygon[] { (Polygon) geometry } ) ) );
+      final MultiPolygon multiPolygon = JTSAdapter.jtsFactory.createMultiPolygon( new Polygon[] { (Polygon)geometry } );
+      hydrotop.setGeometry( (GM_MultiSurface)JTSAdapter.wrap( multiPolygon ) );
     }
 
     GmlSerializer.serializeWorkspace( outputGML, outputWS, "UTF-8" ); //$NON-NLS-1$

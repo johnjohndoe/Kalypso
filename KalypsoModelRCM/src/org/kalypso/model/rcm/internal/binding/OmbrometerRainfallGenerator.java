@@ -63,6 +63,7 @@ import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.model.rcm.binding.IOmbrometerCollection;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
+import org.kalypso.model.rcm.internal.i18n.Messages;
 import org.kalypso.model.rcm.util.BufferBoundaryCalculator;
 import org.kalypso.model.rcm.util.IBoundaryCalculator;
 import org.kalypso.model.rcm.util.OmbrometerUtils;
@@ -98,17 +99,17 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 {
-  static final QName FEATURE_OMBROMETER_RAINFALL_GENERATOR = new QName( UrlCatalogRcm.NS_RCM, "OmbrometerRainfallGenerator" );
+  static final QName FEATURE_OMBROMETER_RAINFALL_GENERATOR = new QName( UrlCatalogRcm.NS_RCM, "OmbrometerRainfallGenerator" ); //$NON-NLS-1$
 
-  static final QName MEMBER_ombrometerCollection = new QName( UrlCatalogRcm.NS_RCM, "ombrometerCollection" );
+  static final QName MEMBER_ombrometerCollection = new QName( UrlCatalogRcm.NS_RCM, "ombrometerCollection" ); //$NON-NLS-1$
 
-  static final QName PROPERTY_ombrometerFeaturePath = new QName( UrlCatalogRcm.NS_RCM, "ombrometerFeaturePath" );
+  static final QName PROPERTY_ombrometerFeaturePath = new QName( UrlCatalogRcm.NS_RCM, "ombrometerFeaturePath" ); //$NON-NLS-1$
 
-  static final QName PROPERTY_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" );
+  static final QName PROPERTY_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" ); //$NON-NLS-1$
 
-  static final QName PROPERTY_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" );
+  static final QName PROPERTY_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" ); //$NON-NLS-1$
 
-  static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
+  static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" ); //$NON-NLS-1$
 
   public OmbrometerRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
@@ -125,11 +126,11 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Führe Generator Ombrometer (Thiessen) aus...", 1000 );
-      monitor.subTask( "Prüfe Voraussetzungen..." );
+      monitor.beginTask( Messages.getString("OmbrometerRainfallGenerator_6"), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("OmbrometerRainfallGenerator_7") ); //$NON-NLS-1$
 
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde gestartet.", null ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("OmbrometerRainfallGenerator_8"), null ) ); //$NON-NLS-1$
 
       /* Get the needed properties. */
       final IXLinkedFeature ombrometerCollectionLink = getProperty( MEMBER_ombrometerCollection, IXLinkedFeature.class );
@@ -147,7 +148,7 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Lade Ombrometer..." );
+      monitor.subTask( Messages.getString("OmbrometerRainfallGenerator_9") ); //$NON-NLS-1$
 
       /* Get the ombrometers. */
       final FeatureList ombrometerList = (FeatureList) GMLXPathUtilities.query( collectionXPath, ombrometerCollection );
@@ -161,7 +162,7 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Konvertiere und wende die Thiessenmethode an..." );
+      monitor.subTask( Messages.getString("OmbrometerRainfallGenerator_10") ); //$NON-NLS-1$
 
       /* Read the observations. */
       final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
@@ -174,7 +175,7 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Erzeuge Ombrometerflächen..." );
+      monitor.subTask( Messages.getString("OmbrometerRainfallGenerator_11") ); //$NON-NLS-1$
 
       final GM_Polygon[] ombrometerAreas = FeatureHelper.getProperties( ombrometerFeatures, areaXPath, new GM_Polygon[ombrometerFeatures.length] );
 
@@ -186,21 +187,21 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
       monitor.worked( 100 );
 
       /* Monitor. */
-      monitor.subTask( "Hole Einzugsgebiete..." );
+      monitor.subTask( Messages.getString("OmbrometerRainfallGenerator_12") ); //$NON-NLS-1$
 
       /* Get all catchment areas. */
       final GM_MultiSurface[] areas = RainfallGeneratorUtilities.findCatchmentAreas( catchmentFeatures, catchmentAreaXPath );
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( "Bearbeite Einzugsgebiete..." );
+      monitor.subTask( Messages.getString("OmbrometerRainfallGenerator_13") ); //$NON-NLS-1$
 
       /* Iterate through all catchments. */
       final IObservation[] result = new IObservation[areas.length];
       for( int i = 0; i < areas.length; i++ )
       {
         /* Monitor. */
-        monitor.subTask( String.format( "Bearbeite Einzugsgebiet %d / %d...", i + 1, areas.length ) );
+        monitor.subTask( String.format( Messages.getString("OmbrometerRainfallGenerator_14"), i + 1, areas.length ) ); //$NON-NLS-1$
 
         final GM_MultiSurface area = areas[i];
         if( area == null )
@@ -211,44 +212,44 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
         final Geometry areaGeometry = JTSAdapter.export( area );
         final double[] weights = JTSUtilities.fractionAreasOf( areaGeometry, ombrometerPolygons );
-        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://thiessen" );
+        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://thiessen" ); //$NON-NLS-1$
 
         /* Monitor. */
         monitor.worked( 400 / areas.length );
       }
 
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.OK, KalypsoModelRcmActivator.PLUGIN_ID, "Berechnet", null ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.OK, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("OmbrometerRainfallGenerator_16"), null ) ); //$NON-NLS-1$
 
       return result;
     }
     catch( final GM_Exception e )
     {
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( Messages.getString("OmbrometerRainfallGenerator_17"), e.getLocalizedMessage() ), e ) ); //$NON-NLS-1$
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to convert geometry: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to convert geometry: " + e.toString(), e ) ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( Messages.getString("OmbrometerRainfallGenerator_19"), e.getLocalizedMessage() ), e ) ); //$NON-NLS-1$
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to combine observations: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to combine observations: " + e.toString(), e ) ); //$NON-NLS-1$
     }
     catch( final MalformedURLException e )
     {
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( Messages.getString("OmbrometerRainfallGenerator_21"), e.getLocalizedMessage() ), e ) ); //$NON-NLS-1$
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to load Observations: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("OmbrometerRainfallGenerator_22") + e.toString(), e ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( Messages.getString("OmbrometerRainfallGenerator_23"), e.getLocalizedMessage() ), e ) ); //$NON-NLS-1$
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to create the rainfall: " + e.toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("OmbrometerRainfallGenerator_24") + e.toString(), e ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -256,7 +257,7 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
       monitor.done();
 
       /* Update the log. */
-      LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde beendet.", null ) );
+      LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("OmbrometerRainfallGenerator_25"), null ) ); //$NON-NLS-1$
     }
   }
 

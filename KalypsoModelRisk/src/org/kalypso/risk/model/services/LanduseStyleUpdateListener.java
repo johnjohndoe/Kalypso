@@ -85,7 +85,7 @@ public class LanduseStyleUpdateListener implements IResourceChangeListener
     if( m_jobStyleUpdate != null )
       m_jobStyleUpdate.cancel();
 
-    m_jobStyleUpdate = new LanduseStyleUpdateService( this, gmlDatabaseFile );
+    m_jobStyleUpdate = new LanduseStyleUpdateService( gmlDatabaseFile );
 
     // m_job.setSystem( true );
     m_jobStyleUpdate.setUser( false );

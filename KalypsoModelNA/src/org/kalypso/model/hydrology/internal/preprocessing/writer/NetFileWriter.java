@@ -214,7 +214,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     /* validation */
     final int count = countZuflussBeans( qqRelationBean, branchingBean, zuflussLinkBean );
     if( count > 1 )
-      m_log.add( IStatus.WARNING, "Node '%s': only one kind of 'QQ-relation', 'Branching' or 'Inflow Timeseries' may be specified. More than one kind is specified at this node.", null, node.getName() );
+      m_log.add( IStatus.WARNING, Messages.getString("NetFileWriter.0"), null, node.getName() ); //$NON-NLS-1$
 
     // QQ has the priority over "Verzweigung", and all of them are mutually exclusive so this is safe
     if( qqRelationBean != null )
@@ -358,7 +358,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     if( branchNode != null )
     {
       final int branchNodeID = m_idManager.getAsciiID( branchNode );
-      branchIdArgument = String.format( " %7d\n", branchNodeID );
+      branchIdArgument = String.format( " %7d\n", branchNodeID ); //$NON-NLS-1$
     }
 
     if( branching instanceof KontZufluss )
@@ -400,6 +400,6 @@ public class NetFileWriter extends AbstractCoreFileWriter
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatusOrOK( "Writing .net file" );
+    return m_log.asMultiStatusOrOK( Messages.getString("NetFileWriter.2") ); //$NON-NLS-1$
   }
 }

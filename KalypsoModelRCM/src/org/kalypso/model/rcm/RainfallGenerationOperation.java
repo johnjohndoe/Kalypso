@@ -60,7 +60,6 @@ import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.model.rcm.binding.IMetadata;
@@ -68,6 +67,7 @@ import org.kalypso.model.rcm.binding.IRainfallCatchmentModel;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.binding.ITarget;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
+import org.kalypso.model.rcm.internal.i18n.Messages;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -123,7 +123,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
     try
     {
       // Real work starts here: create the operation, convert and validate parameters
-      final SubMonitor progress = SubMonitor.convert( monitor, "Gebietsniederschlagermittlung", 100 );
+      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("RainfallGenerationOperation_0"), 100 ); //$NON-NLS-1$
 
       rcm = m_modelProvider.getRainfallCatchmentModell( progress.newChild( 9 ) );
       log = initializeLog( rcm );
@@ -131,7 +131,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
       final ITarget targetDefinition = rcm.getTarget();
       if( targetDefinition == null )
       {
-        final String message = String.format( "Zeitreihenziel nicht definiert, Modell wird nicht berechnet." );
+        final String message = String.format( Messages.getString("RainfallGenerationOperation_1") ); //$NON-NLS-1$
         final Status status = new Status( IStatus.OK, KalypsoModelRcmActivator.PLUGIN_ID, message );
         log.log( status );
         return status;
@@ -202,7 +202,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      final String msg = String.format( "Failed to initialize log file %s", rcm.getLogPath() );
+      final String msg = String.format( Messages.getString("RainfallGenerationOperation_2"), rcm.getLogPath() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, msg, e );
       throw new CoreException( status );
     }
@@ -261,7 +261,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Fehler beim Schreiben der Zeitreihen", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("RainfallGenerationOperation_3"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -296,20 +296,20 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
 
       if( object == null )
       {
-        m_stati.add( IStatus.WARNING, "Einzugsgebiet ohne Zielzeitreihe: " + catchment );
+        m_stati.add( IStatus.WARNING, Messages.getString("RainfallGenerationOperation_4") + catchment ); //$NON-NLS-1$
         return null; // does not make sense to process
       }
 
       if( object instanceof TimeseriesLinkType )
-        return (TimeseriesLinkType) object;
+        return (TimeseriesLinkType)object;
     }
     catch( final GMLXPathException e )
     {
-      final String msg = String.format( "Ungültiger XPath für Ziel-Link: %s ", observationXPath );
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, null ) );
+      final String msg = String.format( "Ungültiger XPath für Ziel-Link: %s ", observationXPath ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, msg ) );
     }
 
-    final String msg = String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein TimeseriesLinkType", object, observationXPath );
-    throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, null ) );
+    final String msg = String.format( Messages.getString("RainfallGenerationOperation_6"), object, observationXPath ); //$NON-NLS-1$
+    throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, msg ) );
   }
 }

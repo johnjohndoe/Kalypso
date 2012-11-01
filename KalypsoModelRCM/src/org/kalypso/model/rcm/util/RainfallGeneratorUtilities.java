@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
+import org.kalypso.model.rcm.internal.i18n.Messages;
 import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -108,7 +109,7 @@ public final class RainfallGeneratorUtilities
       {
         final Feature catchmentFeature = catchmentFeatures[i];
         if( catchmentFeature == null )
-          throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Ein catchment feature war null ..." ) );
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("RainfallGeneratorUtilities_0") ) ); //$NON-NLS-1$
 
         final Object object = GMLXPathUtilities.query( catchmentAreaXPath, catchmentFeature );
         final GM_MultiSurface multiSurface = toMultiSurface( catchmentAreaXPath, object );
@@ -144,7 +145,7 @@ public final class RainfallGeneratorUtilities
     if( object == null )
       return null; // does not make sense to process
 
-    final String message = String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaXPath );
+    final String message = String.format( Messages.getString("RainfallGeneratorUtilities_1"), object, catchmentAreaXPath ); //$NON-NLS-1$
     throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, message ) );
   }
 
@@ -227,8 +228,8 @@ public final class RainfallGeneratorUtilities
       metadata.setProperty( TimeseriesUtils.MD_VORHERSAGE_ENDE, firstEnde );
 
     /* Create a new observation. */
-    final SimpleObservation combinedObservation = new SimpleObservation( "", "", metadata, combinedTuppleModel );
-    combinedObservation.setName( "Generierte Zeitreihe" );
+    final SimpleObservation combinedObservation = new SimpleObservation( "", "", metadata, combinedTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    combinedObservation.setName( Messages.getString("RainfallGeneratorUtilities_4") ); //$NON-NLS-1$
 
     /* Ignore original data sources because rainfall generator combines different data sources. */
     return new AddDataSourceObservationHandler( dataSource, dataSource, combinedObservation ).extend();

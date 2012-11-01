@@ -16,43 +16,36 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.rcm.internal;
+package org.kalypso.model.rcm.internal.i18n;
 
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.BundleContext;
+import java.util.ResourceBundle;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
- * The activator class controls the plug-in life cycle
+ * @author Gernot Belger
  */
-public class KalypsoModelRcmActivator extends AbstractUIPlugin
+public class Messages
 {
-  // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.model.rcm"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.model.rcm.internal.i18n.messages"; //$NON-NLS-1$
 
-  // The shared instance
-  private static KalypsoModelRcmActivator plugin;
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
-  @Override
-  public void start( final BundleContext context ) throws Exception
+  private Messages( )
   {
-    super.start( context );
-    plugin = this;
-  }
-
-  @Override
-  public void stop( final BundleContext context ) throws Exception
-  {
-    plugin = null;
-    super.stop( context );
   }
 
   /**
-   * Returns the shared instance
-   * 
-   * @return the shared instance
+   * java reflections needs this method-signatur
    */
-  public static KalypsoModelRcmActivator getDefault( )
+  public static String getString( final String key )
   {
-    return plugin;
+    return getString( key, ArrayUtils.EMPTY_OBJECT_ARRAY );
+  }
+
+  public static String getString( final String key, final Object... args )
+  {
+    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
   }
 }
