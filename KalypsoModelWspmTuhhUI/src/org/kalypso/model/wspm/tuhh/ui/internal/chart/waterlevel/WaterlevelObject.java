@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -95,7 +96,7 @@ public class WaterlevelObject
   public String getLabel( )
   {
     if( StringUtils.isBlank( m_label ) )
-      return "<unknown waterlevel>";
+      return Messages.getString("WaterlevelObject_0"); //$NON-NLS-1$
 
     return m_label;
   }

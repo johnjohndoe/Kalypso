@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
 
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
@@ -75,14 +76,13 @@ public class TimeseriesChartJob extends Job
   {
     try
     {
-      monitor.beginTask( "Initializing chart...", 100 );
-      monitor.subTask( "Initializing chart..." );
+      monitor.beginTask( Messages.getString("TimeseriesChartJob_0"), 100 ); //$NON-NLS-1$
 
       init();
 
       monitor.worked( 100 );
 
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "OK" );
+      return Status.OK_STATUS;
     }
     catch( final Exception ex )
     {

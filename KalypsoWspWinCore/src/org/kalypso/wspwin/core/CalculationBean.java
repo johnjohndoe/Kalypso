@@ -111,7 +111,7 @@ public class CalculationBean
     try
     {
       int count = 0;
-      lineIt = FileUtils.lineIterator( berFile, "CP850" );
+      lineIt = FileUtils.lineIterator( berFile, "CP850" ); //$NON-NLS-1$
 
       // ignore first line, we just read all lines
       lineIt.nextLine();
@@ -156,13 +156,13 @@ public class CalculationBean
       for( final CalculationBean calculation : calculations )
       {
         final String name = calculation.getName();
-        final String shortName = StringUtils.abbreviateMiddle( name, ".", 57 );
+        final String shortName = StringUtils.abbreviateMiddle( name, ".", 57 ); //$NON-NLS-1$
 
         final BigDecimal fromStation = calculation.getFromStation();
         final BigDecimal toStation = calculation.getToStation();
         final String calcFilename = calculation.getFileName();
 
-        pw.format( Locale.US, "%-57s %9.4f %9.4f  %12s%n", shortName, fromStation, toStation, calcFilename );
+        pw.format( Locale.US, "%-57s %9.4f %9.4f  %12s%n", shortName, fromStation, toStation, calcFilename ); //$NON-NLS-1$
       }
 
       if( pw.checkError() )

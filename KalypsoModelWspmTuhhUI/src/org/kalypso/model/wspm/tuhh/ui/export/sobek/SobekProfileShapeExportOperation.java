@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.shp.SHPException;
@@ -66,7 +67,7 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
 
   public SobekProfileShapeExportOperation( final SobekExportInfo info )
   {
-    super( info, "profile shape" );
+    super( info, Messages.getString("SobekProfileShapeExportOperation_0") ); //$NON-NLS-1$
 
     final IProfileFeature[] profilesToExport = getProfiles();
     m_shapePoint = new SobekShapePoint( profilesToExport, LOCATION );

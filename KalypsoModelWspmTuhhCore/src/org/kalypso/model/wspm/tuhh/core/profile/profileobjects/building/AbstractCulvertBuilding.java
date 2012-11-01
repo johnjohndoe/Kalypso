@@ -19,6 +19,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -64,19 +65,19 @@ public abstract class AbstractCulvertBuilding extends AbstractProfileObject impl
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_BEZUGSPUNKT_X.equals( property ) )
-      return "Bezugspunkt Breite [m]"; // Anchor Width
+      return Messages.getString("AbstractCulvertBuilding_0"); // Anchor Width //$NON-NLS-1$
 
     if( PROPERTY_BEZUGSPUNKT_Y.equals( property ) )
-      return "Bezugspunkt Höhe [mNN]"; // Anchor Height
+      return Messages.getString("AbstractCulvertBuilding_1"); // Anchor Height //$NON-NLS-1$
 
     if( PROPERTY_BREITE.equals( property ) )
-      return "größte Breite/Durchmesser [m]"; // Largest Width
+      return Messages.getString("AbstractCulvertBuilding_2"); // Largest Width //$NON-NLS-1$
 
     if( PROPERTY_SOHLGEFAELLE.equals( property ) )
-      return "Sohlgefälle [%]"; // Channel Slope
+      return Messages.getString("AbstractCulvertBuilding_3"); // Channel Slope //$NON-NLS-1$
 
     if( PROPERTY_RAUHEIT.equals( property ) )
-      return "Rauheit"; // Roughness
+      return Messages.getString("AbstractCulvertBuilding_4"); // Roughness //$NON-NLS-1$
 
     return property;
   }

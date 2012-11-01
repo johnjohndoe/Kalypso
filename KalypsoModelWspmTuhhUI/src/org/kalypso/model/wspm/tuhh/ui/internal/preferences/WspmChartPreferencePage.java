@@ -105,7 +105,7 @@ public class WspmChartPreferencePage extends FieldEditorPreferencePage implement
   public void createFieldEditors( )
   {
     /* keep roughness */
-    final String keepRoughnessLabel = "Keep roughness value if channel markers are moved";
+    final String keepRoughnessLabel = Messages.getString("WspmChartPreferencePage.0"); //$NON-NLS-1$
     m_keepRoughnessEditor = new BooleanFieldEditor( WspmTuhhUiPreferences.KEEP_CHANNEL_ROUGHNESS, keepRoughnessLabel, getFieldEditorParent() ); //$NON-NLS-1$
     addField( m_keepRoughnessEditor );
 

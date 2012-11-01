@@ -37,6 +37,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.Building
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -93,7 +94,7 @@ public class WspmBuildingDecorator implements ILightweightLabelDecorator
 
     /* suffix */
     if( building instanceof ICulvertBuilding )
-      decoration.addSuffix( String.format( " (Durchlass - %s)", typeLabel ) );
+      decoration.addSuffix( String.format( Messages.getString("WspmBuildingDecorator_0"), typeLabel ) ); //$NON-NLS-1$
     else if( building instanceof GenericProfileHorizon )
     {
       // FIXME: remove this label
@@ -101,7 +102,7 @@ public class WspmBuildingDecorator implements ILightweightLabelDecorator
 //      decoration.addSuffix( String.format( " ('%s')", id ) );
     }
     else
-      decoration.addSuffix( String.format( " (%s)", typeLabel ) );
+      decoration.addSuffix( String.format( " (%s)", typeLabel ) ); //$NON-NLS-1$
 
     /* icon */
     final ImageDescriptor buildingImage = getBuildingImage( building );

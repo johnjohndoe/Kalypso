@@ -163,7 +163,7 @@ public class KnaufSA30Bean extends AbstractKnaufProjectBean
       return description.substring( 0, 8 );
 
     while( description.length() < 9 )
-      description += " "; //$NON-NLS-N$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+      description += " "; //$NON-NLS-1$ 
 
     return description;
   }

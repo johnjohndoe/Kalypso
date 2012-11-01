@@ -97,7 +97,7 @@ class TuhhResultDataElementLabelProvider extends LabelProvider
       case "Measurement": //$NON-NLS-1$
         return KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImage( KalypsoModelWspmTuhhUIImages.WATERLEVEL_FIXATION );
 
-      case "Simulation": //$NON-NLS-2$
+      case "Simulation": //$NON-NLS-1$
         return KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImage( KalypsoModelWspmTuhhUIImages.WATERLEVEL_SIMULATION );
 
       default:

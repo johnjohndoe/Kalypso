@@ -71,17 +71,17 @@ public class EwawiPlus
     final String extension = FilenameUtils.getExtension( fileName ).toLowerCase();
     switch( extension )
     {
-      case "pro":
+      case "pro": //$NON-NLS-1$
       {
         m_proIndex.setSourceFile( sourceFile );
         break;
       }
-      case "sta":
+      case "sta": //$NON-NLS-1$
       {
         m_staIndex.setSourceFile( sourceFile );
         break;
       }
-      case "epl":
+      case "epl": //$NON-NLS-1$
       {
         m_eplIndex.setSourceFile( sourceFile );
         break;

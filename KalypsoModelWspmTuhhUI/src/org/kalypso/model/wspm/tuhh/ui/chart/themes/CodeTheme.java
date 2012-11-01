@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.ImageLegendEntry;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -56,7 +57,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
  */
 public class CodeTheme extends AbstractPlaceholderProfileTheme
 {
-  public static final String TITLE = "Code"; //$NON-NLS-1$
+  public static final String TITLE = Messages.getString( "ProfilLayerProviderTuhh.0" ); //$NON-NLS-1$
 
   public CodeTheme( final IProfile profil )
   {

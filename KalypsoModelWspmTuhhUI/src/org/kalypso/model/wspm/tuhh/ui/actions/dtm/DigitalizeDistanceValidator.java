@@ -20,6 +20,7 @@ package org.kalypso.model.wspm.tuhh.ui.actions.dtm;
 
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -35,11 +36,11 @@ public class DigitalizeDistanceValidator implements IInputValidator
     {
       final double value = NumberUtils.parseDouble( newText );
       if( value < MIN_TOLERANCE )
-        return String.format( "Please insert a number bigger than %.2f", MIN_TOLERANCE );
+        return String.format( Messages.getString("DigitalizeDistanceValidator_0"), MIN_TOLERANCE ); //$NON-NLS-1$
     }
     catch( final NumberFormatException e )
     {
-      return "Please insert a valid number (fraction digits are allowed).";
+      return Messages.getString("DigitalizeDistanceValidator_1"); //$NON-NLS-1$
     }
 
     return null;

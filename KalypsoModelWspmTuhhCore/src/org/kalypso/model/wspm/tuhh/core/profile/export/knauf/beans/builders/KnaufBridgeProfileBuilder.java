@@ -99,7 +99,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     if( distanceValue == null )
     {
       Collections.addAll( stati, buildDefaultBeans( m_profile ) );
-      final String message = String.format( "Failed to create upstream/downstream profiles for invalid bridge at %.4f km.", m_profile.getStation() );
+      final String message = String.format( Messages.getString("KnaufBridgeProfileBuilder.2"), m_profile.getStation() ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message );
     }
 
@@ -144,7 +144,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
 
     if( previous == null || next == null )
     {
-      final String msg = String.format( "Failed to move bridge at %.4f km: bridge at start or end of reach", station );
+      final String msg = String.format( Messages.getString("KnaufBridgeProfileBuilder.3"), station ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), msg );
     }
 

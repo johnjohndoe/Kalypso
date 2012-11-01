@@ -178,7 +178,7 @@ public class TimeseriesChartComposite extends Composite
     final IStatus result = job.getResult();
     if( !result.isOK() )
     {
-      System.out.println( "Could not initialize the chart: " + result.getMessage() );
+      System.out.println( "Could not initialize the chart: " + result.getMessage() ); //$NON-NLS-1$
       return;
     }
 

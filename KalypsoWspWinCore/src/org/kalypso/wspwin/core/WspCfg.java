@@ -225,7 +225,7 @@ public class WspCfg
     }
     catch( final IOException e )
     {
-      final String message = String.format( "Failed to read project description from '%s'", WspWinFiles.PROBEZ_TXT );
+      final String message = String.format( Messages.getString("WspCfg.3"), WspWinFiles.PROBEZ_TXT ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoWspWinCorePlugin.PLUGIN_ID, message, e );
     }
   }

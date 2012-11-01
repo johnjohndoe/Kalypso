@@ -63,13 +63,13 @@ public enum KalypsoModelWspmTuhhUIImages implements ImageKey
   CULVERT_OVAL( "icons/obj16/culvertOval.png" ), //$NON-NLS-1$
   CULVERT_CIRCLE( "icons/obj16/culvertCircle.png" ), //$NON-NLS-1$
   CULVERT_TRAPEZOID( "icons/obj16/culvertTrapezoid.png" ), //$NON-NLS-1$
-  CULVERT_MOUTH( "icons/obj16/culvertMouth.png" ),
+  CULVERT_MOUTH( "icons/obj16/culvertMouth.png" ), //$NON-NLS-1$
   LAYER_COMMENT( "icons/obj16/chart_layer_comment.gif" ), //$NON-NLS-1$
   LAYER_SINUOSITY( "icons/obj16/chart_layer_sinus.png" ), //$NON-NLS-1$
   LAYER_ENERGYLOSS( "icons/obj16/chart_layer_energyloss.png" ), //$NON-NLS-1$
   LAYER_CODE( "icons/obj16/chart_layer_code.png" ), //$NON-NLS-1$
 
-  WATERLEVEL_FIXATION( "icons/obj16/WaterlevelFixation.gif" ),
+  WATERLEVEL_FIXATION( "icons/obj16/WaterlevelFixation.gif" ), //$NON-NLS-1$
   WATERLEVEL_SIMULATION( "icons/obj16/startCalulation.gif" ); //$NON-NLS-1$
 
   private final String m_imagePath;

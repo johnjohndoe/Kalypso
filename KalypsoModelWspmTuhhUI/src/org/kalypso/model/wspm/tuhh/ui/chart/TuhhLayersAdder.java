@@ -161,7 +161,7 @@ public final class TuhhLayersAdder
     if( Arrays.isEmpty( existingBuildings ) )
       return true;
 
-    return MessageDialog.openConfirm( shell, "Add Building", "Existing buildings in the profile will be replaced. Continue?" );
+    return MessageDialog.openConfirm( shell, Messages.getString("TuhhLayersAdder.0"), Messages.getString("TuhhLayersAdder.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public static void addWeirLayer( final Shell shell, final IProfile profil )

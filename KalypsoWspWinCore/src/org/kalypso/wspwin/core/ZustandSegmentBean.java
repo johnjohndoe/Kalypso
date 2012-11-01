@@ -107,6 +107,6 @@ public class ZustandSegmentBean
 
   public String formatLine( )
   {
-    return String.format( Locale.US, "%.6f %.6f %.4f %.4f %.4f %s %s", m_stationFrom, m_stationTo, m_distanceVL, m_distanceHF, m_distanceVR, m_fileNameFrom, m_fileNameTo );
+    return String.format( Locale.US, "%.6f %.6f %.4f %.4f %.4f %s %s", m_stationFrom, m_stationTo, m_distanceVL, m_distanceHF, m_distanceVR, m_fileNameFrom, m_fileNameTo ); //$NON-NLS-1$
   }
 }

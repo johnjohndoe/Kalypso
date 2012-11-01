@@ -10,6 +10,7 @@ import org.kalypso.chart.ext.observation.TupleResultLineLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
@@ -96,8 +97,8 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final int bridgeWidthIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH );
 
     final String stationLabel = ComponentUtilities.getComponentLabel( tr.getComponent( stationIndex ) );
-    final String okLabel = "max. " + ComponentUtilities.getComponentLabel( tr.getComponent( okIndex ) );
-    final String ukLabel = "min. " + ComponentUtilities.getComponentLabel( tr.getComponent( ukIndex ) );
+    final String okLabel = Messages.getString("LengthSectionBridgeLayer_0") + ComponentUtilities.getComponentLabel( tr.getComponent( okIndex ) ); //$NON-NLS-1$
+    final String ukLabel = Messages.getString("LengthSectionBridgeLayer_1") + ComponentUtilities.getComponentLabel( tr.getComponent( ukIndex ) ); //$NON-NLS-1$
     final String widthLabel = ComponentUtilities.getComponentLabel( tr.getComponent( bridgeWidthIndex ) );
 
     final Object station = record.getValue( stationIndex );

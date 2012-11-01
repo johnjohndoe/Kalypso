@@ -155,16 +155,16 @@ public class RunOffEventBean
       {
         final String name = runOff.getName();
         final String cleanName = StringUtils.remove( name, ' ' );
-        final String shortName = StringUtils.abbreviateMiddle( cleanName, ".", 20 );
+        final String shortName = StringUtils.abbreviateMiddle( cleanName, ".", 20 ); //$NON-NLS-1$
 
         final Map<BigDecimal, BigDecimal> entries = runOff.getEntries();
 
-        pw.format( "%s %d%n", shortName, entries.size() );
+        pw.format( "%s %d%n", shortName, entries.size() ); //$NON-NLS-1$
         for( final Entry<BigDecimal, BigDecimal> entry : entries.entrySet() )
         {
           final BigDecimal station = entry.getKey();
           final BigDecimal value = entry.getValue();
-          pw.format( Locale.US, "%.4f %.4f%n", station, value );
+          pw.format( Locale.US, "%.4f %.4f%n", station, value ); //$NON-NLS-1$
         }
       }
 

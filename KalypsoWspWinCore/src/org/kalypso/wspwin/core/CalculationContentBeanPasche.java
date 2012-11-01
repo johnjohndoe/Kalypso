@@ -531,20 +531,20 @@ public class CalculationContentBeanPasche extends AbstractCalculationContentBean
       // aber wiederspruch: wird auch noch mal unten extra gelesen?? -> nWSFQ
       printBoolean( pw, m_ergebnislistenErstellen );
 
-      pw.format( Locale.US, "%f", m_gefaelle );
+      pw.format( Locale.US, "%f", m_gefaelle ); //$NON-NLS-1$
 
-      pw.format( Locale.US, "%f%n", m_min );
-      pw.format( Locale.US, "%f%n", m_step );
-      pw.format( Locale.US, "%f%n", m_max );
+      pw.format( Locale.US, "%f%n", m_min ); //$NON-NLS-1$
+      pw.format( Locale.US, "%f%n", m_step ); //$NON-NLS-1$
+      pw.format( Locale.US, "%f%n", m_max ); //$NON-NLS-1$
 
       pw.println( m_abfluss );
 
-      pw.format( Locale.US, "%f%n", m_anfang );
-      pw.format( Locale.US, "%f%n", m_ende );
+      pw.format( Locale.US, "%f%n", m_anfang ); //$NON-NLS-1$
+      pw.format( Locale.US, "%f%n", m_ende ); //$NON-NLS-1$
 
       pw.println( m_strInfo );
 
-      pw.format( Locale.US, "%f%n", m_hoehe );
+      pw.format( Locale.US, "%f%n", m_hoehe ); //$NON-NLS-1$
 
       printBoolean( pw, m_nhmo );
 

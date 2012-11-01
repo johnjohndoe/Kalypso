@@ -97,6 +97,6 @@ public abstract class AbstractCalculationContentBean implements ICalculationCont
     if( value == null )
       pw.println();
     else
-      pw.format( Locale.US, "%s%n", value );
+      pw.format( Locale.US, "%s%n", value ); //$NON-NLS-1$
   }
 }

@@ -96,7 +96,7 @@ public class BuildingMaulProvider implements IProfileObjectProvider
   {
     final TupleResult result = profileObjectObservation.getResult();
     if( result.size() != 1 )
-      throw new IllegalStateException( "Only one record is allowed in profile object observations..." );
+      throw new IllegalStateException( "Only one record is allowed in profile object observations..." ); //$NON-NLS-1$
 
     final IComponent bezugspunktXComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
     final IComponent bezugspunktYComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );

@@ -28,6 +28,7 @@ import org.kalypso.model.wspm.core.gml.classifications.IStyleParameterConstants;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -60,7 +61,7 @@ public class PartTypeAccessor
   {
     final IPartType partType = getPartType();
     if( partType == null )
-      return "<unkown>";
+      return Messages.getString("PartTypeAccessor_0"); //$NON-NLS-1$
 
     return partType.getDescription();
   }
