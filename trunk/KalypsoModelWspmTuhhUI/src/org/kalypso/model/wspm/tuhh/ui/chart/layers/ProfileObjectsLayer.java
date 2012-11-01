@@ -60,7 +60,7 @@ public class ProfileObjectsLayer extends AbstractProfilLayer
 
     final String label = partInfo.getTypeLabel();
 
-    final String typeTitle = String.format( "%s %s", label, m_object.getDescription() );
+    final String typeTitle = String.format( "%s %s", label, m_object.getDescription() ); //$NON-NLS-1$
 
     if( title == null )
       setTitle( typeTitle );

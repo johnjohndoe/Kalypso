@@ -105,7 +105,7 @@ public class WspmMarkerDecorator implements ILightweightLabelDecorator
     final String message = worst.getAttribute( IMarker.MESSAGE, null );
     final String kindText = getKindtext( severity );
 
-    decoration.addSuffix( String.format( " (%s: %s)", kindText, message ) );
+    decoration.addSuffix( String.format( " (%s: %s)", kindText, message ) ); //$NON-NLS-1$
 
     decoration.addOverlay( imageDescriptor, IDecoration.BOTTOM_RIGHT );
   }

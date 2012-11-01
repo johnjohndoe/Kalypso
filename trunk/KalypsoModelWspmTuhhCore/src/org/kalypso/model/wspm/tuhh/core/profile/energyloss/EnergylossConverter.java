@@ -115,7 +115,7 @@ public class EnergylossConverter
 
   private int findIndex( final String key )
   {
-    final String[] split = key.split( "_" );
+    final String[] split = key.split( "_" ); //$NON-NLS-1$
     final String lastSplit = split[split.length - 1];
     final int index = NumberUtils.parseQuietInt( lastSplit, -1 );
     return index;

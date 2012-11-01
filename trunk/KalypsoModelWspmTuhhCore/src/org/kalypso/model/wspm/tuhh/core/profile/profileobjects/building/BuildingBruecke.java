@@ -45,6 +45,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -99,16 +100,16 @@ public class BuildingBruecke extends AbstractProfileObject implements IProfileBu
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_BREITE.equals( property ) )
-      return "größte Breite/Durchmesser [m]"; // Largest Width
+      return Messages.getString("BuildingBruecke_0"); // Largest Width //$NON-NLS-1$
 
     if( PROPERTY_UNTERWASSER.equals( property ) )
-      return "Unterwasser [mNN]"; // Downstream Height
+      return Messages.getString("BuildingBruecke_1"); // Downstream Height //$NON-NLS-1$
 
     if( PROPERTY_FORMBEIWERT.equals( property ) )
-      return "Pfeilerformbeiwert"; // Pillar Shape Coefficient
+      return Messages.getString("BuildingBruecke_2"); // Pillar Shape Coefficient //$NON-NLS-1$
 
     if( PROPERTY_RAUHEIT.equals( property ) )
-      return "Rauheit"; // Roughness
+      return Messages.getString("BuildingBruecke_3"); // Roughness //$NON-NLS-1$
 
     return property;
   }

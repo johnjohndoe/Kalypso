@@ -1,7 +1,5 @@
 package org.kalypso.kalypsosimulationmodel.core;
 
-import org.kalypso.kalypsosimulationmodel.internal.i18n.Messages;
-
 /**
  * Provides assertion methods
  * 
@@ -49,7 +47,7 @@ public class Assert
     if( param == null )
     {
       final StringBuffer buf = new StringBuffer( 128 );
-      buf.append( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.Assert.0" ) ); //$NON-NLS-1$
+      buf.append( "Parameter must not be null; param name: " ); //$NON-NLS-1$
       buf.append( paramName );
       throw new IllegalArgumentException( buf.toString() );
     }
@@ -59,12 +57,12 @@ public class Assert
   {
     if( str == null )
     {
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.Assert.9" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "String must not be null" ); //$NON-NLS-1$
     }
     str = str.trim();
     if( str.length() == 0 )
     {
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.Assert.10" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "String must not be empty" ); //$NON-NLS-1$
     }
     return str;
   }
@@ -89,8 +87,9 @@ public class Assert
     {
       if( message == null )
       {
-        message = Messages.getString( "org.kalypso.kalypsosimulationmodel.core.Assert.11" ); //$NON-NLS-1$
+        message = "Number must be greater or equals to 0"; //$NON-NLS-1$
       }
+
       throw new IllegalArgumentException( message );
     }
   }

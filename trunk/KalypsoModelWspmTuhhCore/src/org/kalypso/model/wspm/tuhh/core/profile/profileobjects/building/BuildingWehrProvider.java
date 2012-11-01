@@ -98,7 +98,7 @@ public class BuildingWehrProvider implements IProfileObjectProvider
   {
     final TupleResult result = profileObjectObservation.getResult();
     if( result.size() != 1 )
-      throw new IllegalStateException( "Only one record is allowed in profile object observations..." );
+      throw new IllegalStateException( "Only one record is allowed in profile object observations..." ); //$NON-NLS-1$
 
     final IComponent wehrartComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_WEHRART );
     final IComponent formbeiwertComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_FORMBEIWERT );

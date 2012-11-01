@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+
 /**
  * @author Kim Werner
  * @author Holger Albert
@@ -77,13 +79,13 @@ public class BuildingTrapez extends AbstractCulvertBuilding
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_BREITE.equals( property ) )
-      return "untere Seite [m]"; // lower side
+      return Messages.getString("BuildingTrapez_0"); // lower side //$NON-NLS-1$
 
     if( PROPERTY_HOEHE.equals( property ) )
-      return "Gesamthöhe [m]"; // Overall Height
+      return Messages.getString("BuildingTrapez_1"); // Overall Height //$NON-NLS-1$
 
     if( PROPERTY_STEIGUNG.equals( property ) )
-      return "Steigung der Dreieckseite [1/m]"; // Gradient
+      return Messages.getString("BuildingTrapez_2"); // Gradient //$NON-NLS-1$
 
     return super.getPropertyLabel( property );
   }

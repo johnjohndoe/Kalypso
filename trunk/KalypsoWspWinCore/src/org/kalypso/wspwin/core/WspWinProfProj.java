@@ -94,7 +94,7 @@ public class WspWinProfProj
     /* Write list of profiles */
     final BufferedWriter pw = new BufferedWriter( new FileWriter( profprojFile ) );
 
-    pw.append( String.format( "%d %d%n", m_profiles.size(), profileStateMapping.size() ) );
+    pw.append( String.format( "%d %d%n", m_profiles.size(), profileStateMapping.size() ) ); //$NON-NLS-1$
 
     for( final ProfileBean profile : m_profiles )
       pw.append( profile.formatProfprojLine() ).append( SystemUtils.LINE_SEPARATOR );
@@ -107,7 +107,7 @@ public class WspWinProfProj
     {
       final String prfFilename = entry.getKey();
       final String stateFilename = entry.getValue();
-      pw.append( String.format( "%s %s%n", prfFilename, stateFilename ) );
+      pw.append( String.format( "%s %s%n", prfFilename, stateFilename ) ); //$NON-NLS-1$
     }
 
     pw.close();

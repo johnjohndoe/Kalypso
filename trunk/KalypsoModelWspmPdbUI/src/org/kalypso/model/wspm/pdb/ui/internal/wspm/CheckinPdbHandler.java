@@ -135,10 +135,10 @@ public class CheckinPdbHandler extends AbstractHandler
   {
     final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof TuhhReach )
-      return new CheckinStateWorker( workspace, (TuhhReach) firstElement );
+      return new CheckinStateWorker( workspace, (TuhhReach)firstElement );
 
     if( firstElement instanceof WspmFixation )
-      return new CheckInEventWorker( workspace, (WspmFixation) firstElement );
+      return new CheckInEventWorker( workspace, (WspmFixation)firstElement );
 
     throw new ExecutionException( "This handler only works on TuhhReach'es or WspmFixation's" ); //$NON-NLS-1$
   }
@@ -196,9 +196,6 @@ public class CheckinPdbHandler extends AbstractHandler
 
     final IStatus result = ProgressUtilities.busyCursorWhile( saveOperation );
     if( !result.isOK() )
-    {
-      // Messages.getString( "CheckinPdbHandler.2" ) //$NON-NLS-1$
       StatusDialog.open( shell, result, windowTitle );
-    }
   }
 }

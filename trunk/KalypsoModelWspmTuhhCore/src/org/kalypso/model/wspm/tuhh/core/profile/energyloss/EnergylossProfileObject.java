@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Kim Werner
@@ -81,13 +82,13 @@ public class EnergylossProfileObject extends AbstractProfileObject implements IE
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_TYPE.equals( property ) )
-      return "Typ"; // Type
+      return Messages.getString("EnergylossProfileObject_0"); // Type //$NON-NLS-1$
 
     if( PROPERTY_DESCRIPTION.equals( property ) )
-      return "Beschreibung"; // Description
+      return Messages.getString("EnergylossProfileObject_1"); // Description //$NON-NLS-1$
 
     if( PROPERTY_VALUE.equals( property ) )
-      return "Energieverlust [mNN]"; // Energyloss
+      return Messages.getString("EnergylossProfileObject_2"); // Energyloss //$NON-NLS-1$
 
     return property;
   }
@@ -187,9 +188,9 @@ public class EnergylossProfileObject extends AbstractProfileObject implements IE
       final String description = energyloss.getDescription();
       final BigDecimal value = energyloss.getValue();
 
-      final String typeKey = String.format( "%s_%d", KEY_TYPE, i );
-      final String descriptionKey = String.format( "%s_%d", KEY_DESCRIPTION, i );
-      final String valueKey = String.format( "%s_%d", KEY_VALUE, i );
+      final String typeKey = String.format( "%s_%d", KEY_TYPE, i ); //$NON-NLS-1$
+      final String descriptionKey = String.format( "%s_%d", KEY_DESCRIPTION, i ); //$NON-NLS-1$
+      final String valueKey = String.format( "%s_%d", KEY_VALUE, i ); //$NON-NLS-1$
 
       if( type != null && type.length() > 0 )
         setValue( typeKey, type );

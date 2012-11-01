@@ -97,7 +97,7 @@ public class ImportBaseMapImportShpOperation implements IImportBaseMapOperation
     m_mapModell = mapModell;
     m_scenarioFolder = scenarioFolder;
 
-    final IPath destinationPath = new Path( "imports" ).append( "basemap" ); //$NON-NLS-1$ //$NON-NLS-1$
+    final IPath destinationPath = new Path( "imports" ).append( "basemap" ); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-2$
     final IFolder destinationFolder = m_scenarioFolder.getProject().getFolder( destinationPath );
 
     final IPath sourceBase = m_sourceLocation.removeFileExtension();

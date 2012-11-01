@@ -90,7 +90,7 @@ public abstract class AbstractEwawiShapeWriter
     final EwawiPro proIndex = data.getProIndex();
     final File sourceFile = proIndex.getSourceFile();
     final String fullPath = FilenameUtils.getFullPath( sourceFile.getAbsolutePath() );
-    final String parent = FilenameUtils.normalize( String.format( "%s../%s/", fullPath, m_outputDirName ) );
+    final String parent = FilenameUtils.normalize( String.format( "%s../%s/", fullPath, m_outputDirName ) ); //$NON-NLS-1$
 
     /* Create the filename (e.g. ALIAS_VG_BJG_PROFIL_PKT_Freitext.shp). */
     final String filename = getTargetFilename( data.getKey() );

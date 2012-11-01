@@ -178,14 +178,14 @@ public class WspWinExportDestinationPage extends WizardPage
     createOverwriteExisting( group );
     createProjectType( group );
     createRoughnessType( group );
-    createPreferClasses( group, "Rauheitsklassen", WspWinExportData.PROPERTY_PREFER_ROUGHNESS_CLASSES );
-    createPreferClasses( group, "Bewuchsklassen", WspWinExportData.PROPERTY_PREFER_VEGETATION_CLASSES );
+    createPreferClasses( group, Messages.getString("WspWinExportDestinationPage.6"), WspWinExportData.PROPERTY_PREFER_ROUGHNESS_CLASSES ); //$NON-NLS-1$
+    createPreferClasses( group, Messages.getString("WspWinExportDestinationPage.7"), WspWinExportData.PROPERTY_PREFER_VEGETATION_CLASSES ); //$NON-NLS-1$
   }
 
   private void createRoughnessType( final Group group )
   {
     final Label label = new Label( group, SWT.NONE );
-    label.setText( "Roughness Type" );
+    label.setText( Messages.getString("WspWinExportDestinationPage.8") ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( group );
     viewer.setContentProvider( new ArrayContentProvider() );
@@ -196,7 +196,7 @@ public class WspWinExportDestinationPage extends WizardPage
       {
         final String componentID = (String) element;
         if( StringUtils.isBlank( componentID ) )
-          return "Beide (ks und kst)";
+          return Messages.getString("WspWinExportDestinationPage.9"); //$NON-NLS-1$
 
         final IComponent component = ComponentUtilities.getFeatureComponent( componentID );
         return ComponentUtilities.getComponentLabel( component );
@@ -226,9 +226,9 @@ public class WspWinExportDestinationPage extends WizardPage
       {
         final Boolean value = (Boolean) element;
         if( value == false )
-          return "normale Werte überschreiben Klassenwerte (standard)";
+          return Messages.getString("WspWinExportDestinationPage.10"); //$NON-NLS-1$
         else
-          return "Klassenwerte überschreiben normale Werte";
+          return Messages.getString("WspWinExportDestinationPage.11"); //$NON-NLS-1$
       }
     } );
 

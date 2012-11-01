@@ -323,7 +323,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   {
     final Shell shell = SWT_AWT_Utilities.findActiveShell();
 
-    final InputDialog inputDialog = new InputDialog( shell, "Profil verlängern", "Digitalisierungsdistanz", String.format( "%.2f", m_digitalizeDistance ), new DigitalizeDistanceValidator() );
+    final InputDialog inputDialog = new InputDialog( shell, Messages.getString("CreateProfileFromDEMWidget.0"), Messages.getString("CreateProfileFromDEMWidget.1"), String.format( "%.2f", m_digitalizeDistance ), new DigitalizeDistanceValidator() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final int result = SWT_AWT_Utilities.openSwtWindow( inputDialog );
     if( result != Window.OK )
       return Double.NaN;

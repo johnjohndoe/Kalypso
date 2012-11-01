@@ -44,6 +44,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -109,10 +110,10 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_WEHRART.equals( property ) )
-      return "Wehrart"; // Weir Type
+      return Messages.getString("BuildingWehr_0"); // Weir Type //$NON-NLS-1$
 
     if( PROPERTY_FORMBEIWERT.equals( property ) )
-      return "Pfeilerformbeiwert"; // Pillar Shape Coefficient
+      return Messages.getString("BuildingWehr_1"); // Pillar Shape Coefficient //$NON-NLS-1$
 
     return property;
   }

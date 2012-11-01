@@ -100,7 +100,7 @@ abstract class AbstractEwawiReader
 
   protected static Long asLong( final String text )
   {
-    if( "-".equals( text ) )
+    if( "-".equals( text ) ) //$NON-NLS-1$
       return null;
 
     return new Long( text );

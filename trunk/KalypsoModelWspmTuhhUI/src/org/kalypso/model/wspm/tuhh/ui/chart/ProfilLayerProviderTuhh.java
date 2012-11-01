@@ -480,7 +480,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       final GenericProfileHorizon horizon = (GenericProfileHorizon)profileObject;
       final String type = horizon.getType();
       // TODO: get constant from elsewhere?
-      if( type.startsWith( "W" ) )
+      if( type.startsWith( "W" ) ) //$NON-NLS-1$
         return false;
 
       if( BuildingBruecke.ID_OK.equals( type ) )

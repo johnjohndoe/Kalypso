@@ -64,10 +64,10 @@ public class EwawiDirReader
       final IStatus status = readFile( file );
       log.add( status );
 
-      System.out.println( String.format( "%d: %s", status.getSeverity(), status.getMessage() ) );
+      System.out.println( String.format( "%d: %s", status.getSeverity(), status.getMessage() ) ); //$NON-NLS-1$
     }
 
-    return log.asMultiStatus( "EWAWI Datei lesen" );
+    return log.asMultiStatus( Messages.EwawiDirReader_1 );
   }
 
   private IStatus readFile( final File file )
@@ -76,19 +76,19 @@ public class EwawiDirReader
     final String extension = FilenameUtils.getExtension( fileName ).toLowerCase();
     switch( extension )
     {
-      case "pro":
+      case "pro": //$NON-NLS-1$
         return readProFile( file );
 
-      case "sta":
+      case "sta": //$NON-NLS-1$
         return readStaFile( file );
 
-      case "epl":
+      case "epl": //$NON-NLS-1$
         return readEplFile( file );
 
         // TODO: Read additional files (foto locations, river names)...
 
       default:
-        return new Status( IStatus.INFO, "%s: Ignoriert", fileName );
+        return new Status( IStatus.INFO, Messages.EwawiDirReader_5, fileName );
     }
   }
 
@@ -96,7 +96,7 @@ public class EwawiDirReader
   {
     final EwawiPlus data = getData( file );
     if( data == null )
-      return new Status( Status.WARNING, WspmEwawiPlugin.PLUGIN_ID, String.format( "'%s': Alias passt nicht zum Alias im Pfad '%s'. Datei wird übersprungen.", file.getName(), file.getParent() ) );
+      return new Status( Status.WARNING, WspmEwawiPlugin.PLUGIN_ID, String.format( Messages.EwawiDirReader_6, file.getName(), file.getParent() ) );
 
     final EwawiProReader reader = new EwawiProReader( data );
     return read( reader, file );
@@ -106,7 +106,7 @@ public class EwawiDirReader
   {
     final EwawiPlus data = getData( file );
     if( data == null )
-      return new Status( Status.WARNING, WspmEwawiPlugin.PLUGIN_ID, String.format( "'%s': Alias passt nicht zum Alias im Pfad '%s'. Datei wird übersprungen.", file.getName(), file.getParent() ) );
+      return new Status( Status.WARNING, WspmEwawiPlugin.PLUGIN_ID, String.format( Messages.EwawiDirReader_7, file.getName(), file.getParent() ) );
 
     final EwawiStaReader reader = new EwawiStaReader( data );
     return read( reader, file );
@@ -116,7 +116,7 @@ public class EwawiDirReader
   {
     final EwawiPlus data = getData( file );
     if( data == null )
-      return new Status( Status.WARNING, WspmEwawiPlugin.PLUGIN_ID, String.format( "'%s': Alias passt nicht zum Alias im Pfad '%s'. Datei wird übersprungen.", file.getName(), file.getParent() ) );
+      return new Status( Status.WARNING, WspmEwawiPlugin.PLUGIN_ID, String.format( Messages.EwawiDirReader_8, file.getName(), file.getParent() ) );
 
     final EwawiEplReader reader = new EwawiEplReader( data );
     return read( reader, file );
@@ -131,7 +131,7 @@ public class EwawiDirReader
     }
     catch( final IOException | ParseException e )
     {
-      final String message = String.format( "%s: Lesen fehlgeschlagen", file.getName() );
+      final String message = String.format( Messages.EwawiDirReader_9, file.getName() );
       return new Status( IStatus.WARNING, WspmEwawiPlugin.PLUGIN_ID, message, e );
     }
   }

@@ -96,7 +96,7 @@ public final class BuildingBrueckeProvider implements IProfileObjectProvider
   {
     final TupleResult result = profileObjectObservation.getResult();
     if( result.size() != 1 )
-      throw new IllegalStateException( "Only one record is allowed in profile object observations..." );
+      throw new IllegalStateException( "Only one record is allowed in profile object observations..." ); //$NON-NLS-1$
 
     final IComponent breiteComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_BREITE );
     final IComponent unterwasserComponent = ProfileUtil.getFeatureComponent( BuildingsCompatibilityConstants.BUILDING_PROPERTY_UNTERWASSER );

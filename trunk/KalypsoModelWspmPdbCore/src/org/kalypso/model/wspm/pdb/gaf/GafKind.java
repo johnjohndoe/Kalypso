@@ -28,9 +28,6 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
  */
 public enum GafKind
 {
-  // TODO i18n?
-  // HACK: introduced Category.None, do not insert none into DB
-  // NONE( Messages.getString( "GafKind.11" ) ); //$NON-NLS-1$
   P( Messages.getString( "GafKind.0" ) ), //$NON-NLS-1$
   S( Messages.getString( "GafKind.1" ) ), //$NON-NLS-1$
   W( Messages.getString( "GafKind.2" ) ), //$NON-NLS-1$

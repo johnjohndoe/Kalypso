@@ -52,9 +52,6 @@ import org.kalypso.model.wspm.tuhh.core.wprof.WProfProfileType;
  */
 public class ProfileCreatorStrategy implements IProfileCreatorStrategy
 {
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

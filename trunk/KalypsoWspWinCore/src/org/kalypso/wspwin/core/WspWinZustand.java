@@ -213,7 +213,7 @@ public class WspWinZustand
       {
         // should never happen
         distance = Math.abs( stationTo.doubleValue() - stationFrom.doubleValue() );
-        System.out.println( "Error in zustand" );
+        System.out.println( "Error in zustand" ); //$NON-NLS-1$
       }
       else
       {
@@ -273,7 +273,7 @@ public class WspWinZustand
     final ZustandBean bean = getBean();
     final String waterName = ProfileBean.shortenName( bean.getWaterName(), ProfileBean.MAX_WATERNAME_LENGTH );
     final String name = ProfileBean.shortenName( bean.getName(), ProfileBean.MAX_STATENAME_LENGTH );
-    pw.append( String.format( "%d %d %s %s%n", m_profileBeans.size(), m_segmentBeans.size(), waterName, name ) );
+    pw.append( String.format( "%d %d %s %s%n", m_profileBeans.size(), m_segmentBeans.size(), waterName, name ) ); //$NON-NLS-1$
 
     /* Profiles */
     for( final ProfileBean profile : m_profileBeans )

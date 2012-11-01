@@ -104,7 +104,7 @@ public abstract class AbstractSobekExportOperation implements ISobekProfileExpor
     }
     catch( final Exception e )
     {
-      final String message = String.format( "'%s' failed", m_operationLabel );
+      final String message = String.format( Messages.getString("AbstractSobekExportOperation.0"), m_operationLabel ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }

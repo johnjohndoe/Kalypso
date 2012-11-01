@@ -104,7 +104,7 @@ public class SinuositaetProfileObjectProvider implements IProfileObjectProvider
   {
     final TupleResult result = profileObjectObservation.getResult();
     if( result.size() != 1 )
-      throw new IllegalStateException( "Only one record is allowed in profile object observations..." );
+      throw new IllegalStateException( "Only one record is allowed in profile object observations..." ); //$NON-NLS-1$
 
     final IComponent kennungComponent = ProfileUtil.getFeatureComponent( PROPERTY_KENNUNG );
     final IComponent snComponent = ProfileUtil.getFeatureComponent( PROPERTY_SN );

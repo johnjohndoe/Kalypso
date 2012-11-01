@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+
 /**
  * @author Kim Werner
  * @author Holger Albert
@@ -63,7 +65,7 @@ public class BuildingKreis extends AbstractCulvertBuilding
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_BREITE.equals( property ) )
-      return "Durchmesser [m]"; // Aperture
+      return Messages.getString("BuildingKreis_0"); // Aperture //$NON-NLS-1$
 
     return super.getPropertyLabel( property );
   }

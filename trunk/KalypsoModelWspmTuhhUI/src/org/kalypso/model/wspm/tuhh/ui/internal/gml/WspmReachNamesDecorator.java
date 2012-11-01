@@ -31,6 +31,7 @@ import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 public class WspmReachNamesDecorator implements ILightweightLabelDecorator
@@ -74,7 +75,7 @@ public class WspmReachNamesDecorator implements ILightweightLabelDecorator
       return;
 
     final String names = StringUtils.join( reachNames, ", " ); //$NON-NLS-1$
-    final String suffix = String.format( " (referenced by: %s)", names );
+    final String suffix = String.format( Messages.getString("WspmReachNamesDecorator_0"), names ); //$NON-NLS-1$
 
     final String shortenedSuffix = StringUtils.abbreviate( suffix, 255 );
 

@@ -242,15 +242,15 @@ public class ZustandBean
   {
     final String strFileName = getFileName();
     final String strBaseName = FileUtilities.nameWithoutExtension( strFileName );
-    return strBaseName + "." + suffix;
+    return strBaseName + "." + suffix; //$NON-NLS-1$
   }
 
   public String formatLine( )
   {
     final String waterName = ProfileBean.shortenName( m_waterName, ProfileBean.MAX_WATERNAME_LENGTH );
     final String stateName = ProfileBean.shortenName( m_name, ProfileBean.MAX_STATENAME_LENGTH );
-    final String dateText = new SimpleDateFormat( "d.M.yyyy" ).format( m_date );
-    return String.format( Locale.US, "%-14s %-14s %-10s  %13.6f  %13.6f  %13s", waterName, stateName, dateText, m_startStation, m_endStation, m_fileName );
+    final String dateText = new SimpleDateFormat( "d.M.yyyy" ).format( m_date ); //$NON-NLS-1$
+    return String.format( Locale.US, "%-14s %-14s %-10s  %13.6f  %13.6f  %13s", waterName, stateName, dateText, m_startStation, m_endStation, m_fileName ); //$NON-NLS-1$
   }
 
   public void writeZustand( final File wspwinDir, final WspWinZustand zustand ) throws IOException

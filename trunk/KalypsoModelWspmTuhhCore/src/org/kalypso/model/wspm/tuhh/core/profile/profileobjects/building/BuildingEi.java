@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+
 /**
  * @author Kim Werner
  * @author Holger Albert
@@ -73,7 +75,7 @@ public class BuildingEi extends AbstractCulvertBuilding
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_HOEHE.equals( property ) )
-      return "Gesamthöhe [m]"; // Overall Height
+      return Messages.getString("BuildingEi_0"); // Overall Height //$NON-NLS-1$
 
     return super.getPropertyLabel( property );
   }

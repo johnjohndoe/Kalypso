@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfileObject;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -87,16 +88,16 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_KENNUNG.equals( property ) )
-      return "Kennung";
+      return Messages.getString("SinuositaetProfileObject_0"); //$NON-NLS-1$
 
     if( PROPERTY_SN.equals( property ) )
-      return "Sinuosität";
+      return Messages.getString("SinuositaetProfileObject_1"); //$NON-NLS-1$
 
     if( PROPERTY_GERINNE_ART.equals( property ) )
-      return "Gerinne Art";
+      return Messages.getString("SinuositaetProfileObject_2"); //$NON-NLS-1$
 
     if( PROPERTY_LF.equals( property ) )
-      return "Linearfaktor";
+      return Messages.getString("SinuositaetProfileObject_3"); //$NON-NLS-1$
 
     return property;
   }

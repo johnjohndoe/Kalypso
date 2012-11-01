@@ -64,10 +64,10 @@ public class ProfileObjectsInfoBuilder implements IProfileObjectInfoBuilder
   {
     final String pointHeader = getPointHeader( object, record );
 
-    final TooltipFormatter formatter = new TooltipFormatter( pointHeader, new String[] { "%s", "%s", "%s" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
+    final TooltipFormatter formatter = new TooltipFormatter( pointHeader, new String[] { "%s", "%s", "%s" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    formatter.addLine( "Breite", String.format( "%,.2f", record.getBreite() ), "m" );
-    formatter.addLine( "Höhe", String.format( "%,.2f", record.getHoehe() ), "mNN" );
+    formatter.addLine( "Breite", String.format( "%,.2f", record.getBreite() ), "m" ); //$NON-NLS-2$
+    formatter.addLine( "Höhe", String.format( "%,.2f", record.getHoehe() ), "mNN" ); //$NON-NLS-2$
 
     final String code = record.getCode();
     if( !StringUtils.isBlank( code ) )
@@ -102,6 +102,6 @@ public class ProfileObjectsInfoBuilder implements IProfileObjectInfoBuilder
     if( StringUtils.isBlank( description ) )
       return typeLabel;
 
-    return String.format( "%s - %s", typeLabel, description );
+    return String.format( "%s - %s", typeLabel, description ); //$NON-NLS-1$
   }
 }
