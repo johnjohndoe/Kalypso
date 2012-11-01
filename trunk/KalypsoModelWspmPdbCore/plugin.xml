@@ -56,7 +56,7 @@
       </script>
       <script
             comment="Oracle - Create DB"
-            location="etc/scripts/create/V12..11.0/oracle.sql"
+            location="etc/scripts/create/V12.11.0/oracle.sql"
             targetVersion="0.0.0"
             type="oracle">
          <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo"/>
