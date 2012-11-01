@@ -42,7 +42,7 @@
     </tabItem>
     <tabItem>
       <tabLabel>Tabelle</tabLabel>
-      <tupleResult property="om:result" tooltip="Ganglinie" style="SWT.MULTI | SWT.FULL_SELECTION">
+      <tupleResult property="om:result" tooltip="Ganglinie" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION">
         <visibleOperation>
           <ogc:Not>
             <ogc:PropertyIsNull>

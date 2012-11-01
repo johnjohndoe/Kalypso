@@ -51,7 +51,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -60,7 +59,7 @@ import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 
 /**
  * Wizard to show length sections to the chart view.
- *
+ * 
  * @author Thomas Jung
  */
 public class SelectLengthSectionWizard extends Wizard
@@ -99,7 +98,7 @@ public class SelectLengthSectionWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final SelectResultWizardPage page = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
+    final SelectResultWizardPage page = (SelectResultWizardPage)getPage( PAGE_SELECT_RESULTS_NAME );
     final IResultMeta[] results = page.getSelectedResults();
     if( results.length == 0 )
     {
@@ -120,12 +119,11 @@ public class SelectLengthSectionWizard extends Wizard
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public IStatus execute( final IProgressMonitor monitor )
       {
         IResultMeta result = null;
         monitor.beginTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.7" ), 2 ); //$NON-NLS-1$
-
 
         // get the first length section element
 
@@ -133,7 +131,7 @@ public class SelectLengthSectionWizard extends Wizard
         {
           if( resultMeta instanceof IDocumentResultMeta )
           {
-            final IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+            final IDocumentResultMeta docResult = (IDocumentResultMeta)resultMeta;
             if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.lengthSection )
             {
               result = docResult;
@@ -158,7 +156,7 @@ public class SelectLengthSectionWizard extends Wizard
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
     ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.12" ), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );

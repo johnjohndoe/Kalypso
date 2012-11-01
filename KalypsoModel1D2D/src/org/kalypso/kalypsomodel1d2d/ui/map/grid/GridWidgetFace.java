@@ -78,6 +78,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+import org.kalypso.kalypsomodel1d2d.ui.KalypsoModel1D2DStrings;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
 /**
@@ -179,9 +180,7 @@ class GridWidgetFace
     m_buttonConvertToModel = toolkit.createButton( compConversion, StringUtils.EMPTY, SWT.PUSH | SWT.FLAT );
     m_buttonConvertToModel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
-    final String buttonLabel = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridWidgetFace.9" ); //$NON-NLS-1$
-
-    m_buttonConvertToModel.setText( buttonLabel );
+    m_buttonConvertToModel.setText( KalypsoModel1D2DStrings.APPLY_BUTTON_LABEL );
     m_buttonConvertToModel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
@@ -390,7 +389,7 @@ class GridWidgetFace
       {
         if( inputElement instanceof GridPointCollector )
         {
-          return ((GridPointCollector) inputElement).getSideconfigsAsArray();
+          return ((GridPointCollector)inputElement).getSideconfigsAsArray();
         }
         else
         {
@@ -419,7 +418,7 @@ class GridWidgetFace
 
     if( source instanceof FieldEditor )
     {
-      ((FieldEditor) source).store();
+      ((FieldEditor)source).store();
     }
     else if( source instanceof ColorSelector )
     {
@@ -429,23 +428,23 @@ class GridWidgetFace
     }
     else if( LINE_COLOR_0.equals( property ) )
     {
-      m_gridPointCollector.setColor( 0, makeAWTColor( (RGB) event.getNewValue() ) );
+      m_gridPointCollector.setColor( 0, makeAWTColor( (RGB)event.getNewValue() ) );
     }
     else if( LINE_COLOR_1.equals( property ) )
     {
-      m_gridPointCollector.setColor( 1, makeAWTColor( (RGB) event.getNewValue() ) );
+      m_gridPointCollector.setColor( 1, makeAWTColor( (RGB)event.getNewValue() ) );
     }
     else if( LINE_COLOR_2.equals( property ) )
     {
-      m_gridPointCollector.setColor( 2, makeAWTColor( (RGB) event.getNewValue() ) );
+      m_gridPointCollector.setColor( 2, makeAWTColor( (RGB)event.getNewValue() ) );
     }
     else if( LINE_COLOR_3.equals( property ) )
     {
-      m_gridPointCollector.setColor( 3, makeAWTColor( (RGB) event.getNewValue() ) );
+      m_gridPointCollector.setColor( 3, makeAWTColor( (RGB)event.getNewValue() ) );
     }
     else if( HANDLE_WIDTH_NAME.equals( property ) )
     {
-      m_gridPointCollector.setPointRectSize( (Integer) event.getNewValue() );
+      m_gridPointCollector.setPointRectSize( (Integer)event.getNewValue() );
     }
     else
     {

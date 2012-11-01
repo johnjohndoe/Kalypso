@@ -29,7 +29,9 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.model.1d2d.project.2d_demo;resolution:=optional,
  org.kalypso.model.1d2d.project.template,
  org.kalypso.module,
- org.kalypso.zml.ui;bundle-version="11.6.4"
+ org.kalypso.zml.ui;bundle-version="11.6.4",
+ org.kalypso.gml.processes,
+ org.junit4;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.kalypso1d2d.extension,
  org.kalypso.kalypso1d2d.pjt.wizards,

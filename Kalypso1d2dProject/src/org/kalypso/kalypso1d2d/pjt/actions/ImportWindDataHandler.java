@@ -63,7 +63,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
 
@@ -79,7 +79,7 @@ public class ImportWindDataHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final IScenarioDataProvider szenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     try
     {
@@ -87,7 +87,7 @@ public class ImportWindDataHandler extends AbstractHandler
       final SelectWidgetHandler handler = new SelectWidgetHandler();
       final Map<String, String> newParameterMap = new HashMap<>();
       newParameterMap.put( SelectWidgetHandler.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget" ); //$NON-NLS-1$
-      newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, KalypsoModel1D2DPlugin.PLUGIN_ID ); //$NON-NLS-1$
+      newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, Kalypso1d2dProjectPlugin.PLUGIN_ID ); //$NON-NLS-1$
       handler.setInitializationData( null, null, newParameterMap );
       final ExecutionEvent exc = new ExecutionEvent( event.getCommand(), newParameterMap, event.getTrigger(), event.getApplicationContext() );
 
@@ -102,8 +102,8 @@ public class ImportWindDataHandler extends AbstractHandler
       final IWorkbench workbench = PlatformUI.getWorkbench();
 
       final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( WIZARD_ID );
-      final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
-      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final INewWizard wizard = (INewWizard)wizardDescriptor.createWizard();
+      final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
       final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
 
       wizard.init( workbench, selection );

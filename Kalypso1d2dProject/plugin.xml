@@ -89,12 +89,6 @@
             id="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
             name="Observation load"/>
         <wizard
-              class="org.kalypso.kalypso1d2d.internal.import2d.Import2dWizard"
-              icon="icons/elcl16/1d2d_edit_protocol_view.gif"
-              id="org.kalypso.wizards.import1d2d.ImportWizard"
-              name="Import 1D2D"
-              project="false"/>
-        <wizard
               class="org.kalypso.kalypso1d2d.internal.export2d.Export2dWizard"
               id="org.kalypso.wizards.export2d.ExportWizard"
               name="Export 2D"
@@ -184,14 +178,19 @@
         <!--
         <image commandId="org.kalypso.model.1d2d.workflow.ProfileImport" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.NetCstr" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.Net1DRivGroup" icon="icons/workflow/"/>
+        -->
+        <image commandId="org.kalypso.model.1d2d.workflow.Net1DRivGroup" icon="icons/workflow/Net1DRivGroup.gif"/>
+        <!--
         <image commandId="org.kalypso.model.1d2d.workflow.Net1DImport" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.Net1DImportWspm" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" icon="icons/workflow/"/>
+        
         <image commandId="org.kalypso.model.1d2d.workflow.Edit1DNet" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.Net2DGroup" icon="icons/workflow/"/>
-        <image commandId="org.kalypso.model.1d2d.workflow.Net2DImport" icon="icons/workflow/"/>
+        -->
+        <image commandId="org.kalypso.model.1d2d.workflow.Net2DGroup" icon="icons/workflow/Net2DGroup.gif"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.Net2DImport" icon="icons/workflow/Net2DImport.gif"/>
+        <!--
         <image commandId="org.kalypso.model.1d2d.workflow.EditNet2D" icon="icons/workflow/"/>
         <image commandId="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" icon="icons/workflow/"/>
         -->
@@ -258,16 +257,15 @@
                commandId="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap"/>
 
  	 <!--*** 2D-editing handlers ***-->
- 	      <!-- FIXME: remove for now -->
 	     <handler
 	           commandId="org.kalypso.model.1d2d.workflow.Net2DImport">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-	                 value="org.kalypso.kalypsomodel1d2d.ui.map.import2d.Import2dElementsWidget"/>
+	                 value="org.kalypso.kalypso1d2d.internal.importNet.Import2dElementsWidget"/>
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-	                 value="org.kalypso.model1d2d"/>
+	                 value="org.kalypso.kalypso1d2d.pjt"/>
            </class>
 	     </handler>
 
