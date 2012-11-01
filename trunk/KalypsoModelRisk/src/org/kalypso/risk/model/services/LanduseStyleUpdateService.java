@@ -84,13 +84,9 @@ public class LanduseStyleUpdateService extends Job
 
   private final IFile m_riskZonesSymbolizerSldFile;
 
-  private final LanduseStyleUpdateListener m_landuseStyleUpdateListener;
-
-  public LanduseStyleUpdateService( final LanduseStyleUpdateListener landuseStyleUpdateListener, final IFile file )
+  public LanduseStyleUpdateService( final IFile file )
   {
     super( Messages.getString( "org.kalypso.risk.model.services.LanduseStyleUpdateService.0" ) ); //$NON-NLS-1$
-
-    m_landuseStyleUpdateListener = landuseStyleUpdateListener;
 
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 

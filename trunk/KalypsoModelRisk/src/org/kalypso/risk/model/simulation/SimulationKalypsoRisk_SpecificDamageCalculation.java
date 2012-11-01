@@ -179,7 +179,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     if( waterlevelCoverageCollection.size() == 0 )
       throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.0" ) ); //$NON-NLS-1$
 
-    final SubMonitor subMonitor = SubMonitor.convert( monitor, "Specific damage calculation", 100 );
+    final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString("SimulationKalypsoRisk_SpecificDamageCalculation.1"), 100 ); //$NON-NLS-1$
 
     final StatisticCollector statistics = createStatistics( controlModel, landusePolygons, subMonitor.newChild( 10 ) );
 

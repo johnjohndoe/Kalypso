@@ -66,7 +66,7 @@ public interface IRainfallGenerator extends Feature
   /**
    * The qname of the filter member.
    */
-  QName MEMBER_FILTER = new QName( UrlCatalogRcm.NS_RCM, "filterMember" );
+  QName MEMBER_FILTER = new QName( UrlCatalogRcm.NS_RCM, "filterMember" ); //$NON-NLS-1$
 
   /**
    * The qname of the period.
@@ -81,12 +81,12 @@ public interface IRainfallGenerator extends Feature
   /**
    * The qname of the valid from time.
    */
-  QName PROPERTY_VALID_FROM = new QName( RcmConstants.NS_RCM, "validFrom" ); // $NON-NLS-1$
+  QName PROPERTY_VALID_FROM = new QName( RcmConstants.NS_RCM, "validFrom" ); // $NON-NLS-1$ //$NON-NLS-1$
 
   /**
    * The qname of the valid to time.
    */
-  QName PROPERTY_VALID_TO = new QName( RcmConstants.NS_RCM, "validTo" ); // $NON-NLS-1$
+  QName PROPERTY_VALID_TO = new QName( RcmConstants.NS_RCM, "validTo" ); // $NON-NLS-1$ //$NON-NLS-1$
 
   /**
    * The qname of the parameter type.

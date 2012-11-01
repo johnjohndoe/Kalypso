@@ -44,11 +44,12 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -106,7 +107,7 @@ public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSur
     if( soilTypeRef == null )
     {
       final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.2", soilTypeLink, i + 1 ); //$NON-NLS-1$
-      throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+      throw new CoreException( new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message ) );
     }
 
     final SoilType soilType = m_output.importSoilType( label, geometry, m_importType, log );

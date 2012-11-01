@@ -54,11 +54,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IOmbrometerCollection extends Feature
 {
-  final static QName QNAME_FEATURE_OMBROMETERCollection = new QName( UrlCatalogRcm.NS_OMBROMETER, "OmbrometerCollection" );
+  final static QName QNAME_FEATURE_OMBROMETERCollection = new QName( UrlCatalogRcm.NS_OMBROMETER, "OmbrometerCollection" ); //$NON-NLS-1$
 
-  final static QName QNAME_PROP_HASBEENPROCESSED = new QName( UrlCatalogRcm.NS_OMBROMETER, "hasBeenProcessed" );
+  final static QName QNAME_PROP_HASBEENPROCESSED = new QName( UrlCatalogRcm.NS_OMBROMETER, "hasBeenProcessed" ); //$NON-NLS-1$
 
-  final static QName QNAME_PROP_OMBROMETERMEMBER = new QName( UrlCatalogRcm.NS_OMBROMETER, "ombrometerMember" );
+  final static QName QNAME_PROP_OMBROMETERMEMBER = new QName( UrlCatalogRcm.NS_OMBROMETER, "ombrometerMember" ); //$NON-NLS-1$
 
   boolean hasBeenProcessed( );
 

@@ -84,7 +84,7 @@ public class StatisticCalculationData extends AbstractModelObject
 
   public static final String PROPERTY_SELECTED_ATTRIBUTE = "selectedAttribute"; //$NON-NLS-1$
 
-  static final String[] NO_ATTRIBUTES = new String[] { Messages.getString("StatisticCalculationData_0") }; //$NON-NLS-1$
+  static final String[] NO_ATTRIBUTES = new String[] { Messages.getString( "StatisticCalculationData_0" ) }; //$NON-NLS-1$
 
   private final IRasterizationControlModel m_controlModel;
 
@@ -138,7 +138,7 @@ public class StatisticCalculationData extends AbstractModelObject
 
     final File shapeDir = shapeFolder.getLocation().toFile();
     final IOFileFilter shpFilter = FileFilterUtils.suffixFileFilter( ShapeFile.EXTENSION_SHP, IOCase.INSENSITIVE ); //$NON-NLS-1$
-    final File[] shapeFiles = shapeDir.listFiles( (FilenameFilter) shpFilter );
+    final File[] shapeFiles = shapeDir.listFiles( (FilenameFilter)shpFilter );
     if( shapeFiles == null )
       return;
 
@@ -146,11 +146,10 @@ public class StatisticCalculationData extends AbstractModelObject
 
     for( final File shpFile : shapeFiles )
     {
-      try
-      {
-        final String shpBase = FilenameUtils.removeExtension( shpFile.getAbsolutePath() );
+      final String shpBase = FilenameUtils.removeExtension( shpFile.getAbsolutePath() );
 
-        final ShapeFile shapeFile = new ShapeFile( shpBase, Charset.defaultCharset(), FileMode.READ );
+      try( final ShapeFile shapeFile = new ShapeFile( shpBase, Charset.defaultCharset(), FileMode.READ ) )
+      {
         final ShapeType shapeType = shapeFile.getShapeType();
         if( shapeType == ShapeType.POLYGON || shapeType == ShapeType.POLYGONZ )
         {
@@ -234,7 +233,7 @@ public class StatisticCalculationData extends AbstractModelObject
 
   public ShapeFile loadSelectedShape( ) throws IOException, DBaseException
   {
-    if( m_selectedShape ==null || m_selectedShape == SHAPE_FILE_NONE )
+    if( m_selectedShape == null || m_selectedShape == SHAPE_FILE_NONE )
       return null;
 
     final String shapeBase = FilenameUtils.removeExtension( m_selectedShape.getAbsolutePath() );

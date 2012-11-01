@@ -127,7 +127,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
     if( StringUtils.isBlank( property ) )
       return new String[] {};
 
-    return StringUtils.split( property, ";" );
+    return StringUtils.split( property, ";" ); //$NON-NLS-1$
   }
 
   @Override

@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -135,7 +134,6 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
         throw new CoreException( status );
       }
 
-
       ProgressUtilities.worked( progess, 1 );
     }
 
@@ -151,7 +149,7 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
     if( geometry == null )
     {
       final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.3", label ); //$NON-NLS-1$
-      m_log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+      m_log.add( IStatus.WARNING, message );
     }
     else
     {
@@ -159,7 +157,7 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
       // FIXME: what is the meaning of gm_point here?
       if( geometry instanceof GM_MultiSurface )
       {
-        final GM_MultiSurface surface = (GM_MultiSurface) geometry;
+        final GM_MultiSurface surface = (GM_MultiSurface)geometry;
         final IStatus isValidTop = TopologyChecker.checkTopology( surface, label );
         if( !isValidTop.isOK() )
         {
@@ -173,7 +171,7 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
       else
       {
         final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.1", label ); //$NON-NLS-1$
-        m_log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+        m_log.add( IStatus.WARNING, message );
       }
     }
   }

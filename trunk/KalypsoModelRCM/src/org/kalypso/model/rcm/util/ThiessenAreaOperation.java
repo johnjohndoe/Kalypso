@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.rcm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -118,7 +119,7 @@ public class ThiessenAreaOperation
    */
   public Map<Feature, GM_Polygon> execute( final List< ? > stations, final IBoundaryCalculator boundaryCalculator, final IProgressMonitor monitor ) throws CoreException, GM_Exception
   {
-    monitor.beginTask( "Thiessen Polygone ermitteln", 6 );
+    monitor.beginTask( Messages.getString("ThiessenAreaOperation_0"), 6 ); //$NON-NLS-1$
 
     if( stations.isEmpty() )
       return Collections.emptyMap();
@@ -190,7 +191,7 @@ public class ThiessenAreaOperation
         final GM_Polygon affectedArea = (GM_Polygon)JTSAdapter.wrap( polygon, crs );
         final Feature ombro = findOmbrometerFor( affectedArea, geoIndex, m_propertyLocation );
         if( ombro == null )
-          throw new GM_Exception( "Fehler bei der Ermittlung der Thiessen Polygone" );
+          throw new GM_Exception( Messages.getString("ThiessenAreaOperation_1") ); //$NON-NLS-1$
         else
           changeMap.put( ombro, affectedArea );
       }

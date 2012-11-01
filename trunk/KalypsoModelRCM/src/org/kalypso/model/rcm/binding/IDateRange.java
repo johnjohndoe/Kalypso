@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IDateRange extends Feature
 {
-  QName FEATURE_DATE_RANGE = new QName( UrlCatalogRcm.NS_RCM, "DateRange" );
+  QName FEATURE_DATE_RANGE = new QName( UrlCatalogRcm.NS_RCM, "DateRange" ); //$NON-NLS-1$
 
   String getFrom( );
 

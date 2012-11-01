@@ -58,6 +58,7 @@ import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.BodenartWriter;
@@ -79,7 +80,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * Import kalypso rainfall runoff models converts between custom ascii format and gml format. Export to ascii can be
  * generated from a gml file or from a gml workspace.
- *
+ * 
  * @author doemming
  */
 public class NAModellConverter
@@ -107,7 +108,7 @@ public class NAModellConverter
     final NaModell naModel = m_data.getNaModel();
     final NAControl metaControl = m_data.getMetaControl();
     final GMLWorkspace parameterWorkspace = m_data.getParameterWorkspace();
-    final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
+    final Parameter parameter = (Parameter)parameterWorkspace.getRootFeature();
     final GMLWorkspace synthNWorkspace = m_data.getSynthNWorkspace();
     final NAOptimize naOptimize = m_data.getNaOptimize();
 
@@ -176,6 +177,6 @@ public class NAModellConverter
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatusOrOK( "NA Modell Converter" );
+    return m_log.asMultiStatusOrOK( Messages.getString("NAModellConverter_0") ); //$NON-NLS-1$
   }
 }

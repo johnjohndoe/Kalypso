@@ -82,7 +82,7 @@ public final class ThiessenAreaJob extends Job
 
   public ThiessenAreaJob( final boolean doThiessen, final IBoundaryCalculator boundaryCalculator, final GMLWorkspace workspace, final List< ? > stations, final QName propertyStation, final QName propertyArea, final QName propertyActive )
   {
-    super( "Thiessen" );
+    super( "Thiessen" ); //$NON-NLS-1$
 
     m_worker = new ThiessenAreaOperation( propertyStation, propertyActive );
 

@@ -43,6 +43,7 @@ package org.kalypso.model.hydrology.operation.hydrotope;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -84,7 +85,7 @@ final class TopologyChecker
           featureLabel = geometry.toString();
         }
         final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.TopologyChecker.0", featureLabel ); //$NON-NLS-1$
-        return StatusUtilities.createStatus( IStatus.WARNING, message + validationError.getMessage(), null );
+        return new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message + validationError.getMessage() );
       }
     }
     catch( final GM_Exception e )

@@ -50,6 +50,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IDateRange;
 import org.kalypso.model.rcm.binding.ITarget;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
+import org.kalypso.model.rcm.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -73,14 +74,14 @@ public class Target extends Feature_Impl implements ITarget
     final Object catchmentsObject = getCatchmentObject();
     if( !(catchmentsObject instanceof FeatureList) )
     {
-      final String msg = String.format( "Einzugsgebiet-FeaturePfad (catchmentObservationPath) zeigt nicht auf eine FeatureListe: %s", getCatchmentPath() );
+      final String msg = String.format( "Einzugsgebiet-FeaturePfad (catchmentObservationPath) zeigt nicht auf eine FeatureListe: %s", getCatchmentPath() ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, msg ) );
     }
 
     final FeatureList catchmentFeatures = (FeatureList) catchmentsObject;
     final Feature[] array = FeatureHelper.toArray( catchmentFeatures );
     if( array.length < catchmentFeatures.size() )
-      throw new CoreException( new Status( IStatus.WARNING, KalypsoModelRcmActivator.PLUGIN_ID, "Ungültige oder leere Feature-Links in Catchment-Workspace" ) );
+      throw new CoreException( new Status( IStatus.WARNING, KalypsoModelRcmActivator.PLUGIN_ID, Messages.getString("Target_1") ) ); //$NON-NLS-1$
 
     return array;
   }

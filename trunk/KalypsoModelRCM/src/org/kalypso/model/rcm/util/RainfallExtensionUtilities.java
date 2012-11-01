@@ -57,15 +57,15 @@ import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
  */
 public class RainfallExtensionUtilities
 {
-  private static final String RAINFALL_CONFIGURATOR_EXTENSION_POINT = "org.kalypso.model.rcm.rainfallConfigurator";
+  private static final String RAINFALL_CONFIGURATOR_EXTENSION_POINT = "org.kalypso.model.rcm.rainfallConfigurator"; //$NON-NLS-1$
 
-  private static final String RAINFALL_CONFIGURATOR_CONFIGURATOR_ELEMENT = "configurator";
+  private static final String RAINFALL_CONFIGURATOR_CONFIGURATOR_ELEMENT = "configurator"; //$NON-NLS-1$
 
-  private static final String RAINFALL_CONFIGURATOR_CONFIGURATOR_ID = "id";
+  private static final String RAINFALL_CONFIGURATOR_CONFIGURATOR_ID = "id"; //$NON-NLS-1$
 
-  private static final String RAINFALL_CONFIGURATOR_CONFIGURATOR_CLASS = "class";
+  private static final String RAINFALL_CONFIGURATOR_CONFIGURATOR_CLASS = "class"; //$NON-NLS-1$
 
-  public static final String RAINFALL_CONFIGURATOR_ID = "org.kalypso.hwv.ui.utils.RdbRainfallConfigurator";
+  public static final String RAINFALL_CONFIGURATOR_ID = "org.kalypso.hwv.ui.utils.RdbRainfallConfigurator"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -106,7 +106,7 @@ public class RainfallExtensionUtilities
         return (IRainfallConfigurator) element.createExecutableExtension( RAINFALL_CONFIGURATOR_CONFIGURATOR_CLASS );
     }
 
-    String message = String.format( "Keinen Rainfall-Configurator mit ID '%s' gefunden.", id );
+    String message = String.format( "Keinen Rainfall-Configurator mit ID '%s' gefunden.", id ); //$NON-NLS-1$
     throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, message, null ) );
   }
 }
