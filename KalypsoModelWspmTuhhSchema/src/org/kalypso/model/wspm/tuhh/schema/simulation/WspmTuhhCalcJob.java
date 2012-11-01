@@ -54,7 +54,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
-import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
+import org.kalypso.commons.java.lang.ProcessTimeoutException;
 import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;

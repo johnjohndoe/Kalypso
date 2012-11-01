@@ -55,7 +55,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
-import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
+import org.kalypso.commons.java.lang.ProcessTimeoutException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties;
