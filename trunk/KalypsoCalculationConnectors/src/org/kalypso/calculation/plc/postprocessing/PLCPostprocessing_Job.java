@@ -41,47 +41,47 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
   public static final String ID = "KalypsoPLC_Postprocessing"; //$NON-NLS-1$
 
   // flood inputs
-  public static final String INPUT_FLOOD_DIFFERENCE_MODEL = "floodDifferenceModel";
+  public static final String INPUT_FLOOD_DIFFERENCE_MODEL = "floodDifferenceModel"; //$NON-NLS-1$
 
-  public static final String INPUT_FLOOD_DIFFERENCE_RESULT_FOLDER = "floodDifferenceResultFolder";
+  public static final String INPUT_FLOOD_DIFFERENCE_RESULT_FOLDER = "floodDifferenceResultFolder"; //$NON-NLS-1$
 
-  public static final String INPUT_FLOOD_CALCULATED_MODEL = "floodCalculatedModel";
+  public static final String INPUT_FLOOD_CALCULATED_MODEL = "floodCalculatedModel"; //$NON-NLS-1$
 
-  public static final String INPUT_FLOOD_CALCULATED_RESULT_FOLDER = "floodCalculatedResultFolder";
+  public static final String INPUT_FLOOD_CALCULATED_RESULT_FOLDER = "floodCalculatedResultFolder"; //$NON-NLS-1$
 
-  public static final String INPUT_FLOOD_STATUS_QUO_MODEL = "floodStatusQuoModel";
+  public static final String INPUT_FLOOD_STATUS_QUO_MODEL = "floodStatusQuoModel"; //$NON-NLS-1$
 
-  public static final String INPUT_FLOOD_STATUS_QUO_RESULT_FOLDER = "floodStatusQuoResultFolder";
+  public static final String INPUT_FLOOD_STATUS_QUO_RESULT_FOLDER = "floodStatusQuoResultFolder"; //$NON-NLS-1$
 
   // na inputs
   public static final String INPUT_NA_RESULTS_FOLDER = "naResultsFolder"; //$NON-NLS-1$
 
   // length section inputs
-  public static final String INPUT_LENGTH_SECTION_STATUS_QUO_FOLDER = "lengthSectionStatusQuoFolder";
+  public static final String INPUT_LENGTH_SECTION_STATUS_QUO_FOLDER = "lengthSectionStatusQuoFolder"; //$NON-NLS-1$
 
-  public static final String INPUT_LENGTH_SECTION_CALCULATED_FOLDER = "lengthSectionCalculatedFolder";
+  public static final String INPUT_LENGTH_SECTION_CALCULATED_FOLDER = "lengthSectionCalculatedFolder"; //$NON-NLS-1$
 
-  public static final String INPUT_LENGTH_SECTION_DIFFERENCE_FOLDER = "lengthSectionDifferenceFolder";
+  public static final String INPUT_LENGTH_SECTION_DIFFERENCE_FOLDER = "lengthSectionDifferenceFolder"; //$NON-NLS-1$
 
   // risk inputs
-  public static final String INPUT_RISK_RASTERIZATION_CONTROL_MODEL = "riskRasterizationControlModel";
+  public static final String INPUT_RISK_RASTERIZATION_CONTROL_MODEL = "riskRasterizationControlModel"; //$NON-NLS-1$
 
-  public static final String INPUT_RISK_DIFFERENCE_RASTER_DATA_MODEL = "riskDifferenceRasterDataModel";
+  public static final String INPUT_RISK_DIFFERENCE_RASTER_DATA_MODEL = "riskDifferenceRasterDataModel"; //$NON-NLS-1$
 
-  public static final String INPUT_RISK_CALCULATED_RASTER_DATA_MODEL = "riskCalculatedRasterDataModel";
+  public static final String INPUT_RISK_CALCULATED_RASTER_DATA_MODEL = "riskCalculatedRasterDataModel"; //$NON-NLS-1$
 
-  public static final String INPUT_RISK_DIFFERENCE_RASTER_FOLDER_OUTPUT = "riskDifferenceRasterFolderOutput";
+  public static final String INPUT_RISK_DIFFERENCE_RASTER_FOLDER_OUTPUT = "riskDifferenceRasterFolderOutput"; //$NON-NLS-1$
 
-  public static final String INPUT_RISK_CALCULATED_RASTER_FOLDER_OUTPUT = "riskCalculatedRasterFolderOutput";
+  public static final String INPUT_RISK_CALCULATED_RASTER_FOLDER_OUTPUT = "riskCalculatedRasterFolderOutput"; //$NON-NLS-1$
 
-  public static final String INPUT_RISK_STATUS_QUO_RASTER_FOLDER_OUTPUT = "riskStatusQuoRasterFolderOutput";
+  public static final String INPUT_RISK_STATUS_QUO_RASTER_FOLDER_OUTPUT = "riskStatusQuoRasterFolderOutput"; //$NON-NLS-1$
 
-  public static final String INPUT_RISK_DIFFERENCE_STATISTICS = "riskDifferenceStatistics";
+  public static final String INPUT_RISK_DIFFERENCE_STATISTICS = "riskDifferenceStatistics"; //$NON-NLS-1$
 
-  public static final String INPUT_RISK_STATUS_QUO_RASTER_DATA_MODEL = "riskStatusQuoRasterDataModel";
+  public static final String INPUT_RISK_STATUS_QUO_RASTER_DATA_MODEL = "riskStatusQuoRasterDataModel"; //$NON-NLS-1$
 
   // output folder
-  public static final String OUTPUT_FOLDER = "outputFolder";
+  public static final String OUTPUT_FOLDER = "outputFolder"; //$NON-NLS-1$
 
   private static final FileFilter GML_FILE_FILTER = new FileFilter()
   {
@@ -123,7 +123,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       addRiskResults( resultsWorkspace, inputProvider, outputFolder );
 
       final File file = new File( outputFolder, "result.gml" ); //$NON-NLS-1$
-      GmlSerializer.serializeWorkspace( file, resultsWorkspace, "UTF-8" );
+      GmlSerializer.serializeWorkspace( file, resultsWorkspace, "UTF-8" ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -184,7 +184,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     final File riskFolder = new File( outputFolder, "risk" ); //$NON-NLS-1$
     riskFolder.mkdir();
     final File file = new File( riskFolder, "result.gml" ); //$NON-NLS-1$
-    GmlSerializer.serializeWorkspace( file, resultsWorkspace, "UTF-8" );
+    GmlSerializer.serializeWorkspace( file, resultsWorkspace, "UTF-8" ); //$NON-NLS-1$
 
     final File controlModelFile = new File( riskFolder, "RasterizationControlModel.gml" ); //$NON-NLS-1$
     final File sldFile = new File( riskFolder, "RiskZonesCoverage.sld" ); //$NON-NLS-1$

@@ -23,7 +23,7 @@ public class Connector_lzNA_kzNA_Job extends AbstractInternalStatusJob implement
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/modelSpecification.xml" ); //$NON-NLS-N$
+    return getClass().getResource( "resources/modelSpecification.xml" ); //$NON-NLS-N$ //$NON-NLS-1$
   }
 
   @Override
@@ -45,10 +45,10 @@ public class Connector_lzNA_kzNA_Job extends AbstractInternalStatusJob implement
 
       for( final String resultFileName : resultsFolderLZ.list() )
       {
-        if( resultFileName.endsWith( ".gml" ) ) //$NON-NLS-N$
+        if( resultFileName.endsWith( ".gml" ) ) //$NON-NLS-N$ //$NON-NLS-1$
         {
           final File lzSim = new File( resultsFolderLZ, resultFileName );
-          final File newOne = new File( tmpdir, "newFile.gml" ); //$NON-NLS-N$
+          final File newOne = new File( tmpdir, "newFile.gml" ); //$NON-NLS-N$ //$NON-NLS-1$
           FileUtils.copyFile( lzSim, newOne );
           if( lzSim.exists() )
           {

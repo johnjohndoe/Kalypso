@@ -189,7 +189,7 @@ public class InundationDifferenceSimulation implements ISimulation
         outputGrid.usePositiveValuesOnly( true );
 
         final String outputCoverageFileName = String.format( "%s_%02d.bin", diffRunoffEvent.getId(), i ); //$NON-NLS-1$
-        final String outputCoverageFileRelativePath = "../" + rasterFolder.getName() + "/" + outputCoverageFileName;
+        final String outputCoverageFileRelativePath = "../" + rasterFolder.getName() + "/" + outputCoverageFileName; //$NON-NLS-1$ //$NON-NLS-2$
         final File outputCoverageFile = new File( rasterFolder.getAbsolutePath(), outputCoverageFileName );
         final ICoverage newCoverage = GeoGridUtilities.addCoverage( diffRunoffEvent.getResultCoverages(), outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 

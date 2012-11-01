@@ -164,7 +164,7 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
 
         runOffEvent.setProperty( IRunOffEvent.PROPERTY_ANNUALITY, returnPeriodToSet );
 
-        GmlSerializer.serializeWorkspace( outputFile, workspaceWSPM, "UTF-8" );
+        GmlSerializer.serializeWorkspace( outputFile, workspaceWSPM, "UTF-8" ); //$NON-NLS-1$
         setStatus( IStatus.OK, "Success" );
       }
       catch( final Exception e )
