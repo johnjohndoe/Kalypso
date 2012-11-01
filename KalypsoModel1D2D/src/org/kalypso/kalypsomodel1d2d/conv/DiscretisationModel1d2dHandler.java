@@ -429,7 +429,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     final IFE1D2DNode nodeWithSameId = getNode( id );
     if( nodeWithSameId != null )
-      throw new IllegalArgumentException( String.format( "Found multiple nodes with the same id: %s", id ) );
+      throw new IllegalArgumentException( String.format( Messages.getString("DiscretisationModel1d2dHandler.0"), id ) ); //$NON-NLS-1$
 
     final GM_Point nodeLocation = m_positionProvider.getGMPoint( xCoord, yCoord, elevation );
     nodeLocation.setCoordinateSystem( m_crs );
@@ -661,6 +661,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   public IStatus getStatus( )
   {
 //    return m_stati.asMultiStatusOrOK( "2D-Import", "Import succesfully finished." );
-    return m_stati.asMultiStatusOrOK( "2D-Import", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.5" ) ); //$NON-NLS-2$
+    return m_stati.asMultiStatusOrOK( Messages.getString("DiscretisationModel1d2dHandler.1"), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.5" ) );  //$NON-NLS-1$//$NON-NLS-2$
   }
 }

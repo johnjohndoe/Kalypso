@@ -24,7 +24,7 @@ public abstract class FE1D2DElement extends Feature_Impl implements IFE1D2DEleme
   @Override
   public void addLinkedComplexElement( IFE1D2DComplexElement element )
   {
-    Assert.throwIAEOnNullParam( element, "element" );
+    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     if( !complexElementsInternal().containsOrLinksTo( element ) )
       complexElementsInternal().addLink( element );
   }
@@ -32,7 +32,7 @@ public abstract class FE1D2DElement extends Feature_Impl implements IFE1D2DEleme
   @Override
   public void removeLinkedComplexElement( IFE1D2DComplexElement element )
   {
-    Assert.throwIAEOnNullParam( element, "element" );
+    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     if( complexElementsInternal().containsOrLinksTo( element ) )
       complexElementsInternal().removeLink( element );
   }

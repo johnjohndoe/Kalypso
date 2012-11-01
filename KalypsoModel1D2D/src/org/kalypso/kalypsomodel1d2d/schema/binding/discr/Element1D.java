@@ -66,7 +66,7 @@ public class Element1D extends FE1D2DElement implements IElement1D
   @Override
   public void setEdge( final IFE1D2DEdge edge )
   {
-    Assert.throwIAEOnNullParam( edge, "edge" );
+    Assert.throwIAEOnNullParam( edge, "edge" ); //$NON-NLS-1$
     final IFE1D2DEdge oldEdge = getEdge();
     if( oldEdge != null )
       oldEdge.removeLinkedElement( this );

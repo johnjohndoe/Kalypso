@@ -97,9 +97,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * <li/>invalidate the envelops of the found feature
  * <li/>and fire feature change event holding the affected feature
  * </ul>
- * This widget rely on the assumption that the map to edit has layer holding feature with the QName
- * {@link Kalypso1D2DSchemaConstants#WB1D2D_F_NODE}
- *
+ * This widget rely on the assumption that the map to edit has layer holding feature with the QName {@link Kalypso1D2DSchemaConstants#WB1D2D_F_NODE}
+ * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  * @author Thomas Jung
@@ -158,7 +157,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     final FeatureList featureList = m_flowTheme.getFeatureList();
     final Feature parentFeature = featureList.getOwner();
 
-    m_flowRelModel = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
+    m_flowRelModel = (IFlowRelationshipModel)parentFeature.getAdapter( IFlowRelationshipModel.class );
     m_flowWorkspace = m_flowTheme.getWorkspace();
 
     reinit();
@@ -276,7 +275,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     {
       if( element instanceof IPolyElement )
       {
-        final IFlowRelationship lBuilding = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) element, m_flowRelModel );
+        final IFlowRelationship lBuilding = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement)element, m_flowRelModel );
         if( lBuilding != null )
         {
           elementWithFlowRelationship.put( element.getId(), lBuilding );
@@ -338,12 +337,13 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
         final IStatus status = ProgressUtilities.busyCursorWhile( operation );
 
-        StatusDialog.open( shell, status, "Valdiation" );
+        final String dialogTitle = Messages.getString("EditFEConceptGeometryWidget.0"); //$NON-NLS-1$
 
+        StatusDialog.open( shell, status, dialogTitle );
         if( status.isOK() )
           return;
 
-        if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Validation", "Fix validation problems now?" ) )
+        if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( dialogTitle, Messages.getString("EditFEConceptGeometryWidget.1") ) ) //$NON-NLS-1$
           return;
 
         final ICommand command = operation.getValidationFix();

@@ -122,7 +122,7 @@ public class DifferenceResultTinHandler
 
       if( surface.size() == 0 )
       {
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, "Difference tin is empty, no result generated." );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString("DifferenceResultTinHandler.0") ); //$NON-NLS-1$
         throw new CoreException( status );
       }
 
@@ -238,7 +238,7 @@ public class DifferenceResultTinHandler
     }
     catch( IOException | GmlSerializeException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "Failed to write difference tin", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString("DifferenceResultTinHandler.1"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally

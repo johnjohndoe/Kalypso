@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -78,7 +79,7 @@ public class RoughnessHandler
   public void addRoughness( final String id, final String label )
   {
     if( m_protoClasses.containsKey( id ) )
-      m_stati.add( IStatus.WARNING, "Duplicate roughness class is ignored: %s", null, id );
+      m_stati.add( IStatus.WARNING, Messages.getString("RoughnessHandler_0"), null, id ); //$NON-NLS-1$
     else
       m_protoClasses.put( id, label );
   }
@@ -131,7 +132,7 @@ public class RoughnessHandler
   {
     if( existingClasses.contains( id ) )
     {
-      m_stati.add( IStatus.INFO, "Roughness class '%s' already exists and is not added again.", null, id );
+      m_stati.add( IStatus.INFO, Messages.getString("RoughnessHandler_1"), null, id ); //$NON-NLS-1$
       return;
     }
 
@@ -146,6 +147,6 @@ public class RoughnessHandler
 
   public IStatus getStatus( )
   {
-    return m_stati.asMultiStatusOrOK( "Roughness Classes" );
+    return m_stati.asMultiStatusOrOK( Messages.getString("RoughnessHandler_2") ); //$NON-NLS-1$
   }
 }

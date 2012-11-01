@@ -86,9 +86,8 @@ import org.kalypso.zml.ui.imports.ImportObservationOperation;
 import org.kalypso.zml.ui.imports.ObservationImportSelection;
 
 /**
- *
  * FIXME: aaarggg! Copy/Paste of ImportObservationWizard from KalypsoUI!
- *
+ * 
  * @deprecated Merge this class with the other import wizard!
  */
 @Deprecated
@@ -120,11 +119,11 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     // TODO: this is not good, because now this wizard really does not work from the 'new' menu. So be consequent and
     // dont let it be a INewWizard!
 
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IHandlerService handlerService = (IHandlerService)workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
-    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final IWorkbenchWindow window = (IWorkbenchWindow)context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage page = window == null ? null : window.getActivePage();
     m_timeseriesView = page == null ? null : page.findView( Perspective.TIMESERIES_REPOSITORY_VIEW_ID );
 
@@ -171,7 +170,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
 
     /* If we still have a good repository, ok */
     if( repositoryContainer.getRepositories().length > 0 )
-      return (ZmlObservationRepository) repositoryContainer.getRepositories()[0];
+      return (ZmlObservationRepository)repositoryContainer.getRepositories()[0];
 
     /* Respository was not configured before, so create a new one */
 
@@ -215,7 +214,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     final ImportObservationData data = new ImportObservationData( allowedTypes );
 
     /* Translate old selection to data */
-    final ObservationImportSelection selection = (ObservationImportSelection) m_importPage.getSelection();
+    final ObservationImportSelection selection = (ObservationImportSelection)m_importPage.getSelection();
     data.getSourceFileData().setFile( selection.getFileSource() );
     data.setTargetFile( selection.getFileTarget() );
 
@@ -257,8 +256,8 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     }
     catch( final CoreException e )
     {
-      final String title = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4" ); //$NON-NLS-1$
-      final String message = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5" ); //$NON-NLS-1$
+      final String title = getWindowTitle();
+      final String message = "Failed to import observation";
 
       final IStatus error = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, message, e );
 
