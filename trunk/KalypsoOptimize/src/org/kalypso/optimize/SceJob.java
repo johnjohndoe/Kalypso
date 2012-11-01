@@ -167,6 +167,7 @@ public class SceJob
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
 
+    // FIXME: too much copy/paste from ProcessHelper; we can probably use process helper instead!
     ProcessControlThread procCtrlThread = null;
     try
     {
@@ -174,11 +175,8 @@ public class SceJob
 
       final Process process = Runtime.getRuntime().exec( commands, null, m_sceDir );
       final long lTimeOut = 1000l * 60l * 15l;// 15 minutes
-      if( lTimeOut > 0 )
-      {
-        procCtrlThread = new ProcessControlThread( process, lTimeOut );
-        procCtrlThread.start();
-      }
+      procCtrlThread = new ProcessControlThread( process, lTimeOut );
+      procCtrlThread.start();
 
       final StringBuffer outBuffer = new StringBuffer();
       final StringBuffer errBuffer = new StringBuffer();
@@ -220,10 +218,7 @@ public class SceJob
         if( monitor.isCanceled() )
         {
           process.destroy();
-          if( procCtrlThread != null )
-          {
-            procCtrlThread.endProcessControl();
-          }
+          procCtrlThread.endProcessControl();
           return;
         }
         try
@@ -238,10 +233,8 @@ public class SceJob
         }
         Thread.sleep( 100 );
       }
-      if( procCtrlThread != null )
-      {
-        procCtrlThread.endProcessControl();
-      }
+
+      procCtrlThread.endProcessControl();
     }
     catch( final IOException e )
     {
