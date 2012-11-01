@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ui.wizards.i18n.Messages;
 
-
 public class PageSecond extends WizardPage
 {
   private final DataContainer m_data;
@@ -24,17 +23,16 @@ public class PageSecond extends WizardPage
 
   private ArrayList<String> m_shpNamesList;
 
-  protected PageSecond( final DataContainer data ) throws Exception
+  PageSecond( final DataContainer data )
   {
-    super( Messages.getString("org.kalypso.ui.wizards.imports.roughness.PageSecond.0") ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.0" ) ); //$NON-NLS-1$
+
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Title" ) );//$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Description" ) );//$NON-NLS-1$
+
     m_data = data;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -54,7 +52,7 @@ public class PageSecond extends WizardPage
 
   public void delayedCreateControl( )
   {
-    final Composite composite = (Composite) getControl();
+    final Composite composite = (Composite)getControl();
     if( m_comboRoughnessIDs != null && m_comboRoughnessIDs.length > 0 )
     {
       final Control[] controls = composite.getChildren();
@@ -86,7 +84,7 @@ public class PageSecond extends WizardPage
         m_comboRoughnessIDs[nextEntryNr].setItems( names );
         m_comboRoughnessIDs[nextEntryNr].select( getSelectionIndex( names, map.get( key ) ) );
 
-        m_comboRoughnessIDs[nextEntryNr].setToolTipText( Messages.getString("org.kalypso.ui.wizards.imports.roughness.PageSecond.1") ); //$NON-NLS-1$
+        m_comboRoughnessIDs[nextEntryNr].setToolTipText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.1" ) ); //$NON-NLS-1$
       }
     }
     composite.layout();
@@ -112,20 +110,7 @@ public class PageSecond extends WizardPage
     return -1;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
-   */
-  @Override
-  public boolean isPageComplete( )
-  {
-    // boolean complete = true;
-    // for(int i=0; i<m_comboRoughnessIDs.length; i++)
-    // complete &= m_comboRoughnessIDs[i].getText().length() > 0;
-    // return complete;
-    return super.isPageComplete();
-  }
-
-  protected void saveDataToModel( )
+  void saveDataToModel( )
   {
     if( isCurrentPage() )
     {

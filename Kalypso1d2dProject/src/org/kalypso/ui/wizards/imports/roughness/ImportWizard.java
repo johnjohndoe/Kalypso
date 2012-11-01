@@ -88,7 +88,7 @@ public class ImportWizard extends Wizard implements INewWizard
     m_data.loadUserSelection( "/.metadata/roughnessUserSelection.dat" ); //$NON-NLS-1$
     try
     {
-      m_data.setRoughnessDatabaseLocation( RoughnessPolygon.DATA_LOCATION, (IRoughnessClsCollection) szenarioDataProvider.getModel( IRoughnessClsCollection.class.getName() ) ); //$NON-NLS-1$
+      m_data.setRoughnessDatabaseLocation( RoughnessPolygon.DATA_LOCATION, (IRoughnessClsCollection)szenarioDataProvider.getModel( IRoughnessClsCollection.class.getName() ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -101,15 +101,9 @@ public class ImportWizard extends Wizard implements INewWizard
   {
     m_pageMain = new PageMain( m_data );
     addPage( m_pageMain );
-    try
-    {
-      m_pageSecond = new PageSecond( m_data );
-      addPage( m_pageSecond );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+
+    m_pageSecond = new PageSecond( m_data );
+    addPage( m_pageSecond );
   }
 
   @Override
@@ -121,7 +115,7 @@ public class ImportWizard extends Wizard implements INewWizard
   @Override
   public boolean performCancel( )
   {
-    ((Transformer) m_operation).unprepare();
+    ((Transformer)m_operation).unprepare();
     m_data.getRoughnessShapeStaticRelationMap().clear();
     m_data.getRoughnessStaticCollectionMap().clear();
     try

@@ -62,7 +62,7 @@ public class DataContainer
 
   public final void setInputFile( final String inputFile )
   {
-    this.m_inputFile = inputFile;
+    m_inputFile = inputFile;
   }
 
   public final void setLayerName( final String layerName )
@@ -77,11 +77,6 @@ public class DataContainer
     return m_roughnessLayer;
   }
 
-  // public final void setLayerEditable( final boolean isLayerEditable )
-  // {
-  // m_isLayerEditable = isLayerEditable;
-  // }
-
   public final void setLayerAsBasic( final boolean isBasicLayer )
   {
     m_isBasicLayer = isBasicLayer;
@@ -91,11 +86,6 @@ public class DataContainer
   {
     return getLayer().getName();
   }
-
-  // public boolean isLayerEditable( )
-  // {
-  // return m_isLayerEditable;
-  // }
 
   public boolean isBasicLayer( )
   {
@@ -160,8 +150,9 @@ public class DataContainer
   }
 
   /**
-   * @param dbAxAy -
-   *            true if user wants dbAxAy database location, false if KS db location is required
+   * @param dbAxAy
+   *          -
+   *          true if user wants dbAxAy database location, false if KS db location is required
    */
   public final String getRoughnessDatabaseLocation( )
   {
@@ -169,8 +160,9 @@ public class DataContainer
   }
 
   /**
-   * @param dbAxAy -
-   *            true if user wants dbAxAy database location, false if KS db location is required
+   * @param dbAxAy
+   *          -
+   *          true if user wants dbAxAy database location, false if KS db location is required
    */
   public final URL getRoughnessDatabaseLocationURL( ) throws MalformedURLException
   {
@@ -203,21 +195,22 @@ public class DataContainer
     return m_userSelectionMap;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   public void loadUserSelection( final String userSelectionFile )
   {
+    // TODO: use dialog settings stuff instead!
+    m_userSelectionFile = m_absolutePath + "/" + m_projectBaseFolder + "/" + userSelectionFile; //$NON-NLS-1$ //$NON-NLS-2$
+    final File file = new File( m_userSelectionFile );
+
     try
     {
-      // TODO: use dialog settings stuff instead!
-      m_userSelectionFile = m_absolutePath + "/" + m_projectBaseFolder + "/" + userSelectionFile; //$NON-NLS-1$ //$NON-NLS-2$
-      final File file = new File( m_userSelectionFile );
       if( file.exists() && file.isFile() && file.length() > 0 )
       {
         final FileInputStream fileStream = new FileInputStream( file );
         final ObjectInputStream objectStream = new ObjectInputStream( fileStream );
         final Object object = objectStream.readObject();
         if( object instanceof LinkedHashMap )
-          m_userSelectionMap = (LinkedHashMap<String, String>) object;
+          m_userSelectionMap = (LinkedHashMap<String, String>)object;
       }
       else
       {
