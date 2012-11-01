@@ -756,7 +756,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         station = teschkeRelation.getStation();
         if( station == null )
         {
-          final String msg = "No station for teschke flow relation.";
+          final String msg = Messages.getString("Gml2RMA10SConv.0"); //$NON-NLS-1$
           final GM_Object location = node.getPoint();
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
           throw new CoreException( status );

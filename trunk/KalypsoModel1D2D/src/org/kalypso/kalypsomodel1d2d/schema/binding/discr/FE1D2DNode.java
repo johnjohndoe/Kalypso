@@ -37,8 +37,8 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   @Override
   public void setPoint( final GM_Point point )
   {
-    Assert.throwIAEOnNullParam( point, "point" );
-    Assert.throwIAEOnNull( point.getCoordinateSystem(), "Point must have a coordinate system." );
+    Assert.throwIAEOnNullParam( point, "point" ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( point.getCoordinateSystem(), "Point must have a coordinate system." ); //$NON-NLS-1$
     setProperty( IFE1D2DNode.PROPERTY_POINT, point );
   }
 
@@ -107,7 +107,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   @Override
   public void addLinkedEdge( IFE1D2DEdge edge )
   {
-    Assert.throwIAEOnNullParam( edge, "edge" );
+    Assert.throwIAEOnNullParam( edge, "edge" ); //$NON-NLS-1$
     if( !linkedItemsInternal().containsOrLinksTo( edge ) )
       linkedItemsInternal().addLink( edge );
   }
@@ -115,7 +115,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   @Override
   public void removeLinkedEdge( IFE1D2DEdge edge )
   {
-    Assert.throwIAEOnNullParam( edge, "edge" );
+    Assert.throwIAEOnNullParam( edge, "edge" ); //$NON-NLS-1$
     if( linkedItemsInternal().containsOrLinksTo( edge ) )
       linkedItemsInternal().removeLink( edge );
   }

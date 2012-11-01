@@ -56,6 +56,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -201,7 +202,7 @@ public class Add2DElementsCommand implements ICommand
         final Geometry foundPolygon = JTSAdapter.export( foundGeometry );
         if( foundPolygon.overlaps( newPolygon ) )
         {
-          m_log.add( IStatus.WARNING, "Element not added: overlaps existing elements: %s", null, (Object)positions );
+          m_log.add( IStatus.WARNING, Messages.getString("Add2DElementsCommand_0"), null, (Object)positions ); //$NON-NLS-1$
           return false;
         }
       }
@@ -233,7 +234,7 @@ public class Add2DElementsCommand implements ICommand
           if( geometry.contains( nodeLocation ) )
           {
             // do not insert nodes that are placed on existing model(overlapped elements)
-            m_log.add( IStatus.WARNING, "Node not added: overlaps existing element: %s", null, position );
+            m_log.add( IStatus.WARNING, Messages.getString("Add2DElementsCommand_1"), null, position ); //$NON-NLS-1$
             return false;
           }
         }

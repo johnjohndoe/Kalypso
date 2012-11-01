@@ -103,7 +103,7 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
   @Override
   public void addLinkedItem( final IFELine element )
   {
-    Assert.throwIAEOnNullParam( element, "element" );
+    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     final FeatureList linesInternal = getLinesInternal();
     if( !linesInternal.containsOrLinksTo( element ) )
       linesInternal.addLink( element );
@@ -119,7 +119,7 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
   @Override
   public void removeLinkedItem( final IFELine element )
   {
-    Assert.throwIAEOnNullParam( element, "element" );
+    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     final FeatureList linesInternal = getLinesInternal();
     if( linesInternal.containsOrLinksTo( element ) )
       linesInternal.remove( element.getId() );

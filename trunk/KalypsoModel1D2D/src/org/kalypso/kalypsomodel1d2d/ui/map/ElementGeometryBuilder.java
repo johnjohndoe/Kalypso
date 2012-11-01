@@ -269,7 +269,7 @@ public class ElementGeometryBuilder
           for( final IFE1D2DElement edgeContainer : containers )
           {
             if( edgeContainer instanceof IElement1D )
-              return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "2D-Element cannot have a common vertice with an 1D-Element" );
+              return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString("ElementGeometryBuilder.0") ); //$NON-NLS-1$
           }
         }
       }

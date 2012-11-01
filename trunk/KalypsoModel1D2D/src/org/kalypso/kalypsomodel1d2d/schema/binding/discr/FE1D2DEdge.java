@@ -105,7 +105,7 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge
   @Override
   public boolean containsNode( final IFE1D2DNode node )
   {
-    Assert.throwIAEOnNullParam( node, "node" );
+    Assert.throwIAEOnNullParam( node, "node" ); //$NON-NLS-1$
     return nodesInternal().containsOrLinksTo( node );
   }
 

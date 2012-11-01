@@ -40,15 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * Undoable command that changes the name of of an {@link Feature}
- *
+ * 
  * @author Patrice Congo
  */
 public class ChangeIFeatureWrapper2NameCmd implements IFeatureChangeCommand
@@ -66,7 +66,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IFeatureChangeCommand
 
   /**
    * Creates a Calculation unit of the given q-name
-   *
+   * 
    * @param cuFeatureQName
    *          the q-name of the calculation unit to create
    * @param model1d2d
@@ -80,8 +80,8 @@ public class ChangeIFeatureWrapper2NameCmd implements IFeatureChangeCommand
    */
   public ChangeIFeatureWrapper2NameCmd( final Feature featureToRename, final String newName )
   {
-    Assert.throwIAEOnNullParam( featureToRename, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeFeatureNameCmd.0" ) ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( newName, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeFeatureNameCmd.1" ) ); //$NON-NLS-1$
+    Assert.isNotNull( featureToRename );
+    Assert.isNotNull( newName );
 
     m_featureToRename = featureToRename;
     m_newName = newName;
@@ -130,7 +130,6 @@ public class ChangeIFeatureWrapper2NameCmd implements IFeatureChangeCommand
   }
 
   /**
-   *
    * @param calculationUnit
    *          the added or removed calculation unit
    * @param added

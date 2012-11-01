@@ -84,7 +84,7 @@ public class QuadMeshValidator
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "Geometry error in mesh", e );
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString("QuadMeshValidator.0"), e ); //$NON-NLS-1$
     }
   }
 

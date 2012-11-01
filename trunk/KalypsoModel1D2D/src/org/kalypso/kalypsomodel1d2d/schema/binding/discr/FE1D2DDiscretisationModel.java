@@ -102,7 +102,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   public IElement1D createElement1D( final IFE1D2DEdge edge )
   {
     if( edge.getLinkedElements().length != 0 )
-      throw new IllegalStateException( "The edge is already contained in one or more elements." );
+      throw new IllegalStateException( "The edge is already contained in one or more elements." ); //$NON-NLS-1$
 
     try
     {
@@ -146,7 +146,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       return node;
 
     if( elementsIntersect( nodeLocation ) )
-      throw new IllegalStateException( "The given location is inside an existing element" );
+      throw new IllegalStateException( "The given location is inside an existing element" ); //$NON-NLS-1$
 
     try
     {
@@ -436,7 +436,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
 
     final IFE1D2DEdge[] linkedEdges = node.getLinkedEdges();
     if( linkedEdges.length != 1 || linkedEdges[0].getLinkedElements().length != 1 || !(linkedEdges[0].getLinkedElements()[0] instanceof IElement1D) )
-      throw new IllegalStateException( "Can only create a 1D continuity line at the end of a 1D element" );
+      throw new IllegalStateException( "Can only create a 1D continuity line at the end of a 1D element" ); //$NON-NLS-1$
 
     try
     {

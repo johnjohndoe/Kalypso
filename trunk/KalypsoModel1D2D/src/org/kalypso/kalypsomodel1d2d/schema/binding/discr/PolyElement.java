@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -35,7 +34,7 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
   @Override
   public void setEdges( final IFE1D2DEdge[] edges )
   {
-    Assert.throwIAEOnNull( edges, Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element2D.2" ) );
+    Assert.throwIAEOnNull( edges, "edge ID must not be null" ); //$NON-NLS-1$
 //    if( edges.length < 3 || edges.length > 4 )
 //      throw new IllegalStateException( String.format( "Cannot create an element with %d edges.", edges.length ) );
 
@@ -88,7 +87,7 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
     return nodes.toArray( new IFE1D2DNode[nodes.size()] );
   }
 
-  private IFE1D2DNode getAdjacentNode( final IFE1D2DNode node, IFE1D2DEdge[] edges, final List<IFE1D2DNode> excludeNodes )
+  private IFE1D2DNode getAdjacentNode( final IFE1D2DNode node, final IFE1D2DEdge[] edges, final List<IFE1D2DNode> excludeNodes )
   {
     for( final IFE1D2DEdge edge : edges )
     {
