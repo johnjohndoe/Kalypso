@@ -214,11 +214,11 @@
          <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.AddRoughnessResolution"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.AddRoughnessResolution"
-               name="Rauheit hinzufügen">
+               name="%reparator.name">
          </reparator>
          <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution"
-               description="Entfernt eine Komponente aus dem Profil"
+               description="%reparator.description"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution"
                name="%org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution.name">
          </reparator>
@@ -1094,7 +1094,7 @@
       <decorator
             class="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmBuildingDecorator"
             id="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmBuildingDecorator"
-            label="Bulding icons for WSPM profiles"
+            label="%decorator.label"
             lightweight="true"
             state="true">
          <enablement>
@@ -1103,12 +1103,12 @@
               <objectClass name="org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment"/>
             </or>
          </enablement>
-         <description>Shows icons for building type for WSPM profiles.</description>
+         <description>%decorator.description</description>
       </decorator>
       <decorator
             class="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmMarkerDecorator"
             id="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmMarkerDecorator"
-            label="Problem marker for WSPM profiles"
+            label="%decorator.label.0"
             lightweight="true"
             location="BOTTOM_RIGHT"
             state="true">
@@ -1118,18 +1118,18 @@
               <objectClass name="org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment"/>
             </or>
          </enablement>
-         <description>Shows icons for building type for WSPM profiles.</description>
+         <description>%decorator.description.0</description>
       </decorator>
       <decorator
             class="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmReachNamesDecorator"
             id="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmReachNamesDecorator"
-            label="Strand names for WSPM profile"
+            label="%decorator.label.1"
             lightweight="true"
             state="false">
          <enablement>
             <objectClass name="org.kalypso.model.wspm.core.gml.IProfileFeature"/>
          </enablement>
-         <description>Shows names of strands that use a WSPM profile in paranthesis behind the profile name.</description>
+         <description>%decorator.description.1</description>
       </decorator>
    </extension>
 
