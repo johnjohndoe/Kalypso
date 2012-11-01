@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.kalypso.kalypso1d2d.internal.bce2d.imports;
+package org.kalypso.kalypso1d2d.internal.import2d;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -13,7 +13,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;

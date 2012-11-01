@@ -66,6 +66,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
@@ -79,7 +80,6 @@ import org.kalypso.kalypsomodel1d2d.sim.ResultProcessingOperation;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ui.wizards.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -113,7 +113,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Evaluating results", m_selectedResults.length );
+    monitor.beginTask( Messages.getString("ReevaluateResultOperation.1"), m_selectedResults.length ); //$NON-NLS-1$
 
     final IStatusCollector stati = new StatusCollector( Kalypso1d2dProjectPlugin.PLUGIN_ID );
 

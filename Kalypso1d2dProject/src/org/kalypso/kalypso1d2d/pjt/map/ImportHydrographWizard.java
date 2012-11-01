@@ -22,7 +22,7 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
@@ -412,7 +412,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 
     if( hydro == null )
     {
-      m_errMsg += "failed to create new hydrograph";
+      m_errMsg += "failed to create new hydrograph"; //$NON-NLS-1$
       return null;
     }
 

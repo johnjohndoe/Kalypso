@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.wizards.export2d;
+package org.kalypso.kalypso1d2d.internal.export2d;
 
 import java.io.File;
 
@@ -53,7 +53,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 public class Export2dWizard extends Wizard implements INewWizard

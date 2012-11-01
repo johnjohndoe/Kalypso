@@ -58,10 +58,10 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.FileDialogUtils;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.kalypso1d2d.internal.bce2d.I2DContants;
+import org.kalypso.kalypso1d2d.internal.I2DContants;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
-import org.kalypso.ui.wizards.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 

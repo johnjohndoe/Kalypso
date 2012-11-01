@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.wizards.export2d;
+package org.kalypso.kalypso1d2d.internal.export2d;
 
 import java.io.File;
 
@@ -55,11 +55,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.MeshConverterFactory;
 import org.kalypso.ui.ImageProvider;
 
-public class Export2dFileSelectWizardPage extends WizardPage
+class Export2dFileSelectWizardPage extends WizardPage
 {
   private Text m_destinationFileField;
 
@@ -77,8 +77,8 @@ public class Export2dFileSelectWizardPage extends WizardPage
   {
     super( pageName, "", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$
 
-    setTitle( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.1") ); //$NON-NLS-1$
-    setDescription( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.2") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.1" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.2" ) ); //$NON-NLS-1$
 
     m_filenameExtensions = fileNameExtensions;
     m_fileTypes = fileTypes;
@@ -90,7 +90,7 @@ public class Export2dFileSelectWizardPage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
-    Composite container = new Composite( parent, SWT.NULL );
+    final Composite container = new Composite( parent, SWT.NULL );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
     container.setLayout( gridLayout );
@@ -99,13 +99,13 @@ public class Export2dFileSelectWizardPage extends WizardPage
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
-    label_1.setText( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.3") ); //$NON-NLS-1$
+    label_1.setText( Messages.getString( "org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.3" ) ); //$NON-NLS-1$
 
     m_destinationFileField = new Text( container, SWT.BORDER );
     m_destinationFileField.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         updatePageComplete();
       }
@@ -116,17 +116,17 @@ public class Export2dFileSelectWizardPage extends WizardPage
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         browseForFile();
       }
     } );
-    button.setText( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.4") ); //$NON-NLS-1$
+    button.setText( Messages.getString( "org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.4" ) ); //$NON-NLS-1$
     final Label label_2 = new Label( container, SWT.NONE );
     label_2.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label_2.setText( " " ); //$NON-NLS-1$
     m_btnExportMiddleNodes = new Button( container, SWT.CHECK );
-    m_btnExportMiddleNodes.setText( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.6") ); //$NON-NLS-1$
+    m_btnExportMiddleNodes.setText( Messages.getString( "org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.6" ) ); //$NON-NLS-1$
     m_btnExportMiddleNodes.setSelection( false );
     final Label label_3 = new Label( container, SWT.NONE );
     label_3.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
@@ -136,10 +136,10 @@ public class Export2dFileSelectWizardPage extends WizardPage
     label_4.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label_4.setText( " " ); //$NON-NLS-1$
     m_btnExportRoughness = new Button( container, SWT.CHECK );
-    m_btnExportRoughness.setText( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.9") ); //$NON-NLS-1$
+    m_btnExportRoughness.setText( Messages.getString( "org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.9" ) ); //$NON-NLS-1$
     m_btnExportRoughness.setSelection( false );
 
-    GridData gd = new GridData();
+    final GridData gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
     gd.widthHint = 75;
 
@@ -155,21 +155,21 @@ public class Export2dFileSelectWizardPage extends WizardPage
     setPageComplete( false );
     final File file = new File( getFilePath() );
     boolean regularExtension = false;
-    for( int i = 0; i < m_filenameExtensions.length; i++ )
-      if( file.getName().endsWith( m_filenameExtensions[i].substring( 1 ) ) )
+    for( final String m_filenameExtension : m_filenameExtensions )
+      if( file.getName().endsWith( m_filenameExtension.substring( 1 ) ) )
       {
         regularExtension = true;
-        m_selectedExtension = m_filenameExtensions[i];
+        m_selectedExtension = m_filenameExtension;
         break;
       }
-    
+
     m_btnExportRoughness.setEnabled( MeshConverterFactory.supportFlowResistanceClasses( m_selectedExtension ) );
     m_btnExportMiddleNodes.setEnabled( MeshConverterFactory.supportMidSideNodes( m_selectedExtension ) );
-        
+
     if( !regularExtension )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.10") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.10" ) ); //$NON-NLS-1$
       m_selectedExtension = null;
       return;
     }
@@ -197,8 +197,8 @@ public class Export2dFileSelectWizardPage extends WizardPage
 
     final String[] filterExtensions = dialog.getFilterExtensions();
     boolean regularExtension = false;
-    for( int i = 0; i < filterExtensions.length; i++ )
-      if( fileName.endsWith( filterExtensions[i].substring( 1 ) ) )
+    for( final String filterExtension : filterExtensions )
+      if( fileName.endsWith( filterExtension.substring( 1 ) ) )
       {
         regularExtension = true;
         break;
@@ -227,13 +227,13 @@ public class Export2dFileSelectWizardPage extends WizardPage
   {
     return m_selectedExtension;
   }
-  
-  public void setEnabledExportMiddleNodes( boolean enable )
+
+  public void setEnabledExportMiddleNodes( final boolean enable )
   {
     m_btnExportMiddleNodes.setEnabled( enable );
   }
-  
-  public void setEnabledExportRoughessData( boolean enable )
+
+  public void setEnabledExportRoughessData( final boolean enable )
   {
     m_btnExportRoughness.setEnabled( enable );
   }
