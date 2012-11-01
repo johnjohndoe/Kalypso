@@ -16,13 +16,13 @@ public interface IKalypsoModelConnectorType
       switch( kind )
       {
         case CONNECTOR_LZNA_KZNA:
-          return "KalypsoModelConnector_LZNA_KZNA";
+          return "KalypsoModelConnector_LZNA_KZNA"; //$NON-NLS-1$
         case CONNECTOR_NA_WSPM:
-          return "KalypsoModelConnector_NA_WSPM";
+          return "KalypsoModelConnector_NA_WSPM"; //$NON-NLS-1$
         case CONNECTOR_WSPM_FLOOD:
-          return "KalypsoModelConnector_WSPM_FM";
+          return "KalypsoModelConnector_WSPM_FM"; //$NON-NLS-1$
         case CONNECTOR_FLOOD_RISK:
-          return "KalypsoModelConnector_FM_RM";
+          return "KalypsoModelConnector_FM_RM"; //$NON-NLS-1$
         default:
           throw new UnsupportedOperationException();
       }

@@ -72,7 +72,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
       for( final IRunoffEvent runoffEvent : floodModelEvents )
       {
         final IAnnualCoverageCollection annualCoverageCollection = riskWaterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
-        annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
+        annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
         annualCoverageCollection.setReturnPeriod( runoffEvent.getReturnPeriod() );
         final ICoverageCollection coverages = runoffEvent.getResultCoverages();
         final IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
@@ -99,7 +99,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
           annualCoverageCollection.getCoverages().add( coverage );
         }
       }
-      GmlSerializer.serializeWorkspace( rmOutputFile, rmModel, "UTF-8" );
+      GmlSerializer.serializeWorkspace( rmOutputFile, rmModel, "UTF-8" ); //$NON-NLS-1$
       resultEater.addResult( MODELSPEC_CONNECTOR_FM_RM.RM_Model.name(), rmOutputFile );
       resultEater.addResult( MODELSPEC_CONNECTOR_FM_RM.RM_InputRasterFolder.name(), rmInputRasterFolder );
 
@@ -122,8 +122,8 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
           final JAXBElement<StyledLayerType> jaxbLayer = layerObjectFactory.createLayer( layer );
           layersList.add( jaxbLayer );
         }
-        final File outMap = File.createTempFile( "tempMap", ".gml", tmpdir ); //$NON-NLS-1$
-        GisTemplateHelper.saveGisMapView( gisview, outMap, "UTF-8" );
+        final File outMap = File.createTempFile( "tempMap", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$
+        GisTemplateHelper.saveGisMapView( gisview, outMap, "UTF-8" ); //$NON-NLS-1$
         resultEater.addResult( MODELSPEC_KALYPSORISK.MAP_WATERLEVEL.toString(), outMap );
       }
 

@@ -10,7 +10,7 @@ public class PluginActivator extends AbstractUIPlugin
 {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.calculation.connectors";
+  public static final String PLUGIN_ID = "org.kalypso.calculation.connectors"; //$NON-NLS-1$
 
   // The shared instance
   private static PluginActivator plugin;
