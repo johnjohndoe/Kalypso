@@ -44,6 +44,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages.DESCRIPTORS;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -65,8 +66,8 @@ public class JumpToDatasetAction extends Action implements IUpdateable
     m_data = data;
     m_widget = widget;
 
-    setText( "Jump to dataset" );
-    setToolTipText( "Shows the current dataset in the map" );
+    setText( Messages.getString("JumpToDatasetAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("JumpToDatasetAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.IMPORT_2D_ELEMENTS_JUMP_TO ) );
   }

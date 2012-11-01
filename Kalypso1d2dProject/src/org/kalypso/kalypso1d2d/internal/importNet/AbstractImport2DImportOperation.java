@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.bce.gis.io.zweidm.IPolygonWithName;
@@ -71,14 +72,14 @@ public abstract class AbstractImport2DImportOperation implements IImport2dImport
   @Override
   public final IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Import 2D-Elements", 100 );
+    monitor.beginTask( Messages.getString("AbstractImport2DImportOperation_0"), 100 ); //$NON-NLS-1$
 
     /* Read the file */
     final String srs = m_importData.getSrs();
     final int sourceSrid = JTSAdapter.toSrid( srs );
     final File importFile = m_importData.getFile();
 
-    monitor.subTask( String.format( "reading file %s", importFile.getName() ) );
+    monitor.subTask( String.format( Messages.getString("AbstractImport2DImportOperation_1"), importFile.getName() ) ); //$NON-NLS-1$
 
     final Pair<IStatus, IPolygonWithName[]> readData = readFileData( importFile, sourceSrid, new SubProgressMonitor( monitor, 33 ) );
 
@@ -94,7 +95,7 @@ public abstract class AbstractImport2DImportOperation implements IImport2dImport
     /* Check for cancel */
     ProgressUtilities.worked( monitor, 0 );
 
-    monitor.subTask( String.format( "analysing read elements", importFile.getName() ) );
+    monitor.subTask( String.format( Messages.getString("AbstractImport2DImportOperation_2"), importFile.getName() ) ); //$NON-NLS-1$
 
     // TODO: analyse data
 

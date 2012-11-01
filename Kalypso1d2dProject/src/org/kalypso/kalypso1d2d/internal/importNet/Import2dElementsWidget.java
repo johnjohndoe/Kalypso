@@ -75,6 +75,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
@@ -190,7 +191,7 @@ public class Import2dElementsWidget extends AbstractWidget implements IWidgetWit
   private Section createOverviewSection( final FormToolkit toolkit, final Composite panel )
   {
     final Section section = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
-    section.setText( "Import External Formats" );
+    section.setText( Messages.getString("Import2dElementsWidget_0") ); //$NON-NLS-1$
 
     createDatasetActions( section );
 
@@ -203,7 +204,7 @@ public class Import2dElementsWidget extends AbstractWidget implements IWidgetWit
   private Section createElementsSection( final FormToolkit toolkit, final Composite panel )
   {
     final Section section = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
-    section.setText( "Elements Preview" );
+    section.setText( Messages.getString("Import2dElementsWidget_1") ); //$NON-NLS-1$
 
     final Table table = toolkit.createTable( section, SWT.BORDER | SWT.FULL_SELECTION );
     section.setClient( table );
@@ -227,7 +228,7 @@ public class Import2dElementsWidget extends AbstractWidget implements IWidgetWit
     final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem nameItem = new ViewerColumnItem( nameColumn );
 
-    nameItem.setText( "ID" );
+    nameItem.setText( "ID" ); //$NON-NLS-1$
     nameItem.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( nameItem.getColumn() );
     nameColumn.setLabelProvider( new PolygonWithNameLabelProvider() );

@@ -48,6 +48,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.internal.importNet.shape.Import2dImportShapeOperation;
 import org.kalypso.kalypso1d2d.internal.importNet.twodm.Import2dImport2dmOperation;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
@@ -70,7 +71,7 @@ public class Import2dImportWizard extends Wizard
     m_operations = new IImport2dImportOperation[] { new Import2dImport2dmOperation( m_data, m_importData ), new Import2dImportShapeOperation( m_data, m_importData ) };
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
-    setWindowTitle( "Import 2D Elements" );
+    setWindowTitle( Messages.getString("Import2dImportWizard_0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
 
     addPage( new Import2dImportPage( "filePage", m_importData, m_operations ) ); //$NON-NLS-1$

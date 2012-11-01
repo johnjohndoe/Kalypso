@@ -45,6 +45,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages.DESCRIPTORS;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
@@ -59,8 +60,8 @@ public class Import2dImportAction extends Action
   {
     m_data = data;
 
-    setText( "Import elements from file..." );
-    setToolTipText( "Add elements from an external file to the working set of elements" );
+    setText( Messages.getString("Import2dImportAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("Import2dImportAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.IMPORT_2D_ELEMENTS ) );
   }

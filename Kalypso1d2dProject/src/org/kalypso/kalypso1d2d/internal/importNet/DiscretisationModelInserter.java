@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
@@ -196,7 +197,7 @@ public class DiscretisationModelInserter
     };
     m_incomingIndex.query( boundingBox, insertVisitor );
 
-    return stati.asMultiStatusOrOK( "Problem(s) while inserting elements into model" );
+    return stati.asMultiStatusOrOK( Messages.getString("DiscretisationModelInserter_0") ); //$NON-NLS-1$
   }
 
   private Envelope calculateIncomingExtent( )
@@ -227,7 +228,7 @@ public class DiscretisationModelInserter
     }
     catch( final Exception e )
     {
-      final String message = String.format( "Failed to insert element '%s'", item.getName() );
+      final String message = String.format( Messages.getString("DiscretisationModelInserter_1"), item.getName() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, message, e );
     }
   }

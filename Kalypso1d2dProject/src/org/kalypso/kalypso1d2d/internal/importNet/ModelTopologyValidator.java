@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.internal.importNet;
 
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
+
 import com.bce.gis.io.zweidm.IPolygonWithName;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -84,7 +86,7 @@ public class ModelTopologyValidator
   private String checkIntersection( final Geometry intersection, final IPolygonWithName item1, final IPolygonWithName item2 )
   {
     if( intersection instanceof GeometryCollection )
-      return "complex intersection";
+      return Messages.getString("ModelTopologyValidator_0"); //$NON-NLS-1$
 
     switch( intersection.getDimension() )
     {
@@ -96,7 +98,7 @@ public class ModelTopologyValidator
 
       case 2:
         // never legal
-        return String.format( "overlapping (area = %.4f)", intersection.getArea() );
+        return String.format( Messages.getString("ModelTopologyValidator_1"), intersection.getArea() ); //$NON-NLS-1$
 
       default:
         throw new IllegalStateException();
@@ -112,10 +114,10 @@ public class ModelTopologyValidator
 
     // 2 points, edge must be a real edge of both polygons
     if( !isVerticeOf( item1.getPolygon(), vertice.getCoordinate() ) )
-      return String.format( "intersection is not a vertice of item '%s'", item1.getName() );
+      return String.format( Messages.getString("ModelTopologyValidator_2"), item1.getName() ); //$NON-NLS-1$
 
     if( !isVerticeOf( item2.getPolygon(), vertice.getCoordinate() ) )
-      return String.format( "intersection is not a vertice of item '%s'", item2.getName() );
+      return String.format( Messages.getString("ModelTopologyValidator_3"), item2.getName() ); //$NON-NLS-1$
 
     return null;
   }
@@ -143,18 +145,18 @@ public class ModelTopologyValidator
       throw new IllegalStateException();
 
     if( numPoints > 2 )
-      return "intersect with edge of more than 2 points";
+      return Messages.getString("ModelTopologyValidator_4"); //$NON-NLS-1$
 
     if( edge.getLength() == 0.0 )
-      return "invalid edge";
+      return Messages.getString("ModelTopologyValidator_5"); //$NON-NLS-1$
 
     // 2 points, edge must be a real edge of both polygons
     final LineSegment segment = new LineSegment( edge.getCoordinateN( 0 ), edge.getCoordinateN( 1 ) );
     if( !isEdgeOf( item1.getPolygon(), segment ) )
-      return String.format( "intersection is not a complete edge of item '%s'", item1.getName() );
+      return String.format( Messages.getString("ModelTopologyValidator_6"), item1.getName() ); //$NON-NLS-1$
 
     if( !isEdgeOf( item2.getPolygon(), segment ) )
-      return String.format( "intersection is not a complete edge of item '%s'", item2.getName() );
+      return String.format( Messages.getString("ModelTopologyValidator_7"), item2.getName() ); //$NON-NLS-1$
 
     return null;
   }

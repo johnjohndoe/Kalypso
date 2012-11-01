@@ -50,6 +50,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.internal.importNet.AbstractImport2DImportOperation;
 import org.kalypso.kalypso1d2d.internal.importNet.Import2dElementsData;
 import org.kalypso.kalypso1d2d.internal.importNet.Import2dImportData;
@@ -73,7 +74,7 @@ public class Import2dImport2dmOperation extends AbstractImport2DImportOperation
   @Override
   public String getFilterName( )
   {
-    return "SMS Files";
+    return Messages.getString("Import2dImport2dmOperation_0"); //$NON-NLS-1$
   }
 
   @Override
