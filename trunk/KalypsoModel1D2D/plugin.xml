@@ -264,6 +264,7 @@
       </class>
     </handler>
     <!-- 2D-Parameter --> 
+    <!-- was broken, can probably be removed
     <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation.2D">
       <enabledWhen>
       	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param2d" />
@@ -280,6 +281,7 @@
         <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditWeir2DFlowrelationWidget"/>
       </class>
     </handler>
+    -->
    
     <!-- Hydrograph -->
     <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateHydrograph">
