@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.internal.bce2d.imports;
+package org.kalypso.kalypso1d2d.internal.import2d;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;

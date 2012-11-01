@@ -83,15 +83,15 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
-import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.zml.ui.imports.ObservationImportSelection;
 import org.kalypso.zml.ui.imports.TimezoneEtcFilter;
 
 /**
  * FIXME: this is a stupid copy/paste from the original ImportObservationSelectionWizardPage, however it does almost the
  * same thing -> we need to combine the two pages again!
- *
+ * 
  * @author doemming
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
@@ -281,8 +281,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) comboTimeZones.getSelection();
-        updateTimeZone( (String) selection.getFirstElement() );
+        final IStructuredSelection selection = (IStructuredSelection)comboTimeZones.getSelection();
+        updateTimeZone( (String)selection.getFirstElement() );
       }
     } );
 
@@ -314,7 +314,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   private String getInputTypeFromSelection( )
   {
     final ISelection lSelection = m_formatCombo.getSelection();
-    final INativeObservationAdapter lNativeObservationAdapter = (INativeObservationAdapter) ((StructuredSelection) lSelection).getFirstElement();
+    final INativeObservationAdapter lNativeObservationAdapter = (INativeObservationAdapter)((StructuredSelection)lSelection).getFirstElement();
     return lNativeObservationAdapter.getAxisTypeValue();
   }
 
@@ -472,7 +472,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   @Override
   public ISelection getSelection( )
   {
-    final IStructuredSelection formatSelection = (IStructuredSelection) m_formatCombo.getSelection();
+    final IStructuredSelection formatSelection = (IStructuredSelection)m_formatCombo.getSelection();
     if( !m_controlFinished )
       return new ISelection()
       {
@@ -489,7 +489,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     final String sourceName = FileUtilities.nameWithoutExtension( m_sourceFile.getName() );
 
     m_targetFile = m_targetFolder.getFile( sourceName + "." + getInputTypeFromSelection() + ".zml" ); //$NON-NLS-1$ //$NON-NLS-2$
-    return new ObservationImportSelection( m_sourceFile, m_targetFile, (INativeObservationAdapter) formatSelection.getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection(), m_timezone );
+    return new ObservationImportSelection( m_sourceFile, m_targetFile, (INativeObservationAdapter)formatSelection.getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection(), m_timezone );
   }
 
   /**
@@ -509,7 +509,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   {
     if( selection instanceof ObservationImportSelection )
     {
-      final ObservationImportSelection s = (ObservationImportSelection) selection;
+      final ObservationImportSelection s = (ObservationImportSelection)selection;
       if( m_formatCombo != null )
         m_formatCombo.setSelection( new StructuredSelection( s.getNativeAdapter() ) );
       m_sourceFile = s.getFileSource();
@@ -521,9 +521,9 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     }
     else if( selection instanceof IStructuredSelection )
     {
-      final Object firstElement = ((StructuredSelection) selection).getFirstElement();
+      final Object firstElement = ((StructuredSelection)selection).getFirstElement();
       if( firstElement instanceof IFile )
-        m_targetFile = (IFile) firstElement;
+        m_targetFile = (IFile)firstElement;
     }
   }
 

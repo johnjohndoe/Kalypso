@@ -89,13 +89,13 @@
             id="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
             name="Observation load"/>
         <wizard
-              class="org.kalypso.kalypso1d2d.internal.bce2d.imports.Import2dWizard"
+              class="org.kalypso.kalypso1d2d.internal.import2d.Import2dWizard"
               icon="icons/elcl16/1d2d_edit_protocol_view.gif"
               id="org.kalypso.wizards.import1d2d.ImportWizard"
               name="Import 1D2D"
               project="false"/>
         <wizard
-              class="org.kalypso.wizards.export2d.Export2dWizard"
+              class="org.kalypso.kalypso1d2d.internal.export2d.Export2dWizard"
               id="org.kalypso.wizards.export2d.ExportWizard"
               name="Export 2D"
               project="false"/>

@@ -46,12 +46,13 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
- * @author Nico Schrage
+ * IMPORTANT: only to be used for Template Messages!
  * 
+ * @author Nico Schrage
  */
 public class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kalypso1d2d.pjt.i18n.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.kalypso1d2d.pjt.i18n.templateMessages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 

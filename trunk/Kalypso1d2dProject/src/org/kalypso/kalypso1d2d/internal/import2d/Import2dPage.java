@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.internal.bce2d.imports;
+package org.kalypso.kalypso1d2d.internal.import2d;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -16,8 +16,8 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
-import org.kalypso.kalypso1d2d.internal.bce2d.I2DContants;
-import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
+import org.kalypso.kalypso1d2d.internal.I2DContants;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -104,8 +104,8 @@ public class Import2dPage extends WizardPage
   private void createImportRoughnessControls( final Composite parent )
   {
     final Button checkbox = new Button( parent, SWT.CHECK );
-    checkbox.setText( "Import Roughness Classes" );
-    checkbox.setToolTipText( "Adds roughness classes from the import file as new flow resistance classes into the model" );
+    checkbox.setText( Messages.getString("Import2dPage.0") ); //$NON-NLS-1$
+    checkbox.setToolTipText( Messages.getString("Import2dPage.1") ); //$NON-NLS-1$
     checkbox.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
 
     final ISWTObservableValue target = SWTObservables.observeSelection( checkbox );

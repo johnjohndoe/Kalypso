@@ -41,7 +41,7 @@
 package org.kalypso.ui.wizards.imports.roughness;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.ui.wizards.i18n.Messages;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 
 /**
  * Yet only a dummy command used to make the workspace 

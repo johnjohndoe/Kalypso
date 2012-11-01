@@ -43,6 +43,7 @@ package org.kalypso.ui.wizards.lengthsection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 
 /**
  * A label provider that return the annotation of a IPropertyType.
@@ -55,7 +56,7 @@ final class PropertyNameLabelProvider extends LabelProvider
   public String getText( final Object element )
   {
     if( element == CreateLengthSectionData.NO_RPOPERTY_SELECTED )
-      return "<keine Auswahl>";
+      return Messages.getString("PropertyNameLabelProvider_0"); //$NON-NLS-1$
 
     final IPropertyType propertyType = (IPropertyType) element;
     final IAnnotation annotation = propertyType.getAnnotation();

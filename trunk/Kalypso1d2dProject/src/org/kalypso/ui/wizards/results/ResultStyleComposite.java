@@ -64,10 +64,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages.DESCRIPTORS;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
-import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.editor.EditStyleDialog;
 import org.kalypso.ui.wizards.results.editor.IEditStyleDialogModifyListener;
 

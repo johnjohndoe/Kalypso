@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.internal.bce2d.imports;
+package org.kalypso.kalypso1d2d.internal.import2d;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -17,7 +17,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
