@@ -94,12 +94,12 @@ public class DataContainer
 
   public final void setShapeProperty( final String shapeProperty )
   {
-    this.m_shapeProperty = shapeProperty;
+    m_shapeProperty = shapeProperty;
   }
 
   public final void setCoordinateSystem( final String coordinateSystem )
   {
-    this.m_coordinateSystem = coordinateSystem;
+    m_coordinateSystem = coordinateSystem;
   }
 
   public String getInputFile( )
@@ -145,8 +145,7 @@ public class DataContainer
 
   public final IRoughnessPolygonCollection getRoughnessPolygonCollection( )
   {
-    final IRoughnessPolygonCollection roughnessPolygonCollection = m_model.getRoughnessPolygonCollection( getLayer() );
-    return roughnessPolygonCollection;
+    return m_model.getRoughnessPolygonCollection( getLayer() );
   }
 
   /**
@@ -180,11 +179,6 @@ public class DataContainer
       m_roughnessStaticCollectionMap.put( roughnessClsCollection.getRoughnessClasses().get( i ).getName(), roughnessClsCollection.getRoughnessClasses().get( i ).getId() );
   }
 
-  public final String getProjectBaseFolder( )
-  {
-    return m_projectBaseFolder;
-  }
-
   public final void setProjectBaseFolder( final String projectBaseFolder )
   {
     m_projectBaseFolder = projectBaseFolder;
@@ -198,39 +192,34 @@ public class DataContainer
   @SuppressWarnings( "unchecked" )
   public void loadUserSelection( final String userSelectionFile )
   {
-    // TODO: use dialog settings stuff instead!
-    m_userSelectionFile = m_absolutePath + "/" + m_projectBaseFolder + "/" + userSelectionFile; //$NON-NLS-1$ //$NON-NLS-2$
-    final File file = new File( m_userSelectionFile );
+    /* prepare for exception */
+    m_userSelectionMap = new LinkedHashMap<>();
 
-    try
+    // TODO: use dialog settings stuff instead!
+
+    // FIXME: arg,... manual path handling...
+    m_userSelectionFile = m_absolutePath + "/" + m_projectBaseFolder + "/" + userSelectionFile; //$NON-NLS-1$ //$NON-NLS-2$
+
+    final File file = new File( m_userSelectionFile );
+    if( !file.exists() || !file.isFile() || file.length() <= 0 )
+      return;
+
+    try( final ObjectInputStream objectStream = new ObjectInputStream( new FileInputStream( file ) ) )
     {
-      if( file.exists() && file.isFile() && file.length() > 0 )
-      {
-        final FileInputStream fileStream = new FileInputStream( file );
-        final ObjectInputStream objectStream = new ObjectInputStream( fileStream );
-        final Object object = objectStream.readObject();
-        if( object instanceof LinkedHashMap )
-          m_userSelectionMap = (LinkedHashMap<String, String>)object;
-      }
-      else
-      {
-        file.createNewFile();
-        m_userSelectionMap = new LinkedHashMap<>();
-      }
+      final Object object = objectStream.readObject();
+      if( object instanceof LinkedHashMap )
+        m_userSelectionMap = (LinkedHashMap<String, String>)object;
     }
     catch( final Exception e )
     {
-      m_userSelectionMap = new LinkedHashMap<>();
       e.printStackTrace();
     }
   }
 
   public void saveUserSelection( )
   {
-    try
+    try( final ObjectOutputStream objectStream = new ObjectOutputStream( new FileOutputStream( m_userSelectionFile ) ) )
     {
-      final FileOutputStream fileStream = new FileOutputStream( m_userSelectionFile );
-      final ObjectOutputStream objectStream = new ObjectOutputStream( fileStream );
       objectStream.writeObject( m_userSelectionMap );
     }
     catch( final Exception e )
