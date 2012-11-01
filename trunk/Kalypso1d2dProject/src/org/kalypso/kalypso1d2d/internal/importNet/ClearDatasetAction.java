@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 
 import com.bce.gis.io.zweidm.IPolygonWithName;
 
@@ -63,8 +64,8 @@ public class ClearDatasetAction extends Action implements IUpdateable
   {
     m_data = data;
 
-    setText( "Clear Dataset" );
-    setToolTipText( "Clears all elements from the dataset" );
+    setText( Messages.getString("ClearDatasetAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("ClearDatasetAction_1") ); //$NON-NLS-1$
 
     final ImageDescriptor image = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor( ISharedImages.IMG_ELCL_REMOVE );
     setImageDescriptor( image );
@@ -82,7 +83,7 @@ public class ClearDatasetAction extends Action implements IUpdateable
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    if( !MessageDialog.openConfirm( shell, getText(), "Clear all elements from the dataset?" ) )
+    if( !MessageDialog.openConfirm( shell, getText(), Messages.getString("ClearDatasetAction_2") ) ) //$NON-NLS-1$
       return;
 
     m_data.clearElements();

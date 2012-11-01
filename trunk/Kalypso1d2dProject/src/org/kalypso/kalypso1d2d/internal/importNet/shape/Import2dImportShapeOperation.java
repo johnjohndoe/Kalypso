@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.internal.importNet.AbstractImport2DImportOperation;
 import org.kalypso.kalypso1d2d.internal.importNet.Import2dElementsData;
 import org.kalypso.kalypso1d2d.internal.importNet.Import2dImportData;
@@ -88,7 +89,7 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
   public String getFilterName( )
   {
     // FIXME: get from elsewhere
-    return "ESRI Shape Files";
+    return Messages.getString("Import2dImportShapeOperation_0"); //$NON-NLS-1$
   }
 
   @Override
@@ -112,14 +113,14 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
       final ShapeType shapeType = shapeFile.getShapeType();
       if( !(shapeType == ShapeType.POLYGON || shapeType == ShapeType.POLYGONZ) )
       {
-        final String message = String.format( "Illegal shape type (''%s), only %s or %s allowed.", shapeType, ShapeType.POLYGON, ShapeType.POLYGONZ );
+        final String message = String.format( Messages.getString("Import2dImportShapeOperation_1"), shapeType, ShapeType.POLYGON, ShapeType.POLYGONZ ); //$NON-NLS-1$
         final IStatus readStatus = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, message );
         return Pair.of( readStatus, null );
       }
 
       final int numRecords = shapeFile.getNumRecords();
 
-      monitor.beginTask( String.format( "Reading %s", filePath ), numRecords );
+      monitor.beginTask( String.format( Messages.getString("Import2dImportShapeOperation_2"), filePath ), numRecords ); //$NON-NLS-1$
 
       // TODO: potential heap exception here -> handle!
       final Collection<IPolygonWithName> polygons = new ArrayList<>( numRecords );

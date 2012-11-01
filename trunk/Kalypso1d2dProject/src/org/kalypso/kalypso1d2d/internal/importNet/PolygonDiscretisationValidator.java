@@ -42,6 +42,7 @@ package org.kalypso.kalypso1d2d.internal.importNet;
 
 import java.util.List;
 
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -122,7 +123,7 @@ public class PolygonDiscretisationValidator
     final Polygon polygon = item.getPolygon();
 
     if( polygon.intersects( line ) )
-      return "touches an 1D-Element";
+      return Messages.getString("PolygonDiscretisationValidator_0"); //$NON-NLS-1$
 
     return null;
   }

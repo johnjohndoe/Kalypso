@@ -56,6 +56,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -93,7 +94,7 @@ public class ConvertToModelAction extends Action implements IUpdateable
     m_widget = widget;
 
     setText( KalypsoModel1D2DStrings.APPLY_BUTTON_LABEL ); //$NON-NLS-1$
-    setToolTipText( "Adds the imported elements to the 2D-mesh" );
+    setToolTipText( Messages.getString("ConvertToModelAction_0") ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = Kalypso1d2dProjectPlugin.getImageProvider();
     setImageDescriptor( imageProvider.getImageDescriptor( Kalypso1d2dProjectImages.DESCRIPTORS.OK ) );
@@ -126,7 +127,7 @@ public class ConvertToModelAction extends Action implements IUpdateable
     final IPolygonWithName[] elements = m_data.getElements();
     if( ArrayUtils.isEmpty( elements ) )
     {
-      MessageDialog.openInformation( shell, getText(), "Keine Elemente vorhanden. Bitte importieren Sie zuerst Element aus einer externen Datei." );
+      MessageDialog.openInformation( shell, getText(), Messages.getString("ConvertToModelAction_1") ); //$NON-NLS-1$
       return;
     }
 
@@ -173,7 +174,7 @@ public class ConvertToModelAction extends Action implements IUpdateable
     catch( final Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Failed to add elements to mesh", e );
+      return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("ConvertToModelAction_2"), e ); //$NON-NLS-1$
     }
   }
 

@@ -43,6 +43,7 @@ package org.kalypso.kalypso1d2d.internal.importNet;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -68,7 +69,7 @@ public class Import2dElementsData extends AbstractModelObject
 
   public static final String PROPERTY_ANALYSIS_ENABLED = "analysisEnabled"; //$NON-NLS-1$
 
-  private static final IStatus NO_STATUS = new Status( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "No imported elements" );
+  private static final IStatus NO_STATUS = new Status( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("Import2dElementsData_0") ); //$NON-NLS-1$
 
   private IPolygonWithName[] m_elements = new IPolygonWithName[0];
 

@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusPrinter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusWithTime;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.internal.importNet.DiscretisationModelInserter;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -100,12 +101,12 @@ class SmsDicretisationModelTarget implements ISmsConversionTarget
     final StatusPrinter statusPrinter = new StatusPrinter( 0, new PrintWriter( System.out ) );
 
     /* Incoming index */
-    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Building index for new elements...", new Date() ) );
+    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_0"), new Date() ) ); //$NON-NLS-1$
     m_inserter.buildIncomingIndex();
-    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Index for new elements was built.", new Date() ) );
+    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_1"), new Date() ) ); //$NON-NLS-1$
 
     /* Incoming validation */
-    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Validating incoming elements...", new Date() ) );
+    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_2"), new Date() ) ); //$NON-NLS-1$
     final IStatus validateIncomingStatus = m_inserter.validateIncoming();
     statusPrinter.getChildPrinter().print( validateIncomingStatus );
 
@@ -113,14 +114,14 @@ class SmsDicretisationModelTarget implements ISmsConversionTarget
     final Collection<IPolygonWithName> badElements = m_inserter.getBadIncoming();
     if( badElements.size() > 0 )
     {
-      statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Removing bad incoming elements...", new Date() ) );
+      statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_3"), new Date() ) ); //$NON-NLS-1$
       m_inserter.removeElements( badElements );
-      statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Bad incoming elements removed.", new Date() ) );
+      statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_4"), new Date() ) ); //$NON-NLS-1$
     }
 
     // TODO: check, how new elements intersect with existing
     /* Incoming validation */
-    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Checking incoming elements against model...", new Date() ) );
+    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_5"), new Date() ) ); //$NON-NLS-1$
     final IStatus validateIncomingModelStatus = m_inserter.validateAgainstModel();
     statusPrinter.getChildPrinter().print( validateIncomingModelStatus );
 
@@ -128,21 +129,21 @@ class SmsDicretisationModelTarget implements ISmsConversionTarget
     final Collection<IPolygonWithName> badModelElements = m_inserter.getBadAgainstModel();
     if( badModelElements.size() > 0 )
     {
-      statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Removing bad incoming elements...", new Date() ) );
+      statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_6"), new Date() ) ); //$NON-NLS-1$
       // FIXME: allow for different strategies
       m_inserter.removeElements( badModelElements );
-      statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Bad incoming elements removed.", new Date() ) );
+      statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_7"), new Date() ) ); //$NON-NLS-1$
     }
 
     /* Committing changes into model */
-    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Changing model data...", new Date() ) );
+    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_8"), new Date() ) ); //$NON-NLS-1$
     m_inserter.commitChanges();
-    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Model changed.", new Date() ) );
+    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_9"), new Date() ) ); //$NON-NLS-1$
 
     /* Save data */
-    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Saving changed model...", new Date() ) );
+    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_10"), new Date() ) ); //$NON-NLS-1$
     saveModel();
-    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Model saved.", new Date() ) );
+    statusPrinter.print( new StatusWithTime( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("SmsDicretisationModelTarget_11"), new Date() ) ); //$NON-NLS-1$
   }
 
   private void saveModel( )

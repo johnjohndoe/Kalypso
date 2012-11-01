@@ -53,6 +53,7 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 
 /**
@@ -73,8 +74,8 @@ public class Import2dImportPage extends WizardPage
     m_data = data;
     m_operations = operations;
 
-    setTitle( "Import File" );
-    setDescription( "Select the file for import on this page." );
+    setTitle( Messages.getString("Import2dImportPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("Import2dImportPage_1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -95,7 +96,7 @@ public class Import2dImportPage extends WizardPage
 
   private void createFileControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Import File" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("Import2dImportPage_2") ); //$NON-NLS-1$
 
     final IObservableValue modelFile = BeansObservables.observeValue( m_data, FileAndHistoryData.PROPERTY_FILE );
     final IObservableValue modelHistory = BeansObservables.observeValue( m_data, FileAndHistoryData.PROPERTY_HISTORY );

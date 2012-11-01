@@ -48,6 +48,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
 
@@ -104,7 +105,7 @@ public class SurfacePlaneChecker
     final Envelope fullExtent = m_index.getBoundingBox();
     m_index.query( fullExtent, checkVisitor );
 
-    return m_stati.asMultiStatusOrOK( "Inconsistent element(s) found", "No inconsistent elements found" );
+    return m_stati.asMultiStatusOrOK( Messages.getString("SurfacePlaneChecker_0"), Messages.getString("SurfacePlaneChecker_1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected void checkItem( final IPolygonWithName item )
@@ -115,7 +116,7 @@ public class SurfacePlaneChecker
       final String name = item.getName();
       m_badElements.put( name, item );
 
-      m_stati.add( IStatus.WARNING, "Element %s: %s", null, name, itemWarning );
+      m_stati.add( IStatus.WARNING, Messages.getString("SurfacePlaneChecker_2"), null, name, itemWarning ); //$NON-NLS-1$
       return;
     }
 
@@ -151,7 +152,7 @@ public class SurfacePlaneChecker
 
     m_badElements.put( name1, item );
 
-    m_stati.add( IStatus.WARNING, "Element %s and %s: %s", null, name1, name2, warning );
+    m_stati.add( IStatus.WARNING, Messages.getString("SurfacePlaneChecker_3"), null, name1, name2, warning ); //$NON-NLS-1$
   }
 
   private String doCheckItem( final IPolygonWithName item )
@@ -161,12 +162,12 @@ public class SurfacePlaneChecker
     final int numPoints = polygon.getNumPoints();
     if( numPoints > 5 )
       // TODO: would be nice if we could handle this -> preprocess elements and triangulate them
-      return "too many vertices, can only handle 3 or 4";
+      return Messages.getString("SurfacePlaneChecker_4"); //$NON-NLS-1$
 
     if( !polygon.isValid() )
-      return "invalid polygon";
+      return Messages.getString("SurfacePlaneChecker_5"); //$NON-NLS-1$
     if( polygon.getNumInteriorRing() != 0 )
-      return "contains holes";
+      return Messages.getString("SurfacePlaneChecker_6"); //$NON-NLS-1$
 
     return null;
   }
