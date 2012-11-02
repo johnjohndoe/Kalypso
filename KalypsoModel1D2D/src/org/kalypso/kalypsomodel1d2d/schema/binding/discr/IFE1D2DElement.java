@@ -88,6 +88,8 @@ public interface IFE1D2DElement extends IFENetItem
   Double getRoughnessCorrectionAxAy( );
 
   Double getRoughnessCorrectionDP( );
+  
+  IFE1D2DEdge[] getEdges( );
 
   IFE1D2DNode[] getNodes( );
   

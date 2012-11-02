@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -68,7 +67,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -82,9 +80,6 @@ import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -99,7 +94,6 @@ import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.refinement.Refinement;
 
@@ -131,11 +125,9 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
   private final ToolTipRenderer m_warningRenderer = new ToolTipRenderer();
 
-  private FeatureList m_featureList;
-
   private GM_Object[] m_objects;
 
-  private List<Feature> m_featuresToRefine;
+  private List<IPolyElement> m_featuresToRefine;
 
   private boolean m_warning;
 
@@ -174,13 +166,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     else
       m_geometryBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
     m_pointSnapper = new PointSnapper( m_model1d2d, mapPanel );
-
-    final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    if( activeTheme instanceof IKalypsoFeatureTheme )
-    {
-      m_theme = (IKalypsoFeatureTheme)activeTheme;
-      m_featureList = m_theme == null ? null : m_theme.getFeatureList();
-    }
 
     m_objects = null;
   }
@@ -359,7 +344,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     /* calculate centroids of refinements */
     final List<GM_Point> centroidList = getCentroids( m_objects );
     /* reselect */
-    final List<Feature> refineList = reselectFeatures( centroidList );
+    final List<IPolyElement> refineList = reselectFeatures( centroidList );
 
     try
     {
@@ -370,10 +355,9 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
       // add remove element command
       final DeletePolyElementCmd deleteCommand = new DeletePolyElementCmd( discModel );
-      for( final Feature feature : refineList )
+      for( final IPolyElement feature : refineList )
       {
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
-          deleteCommand.addElementToRemove( feature );
+        deleteCommand.addElementToRemove( feature );
       }
       try
       {
@@ -409,24 +393,16 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     }
   }
 
-  private List<Feature> reselectFeatures( final List<GM_Point> centroidList )
+  private List<IPolyElement> reselectFeatures( final List<GM_Point> centroidList )
   {
-    final List<Feature> refineList = new ArrayList<>();
-    for( final Feature feature : m_featuresToRefine )
+    final List<IPolyElement> refineList = new ArrayList<>();
+    for( final IPolyElement feature : m_featuresToRefine )
     {
-      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
+      final GM_Polygon surface = feature.getGeometry();
+      for( final GM_Point centroid : centroidList )
       {
-        final GM_Object geom = (GM_Object)feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
-        if( geom instanceof GM_Polygon )
-        {
-          final GM_Polygon surface = (GM_Polygon)geom;
-
-          for( final GM_Point centroid : centroidList )
-          {
-            if( surface.intersects( centroid ) )
-              refineList.add( feature );
-          }
-        }
+        if( surface.intersects( centroid ) )
+          refineList.add( feature );
       }
     }
     return refineList;
@@ -480,32 +456,21 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
     m_featuresToRefine = new ArrayList<>();
 
-    if( m_featureList == null )
-      return;
-
     /* select features */
     final String crs = m_geom.getCoordinateSystem();
 
-    final List<Feature> selectedFeatures = doSelect( m_geom, m_featureList );
+    final List<IPolyElement> selectedFeatures = doSelect( m_geom );
 
     final List<GM_Polygon> surfaceList = new ArrayList<>();
 
-    for( final Feature feature : selectedFeatures )
+    for( final IPolyElement feature : selectedFeatures )
     {
-      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
-      {
-        // get the geometry
-        final GM_Object selectedGeom = (GM_Object)feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
-        if( selectedGeom instanceof GM_Polygon )
-        {
-          final GM_Polygon surface = (GM_Polygon)selectedGeom;
+      // get the geometry
+      final GM_Polygon surface = feature.getGeometry();
+      surfaceList.add( surface );
 
-          surfaceList.add( surface );
-        }
-
-        // get the selected Feature
-        m_featuresToRefine.add( feature );
-      }
+      // get the selected Feature
+      m_featuresToRefine.add( feature );
     }
 
     /* REFINEMENT */
@@ -553,27 +518,24 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     getMapPanel().repaintMap();
   }
 
-  private static List<Feature> doSelect( final GM_Object selectGeometry, final FeatureList featureList )
+  private List<IPolyElement> doSelect( final GM_Object selectGeometry )
   {
     if( selectGeometry == null )
       return null;
+
     // select feature from featureList by using the selectGeometry
-    if( featureList == null )
-      return null;
+    final List<IPolyElement> selectedFeatures = new ArrayList<>();
 
-    final List<Feature> selectedFeatures = new ArrayList<>();
-
-    final List<Feature> selectedSubList = selectFeatures( featureList, selectGeometry );
+    final List<IPolyElement> selectedSubList = selectFeatures( selectGeometry );
     if( selectedSubList != null )
       selectedFeatures.addAll( selectedSubList );
 
     return selectedFeatures;
   }
 
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
-  private static List<Feature> selectFeatures( final FeatureList featureList, final GM_Object theGeom )
+  private List<IPolyElement> selectFeatures( final GM_Object theGeom )
   {
-    final List<Feature> selectedFeatures = new ArrayList<>();
+    final List<IPolyElement> selectedFeatures = new ArrayList<>();
 
     // *** Why this??
     GM_Object selectGeometry = theGeom;
@@ -592,23 +554,19 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     // *****
 
     final GM_Envelope envelope = selectGeometry.getEnvelope();
-    final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
-    final List result = featureList.query( envelope, null );
+    final List<IFE1D2DElement> result = m_model1d2d.queryElements( envelope, null );
 
-    for( final Object object : result )
+    for( final IFE1D2DElement element : result )
     {
-      final Feature feature = FeatureHelper.getFeature( workspace, object );
-
-      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
+      if( element instanceof IPolyElement )
       {
-        final GM_Object geom = (GM_Object)feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
+        final IPolyElement polyElement = (IPolyElement)element;
+        final GM_Object geom = polyElement.getGeometry();
         if( geom != null )
         {
           final GM_Object intersection = selectGeometry.intersection( geom );
           if( intersection != null )
-          {
-            selectedFeatures.add( feature );
-          }
+            selectedFeatures.add( polyElement );
         }
       }
     }

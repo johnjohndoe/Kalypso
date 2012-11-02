@@ -56,6 +56,12 @@ public class Element1D extends FE1D2DElement implements IElement1D
   }
 
   @Override
+  public IFE1D2DEdge[] getEdges( )
+  {
+    return new IFE1D2DEdge[] { getEdge() };
+  }
+
+  @Override
   public IFE1D2DEdge getEdge( )
   {
     final Object property = getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );

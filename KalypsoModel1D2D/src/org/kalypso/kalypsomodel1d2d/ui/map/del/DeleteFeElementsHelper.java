@@ -142,7 +142,7 @@ public class DeleteFeElementsHelper
       {
         final Feature feature = easyFeatureWrapper.getFeature();
         if( feature instanceof IPolyElement )
-          deleteCmdPolyElement.addElementToRemove( feature );
+          deleteCmdPolyElement.addElementToRemove( (IPolyElement)feature );
         else if( feature instanceof IElement1D )
         {
           deleteCmd1dElement.addElementToRemove( (IElement1D)feature );

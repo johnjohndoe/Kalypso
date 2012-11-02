@@ -35,6 +35,9 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
       return null;
 
     final IFE1D2DNode[] nodes = ((IFE1D2DEdge)feature).getNodes();
+    if( nodes.length != 2 )
+      return null;
+
     final IFE1D2DNode node0 = nodes[0];
     final GM_Point point0 = node0.getPoint();
     final IFE1D2DNode node1 = nodes[1];
