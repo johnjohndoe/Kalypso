@@ -62,6 +62,17 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  private FeatureList nodesInternal( )
+  {
+    return (FeatureList)getProperty( PROP_NODES );
+  }
+
+  @Override
+  public IFE1D2DNode[] getNodes( )
+  {
+    return nodesInternal().toFeatures( new IFE1D2DNode[nodesInternal().size()] );
+  }
+
   @Override
   public void setNodes( final IFE1D2DNode[] nodes )
   {

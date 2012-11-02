@@ -393,7 +393,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       line2D_ID = getConversionID( transitionElementContinuityLines[0] );
       line1D = (IContinuityLine1D)transitionElementContinuityLines[1];
     }
-    final IFE1D2DNode node1D = line1D.getNodes()[0];
+    final IFE1D2DNode node1D = line1D.getNode();
     node1D_ID = getConversionID( node1D );
     final IFE1D2DEdge[] containers = node1D.getLinkedEdges();
     for( final IFE1D2DEdge container : containers )
