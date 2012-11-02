@@ -59,21 +59,10 @@ public abstract class FELine extends Feature_Impl implements IFELine
     return (FeatureList)getProperty( WB1D2D_PROP_ELEMENT_CONTAINERS );
   }
 
-  protected FeatureList nodesInternal( )
-  {
-    return (FeatureList)getProperty( PROP_NODES );
-  }
-
   protected void setGeometry( final GM_Curve value )
   {
     setProperty( PROP_GEOMETRY, value );
     setEnvelopesUpdated();
-  }
-
-  @Override
-  public IFE1D2DNode[] getNodes( )
-  {
-    return nodesInternal().toFeatures( new IFE1D2DNode[nodesInternal().size()] );
   }
 
   @Override
