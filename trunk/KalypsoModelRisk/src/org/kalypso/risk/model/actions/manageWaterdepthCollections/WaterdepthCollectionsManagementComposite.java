@@ -171,7 +171,7 @@ public class WaterdepthCollectionsManagementComposite extends Composite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
         handleSelectionChanged( selection );
       }
     } );
@@ -192,14 +192,14 @@ public class WaterdepthCollectionsManagementComposite extends Composite
     for( final IAction action : values )
     {
       if( action instanceof IUpdateable )
-        ((IUpdateable) action).update();
+        ((IUpdateable)action).update();
     }
 
     final Object selectedElement = selection.getFirstElement();
 
     if( selectedElement instanceof IAnnualCoverageCollection )
     {
-      final IAnnualCoverageCollection coverageCollection = (IAnnualCoverageCollection) selectedElement;
+      final IAnnualCoverageCollection coverageCollection = (IAnnualCoverageCollection)selectedElement;
       updateEventThemes( coverageCollection );
     }
 
@@ -311,10 +311,10 @@ public class WaterdepthCollectionsManagementComposite extends Composite
     try
     {
       if( selectedObject instanceof ICoverage )
-        return ((ICoverage) selectedObject).getBoundedBy();
+        return ((ICoverage)selectedObject).getBoundedBy();
 
       if( selectedObject instanceof IAnnualCoverageCollection )
-        return ((IAnnualCoverageCollection) selectedObject).getCoverages().getBoundingBox();
+        return ((IAnnualCoverageCollection)selectedObject).getCoverages().getBoundingBox();
 
       return null;
     }

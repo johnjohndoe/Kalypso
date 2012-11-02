@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  * <li>shallOverwrite (Boolean): shall the string be translated?</li>
  * </ul>
  * </p>
- *
+ * 
  * @author thuel2
  */
 public class GetNameFromInscription extends FeaturePropertyFunction
@@ -86,8 +86,7 @@ public class GetNameFromInscription extends FeaturePropertyFunction
   private static final QName QN_STATE_INSCRIPTION_LABEL = new QName( NS_COMMON, P_STATE_INSCRIPTION_LABEL );
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
@@ -98,7 +97,7 @@ public class GetNameFromInscription extends FeaturePropertyFunction
     if( inscriptionProperty == null )
       return currentValue;
 
-    final List< ? > inscriptionList = (List< ? >) feature.getProperty( inscriptionProperty );
+    final List< ? > inscriptionList = (List< ? >)feature.getProperty( inscriptionProperty );
     if( inscriptionList == null )
       return currentValue;
 
@@ -110,10 +109,10 @@ public class GetNameFromInscription extends FeaturePropertyFunction
     for( final Object object : inscriptionList )
     {
       if( object instanceof Feature )
-        f = (Feature) object;
+        f = (Feature)object;
       else
         // this branch should never be reached according to the schema file
-        f = feature.getWorkspace().getFeature( (String) object );
+        f = feature.getWorkspace().getFeature( (String)object );
 
       if( f != null )
       {
@@ -122,8 +121,8 @@ public class GetNameFromInscription extends FeaturePropertyFunction
         final Object langFeat = f.getProperty( langProp );
         if( langFeat != null )
         {
-          final String languageUri = ((IXLinkedFeature) langFeat).getUri();
-          final String languageHref = ((IXLinkedFeature) langFeat).getHref();
+          final String languageUri = ((IXLinkedFeature)langFeat).getUri();
+          final String languageHref = ((IXLinkedFeature)langFeat).getHref();
           final String lang = languageHref.replaceAll( languageUri + "#", "" ); //$NON-NLS-1$ //$NON-NLS-2$
           final IPropertyType labelProp = inscriptionFtp.getProperty( QN_STATE_INSCRIPTION_LABEL );
           final Object label = f.getProperty( labelProp );
@@ -139,7 +138,7 @@ public class GetNameFromInscription extends FeaturePropertyFunction
     {
       if( intNames.containsKey( m_langLong ) )
         return intNames.get( m_langLong );
-      else if (intNames.containsKey( m_langShort ))
+      else if( intNames.containsKey( m_langShort ) )
         return intNames.get( m_langShort );
       else
         return null;
@@ -165,8 +164,7 @@ public class GetNameFromInscription extends FeaturePropertyFunction
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
