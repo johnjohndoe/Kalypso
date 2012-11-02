@@ -70,7 +70,7 @@ public class DeleteCmdFactory
     Assert.throwIAEOnNullParam( feature, "feature" ); //$NON-NLS-1$
     if( feature instanceof IPolyElement )
     {
-      return new DeletePolyElementCmd( model1d2d, feature );
+      return new DeletePolyElementCmd( model1d2d, (IPolyElement)feature );
     }
     else if( feature instanceof IElement1D )
     {

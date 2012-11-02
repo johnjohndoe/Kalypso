@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import gnu.trove.THashSet;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -355,23 +358,45 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   public void removeEdge( final IFE1D2DEdge edge )
   {
     Assert.throwIAEOnNullParam( edge, "edge" );//$NON-NLS-1$
+
     final FeatureList edges = getEdgesInternal();
-    if( edges.contains( edge ) )
-      edges.remove( edge );
+    if( !edges.contains( edge ) )
+      return;
+
+    if( edge.getLinkedElements().length != 0 )
+      throw new IllegalStateException( "Edge is referenced by one or more elements." );
+
+    final IFE1D2DNode[] nodes = edge.getNodes();
+    for( final IFE1D2DNode node : nodes )
+    {
+      node.removeLinkedEdge( edge );
+      if( node.getLinkedEdges().length == 0 )
+        removeNode( node );
+    }
+    edges.remove( edge );
   }
 
   @Override
   public void removeElement( final IFE1D2DElement element )
   {
     Assert.throwIAEOnNullParam( element, "element" );//$NON-NLS-1$
+
     final FeatureList elements = getElementsInternal();
-    final IFE1D2DComplexElement<IFENetItem>[] linkedElements = element.getLinkedElements();
-    for( final IFE1D2DComplexElement<IFENetItem> complexElement : linkedElements )
+    if( !elements.contains( element ) )
+      return;
+
+    if( element.getLinkedElements().length != 0 )
+      throw new IllegalStateException( "Element is referenced by one or more complex elements." );
+
+    final IFE1D2DEdge[] edges = element.getEdges();
+    for( final IFE1D2DEdge edge : edges )
     {
-      complexElement.removeLinkedItem( element );
+      edge.removeLinkedElement( element );
+      if( edge.getLinkedElements().length == 0 )
+        removeEdge( edge );
     }
-    if( elements.contains( element ) )
-      elements.remove( element );
+
+    elements.remove( element );
   }
 
   @Override
@@ -379,8 +404,13 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   {
     Assert.throwIAEOnNullParam( node, "node" );//$NON-NLS-1$
     final FeatureList nodes = getNodesInternal();
-    if( nodes.contains( node ) )
-      nodes.remove( node );
+    if( !nodes.contains( node ) )
+      return;
+
+    if( node.getLinkedEdges().length != 0 )
+      throw new IllegalStateException( "Node is referenced by one or more edges." );
+
+    nodes.remove( node );
   }
 
   @Override
@@ -388,8 +418,44 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   public void removeAllNodes( final Collection<IFE1D2DNode> nodesToRemove )
   {
     Assert.throwIAEOnNullParam( nodesToRemove, "nodesToRemove" );//$NON-NLS-1$
+
+    for( final IFE1D2DNode node : nodesToRemove )
+    {
+      if( node.getLinkedEdges().length != 0 )
+        throw new IllegalStateException( "Node is referenced by one or more edges." );
+    }
+    
     final FeatureList nodes = getNodesInternal();
     nodes.removeAll( nodesToRemove );
+  }
+
+  @Override
+  @SuppressWarnings( "unchecked" )
+  public void removeAllEdges( final Collection<IFE1D2DEdge> edgesToRemove )
+  {
+    Assert.throwIAEOnNullParam( edgesToRemove, "edgesToRemove" );//$NON-NLS-1$
+
+    for( final IFE1D2DEdge edge : edgesToRemove )
+    {
+      if( edge.getLinkedElements().length != 0 )
+        throw new IllegalStateException( "Edge is referenced by one or more elements." );
+    }
+
+    final FeatureList edges = getEdgesInternal();
+    edges.removeAll( edgesToRemove );
+
+    final Set<IFE1D2DNode> nodesToRemove = new THashSet<>();
+    for( final IFE1D2DEdge edge : edgesToRemove )
+    {
+      final IFE1D2DNode[] nodes = edge.getNodes();
+      for( final IFE1D2DNode node : nodes )
+      {
+        node.removeLinkedEdge( edge );
+        if( node.getLinkedEdges().length == 0 )
+          nodesToRemove.add( node );
+      }
+    }
+    removeAllNodes( nodesToRemove );
   }
 
   @Override
@@ -397,8 +463,28 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   public void removeAllElements( final Collection<IFE1D2DElement> elementsToRemove )
   {
     Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" );//$NON-NLS-1$
+
+    for( final IFE1D2DElement element : elementsToRemove )
+    {
+      if( element.getLinkedElements().length != 0 )
+        throw new IllegalStateException( "Element is referenced by one or more complex elements." );
+    }
+
     final FeatureList elements = getElementsInternal();
     elements.removeAll( elementsToRemove );
+
+    final Set<IFE1D2DEdge> edgesToRemove = new THashSet<>();
+    for( final IFE1D2DElement element : elementsToRemove )
+    {
+      final IFE1D2DEdge[] edges = element.getEdges();
+      for( final IFE1D2DEdge edge : edges )
+      {
+        edge.removeLinkedElement( element );
+        if( edge.getLinkedElements().length == 0 )
+          edgesToRemove.add( edge );
+      }
+    }
+    removeAllEdges( edgesToRemove );
   }
 
   @Override

@@ -65,7 +65,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   @Override
   public IFE1D2DNode getNode( )
   {
-    return (IFE1D2DNode)getMember( PROP_NODES );
+    return (IFE1D2DNode)resolveMember( PROP_NODES );
   }
 
   @Override

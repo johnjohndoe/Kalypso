@@ -40,13 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import java.util.HashSet;
+import gnu.trove.THashSet;
+
 import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -59,9 +58,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class DeletePolyElementCmd implements IFeatureChangeCommand
 {
-  private final Set<Feature> m_changedFeatures = new HashSet<>();
-
-  private final Set<Feature> m_setFeaturesToRemove = new HashSet<>();
+  private final Set<IFE1D2DElement> m_elementsToRemove = new THashSet<>();
 
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
@@ -70,10 +67,9 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
     this( model1d2d, null );
   }
 
-  public DeletePolyElementCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature pFeature )
+  public DeletePolyElementCmd( final IFEDiscretisationModel1d2d model1d2d, final IPolyElement pFeature )
   {
     m_model1d2d = model1d2d;
-
     addElementToRemove( pFeature );
   }
 
@@ -92,54 +88,18 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
   @Override
   public void process( ) throws Exception
   {
-    final RemoveEdgeWithoutContainerOrInvCmd remEdgeCmd = new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, null );
-
-    for( final Feature lFeature : m_setFeaturesToRemove )
+    for( final Feature lFeature : m_elementsToRemove )
     {
       final IPolyElement lElement = (IPolyElement)lFeature.getAdapter( IPolyElement.class );
 
       // delete link to complex elements
       final IFE1D2DComplexElement[] parentComplexElements = lElement.getLinkedElements();
       for( final IFE1D2DComplexElement complexElement : parentComplexElements )
-      {
         complexElement.removeLinkedItem( lElement );
-        m_changedFeatures.add( complexElement );
-      }
-      m_changedFeatures.add( lElement );
-
-      // delete link to edges and the edges itself (with the nodes)
-      final IFE1D2DEdge[] edges = lElement.getEdges();
-      for( final IFE1D2DEdge edge : edges )
-      {
-        final IFE1D2DElement[] lListContainers = edge.getLinkedElements();
-        boolean lBoolContainsAll = true;
-        for( final IFE1D2DElement element : lListContainers )
-        {
-          final IPolyElement lFeatureAct = (IPolyElement)element;
-          if( !m_setFeaturesToRemove.contains( lFeatureAct ) )
-          {
-            lBoolContainsAll = false;
-            break;
-          }
-        }
-
-        if( lBoolContainsAll )
-        {
-          remEdgeCmd.addEdgeToRemove( edge );
-        }
-        edge.removeLinkedElement( lElement );
-        m_changedFeatures.add( edge );
-
-        final IFE1D2DNode[] nodes = edge.getNodes();
-        for( final Feature feature : nodes )
-        {
-          m_changedFeatures.add( feature );
-        }
-      }
-      // delete element from model
-      m_model1d2d.removeElement( lElement );
     }
-    remEdgeCmd.process();
+
+    // delete elements from model
+    m_model1d2d.removeAllElements( m_elementsToRemove );
   }
 
   @Override
@@ -157,12 +117,12 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
   @Override
   public Feature[] getChangedFeatures( )
   {
-    return m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
+    return m_elementsToRemove.toArray( new Feature[m_elementsToRemove.size()] );
   }
 
-  public void addElementToRemove( final Feature pFeature )
+  public void addElementToRemove( final IPolyElement pFeature )
   {
     if( pFeature != null )
-      m_setFeaturesToRemove.add( pFeature );
+      m_elementsToRemove.add( pFeature );
   }
 }
