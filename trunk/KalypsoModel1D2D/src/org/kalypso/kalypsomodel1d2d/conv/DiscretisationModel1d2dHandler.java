@@ -154,7 +154,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final String m_crs;
 
-  private IScenarioDataProvider m_scenarioDataProvider;
+  private final IScenarioDataProvider m_scenarioDataProvider;
 
   public DiscretisationModel1d2dHandler( final IScenarioDataProvider scenarioDataProvider, final IPositionProvider positionProvider ) throws CoreException
   {
@@ -430,7 +430,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     final IFE1D2DNode nodeWithSameId = getNode( id );
     if( nodeWithSameId != null )
-      throw new IllegalArgumentException( String.format( Messages.getString( "DiscretisationModel1d2dHandler.0" ), id ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( String.format( "Found multiple nodes with the same id: %s", id ) ); //$NON-NLS-1$
 
     final GM_Point nodeLocation = m_positionProvider.getGMPoint( xCoord, yCoord, elevation );
     nodeLocation.setCoordinateSystem( m_crs );

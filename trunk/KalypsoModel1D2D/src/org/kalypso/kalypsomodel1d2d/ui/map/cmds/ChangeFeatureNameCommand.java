@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -51,7 +50,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * 
  * @author Patrice Congo
  */
-public class ChangeIFeatureWrapper2NameCmd implements IFeatureChangeCommand
+public class ChangeFeatureNameCommand implements IFeatureChangeCommand
 {
   private String m_oldName;
 
@@ -78,7 +77,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IFeatureChangeCommand
    * @throws IllegalArgumentException
    *           if cuFeatureQName or model1d2d is null
    */
-  public ChangeIFeatureWrapper2NameCmd( final Feature featureToRename, final String newName )
+  public ChangeFeatureNameCommand( final Feature featureToRename, final String newName )
   {
     Assert.isNotNull( featureToRename );
     Assert.isNotNull( newName );
@@ -103,7 +102,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IFeatureChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeFeatureNameCmd.2" ); //$NON-NLS-1$
+    return "Change Name"; //$NON-NLS-1$
   }
 
   @Override
@@ -144,9 +143,6 @@ public class ChangeIFeatureWrapper2NameCmd implements IFeatureChangeCommand
     workspace.fireModellEvent( event );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
@@ -156,14 +152,10 @@ public class ChangeIFeatureWrapper2NameCmd implements IFeatureChangeCommand
     }
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
     m_featureToRename.setDescription( m_oldName );
     fireProcessChanges();
   }
-
 }

@@ -66,7 +66,7 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * Saves the changes made on a building into the real flow relation.
- *
+ * 
  * @author Gernot Belger
  */
 public class SaveBuildingParameterHandler extends AbstractHandler implements IElementUpdater
@@ -74,8 +74,8 @@ public class SaveBuildingParameterHandler extends AbstractHandler implements IEl
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     final IChartComposite chart = ChartHandlerUtilities.getChartChecked( context );
     final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
@@ -103,8 +103,6 @@ public class SaveBuildingParameterHandler extends AbstractHandler implements IEl
       final String commandName = HandlerUtils.getCommandName( event );
       StatusDialog.open( shell, status, commandName );
     }
-
-    // ErrorDialog.openError( shell, "", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }
