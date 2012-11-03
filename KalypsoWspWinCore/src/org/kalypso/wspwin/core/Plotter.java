@@ -52,11 +52,13 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.process.StreamStreamer;
 import org.kalypso.contribs.eclipse.osgi.FrameworkUtilities;
+import org.kalypso.contribs.java.io.FileExtensions;
+import org.kalypso.contribs.java.io.FilePattern;
 import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * Helper code to access WspWin-Plotter
- *
+ * 
  * @author Gernot Belger
  */
 public class Plotter
@@ -80,8 +82,12 @@ public class Plotter
     MessageDialog.openWarning( shell, Messages.getString( "Plotter_2" ), message ); //$NON-NLS-1$
 
     final FileDialog dlg = new FileDialog( shell );
-    dlg.setFilterNames( new String[] { Messages.getString( "Plotter_3" ), Messages.getString( "Plotter_4" ) } ); //$NON-NLS-1$ //$NON-NLS-2$
-    dlg.setFilterExtensions( new String[] { "*.*", "*.exe" } ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    final FilePattern allFilesFilter = FileExtensions.ALL_FILES;
+
+    dlg.setFilterNames( new String[] { allFilesFilter.getFilterLabel(), Messages.getString( "Plotter_4" ) } ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    dlg.setFilterExtensions( new String[] { allFilesFilter.getPattern(), "*.exe" } ); //$NON-NLS-1$ //$NON-NLS-2$
     dlg.setFilterIndex( 1 );
     dlg.setText( Messages.getString( "Plotter_7" ) ); //$NON-NLS-1$
 
@@ -96,7 +102,7 @@ public class Plotter
 
   /**
    * Returns the currently configured plotter exe, regardless if it still exists or not.
-   *
+   * 
    * @return <code>null</code>, if never a path has been specified.
    */
   private static File getPlotterExe( )
@@ -115,8 +121,7 @@ public class Plotter
   }
 
   /**
-   * Returns the configured plotter.exe and also checks if it still exists and can be executed. If not,
-   * <code>null</code> is returned.
+   * Returns the configured plotter.exe and also checks if it still exists and can be executed. If not, <code>null</code> is returned.
    */
   public static File getPlotterExeChecked( )
   {
