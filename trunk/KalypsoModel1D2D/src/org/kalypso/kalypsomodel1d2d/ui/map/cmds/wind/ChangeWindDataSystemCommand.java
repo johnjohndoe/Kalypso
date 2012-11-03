@@ -66,13 +66,11 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 /**
  * Composite command used to change the wind data model command. This composite takes the responsibility to notifies the
  * commandable workspace about the changes introduced by its sub command
- *
+ * 
  * @author ig
  */
 public class ChangeWindDataSystemCommand implements ICommand
 {
-  public static final String DEFAULT_DESCRIPTION = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.0" ); //$NON-NLS-1$
-
   private final CommandableWorkspace m_commandableWorkspace;
 
   private final List<IFeatureChangeCommand> m_commands = new ArrayList<>();
@@ -85,34 +83,20 @@ public class ChangeWindDataSystemCommand implements ICommand
 
   private final IWindModel m_windModel;
 
-  private final String m_description;
-
   public ChangeWindDataSystemCommand( final CommandableWorkspace commandableWorkspace, final IWindModel pWindModel )
   {
-    this( commandableWorkspace, pWindModel, DEFAULT_DESCRIPTION );
-  }
+    Assert.throwIAEOnNullParam( pWindModel, "pWindModel" ); //$NON-NLS-1$
 
-  public ChangeWindDataSystemCommand( final CommandableWorkspace commandableWorkspace, final IWindModel pWindModel, final String description )
-  {
-    Assert.throwIAEOnNullParam( pWindModel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.1" ) ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( description, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.2" ) ); //$NON-NLS-1$
     m_commandableWorkspace = commandableWorkspace;
     m_windModel = pWindModel;
-    m_description = description;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
-    return m_description;
+    return "Change Discretisation model"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
@@ -157,9 +141,6 @@ public class ChangeWindDataSystemCommand implements ICommand
     m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_windModel, changedFeaturesArray, m_intEventType ) );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
@@ -176,9 +157,6 @@ public class ChangeWindDataSystemCommand implements ICommand
     }
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
@@ -202,8 +180,10 @@ public class ChangeWindDataSystemCommand implements ICommand
 
   public void addCommand( final IFeatureChangeCommand command )
   {
-    Assert.throwIAEOnNullParam( command, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.3" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( command, "command" ); //$NON-NLS-1$
+
     m_commands.add( command );
+
     if( command instanceof DeleteWindDataSystem )
     {
       for( final IWindDataProvider lWindDataWrapper : ((DeleteWindDataSystem)command).getWindDataModelSystem().getWindDataModels() )
@@ -215,7 +195,6 @@ public class ChangeWindDataSystemCommand implements ICommand
           final File lFile = new File( lWindDataWrapper.getDataFileURL().toURI() );
           final IPath path = new Path( lFile.getAbsolutePath() );
           lIFile = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
-//          lFile = new IFile( lWindDataWrapper.getDataFileURL().toURI() );
         }
         catch( final URISyntaxException e )
         {
@@ -229,7 +208,6 @@ public class ChangeWindDataSystemCommand implements ICommand
     }
 
     isUndoable = isUndoable && command.isUndoable();
-
   }
 
   public IStatus deleteFiles( )
@@ -240,7 +218,6 @@ public class ChangeWindDataSystemCommand implements ICommand
       try
       {
         lFile.delete( false, new NullProgressMonitor() );
-//        lFile.deleteOnExit();
       }
       catch( final Exception e )
       {

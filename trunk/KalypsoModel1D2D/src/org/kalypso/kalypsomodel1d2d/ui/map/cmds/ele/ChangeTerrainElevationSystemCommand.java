@@ -64,13 +64,11 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 /**
  * Composite command used to change the discretisation command. This composite takes the responsibility to nodifies the
  * commandable workspace about the chnage introduced by its sub command
- *
+ * 
  * @author Patrice Congo
  */
 public class ChangeTerrainElevationSystemCommand implements ICommand
 {
-  public static final String DEFAULT_DESCRIPTION = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.0" ); //$NON-NLS-1$
-
   private final CommandableWorkspace m_commandableWorkspace;
 
   private final List<IFeatureChangeCommand> m_commands = new ArrayList<>();
@@ -83,51 +81,29 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
 
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
-  private final String m_description;
-
   private final ITerrainElevationModelSystem m_terrainModel;
 
   public ChangeTerrainElevationSystemCommand( final CommandableWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d, final ITerrainElevationModelSystem terrainModel )
   {
-    this( commandableWorkspace, model1d2d, terrainModel, DEFAULT_DESCRIPTION );
-  }
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
 
-  public ChangeTerrainElevationSystemCommand( final CommandableWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d )
-  {
-    this( commandableWorkspace, model1d2d, null, DEFAULT_DESCRIPTION );
-  }
-
-  public ChangeTerrainElevationSystemCommand( final CommandableWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d, final ITerrainElevationModelSystem terrainModel, final String description )
-  {
-    Assert.throwIAEOnNullParam( model1d2d, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.1" ) ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( description, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.2" ) ); //$NON-NLS-1$
     m_commandableWorkspace = commandableWorkspace;
     m_model1d2d = model1d2d;
-    m_description = description;
     m_terrainModel = terrainModel;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
-    return m_description;
+    return "Change Discretisation model"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return isUndoable;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
@@ -208,13 +184,9 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
     }
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
-
     // reverse order is taken because of eventual dependencies
     IFeatureChangeCommand command;
     for( int index = m_commands.size() - 1; index >= 0; index-- )
@@ -234,7 +206,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
 
   public void addCommand( final IFeatureChangeCommand command, final IFile file )
   {
-    Assert.throwIAEOnNullParam( command, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.3" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( command, "command" ); //$NON-NLS-1$
     m_commands.add( command );
     if( file != null )
       m_files.add( file );

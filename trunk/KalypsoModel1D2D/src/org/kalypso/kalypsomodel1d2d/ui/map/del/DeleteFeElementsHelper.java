@@ -120,7 +120,7 @@ public class DeleteFeElementsHelper
       final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       if( discretisationModel == null )
-        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.3" ) ); //$NON-NLS-1$
+        throw new RuntimeException( "Could not find model1d2d" ); //$NON-NLS-1$
 
       final IStatus contiStatus = checkContinuityLines( discretisationModel, selected );
       if( contiStatus != null )
@@ -241,7 +241,8 @@ public class DeleteFeElementsHelper
     for( final EasyFeatureWrapper easyFeatureWrapper : selected )
     {
       if( easyFeatureWrapper == null )
-        throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.4" ) ); //$NON-NLS-1$
+        throw new IllegalArgumentException( "All easy features in selected must be non null" ); //$NON-NLS-1$
+
       final IFE1D2DElement element = (IFE1D2DElement)easyFeatureWrapper.getFeature().getAdapter( IFE1D2DElement.class );
       final IFE1D2DNode[] nodes = element.getNodes();
       for( final IFE1D2DNode node : nodes )
@@ -255,7 +256,7 @@ public class DeleteFeElementsHelper
           if( element instanceof IElement1D )
           {
             final IFE1D2DEdge[] containers = node.getLinkedEdges();
-            int numberOfEdgeContainers = containers.length;
+            final int numberOfEdgeContainers = containers.length;
             if( numberOfEdgeContainers < 2 )
             {
               SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.7" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
