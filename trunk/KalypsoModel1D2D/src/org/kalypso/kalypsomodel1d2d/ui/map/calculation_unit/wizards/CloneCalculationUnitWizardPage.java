@@ -85,13 +85,17 @@ public class CloneCalculationUnitWizardPage extends WizardPage
       @Override
       public void modifyText( final ModifyEvent e )
       {
-        setPageComplete( isNameValid() ); //$NON-NLS-1$
-        getContainer().updateButtons();
+        handleCalcUnitNameModifed();
       }
-
     } );
 
     setPageComplete( false );
+  }
+
+  void handleCalcUnitNameModifed( )
+  {
+    setPageComplete( isNameValid() ); //$NON-NLS-1$
+    getContainer().updateButtons();
   }
 
   boolean isNameValid( )

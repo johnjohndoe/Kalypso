@@ -99,7 +99,7 @@ public class AssignNodeElevationFaceComponent extends Composite
     @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
-      handleSelectionChanged( (IStructuredSelection) event.getSelection() );
+      handleSelectionChanged( (IStructuredSelection)event.getSelection() );
     }
   };
 
@@ -166,13 +166,18 @@ public class AssignNodeElevationFaceComponent extends Composite
       @Override
       public void widgetSelected( final SelectionEvent event )
       {
-        final IFE1D2DNode[] allNonElevationNodes = ApplyElevationHelper.getAllNonElevationNodes( m_dataModel );
-        m_nodeElevationViewer.setInput( allNonElevationNodes );
-        m_nodeElevationViewer.refresh();
+        handleNoElevationButtonPressed();
       }
     } );
 
     return panel;
+  }
+
+  void handleNoElevationButtonPressed( )
+  {
+    final IFE1D2DNode[] allNonElevationNodes = ApplyElevationHelper.getAllNonElevationNodes( m_dataModel );
+    m_nodeElevationViewer.setInput( allNonElevationNodes );
+    m_nodeElevationViewer.refresh();
   }
 
   private Control createNodeTable( final FormToolkit toolkit, final Composite parent )
@@ -224,7 +229,7 @@ public class AssignNodeElevationFaceComponent extends Composite
       }
     } );
 
-    final Button selectAllWithoutElevation = toolkit.createButton( buttonPanel, Messages.getString("AssignNodeElevationFaceComponent.2"), SWT.PUSH ); //$NON-NLS-1$
+    final Button selectAllWithoutElevation = toolkit.createButton( buttonPanel, Messages.getString( "AssignNodeElevationFaceComponent.2" ), SWT.PUSH ); //$NON-NLS-1$
     selectAllWithoutElevation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     selectAllWithoutElevation.addSelectionListener( new SelectionAdapter()
     {
@@ -264,7 +269,7 @@ public class AssignNodeElevationFaceComponent extends Composite
   {
     final List<IFE1D2DNode> nodesWithoutElevation = new ArrayList<>();
 
-    final IFE1D2DNode[] allNodes = (IFE1D2DNode[]) m_nodeElevationViewer.getInput();
+    final IFE1D2DNode[] allNodes = (IFE1D2DNode[])m_nodeElevationViewer.getInput();
     for( final IFE1D2DNode node : allNodes )
     {
       final GM_Point point = node.getPoint();
@@ -318,10 +323,10 @@ public class AssignNodeElevationFaceComponent extends Composite
 
       final List<IFE1D2DNode> nodeList = new ArrayList<>();
 
-      for( final Object selected : ((IStructuredSelection) selection).toList() )
+      for( final Object selected : ((IStructuredSelection)selection).toList() )
       {
         if( selected instanceof IFE1D2DNode )
-          nodeList.add( (IFE1D2DNode) selected );
+          nodeList.add( (IFE1D2DNode)selected );
       }
 
       ApplyElevationHelper.assignElevationToSelectedNodes( m_dataModel, nodeList );
@@ -369,7 +374,7 @@ public class AssignNodeElevationFaceComponent extends Composite
   {
     if( ITerrainElevationModel.class.toString().equals( key ) )
     {
-      final ITerrainElevationModel[] selection = (ITerrainElevationModel[]) newValue;
+      final ITerrainElevationModel[] selection = (ITerrainElevationModel[])newValue;
       String name = StringUtils.EMPTY;
       if( selection != null )
       {
@@ -378,13 +383,13 @@ public class AssignNodeElevationFaceComponent extends Composite
         {
           names[i] = selection[i].getName();
           if( StringUtils.isBlank( names[i] ) )
-            names[i] = ((INativeTerrainElevationModelWrapper) newValue).getId();
+            names[i] = ((INativeTerrainElevationModelWrapper)newValue).getId();
         }
 
         name = StringUtils.join( names, ", " ); //$NON-NLS-1$
       }
       else
-        name = Messages.getString("AssignNodeElevationFaceComponent.3"); //$NON-NLS-1$
+        name = Messages.getString( "AssignNodeElevationFaceComponent.3" ); //$NON-NLS-1$
 
       m_inputText.setText( name );
     }

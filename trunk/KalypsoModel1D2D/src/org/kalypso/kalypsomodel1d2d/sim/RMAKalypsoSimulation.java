@@ -58,6 +58,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.io.VFSUtilities;
@@ -65,7 +66,6 @@ import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.IProcessFactory;
 import org.kalypso.commons.process.ProcessTimeoutException;
 import org.kalypso.commons.vfs.FileSystemManagerWrapper;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.contribs.java.lang.ProgressCancelable;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -125,8 +125,8 @@ public class RMAKalypsoSimulation implements ISimulation
    * <li>execute the .exe</li>
    * </ul>
    * 
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
+   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider, org.kalypso.simulation.core.ISimulationResultEater,
+   *      org.kalypso.simulation.core.ISimulationMonitor)
    */
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
@@ -149,13 +149,13 @@ public class RMAKalypsoSimulation implements ISimulation
     try
     {
       // TODO: use URI instead of URL
-      final String version = (String) inputProvider.getInputForID( INPUT_RMA_VERSION );
-      final URL modelFileUrl = (URL) inputProvider.getInputForID( INPUT_MESH );
-      final URL controlFileUrl = (URL) inputProvider.getInputForID( INPUT_CONTROL );
-      final URL buildingFileUrl = (URL) inputProvider.getInputForID( INPUT_BUILDINGS );
-      final URL bcwqFileUrl = (URL) inputProvider.getInputForID( INPUT_BC_WQ );
-      final URL windFileUrl = (URL) inputProvider.getInputForID( INPUT_WIND );
-      final URL windCoordFileUrl = (URL) inputProvider.getInputForID( INPUT_WIND_COORD );
+      final String version = (String)inputProvider.getInputForID( INPUT_RMA_VERSION );
+      final URL modelFileUrl = (URL)inputProvider.getInputForID( INPUT_MESH );
+      final URL controlFileUrl = (URL)inputProvider.getInputForID( INPUT_CONTROL );
+      final URL buildingFileUrl = (URL)inputProvider.getInputForID( INPUT_BUILDINGS );
+      final URL bcwqFileUrl = (URL)inputProvider.getInputForID( INPUT_BC_WQ );
+      final URL windFileUrl = (URL)inputProvider.getInputForID( INPUT_WIND );
+      final URL windCoordFileUrl = (URL)inputProvider.getInputForID( INPUT_WIND_COORD );
 
       manager = VFSUtilities.getNewManager();
       final FileObject modelFile = manager.resolveFile( modelFileUrl.toString() );
@@ -183,7 +183,7 @@ public class RMAKalypsoSimulation implements ISimulation
 
       final String tempDirName;
       if( inputProvider.hasID( INPUT_WORKING_DIR ) )
-        tempDirName = (String) inputProvider.getInputForID( INPUT_WORKING_DIR );
+        tempDirName = (String)inputProvider.getInputForID( INPUT_WORKING_DIR );
       else
         tempDirName = tmpdir.getName();
 
@@ -243,7 +243,7 @@ public class RMAKalypsoSimulation implements ISimulation
       if( errorFile == null || !errorFile.exists() || errorFile.getContent().getSize() == 0 )
       {
         /* Successfully finished simulation */
-        progressMonitor.done( StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.20" ) ) ); //$NON-NLS-1$
+        progressMonitor.done( new Status( IStatus.OK, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.20" ) ) ); //$NON-NLS-1$
       }
       else
       {
@@ -251,7 +251,7 @@ public class RMAKalypsoSimulation implements ISimulation
         final byte[] content = FileUtil.getContent( errorFile );
         final String charset = Charset.defaultCharset().name();
         final String errorMessage = new String( content, charset );
-        final IStatus status = StatusUtilities.createErrorStatus( errorMessage );
+        final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, errorMessage );
         progressMonitor.done( status );
         throw new CoreException( status );
       }
@@ -289,7 +289,7 @@ public class RMAKalypsoSimulation implements ISimulation
   {
     if( version == null || version.length() == 0 )
       // REMARK: maybe could instead use a default or the one with the biggest version number?
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.23" ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.23" ) ) ); //$NON-NLS-1$
 
     // REMARK: This is OS dependent; we use should use a pattern according to OS
     final String exeName = ISimulation1D2DConstants.SIM_RMA10_EXE_FILE_PREFIX + version + ".exe"; //$NON-NLS-1$
@@ -302,7 +302,7 @@ public class RMAKalypsoSimulation implements ISimulation
       return exeFile;
 
     final String exeMissingMsg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.26" ), exeFile.getAbsolutePath() ); //$NON-NLS-1$
-    throw new CoreException( StatusUtilities.createErrorStatus( exeMissingMsg ) );
+    throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, exeMissingMsg ) );
   }
 
   public final FileObject getWorkingDir( )

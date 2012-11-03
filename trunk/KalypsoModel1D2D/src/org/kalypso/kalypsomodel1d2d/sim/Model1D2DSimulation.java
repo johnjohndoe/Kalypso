@@ -44,13 +44,14 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.Util;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -73,7 +74,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Starting point for running 1d2d simulations.
- *
+ * 
  * @author Gernot Belger
  */
 public class Model1D2DSimulation implements ISimulation1D2DConstants
@@ -183,7 +184,6 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
 
   /**
    * Sets the unit to calculate into the Control-Model as active unit.<br>
-   *
    * TODO: this is a bit fishy... Better would be to couple calc-units and its corresponding control-models more
    * closely. Then no search for and/or setting of active unit should be necessary any more.
    */
@@ -201,7 +201,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     }
     catch( final Throwable e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.11" ) + calcUnitId ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.11" ) + calcUnitId ) ); //$NON-NLS-1$
     }
   }
 

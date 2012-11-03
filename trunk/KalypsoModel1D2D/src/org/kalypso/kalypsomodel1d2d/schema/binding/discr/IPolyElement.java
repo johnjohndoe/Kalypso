@@ -58,10 +58,10 @@ public interface IPolyElement extends IFE1D2DElement
 
   GM_Polygon getGeometry( );
 
+  @Override
   IFE1D2DEdge[] getEdges( );
 
   void setEdges( IFE1D2DEdge[] edges );
 
   boolean containsEdge( IFE1D2DEdge edge );
-
 }
