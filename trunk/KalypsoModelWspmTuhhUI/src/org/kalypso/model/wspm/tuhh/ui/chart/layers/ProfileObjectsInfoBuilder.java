@@ -23,6 +23,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
+import org.kalypso.model.wspm.core.profil.ProfileStrings;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.ext.base.layer.TooltipFormatter;
@@ -66,12 +67,13 @@ public class ProfileObjectsInfoBuilder implements IProfileObjectInfoBuilder
 
     final TooltipFormatter formatter = new TooltipFormatter( pointHeader, new String[] { "%s", "%s", "%s" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    formatter.addLine( "Breite", String.format( "%,.2f", record.getBreite() ), "m" ); //$NON-NLS-2$
-    formatter.addLine( "Höhe", String.format( "%,.2f", record.getHoehe() ), "mNN" ); //$NON-NLS-2$
+    // TODO: get labels and units from profile object
+    formatter.addLine( ProfileStrings.PROFILE_OBJECT_RECORD_WIDTH_LABEL, String.format( "%,.2f", record.getBreite() ), ProfileStrings.PROFILE_OBJECT_RECORD_WIDTH_UNIT ); //$NON-NLS-2$
+    formatter.addLine( ProfileStrings.PROFILE_OBJECT_RECORD_HEIGHT_LABEL, String.format( "%,.2f", record.getHoehe() ), ProfileStrings.PROFILE_OBJECT_RECORD_HEIGHT_UNIT ); //$NON-NLS-2$
 
     final String code = record.getCode();
     if( !StringUtils.isBlank( code ) )
-      formatter.addLine( "Kennzeichen", code, StringUtils.EMPTY );
+      formatter.addLine( ProfileStrings.PROFILE_OBJECT_RECORD_CODE_LABEL, code, StringUtils.EMPTY );
 
     final String comment = record.getComment();
     if( !StringUtils.isBlank( comment ) )
