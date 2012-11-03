@@ -65,7 +65,7 @@ import org.eclipse.ui.internal.ide.actions.QuickMenuAction;
  * 
  * @author Holger Albert
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
 {
   /*
@@ -276,17 +276,14 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
     register( newQuickMenu );
   }
 
-  /**
-   * @see org.eclipse.ui.application.ActionBarAdvisor#fillMenuBar(org.eclipse.jface.action.IMenuManager)
-   */
   @Override
   protected void fillMenuBar( final IMenuManager menuBar )
   {
     menuBar.add( createFileMenu() );
     final MenuManager editMenu = new MenuManager( IDEWorkbenchMessages.Workbench_edit, IWorkbenchActionConstants.M_EDIT );
     final MenuManager windowMenu = new MenuManager( IDEWorkbenchMessages.Workbench_window, IWorkbenchActionConstants.M_WINDOW );
-    final MenuManager openPerspectiveMenu = new MenuManager( IDEWorkbenchMessages.Workbench_openPerspective, "openPerspective" );
-    final MenuManager showViewMenu = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" );
+    final MenuManager openPerspectiveMenu = new MenuManager( IDEWorkbenchMessages.Workbench_openPerspective, "openPerspective" ); //$NON-NLS-1$
+    final MenuManager showViewMenu = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" ); //$NON-NLS-1$
     final MenuManager helpMenu = new MenuManager( IDEWorkbenchMessages.Workbench_help, IWorkbenchActionConstants.M_HELP );
 
     /* The edit menu. */

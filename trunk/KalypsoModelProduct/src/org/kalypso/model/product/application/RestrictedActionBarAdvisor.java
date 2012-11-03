@@ -62,7 +62,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
  * 
  * @author Holger Albert
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class RestrictedActionBarAdvisor extends ActionBarAdvisor
 {
   /*
@@ -231,7 +231,7 @@ public class RestrictedActionBarAdvisor extends ActionBarAdvisor
     final MenuManager windowMenu = new MenuManager( IDEWorkbenchMessages.Workbench_window, IWorkbenchActionConstants.M_WINDOW );
     // MenuManager openPerspectiveMenu = new MenuManager( IDEWorkbenchMessages.Workbench_openPerspective,
     // "openPerspective" );
-    final MenuManager showViewMenu = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" );
+    final MenuManager showViewMenu = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" ); //$NON-NLS-1$
     final MenuManager helpMenu = new MenuManager( IDEWorkbenchMessages.Workbench_help, IWorkbenchActionConstants.M_HELP );
 
     /* The file menu. */
@@ -303,19 +303,19 @@ public class RestrictedActionBarAdvisor extends ActionBarAdvisor
     helpMenu.add( new GroupMarker( IWorkbenchActionConstants.HELP_START ) );
     if( !m_introHidden )
       helpMenu.add( m_introAction ); //
-    helpMenu.add(new Separator("group.main.ext")); //$NON-NLS-1$
+    helpMenu.add( new Separator( "group.main.ext" ) ); //$NON-NLS-1$
     helpMenu.add( m_helpContentsAction );
-    helpMenu.add(new GroupMarker("group.tutorials")); //$NON-NLS-1$
-    helpMenu.add(new GroupMarker("group.tools")); //$NON-NLS-1$
-    helpMenu.add(new Separator("group.updates")); //$NON-NLS-1$
+    helpMenu.add( new GroupMarker( "group.tutorials" ) ); //$NON-NLS-1$
+    helpMenu.add( new GroupMarker( "group.tools" ) ); //$NON-NLS-1$
+    helpMenu.add( new Separator( "group.updates" ) ); //$NON-NLS-1$
     helpMenu.add( new GroupMarker( IWorkbenchActionConstants.HELP_END ) );
-    helpMenu.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS));
+    helpMenu.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
     // about should always be at the bottom
-    helpMenu.add(new Separator("group.about")); //$NON-NLS-1$
+    helpMenu.add( new Separator( "group.about" ) ); //$NON-NLS-1$
 
-    final ActionContributionItem aboutItem = new ActionContributionItem(m_aboutAction);
-    aboutItem.setVisible(!Util.isMac());
+    final ActionContributionItem aboutItem = new ActionContributionItem( m_aboutAction );
+    aboutItem.setVisible( !Util.isMac() );
     helpMenu.add( m_aboutAction );
-    helpMenu.add(new GroupMarker("group.about.ext")); //$NON-NLS-1$
+    helpMenu.add( new GroupMarker( "group.about.ext" ) ); //$NON-NLS-1$
   }
 }
