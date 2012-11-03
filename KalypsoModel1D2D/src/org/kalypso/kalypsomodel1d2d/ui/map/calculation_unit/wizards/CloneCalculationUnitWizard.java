@@ -69,6 +69,7 @@ public class CloneCalculationUnitWizard extends Wizard
     m_dataModel = dataModel;
     m_calcUnitToClone = calcUnitToClone;
     m_calcUnitDataModel = calcUnitDataModel;
+
     super.setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CloneCalculationUnitWizard.0" ) ); //$NON-NLS-1$
   }
 
@@ -84,11 +85,10 @@ public class CloneCalculationUnitWizard extends Wizard
   {
     final String calcUnitName = m_page.getCalculationUnitName();
 
-    final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( m_calcUnitToClone.getQualifiedName(), (IFEDiscretisationModel1d2d) Util.getModel( IFEDiscretisationModel1d2d.class.getName() ), calcUnitName, m_calcUnitToClone )
+    final KeyBasedDataModel dataModel = m_dataModel;
+
+    final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( (IFEDiscretisationModel1d2d)Util.getModel( IFEDiscretisationModel1d2d.class.getName() ), calcUnitName, m_calcUnitToClone )
     {
-      /**
-       * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd#process()
-       */
       @Override
       public void process( ) throws Exception
       {
@@ -98,16 +98,16 @@ public class CloneCalculationUnitWizard extends Wizard
         // Move it outside where this wizard is executed
 
         // reset list of calculation units
-        final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+        final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d)dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
         final List<ICalculationUnit> calcUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
-        m_dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calcUnits );
+        dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calcUnits );
 
         // set the create unit as selected
-        m_dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, getCreatedCalculationUnit() );
+        dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, getCreatedCalculationUnit() );
       }
     };
+
     KeyBasedDataModelUtil.postCommand( m_dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
     return true;
   }
-
 }

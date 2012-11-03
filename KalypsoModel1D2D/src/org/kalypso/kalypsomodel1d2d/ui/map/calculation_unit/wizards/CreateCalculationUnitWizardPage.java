@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -63,13 +64,11 @@ public class CreateCalculationUnitWizardPage extends WizardPage
 
   private Combo m_calcUnitType;
 
-//  private Text m_calcUnitDescription;
+  private static final String QNAME_KEY_1D2D = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.0" ); //$NON-NLS-1$
 
-  private static final String QNAME_KEY_1D2D = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.0");  //$NON-NLS-1$
+  private static final String QNAME_KEY_2D = "2D Berechnungseinheit"; //$NON-NLS-1$
 
-  private static final String QNAME_KEY_2D = "2D Berechnungseinheit";  //$NON-NLS-1$
-
-  private static final String QNAME_KEY_1D = "1D Berechnungseinheit";  //$NON-NLS-1$
+  private static final String QNAME_KEY_1D = "1D Berechnungseinheit"; //$NON-NLS-1$
 
   public CreateCalculationUnitWizardPage( final String name, final String description )
   {
@@ -78,9 +77,6 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     setDescription( description );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -91,21 +87,20 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     setControl( composite );
 
     final Label nameLabel = new Label( composite, SWT.RIGHT );
-    nameLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.3") );  //$NON-NLS-1$
+    nameLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.3" ) ); //$NON-NLS-1$
     m_calcUnitName = new Text( composite, SWT.SINGLE | SWT.BORDER );
     m_calcUnitName.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_calcUnitName.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
-        setPageComplete( !m_calcUnitName.getText().trim().equals( "" ) );  //$NON-NLS-1$
-        getContainer().updateButtons();
+        handleNameModified();
       }
     } );
 
-    Label typeLabel = new Label( composite, SWT.RIGHT );
-    typeLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.5") );  //$NON-NLS-1$
+    final Label typeLabel = new Label( composite, SWT.RIGHT );
+    typeLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.5" ) ); //$NON-NLS-1$
 
     m_calcUnitType = new Combo( composite, SWT.RIGHT | SWT.READ_ONLY | SWT.BORDER );
     m_calcUnitType.add( QNAME_KEY_1D2D );
@@ -114,13 +109,13 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     m_calcUnitType.select( 0 );
     m_calcUnitType.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-//    final Label descriptionLabel = new Label( composite, SWT.RIGHT );
-//    descriptionLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.9") ); //$NON-NLS-1$
-//    m_calcUnitDescription = new Text( composite, SWT.BORDER | SWT.MULTI );
-//    m_calcUnitDescription.setText( "" ); //$NON-NLS-1$
-//    m_calcUnitDescription.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    
     setPageComplete( false );
+  }
+
+  void handleNameModified( )
+  {
+    setPageComplete( !m_calcUnitName.getText().trim().equals( "" ) ); //$NON-NLS-1$
+    getContainer().updateButtons();
   }
 
   public String getCalculationUnitName( )
@@ -138,13 +133,11 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     else if( QNAME_KEY_1D2D.equals( qNameKey ) )
       return ICalculationUnit1D2D.QNAME;
     else
-      throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.6") + qNameKey );  //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.6" ) + qNameKey ); //$NON-NLS-1$
   }
 
   public String getCalculationUnitDescription( )
   {
-    return ""; //$NON-NLS-1$
-//    return m_calcUnitDescription.getText();
+    return StringUtils.EMPTY;
   }
-
 }

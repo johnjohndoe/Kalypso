@@ -60,100 +60,85 @@ public class XYZOffsetPositionProvider implements IPositionProvider
   /**
    * The x offset to add to the native x-coordinate to get the target coordinate
    */
-  private final double xOffset;
+  private final double m_xOffset;
 
   /**
    * The y offset to add to the native y-coordinate to get the target coordinate
    */
-  private final double yOffset;
+  private final double m_yOffset;
 
   /**
    * The z offset to add to the native z-coordinate to get the target coordinate
    */
-  private final double zOffset;
+  private final double m_zOffset;
 
   /**
    * coordinate reference system of the target points
    */
-  private final String crs;
+  private final String m_crs;
 
   public XYZOffsetPositionProvider( final double xoffset, final double yoffset, final String coordinateSystem )
   {
     Assert.throwIAEOnNullParam( coordinateSystem, "coordinateSystem" ); //$NON-NLS-1$
-    xOffset = xoffset;
-    yOffset = yoffset;
-    zOffset = 0.0;
-    this.crs = coordinateSystem;
+    m_xOffset = xoffset;
+    m_yOffset = yoffset;
+    m_zOffset = 0.0;
+    m_crs = coordinateSystem;
   }
 
   /**
    * Creates a native coordinate system with the specified target coordinate system and the given coordinate offsets
    * 
    * @param xOffset
-   *            the x offset
+   *          the x offset
    * @param yOffset
-   *            the y offset
+   *          the y offset
    * @param zOffset
-   *            the z offset
+   *          the z offset
    * @param crs
-   *            the target coordinate system
+   *          the target coordinate system
    */
   public XYZOffsetPositionProvider( final String crs, final double xOffset, final double yOffset, final double zOffset ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( crs, "crs" ); //$NON-NLS-1$
 
-    this.xOffset = xOffset;
-    this.yOffset = yOffset;
-    this.zOffset = zOffset;
-    this.crs = crs;
+    m_xOffset = xOffset;
+    m_yOffset = yOffset;
+    m_zOffset = zOffset;
+    m_crs = crs;
 
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getCoordinateSystem()
-   */
   @Override
   public String getCoordinateSystem( )
   {
-    return crs;
+    return m_crs;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getGMPoint(double, double, double)
-   */
   @Override
   public GM_Point getGMPoint( final double nativeX, final double nativeY, final double nativeZ )
   {
-    return GeometryFactory.createGM_Point( nativeX + xOffset, nativeY + yOffset, nativeZ + zOffset, crs );
+    return GeometryFactory.createGM_Point( nativeX + m_xOffset, nativeY + m_yOffset, nativeZ + m_zOffset, m_crs );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getNativeX(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public double getNativeX( final GM_Point point ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( point, "point" ); //$NON-NLS-1$
-    return point.getX() - xOffset;
+    return point.getX() - m_xOffset;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getNativeY(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public double getNativeY( final GM_Point point ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( point, "point" ); //$NON-NLS-1$
-    return point.getY() - yOffset;
+    return point.getY() - m_yOffset;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getNativeZ(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public double getNativeZ( final GM_Point point ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( point, "point" ); //$NON-NLS-1$
-    return point.getZ() - zOffset;
+    return point.getZ() - m_zOffset;
   }
 }

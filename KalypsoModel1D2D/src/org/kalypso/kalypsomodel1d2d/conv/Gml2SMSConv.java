@@ -53,8 +53,9 @@ import java.util.TreeSet;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.util.FormatterUtils;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -253,7 +254,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
 
       final String msg = String.format( "Keine H�hendaten: [%.3f, %.3f]", x, y ); //$NON-NLS-1$
       // TODO: georefed error msg
-      throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
     }
   }
 
@@ -281,7 +282,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     final Set<IFE1D2DEdge> edgeSet = new HashSet<>( elementsInBBox.length * 2 );
 
     if( elementsInBBox.length == 0 )
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.2" ), null ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.2" ) ) ); //$NON-NLS-1$
 
     for( final IFE1D2DElement element : elementsInBBox )
     {
@@ -402,7 +403,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     // TODO: georefed, core exception!
     final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.5", roughnessClsID, element ); //$NON-NLS-1$
     // TODO: use default zone instead
-    throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+    throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
   }
 
   @Override

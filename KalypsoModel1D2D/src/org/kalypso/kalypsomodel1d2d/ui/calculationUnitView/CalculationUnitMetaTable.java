@@ -115,7 +115,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Calculation unit widget component that shows the table of existing calculation units, with the corresponding buttons
- *
+ * 
  * @author Madanagopal
  * @author Dejan Antanaskovic
  */
@@ -126,12 +126,11 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   final private ISelectionChangedListener m_selectListener = new ISelectionChangedListener()
   {
     @Override
-    @SuppressWarnings("synthetic-access")
     public void selectionChanged( final SelectionChangedEvent event )
     {
       try
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
         if( selection == null )
         {
           return;
@@ -145,7 +144,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         {
           if( firstElement instanceof Feature )
           {
-            final Feature firstElementWrapper = (Feature) firstElement;
+            final Feature firstElementWrapper = (Feature)firstElement;
             setCurrentSelection( firstElementWrapper );
           }
         }
@@ -211,6 +210,8 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       }
     } );
 
+    final CalculationUnitDataModel dataModel = m_dataModel;
+
     final IFEDiscretisationModel1d2d discModel = m_dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
     final GMLWorkspace workspace = discModel.getWorkspace();
     final ModellEventListener modelListener = new ModellEventListener()
@@ -223,7 +224,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           @Override
           public void run( )
           {
-            final Object newValue = m_dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+            final Object newValue = dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
             updateOnNewInput( display, tableViewer, newValue );
           }
         };
@@ -310,7 +311,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       DisposeButtonImageListener.hookToButton( m_btnMaximizeCalcUnit );
       m_btnMaximizeCalcUnit.addSelectionListener( new SelectionAdapter()
       {
-        @SuppressWarnings("synthetic-access")
+        @SuppressWarnings( "synthetic-access" )
         @Override
         public void widgetSelected( final SelectionEvent event )
         {
@@ -419,10 +420,8 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         @Override
         public void widgetSelected( final SelectionEvent event )
         {
-          if( m_dataModel.getSelectedCalculationUnit() == null )
-          {
+          if( dataModel.getSelectedCalculationUnit() == null )
             return;
-          }
 
           final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
           final CalculationUnitPropertyWizard calculationSubWizard = new CalculationUnitPropertyWizard( dataModel );
@@ -464,7 +463,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   {
     final KeyBasedDataModel dataModel = getDataModel();
     final ICalculationUnit calcUnitToDel = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) getDataModel().getData( ICommonKeys.KEY_DATA_PROVIDER );
+    final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider)getDataModel().getData( ICommonKeys.KEY_DATA_PROVIDER );
     if( calcUnitToDel != null )
     {
       // TODO: check for existing results
@@ -516,8 +515,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     return Status.OK_STATUS;
   }
 
-  protected void moveSelection( @SuppressWarnings("unused")
-  final int delta )
+  protected void moveSelection( @SuppressWarnings( "unused" ) final int delta )
   {
     throw new UnsupportedOperationException();
   }
@@ -545,13 +543,13 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     wizardDialog.open();
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   protected List<ICalculationUnit> getCalcUnits( )
   {
     final Object inputData = getDataModel().getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
     if( inputData != null )
     {
-      return (List<ICalculationUnit>) inputData;
+      return (List<ICalculationUnit>)inputData;
     }
 
     return new ArrayList<>();
@@ -581,7 +579,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
   protected Feature getCurrentSelection( )
   {
-    return (Feature) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    return (Feature)m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
   }
 
   public KeyBasedDataModel getDataModel( )
@@ -619,7 +617,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     final Runnable runnable = new Runnable()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public void run( )
       {
         tableViewer.refresh();
