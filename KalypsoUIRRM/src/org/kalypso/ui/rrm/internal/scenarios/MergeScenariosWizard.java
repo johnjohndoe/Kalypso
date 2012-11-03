@@ -78,14 +78,14 @@ public class MergeScenariosWizard extends Wizard
     m_scenariosData = new MergeScenariosData( scenario );
     m_mergeScenariosWizardPage = null;
 
-    setWindowTitle( Messages.getString("MergeScenariosWizard_0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "MergeScenariosWizard_0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
   @Override
   public void addPages( )
   {
-    m_mergeScenariosWizardPage = new MergeScenariosWizardPage( Messages.getString("MergeScenariosWizard_1"), m_scenariosData ); //$NON-NLS-1$
+    m_mergeScenariosWizardPage = new MergeScenariosWizardPage( "MergeScenariosWizardPage", m_scenariosData ); //$NON-NLS-1$
     addPage( m_mergeScenariosWizardPage );
   }
 
@@ -97,15 +97,17 @@ public class MergeScenariosWizard extends Wizard
 
     /* Determine the properties of the message dialog. */
     int kind = MessageDialog.INFORMATION;
-    String message = Messages.getString("MergeScenariosWizard_2"); //$NON-NLS-1$
+    String message = Messages.getString( "MergeScenariosWizard_2" ); //$NON-NLS-1$
     if( !scenariosVerified )
     {
       kind = MessageDialog.WARNING;
-      message = Messages.getString("MergeScenariosWizard_3"); //$NON-NLS-1$
+      message = Messages.getString( "MergeScenariosWizard_3" ); //$NON-NLS-1$
     }
 
     /* Open the message dialog. */
-    final MessageDialog dialog = new MessageDialog( getShell(), getWindowTitle(), null, message, kind, new String[] { Messages.getString("MergeScenariosWizard_4"), Messages.getString("MergeScenariosWizard_5") }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$
+    // FIXME: use, confirm dialog!
+    final MessageDialog dialog = new MessageDialog( getShell(), getWindowTitle(), null, message, kind, new String[] {
+        Messages.getString( "MergeScenariosWizard_4" ), Messages.getString( "MergeScenariosWizard_5" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$
     if( dialog.open() != 0 )
       return false;
 

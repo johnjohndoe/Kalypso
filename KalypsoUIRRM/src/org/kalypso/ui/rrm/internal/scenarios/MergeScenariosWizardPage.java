@@ -127,9 +127,6 @@ public class MergeScenariosWizardPage extends WizardPage
     setDescription( String.format( Messages.getString( "MergeScenariosWizardPage_1" ), scenariosData.getTargetScenario().getName() ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -253,12 +250,12 @@ public class MergeScenariosWizardPage extends WizardPage
     if( selection.isEmpty() || !(selection instanceof IStructuredSelection) )
       return;
 
-    final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+    final IStructuredSelection structuredSelection = (IStructuredSelection)selection;
     final Object firstElement = structuredSelection.getFirstElement();
     if( !(firstElement instanceof IScenario) )
       return;
 
-    final IScenario scenario = (IScenario) firstElement;
+    final IScenario scenario = (IScenario)firstElement;
     final String uri = scenario.getURI();
     final String name = scenario.getName();
     final IStatus status = m_compareStatus.getMergedStatus( uri, name );
