@@ -3,6 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelSimulationBase
 Bundle-SymbolicName: org.kalypso.ModelSimulationBase;singleton:=true
 Bundle-Version: 12.7.0.qualifier
+Bundle-Localization: plugin
 Require-Bundle: 
  org.eclipse.core.expressions;visibility:=reexport,
  org.kalypso.gml.processes,

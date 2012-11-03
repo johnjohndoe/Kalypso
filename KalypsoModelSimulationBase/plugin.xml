@@ -104,14 +104,14 @@
              icon="icons/file_shp.gif"
              id="shapeImportWorkflow"
              name="ESRI (tm) Shape">
-         <description>Eine ESRI Shape Datei als Thema hinufügen.</description>
+         <description>%shapeImportWorkflow.description</description>
        </wizard>
        <wizard
              class="org.kalypso.kalypsosimulationmodel.internal.ui.map.ImportImageWorkflowWizard"
              icon="icons/file_image.gif"
              id="imageImportWorkflow"
              name="Georeferenced Image (TIFF, JPG, PNG)">
-             <description>Eine georeferenziertes Bild (.tiff, .jpg, .png, ...) als Thema hinzufügen.</description>
+             <description>%imageImportWorkflow.description</description>
        </wizard>
     </extension>
 
