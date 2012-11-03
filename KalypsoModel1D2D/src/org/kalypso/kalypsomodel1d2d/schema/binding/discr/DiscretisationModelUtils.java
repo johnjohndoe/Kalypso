@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -55,11 +54,9 @@ public class DiscretisationModelUtils
 {
   private DiscretisationModelUtils( )
   {
-    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils.0" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( "Helper class, do not instantiate!" ); //$NON-NLS-1$
   }
 
-  /**
-   */
   public static Feature findModelElementForBC( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
 

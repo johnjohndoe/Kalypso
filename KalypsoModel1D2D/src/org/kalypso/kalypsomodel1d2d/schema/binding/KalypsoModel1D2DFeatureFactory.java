@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.WindModelDisplayElementFactory;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.HMOTerrainElevationModel;
@@ -25,18 +24,17 @@ import org.kalypsodeegree_impl.graphics.displayelements.TriangulatedSurfacePolyg
 
 /**
  * Adapter Factory for feature in the simBase namespace
- *
+ * 
  * @author Patrice Congo
- *
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings( "rawtypes" )
 public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 {
   private interface AdapterConstructor
   {
     /**
      * Construct the Adapter of the specified class for the given feature
-     *
+     * 
      * @param <T>
      * @param feature
      * @param cls
@@ -62,16 +60,13 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( !(adaptableObject instanceof Feature) )
-    {
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoModel1D2DFeatureFactory.0") + Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoModel1D2DFeatureFactory.1") + adaptableObject ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
+      throw new IllegalArgumentException( "Adapter Factory for feature only but get to adapt:" + adaptableObject ); //$NON-NLS-1$
 
     final AdapterConstructor ctor = constructors.get( adapterType );
-    if( ctor != null )
-    {
-      return ctor.constructAdapter( (Feature) adaptableObject, adapterType );
-    }
-    return null;
+    if( ctor == null )
+      return null;
+
+    return ctor.constructAdapter( (Feature)adaptableObject, adapterType );
   }
 
   @Override
@@ -95,8 +90,8 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         final QName name = feature.getFeatureType().getQName();
         if( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( name ) )
         {
-          final ITerrainElevationModel terrainElevationModel = (ITerrainElevationModel) feature.getAdapter( ITerrainElevationModel.class );
-          final IElevationModel elevationProvider = ((NativeTerrainElevationModelWrapper) terrainElevationModel).getElevationProvider();
+          final ITerrainElevationModel terrainElevationModel = (ITerrainElevationModel)feature.getAdapter( ITerrainElevationModel.class );
+          final IElevationModel elevationProvider = ((NativeTerrainElevationModelWrapper)terrainElevationModel).getElevationProvider();
 
           if( elevationProvider instanceof HMOTerrainElevationModel )
           {

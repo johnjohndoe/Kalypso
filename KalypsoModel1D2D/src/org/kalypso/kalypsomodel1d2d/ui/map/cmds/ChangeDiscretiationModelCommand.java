@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 /**
  * Composite command used to change the discretisation command. This composite takes the responsibility to notify the
  * commandable workspace about the change introduced by its sub command
- *
+ * 
  * @author Patrice Congo
  */
 public class ChangeDiscretiationModelCommand implements ICommand
@@ -82,8 +82,8 @@ public class ChangeDiscretiationModelCommand implements ICommand
 
   public ChangeDiscretiationModelCommand( final GMLWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d, final String description )
   {
-    Assert.throwIAEOnNullParam( model1d2d, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand.1" ) ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( description, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand.2" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( description, "description" ); //$NON-NLS-1$
     m_description = description;
     m_model1d2d = model1d2d;
     m_commandableWorkspace = commandableWorkspace;
@@ -209,7 +209,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
 
   public void addCommand( final IFeatureChangeCommand command )
   {
-    Assert.throwIAEOnNullParam( command, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand.3" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( command, "command" ); //$NON-NLS-1$
     if( m_commands instanceof AddNodeCommand )
     {
       m_nodeCommands.add( command );

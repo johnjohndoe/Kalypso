@@ -52,11 +52,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
@@ -117,7 +117,7 @@ public class ModelDtmWizard extends Wizard
     m_mapPart = mapPart;
 
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -193,7 +193,7 @@ public class ModelDtmWizard extends Wizard
         {
           if( style instanceof UserStyle )
           {
-            final UserStyle userStyle = (UserStyle) style;
+            final UserStyle userStyle = (UserStyle)style;
             final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
             for( final FeatureTypeStyle featureTypeStyle : featureTypeStyles )
             {
@@ -205,9 +205,9 @@ public class ModelDtmWizard extends Wizard
                 for( final Symbolizer symbolizer : symbolizers )
                 {
                   if( symbolizer instanceof SurfaceLineSymbolizer && m_isoSymbolizer == null )
-                    m_isoSymbolizer = (SurfaceLineSymbolizer) symbolizer;
+                    m_isoSymbolizer = (SurfaceLineSymbolizer)symbolizer;
                   if( symbolizer instanceof SurfacePolygonSymbolizer && m_polySmybolizer == null )
-                    m_polySmybolizer = (SurfacePolygonSymbolizer) symbolizer;
+                    m_polySmybolizer = (SurfacePolygonSymbolizer)symbolizer;
                 }
               }
             }
@@ -218,13 +218,13 @@ public class ModelDtmWizard extends Wizard
     catch( final CoreException e )
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.1"), e.getStatus() ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.1" ), e.getStatus() ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.getLocalizedMessage(), e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.2"), status ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.2" ), status ); //$NON-NLS-1$
     }
     finally
     {
@@ -254,7 +254,7 @@ public class ModelDtmWizard extends Wizard
     catch( final CoreException e )
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.3"), e.getStatus() ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.3" ), e.getStatus() ); //$NON-NLS-1$
       return true;
     }
 
@@ -270,7 +270,7 @@ public class ModelDtmWizard extends Wizard
       final String gmlSource = ResourceUtilities.makeRelativ( mapFile, m_dtmFile ).toString();
       final String sldSource = ResourceUtilities.makeRelativ( mapFile, m_styleFile ).toString();
 
-      final AddThemeCommand addThemeCommand = new AddThemeCommand( mapModell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.4"), "gml", "", gmlSource ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final AddThemeCommand addThemeCommand = new AddThemeCommand( mapModell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.4" ), "gml", "", gmlSource ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       // addThemeCommand.addStyle( "tinPolyStyle", sldSource );
       addThemeCommand.addStyle( "tinLineStyle", sldSource ); //$NON-NLS-1$
       addThemeCommand.addProperty( THEME_PROP_MODEL_DTM, "true" ); // any value != null //$NON-NLS-1$

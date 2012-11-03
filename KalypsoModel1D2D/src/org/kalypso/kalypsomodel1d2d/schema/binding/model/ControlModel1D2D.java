@@ -55,7 +55,6 @@ import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -74,7 +73,6 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * @author Patrice Congo
  * @author Madanagopal
  * @author Dejan Antanaskovic
- * 
  */
 public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
 {
@@ -553,13 +551,10 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D.0" ), e ); //$NON-NLS-1$
+      throw new RuntimeException( "Exception while setting calculation unit link to control" ); //$NON-NLS-1$
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getCalculationUnit()
-   */
   @Override
   public ICalculationUnit getCalculationUnit( )
   {
