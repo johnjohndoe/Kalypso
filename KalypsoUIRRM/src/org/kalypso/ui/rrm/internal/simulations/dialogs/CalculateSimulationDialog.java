@@ -104,9 +104,6 @@ public class CalculateSimulationDialog extends TitleAreaDialog
     m_calculateStartConditions = false;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
@@ -115,7 +112,7 @@ public class CalculateSimulationDialog extends TitleAreaDialog
     setTitle( Messages.getString( "CalculateSimulationDialog_1" ) ); //$NON-NLS-1$
 
     /* Create the main composite. */
-    final Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite)super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -185,7 +182,7 @@ public class CalculateSimulationDialog extends TitleAreaDialog
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final Button source = (Button) e.getSource();
+        final Button source = (Button)e.getSource();
         m_calculateStartConditions = source.getSelection();
       }
     } );
