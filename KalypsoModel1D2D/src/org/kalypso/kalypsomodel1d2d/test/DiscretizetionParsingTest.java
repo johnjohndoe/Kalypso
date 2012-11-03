@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package test.org.kalypso.kalypsomodel1d2d;
+package org.kalypso.kalypsomodel1d2d.test;
 
 import org.kalypso.gml.test.GmlParsingTester;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
