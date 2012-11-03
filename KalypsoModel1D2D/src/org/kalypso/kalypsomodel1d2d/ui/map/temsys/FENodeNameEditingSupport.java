@@ -51,7 +51,7 @@ import org.kalypso.afgui.model.Util;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeFeatureNameCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
@@ -103,7 +103,7 @@ public class FENodeNameEditingSupport extends EditingSupport
 
     final CommandableWorkspace workspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );
 
-    final ChangeIFeatureWrapper2NameCmd cmd = new ChangeIFeatureWrapper2NameCmd( node, (String) value )
+    final ChangeFeatureNameCommand cmd = new ChangeFeatureNameCommand( node, (String) value )
     {
       @Override
       public void process( ) throws Exception

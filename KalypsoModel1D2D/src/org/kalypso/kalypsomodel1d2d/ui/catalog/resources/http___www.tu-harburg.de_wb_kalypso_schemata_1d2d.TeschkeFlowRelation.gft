@@ -91,7 +91,7 @@
   </tabFolder>
   
   <translator id="commons.msgGetString">
-    <class xmlns="">org.kalypso.model1d2d:org.kalypso.kalypsomodel1d2d.ui.catalog.Messages</class>
+    <class xmlns="">org.kalypso.model1d2d:org.kalypso.kalypsomodel1d2d.ui.catalog.TemplateMessages</class>
   </translator>
   
 </featureview>

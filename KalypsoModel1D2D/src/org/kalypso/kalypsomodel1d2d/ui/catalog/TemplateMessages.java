@@ -49,15 +49,15 @@ import org.kalypso.contribs.java.i18n.I18nUtils;
  * 
  * @author Gernot Belger
  */
-public final class Messages
+public final class TemplateMessages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.ui.catalog.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.ui.catalog.templateMessages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
   private static final Object[] NO_ARGS = new Object[0];
 
-  private Messages( )
+  private TemplateMessages( )
   {
   }
 

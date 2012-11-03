@@ -364,7 +364,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       return;
 
     if( edge.getLinkedElements().length != 0 )
-      throw new IllegalStateException( "Edge is referenced by one or more elements." );
+      throw new IllegalStateException( "Edge is referenced by one or more elements." ); //$NON-NLS-1$
 
     final IFE1D2DNode[] nodes = edge.getNodes();
     for( final IFE1D2DNode node : nodes )
@@ -386,7 +386,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       return;
 
     if( element.getLinkedElements().length != 0 )
-      throw new IllegalStateException( "Element is referenced by one or more complex elements." );
+      throw new IllegalStateException( "Element is referenced by one or more complex elements." ); //$NON-NLS-1$
 
     final IFE1D2DEdge[] edges = element.getEdges();
     for( final IFE1D2DEdge edge : edges )
@@ -408,7 +408,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       return;
 
     if( node.getLinkedEdges().length != 0 )
-      throw new IllegalStateException( "Node is referenced by one or more edges." );
+      throw new IllegalStateException( "Node is referenced by one or more edges." ); //$NON-NLS-1$
 
     nodes.remove( node );
   }
@@ -422,7 +422,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     for( final IFE1D2DNode node : nodesToRemove )
     {
       if( node.getLinkedEdges().length != 0 )
-        throw new IllegalStateException( "Node is referenced by one or more edges." );
+        throw new IllegalStateException( "Node is referenced by one or more edges." ); //$NON-NLS-1$
     }
     
     final FeatureList nodes = getNodesInternal();
@@ -438,7 +438,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     for( final IFE1D2DEdge edge : edgesToRemove )
     {
       if( edge.getLinkedElements().length != 0 )
-        throw new IllegalStateException( "Edge is referenced by one or more elements." );
+        throw new IllegalStateException( "Edge is referenced by one or more elements." ); //$NON-NLS-1$
     }
 
     final FeatureList edges = getEdgesInternal();
@@ -467,7 +467,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     for( final IFE1D2DElement element : elementsToRemove )
     {
       if( element.getLinkedElements().length != 0 )
-        throw new IllegalStateException( "Element is referenced by one or more complex elements." );
+        throw new IllegalStateException( "Element is referenced by one or more complex elements." ); //$NON-NLS-1$
     }
 
     final FeatureList elements = getElementsInternal();

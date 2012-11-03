@@ -424,7 +424,7 @@ public class Control1D2DConverter
         final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D)parentCalculationUnit;
         final IFeatureBindingCollection<ICalculationUnit> changedSubUnits = calculationUnit1D2D.getSubCalculationUnits();
         int in2DCalcUnitCount = 0;
-        final IFE1D2DComplexElement[] containers = line.getLinkedElements();
+        final IFE1D2DComplexElement< ? >[] containers = line.getLinkedElements();
         for( final Feature calcUnit : containers )
         {
           if( ((ICalculationUnit)calcUnit).getType() == TYPE.TYPE2D && changedSubUnits.contains( calcUnit ) )
@@ -803,6 +803,7 @@ public class Control1D2DConverter
               }
               catch( final Exception e )
               {
+                // FIXME: grr, error handling -> we need to stop calculation in such a case!
                 m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, Messages.getString( "Control1D2DConverter.1" ), boundaryCondition.getLocation(), e ); //$NON-NLS-1$
               }
               formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, infVel, Math.toRadians( boundaryCondition.getDirection().doubleValue() ) ); //$NON-NLS-1$
@@ -831,7 +832,7 @@ public class Control1D2DConverter
     {
       if( j % 9 == 0 )
       {
-        formatter.format( "%nBC%6s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.31" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        formatter.format( "%nBC%6s", " " ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       formatter.format( "%5d010", lListFactors.get( j ) ); //$NON-NLS-1$
     }

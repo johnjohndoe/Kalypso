@@ -180,7 +180,7 @@ public class AddNodeCommand implements IFeatureChangeCommand
   public String toString( )
   {
     final StringBuffer buf = new StringBuffer();
-    buf.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.3" ) ); //$NON-NLS-1$
+    buf.append( "AddNodeCommand[" ); //$NON-NLS-1$
     buf.append( m_nodePoint );
     buf.append( ']' );
     return buf.toString();
