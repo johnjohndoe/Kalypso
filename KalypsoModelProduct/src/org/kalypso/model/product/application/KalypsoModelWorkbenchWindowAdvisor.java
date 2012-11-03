@@ -56,7 +56,7 @@ import org.eclipse.ui.internal.util.PrefUtil;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 {
   /**
@@ -131,9 +131,6 @@ public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
     configurer.setShowFastViewBars( !m_restrictedAccess );
     configurer.setShowProgressIndicator( true );
     configurer.setShowStatusLine( true );
-
-    /* Set the title. */
-//    configurer.setTitle( Messages.getString( "org.kalypso.model.product.application.KalypsoModelWorkbenchWindowAdvisor.0" ) ); //$NON-NLS-1$
   }
 
   @Override
