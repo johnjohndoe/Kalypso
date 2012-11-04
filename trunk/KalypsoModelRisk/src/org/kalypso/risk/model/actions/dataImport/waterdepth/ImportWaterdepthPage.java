@@ -10,7 +10,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -75,7 +74,7 @@ public class ImportWaterdepthPage extends WizardPage
     final Object layoutData = parent.getLayoutData();
     if( layoutData instanceof GridData )
     {
-      final GridData pLayout = (GridData) layoutData;
+      final GridData pLayout = (GridData)layoutData;
       pLayout.widthHint = 410;
       pLayout.heightHint = 400;
       parent.layout();
@@ -130,10 +129,7 @@ public class ImportWaterdepthPage extends WizardPage
   private void createControlTablePart( final Composite parent )
   {
     m_tableViewer = new Table( parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
-    final GridData gridData = new GridData( GridData.FILL_BOTH );
-    gridData.grabExcessHorizontalSpace = true;
-    gridData.grabExcessVerticalSpace = true;
-    m_tableViewer.setLayoutData( gridData );
+    m_tableViewer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final TableColumn fileColumn = new TableColumn( m_tableViewer, SWT.LEFT );
     fileColumn.setText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.13" ) ); //$NON-NLS-1$
@@ -177,13 +173,8 @@ public class ImportWaterdepthPage extends WizardPage
 
     m_btnAddNew.setImage( addButtonImage );
     m_btnAddNew.setToolTipText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.11" ) ); //$NON-NLS-1$
-    m_btnAddNew.addSelectionListener( new SelectionListener()
+    m_btnAddNew.addSelectionListener( new SelectionAdapter()
     {
-      @Override
-      public void widgetDefaultSelected( final SelectionEvent e )
-      {
-      }
-
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -191,7 +182,6 @@ public class ImportWaterdepthPage extends WizardPage
 
         for( int i = 0; i < rasterFiles.size(); i++ )
         {
-
           try
           {
             final String rasterFile = rasterFiles.get( i );
@@ -220,13 +210,8 @@ public class ImportWaterdepthPage extends WizardPage
     m_btnDeleteSelected.setImage( deleteButtonImage );
     m_btnDeleteSelected.setToolTipText( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthPage.16" ) ); //$NON-NLS-1$
     m_btnDeleteSelected.setEnabled( false );
-    m_btnDeleteSelected.addSelectionListener( new SelectionListener()
+    m_btnDeleteSelected.addSelectionListener( new SelectionAdapter()
     {
-      @Override
-      public void widgetDefaultSelected( final SelectionEvent e )
-      {
-      }
-
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -307,7 +292,7 @@ public class ImportWaterdepthPage extends WizardPage
       protected void selectionChanged( final String selectedCRS )
       {
         m_crs = selectedCRS;
-        if( m_selectedRasterIndex >= 0 && m_rasterInfos.size() < m_selectedRasterIndex )
+        if( m_selectedRasterIndex >= 0 && m_selectedRasterIndex < m_rasterInfos.size() )
         {
           if( m_rasterInfos.get( m_selectedRasterIndex ).setCoordinateSystem( m_crs ) )
           {

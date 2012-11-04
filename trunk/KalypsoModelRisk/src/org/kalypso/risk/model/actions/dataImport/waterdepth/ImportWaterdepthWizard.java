@@ -96,29 +96,20 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
   }
 
   /**
-   * @see org.eclipse.jface.wizard.Wizard#canFinish()
-   */
-  @Override
-  public boolean canFinish( )
-  {
-    return m_page.isPageComplete();
-  }
-
-  /**
    * This method is called by the wizard framework when the user presses the Finish button.
    */
   @Override
   public boolean performFinish( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
-    final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
+    final MapView mapView = (MapView)workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
       //StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.8" ) ); //$NON-NLS-1$
       return false;
     }
 
-    final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
+    final GisTemplateMapModell mapModell = (GisTemplateMapModell)mapView.getMapPanel().getMapModell();
     final IScenarioDataProvider scenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
     final List<AsciiRasterInfo> rasterInfos = m_page.getRasterInfos();
@@ -150,7 +141,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
       // fireModellEvent to redraw a map...
       // final IFeatureBindingCollection<IAnnualCoverageCollection> waterdepthCoverageCollection =
       // rasterDataModel.getWaterlevelCoverageCollection();
-      final Feature f1 = (Feature) rasterDataModel.getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
+      final Feature f1 = (Feature)rasterDataModel.getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, f1, new Feature[] { f1 }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     }
