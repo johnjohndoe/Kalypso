@@ -92,7 +92,9 @@ public class StatisticCollector
     final Rectangle searchRect = new Rectangle( (float)position.x, (float)position.y, (float)position.x, (float)position.y );
     m_index.intersects( searchRect, visitor );
 
-    m_total.addSpecificDamage( returnPeriod, position.z, cellArea );
+    final double damageValue = position.z;
+
+    m_total.addSpecificDamage( returnPeriod, damageValue, cellArea );
   }
 
   public void setItems( final RiskStatisticItem[] items )

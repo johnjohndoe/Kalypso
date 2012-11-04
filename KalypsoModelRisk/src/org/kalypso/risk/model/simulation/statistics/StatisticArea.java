@@ -47,7 +47,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Represents one polygon area of an item that contains possibly many ones.
- *
+ * 
  * @author Gernot Belger
  */
 public class StatisticArea
@@ -78,5 +78,11 @@ public class StatisticArea
   public Polygon getArea( )
   {
     return m_area;
+  }
+
+  public double calculateDamage( final double depth )
+  {
+    // TODO Auto-generated method stub
+    return 0;
   }
 }
