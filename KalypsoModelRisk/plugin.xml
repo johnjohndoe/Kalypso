@@ -140,12 +140,10 @@
  <extension point="org.eclipse.ui.commands">
     <category id="org.kalypso.risk.model.workflow" name="Risk workflow Commands" />
     <command id="org.kalypso.risk.model.workflow.Preprocessing" name="%org.kalypso.risk.model.workflow.Preprocessing.name" description="%org.kalypso.risk.model.workflow.Preprocessing.description" categoryId="org.kalypso.risk.model.workflow"/>
-    <command id="org.kalypso.risk.model.workflow.DataLoad" name="%org.kalypso.risk.model.workflow.DataLoad.name" description="%org.kalypso.risk.model.workflow.DataLoad.description" categoryId="org.kalypso.risk.model.workflow"/>
     <command id="org.kalypso.risk.model.workflow.ImportLanduseShapeData" name="%org.kalypso.risk.model.workflow.ImportLanduseShapeData.name" description="%org.kalypso.risk.model.workflow.ImportLanduseShapeData.description" categoryId="org.kalypso.risk.model.workflow"/>
     <command id="org.kalypso.risk.model.workflow.ImportWaterdepthRaster" name="%org.kalypso.risk.model.workflow.ImportWaterdepthRaster.name" description="%org.kalypso.risk.model.workflow.ImportWaterdepthRaster.description" categoryId="org.kalypso.risk.model.workflow"/>
     <command id="org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler" name="%org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler.name" description="%org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler.description" categoryId="org.kalypso.risk.model.workflow"/>
     <command id="org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler" name="%org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler.name" description="%org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler.description" categoryId="org.kalypso.risk.model.workflow"/>
-    <command id="org.kalypso.risk.model.workflow.Databases" name="%org.kalypso.risk.model.workflow.Databases.name" description="%org.kalypso.risk.model.workflow.Databases.description" categoryId="org.kalypso.risk.model.workflow"/>
     <command id="org.kalypso.risk.model.workflow.CalculationControlPanel" name="%org.kalypso.risk.model.workflow.CalculationControlPanel.name" description="%org.kalypso.risk.model.workflow.CalculationControlPanel.description" categoryId="org.kalypso.risk.model.workflow"/>
     <command id="org.kalypso.risk.model.workflow.RiskZonesPanel" name="%org.kalypso.risk.model.workflow.RiskZonesPanel.name" description="%org.kalypso.risk.model.workflow.RiskZonesPanel.description" categoryId="org.kalypso.risk.model.workflow"/>
     <command id="org.kalypso.risk.model.workflow.Processing" name="%org.kalypso.risk.model.workflow.Processing.name" description="%org.kalypso.risk.model.workflow.Processing.description" categoryId="org.kalypso.risk.model.workflow"/>
@@ -159,26 +157,16 @@
  </extension>
  
  <extension point="org.eclipse.ui.commandImages">
-    <!--
-    <image commandId="org.kalypso.risk.model.workflow.Preprocessing" icon="icons/workflow/Preprocessing."/>
-    -->
-    <image commandId="org.kalypso.risk.model.workflow.DataLoad" icon="icons/workflow/DataLoad.gif"/>
-    <!--
-    <image commandId="org.kalypso.risk.model.workflow.ImportLanduseShapeData" icon="icons/workflow/ImportLanduseShapeData."/>
-    -->
+    <image commandId="org.kalypso.risk.model.workflow.Preprocessing" icon="icons/workflow/Preprocessing.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.ImportLanduseShapeData" icon="icons/workflow/ImportLanduseShapeData.png"/>
     <image commandId="org.kalypso.risk.model.workflow.ImportWaterdepthRaster" icon="icons/workflow/ImportWaterdepthRaster.gif"/>
     <image commandId="org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler" icon="icons/workflow/WaterdepthCollectionsWidgetHandler.gif"/>
     <image commandId="org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler" icon="icons/workflow/WaterdepthCoveragesWidgetHandler.gif"/>
-    <!--
-    <image commandId="org.kalypso.risk.model.workflow.Databases" icon="icons/workflow/Databases"/>
-    <image commandId="org.kalypso.risk.model.workflow.CalculationControlPanel" icon="icons/workflow/CalculationControlPanel"/>
-    <image commandId="org.kalypso.risk.model.workflow.RiskZonesPanel" icon="icons/workflow/RiskZonesPanel."/>
-    -->
+    <image commandId="org.kalypso.risk.model.workflow.CalculationControlPanel" icon="icons/workflow/CalculationControlPanel.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.RiskZonesPanel" icon="icons/workflow/RiskZonesPanel.png"/>
     <image commandId="org.kalypso.risk.model.workflow.Processing" icon="icons/workflow/Processing.gif"/>
-    <!--
-    <image commandId="org.kalypso.risk.model.workflow.DamagePotentialCalculationHandler" icon="icons/workflow/DamagePotentialCalculationHandler"/>
-    <image commandId="org.kalypso.risk.model.workflow.RiskZonesCalculationHandler" icon="icons/workflow/RiskZonesCalculationHandler."/>
-    -->
+    <image commandId="org.kalypso.risk.model.workflow.DamagePotentialCalculationHandler" icon="icons/workflow/DamagePotentialCalculationHandler.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.RiskZonesCalculationHandler" icon="icons/workflow/RiskZonesCalculationHandler.png"/>
     <image commandId="org.kalypso.risk.model.workflow.StatisticsCalculationHandler" icon="icons/workflow/StatisticsCalculationHandler.png"/>
     <image commandId="org.kalypso.risk.model.workflow.Postprocessing" icon="icons/workflow/Postprocessing.png"/>
     <image commandId="org.kalypso.risk.model.workflow.RiskShowResultStatisticHandler" icon="icons/workflow/RiskShowResultStatisticHandler.png"/>

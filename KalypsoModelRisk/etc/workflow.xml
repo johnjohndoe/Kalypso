@@ -5,16 +5,12 @@
 
   <!-- TASK DEFINITIONS -->
   <TaskGroup context="MainMap" URI="org.kalypso.risk.model.workflow.Preprocessing">
-    <TaskGroup context="MainMap" URI="org.kalypso.risk.model.workflow.DataLoad">
-      <Task context="ImportLanduseShapeDataWizard" URI="org.kalypso.risk.model.workflow.ImportLanduseShapeData" />
-      <Task context="ImportWaterdepthRasterWizard" URI="org.kalypso.risk.model.workflow.ImportWaterdepthRaster" />
-      <Task context="MainMap" URI="org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler" />
-      <Task context="MainMap" URI="org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler" />
-    </TaskGroup>
-    <TaskGroup context="MainMap" URI="org.kalypso.risk.model.workflow.Databases">
-      <Task context="CalculationControlPanel" URI="org.kalypso.risk.model.workflow.CalculationControlPanel" />
-      <Task context="RiskZonesPanel" URI="org.kalypso.risk.model.workflow.RiskZonesPanel" />
-    </TaskGroup>
+    <Task context="ImportLanduseShapeDataWizard" URI="org.kalypso.risk.model.workflow.ImportLanduseShapeData" />
+    <Task context="ImportWaterdepthRasterWizard" URI="org.kalypso.risk.model.workflow.ImportWaterdepthRaster" />
+    <Task context="MainMap" URI="org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler" />
+    <Task context="MainMap" URI="org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler" />
+    <Task context="CalculationControlPanel" URI="org.kalypso.risk.model.workflow.CalculationControlPanel" />
+    <Task context="RiskZonesPanel" URI="org.kalypso.risk.model.workflow.RiskZonesPanel" />
   </TaskGroup>
   <TaskGroup context="MainMap" URI="org.kalypso.risk.model.workflow.Processing">
     <Task type="SYNCHRONOUS" context="ImportWaterdepthRasterContext" URI="org.kalypso.risk.model.workflow.DamagePotentialCalculationHandler" />
