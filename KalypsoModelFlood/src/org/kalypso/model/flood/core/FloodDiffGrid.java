@@ -43,6 +43,7 @@ package org.kalypso.model.flood.core;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,9 +81,9 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 
   private final Map<IFloodExtrapolationPolygon, Double> m_polygonWsps = new HashMap<>();
 
-  private BigDecimal m_min;
+  private double m_min;
 
-  private BigDecimal m_max;
+  private double m_max;
 
   private final IRunoffEvent m_event;
 
@@ -94,8 +95,8 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     m_polygons = polygons;
     m_event = event;
 
-    m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-    m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    m_min = Double.MAX_VALUE;
+    m_max = -Double.MAX_VALUE;
   }
 
   @Override
@@ -106,11 +107,12 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
       return z;
 
     final double value = getValueInternal( x, y, z );
+
+    /* update min/max */
     if( !Double.isNaN( value ) )
     {
-      /* update min/max */
-      m_min = m_min.min( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-      m_max = m_max.max( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+      m_min = Math.min( m_min, value );
+      m_max = Math.max( m_max, value );
     }
 
     return value;
@@ -136,9 +138,6 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     /* - if clip (-): Double.NaN */
     if( containsClipPolygons( polygons ) == true )
       return Double.NaN;
-
-    // if( !Double.isNaN( wspValue ) )
-    // return wspValue - terrainValue;
 
     /* - if extrapolation: getExtrapolationsvalue */
     final IFloodExtrapolationPolygon extrapolPolygon = getExtrapolPolygons( polygons );
@@ -248,18 +247,18 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
   {
     final GM_Position pos = JTSAdapter.wrap( crd );
 
+    // FIXME: check coordinate system!
+
     final List<IFloodPolygon> list = m_polygons.query( pos );
-    final List<IFloodPolygon> polygonList = new LinkedList<>();
 
     if( list == null || list.size() == 0 )
-      return polygonList;
-    else
+      return Collections.emptyList();
+
+    final List<IFloodPolygon> polygonList = new LinkedList<>();
+    for( final IFloodPolygon polygon : list )
     {
-      for( final IFloodPolygon polygon : list )
-      {
-        if( polygon.contains( pos ) && polygon.getEvents().contains( m_event ) )
-          polygonList.add( polygon );
-      }
+      if( polygon.contains( pos ) && polygon.getEvents().contains( m_event ) )
+        polygonList.add( polygon );
     }
 
     return polygonList;
@@ -268,12 +267,12 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
   @Override
   public BigDecimal getMin( )
   {
-    return m_min;
+    return new BigDecimal( m_min ).setScale( 2, BigDecimal.ROUND_HALF_UP );
   }
 
   @Override
   public BigDecimal getMax( )
   {
-    return m_max;
+    return new BigDecimal( m_max ).setScale( 2, BigDecimal.ROUND_HALF_UP );
   }
 }
