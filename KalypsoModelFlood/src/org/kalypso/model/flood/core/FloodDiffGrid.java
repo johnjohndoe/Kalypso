@@ -91,6 +91,8 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 
   private final IGeoTransformer m_gridToPolygonTransformer;
 
+  private final String m_polygonSRS;
+
   public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ITinReference> tins, final IFeatureBindingCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException, GeoGridException
   {
     super( inputGrid, pUrl );
@@ -100,8 +102,8 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     m_event = event;
 
     // REMARK: we assume that the polygons are in the kalypso srs
-    final String polygonSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    m_gridToPolygonTransformer = GeoTransformerFactory.getGeoTransformer( polygonSRS );
+    m_polygonSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    m_gridToPolygonTransformer = GeoTransformerFactory.getGeoTransformer( m_polygonSRS );
 
     m_min = Double.MAX_VALUE;
     m_max = -Double.MAX_VALUE;
@@ -200,7 +202,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     }
   }
 
-  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon )
+  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon ) throws GeoGridException
   {
     // REMARK: hash for each polygon its wsp, to we do not need to recalculate it each time
     if( m_polygonWsps.containsKey( polygon ) )
@@ -210,15 +212,26 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     if( refPoint == null )
       return Double.NaN;
 
-    final GM_Position position = refPoint.getPosition();
-    final Coordinate crd = JTSAdapter.export( position );
+    try
+    {
+      final GM_Position position = refPoint.getPosition();
+      final String gridSrs = getSourceCRS();
 
-    // get wsp value
-    final double wspValue = getWspValue( crd );
+      final GM_Position gridPos = position.transform( m_polygonSRS, gridSrs );
 
-    m_polygonWsps.put( polygon, wspValue );
+      final Coordinate crd = JTSAdapter.export( gridPos );
 
-    return wspValue;
+      // get wsp value
+      final double wspValue = getWspValue( crd );
+
+      m_polygonWsps.put( polygon, wspValue );
+
+      return wspValue;
+    }
+    catch( final GeoTransformerException e )
+    {
+      throw new GeoGridException( "Failed to transform polygons to srs of grid", e ); //$NON-NLS-1$
+    }
   }
 
   private IFloodExtrapolationPolygon getExtrapolPolygons( final List<IFloodPolygon> polygons )
