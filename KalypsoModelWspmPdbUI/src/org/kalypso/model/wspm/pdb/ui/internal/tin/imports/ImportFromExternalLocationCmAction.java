@@ -50,26 +50,19 @@ import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
+ * Imports a dhm from the cross section database.
+ * 
  * @author Holger Albert
  */
 public class ImportFromExternalLocationCmAction extends CoverageManagementAction
 {
-  /**
-   * The shell.
-   */
   private Shell m_shell;
 
-  /**
-   * The coverage management widget.
-   */
   private CoverageManagementWidget m_widget;
 
-  /**
-   * The constructor.
-   */
   public ImportFromExternalLocationCmAction( )
   {
-    super( Messages.getString("ImportFromExternalLocationCmAction_0") ); //$NON-NLS-1$
+    super( Messages.getString( "ImportFromExternalLocationCmAction_0" ) ); //$NON-NLS-1$
 
     m_widget = null;
   }
@@ -79,6 +72,12 @@ public class ImportFromExternalLocationCmAction extends CoverageManagementAction
   {
     try
     {
+      /* if no coverage can be added, we also cannot add via this method */
+      if( !m_widget.isShowAddRemoveButton() )
+        return false;
+
+      // TODO: should this not be decided inside the action instead?
+
       final IPdbSettings[] settings = PdbSettings.getSettings();
       if( settings.length == 0 )
         return false;
@@ -93,10 +92,10 @@ public class ImportFromExternalLocationCmAction extends CoverageManagementAction
   }
 
   @Override
-  public void preExecute( final Shell shell, final Object data )
+  public void init( final Shell shell, final Object data )
   {
     m_shell = shell;
-    m_widget = (CoverageManagementWidget) data;
+    m_widget = (CoverageManagementWidget)data;
   }
 
   @Override
