@@ -102,7 +102,7 @@ public class ImportFromExternalLocationAction extends Action
       ImportCoverageUtilities.zoomToCoverages( newCoverages, m_widget );
 
       /* Selct the new coverages in the widget. */
-      ImportCoverageUtilities.selectCoverages( newCoverages, m_widget );
+      m_widget.handleCoveragesAdded( newCoverages );
 
       /* Save the coverages. */
       final IStatus status = ImportCoverageUtilities.saveCoverages( m_widget );
