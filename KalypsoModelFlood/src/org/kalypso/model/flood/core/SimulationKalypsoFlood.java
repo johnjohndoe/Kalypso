@@ -176,9 +176,7 @@ public class SimulationKalypsoFlood implements ISimulation
       for( final IRunoffEvent event : events )
       {
         if( event.isMarkedForProcessing() )
-
           markedEvents.add( event );
-
       }
 
       if( markedEvents.size() == 0 )
@@ -505,7 +503,7 @@ public class SimulationKalypsoFlood implements ISimulation
       coverage.setDescription( desc );
 
       inputGridReader.close();
-      inputGridReader.dispose();
+      inputGrid.close();
     }
   }
 
