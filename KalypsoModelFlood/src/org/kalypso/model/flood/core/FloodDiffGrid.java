@@ -59,8 +59,10 @@ import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IFloodVolumePolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -87,6 +89,8 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 
   private final IRunoffEvent m_event;
 
+  private final IGeoTransformer m_gridToPolygonTransformer;
+
   public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ITinReference> tins, final IFeatureBindingCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException, GeoGridException
   {
     super( inputGrid, pUrl );
@@ -94,6 +98,10 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     m_tins = tins;
     m_polygons = polygons;
     m_event = event;
+
+    // REMARK: we assume that the polygons are in the kalypso srs
+    final String polygonSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    m_gridToPolygonTransformer = GeoTransformerFactory.getGeoTransformer( polygonSRS );
 
     m_min = Double.MAX_VALUE;
     m_max = -Double.MAX_VALUE;
@@ -243,25 +251,33 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     return false;
   }
 
-  private List<IFloodPolygon> getPolygons( final Coordinate crd )
+  private List<IFloodPolygon> getPolygons( final Coordinate crd ) throws GeoGridException
   {
-    final GM_Position pos = JTSAdapter.wrap( crd );
-
-    // FIXME: check coordinate system!
-
-    final List<IFloodPolygon> list = m_polygons.query( pos );
-
-    if( list == null || list.size() == 0 )
-      return Collections.emptyList();
-
-    final List<IFloodPolygon> polygonList = new LinkedList<>();
-    for( final IFloodPolygon polygon : list )
+    try
     {
-      if( polygon.contains( pos ) && polygon.getEvents().contains( m_event ) )
-        polygonList.add( polygon );
-    }
+      final GM_Position pos = GeometryFactory.createGM_Position( crd.x, crd.y );
 
-    return polygonList;
+      // REMARK: must transform to srs of polyogons
+      final GM_Position polygonPos = m_gridToPolygonTransformer.transform( pos, getSourceCRS() );
+
+      final List<IFloodPolygon> list = m_polygons.query( polygonPos );
+
+      if( list == null || list.size() == 0 )
+        return Collections.emptyList();
+
+      final List<IFloodPolygon> polygonList = new LinkedList<>();
+      for( final IFloodPolygon polygon : list )
+      {
+        if( polygon.contains( polygonPos ) && polygon.getEvents().contains( m_event ) )
+          polygonList.add( polygon );
+      }
+
+      return polygonList;
+    }
+    catch( final GeoTransformerException e )
+    {
+      throw new GeoGridException( "Failed to transform grid position to srs of polygons", e ); //$NON-NLS-1$
+    }
   }
 
   @Override
