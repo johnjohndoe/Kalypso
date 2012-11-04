@@ -61,7 +61,7 @@ public class AsciiRasterInfo
     final GM_Point origin = m_gridDomain.getOrigin( m_coordinateSystem );
     m_offsetX = origin.getX();
     m_offsetY = origin.getY();
-    m_cellSize = (int) (m_gridDomain.getOffsetX().getGeoX() - m_gridDomain.getOffsetX().getGeoY());
+    m_cellSize = (int)(m_gridDomain.getOffsetX().getGeoX() - m_gridDomain.getOffsetX().getGeoY());
   }
 
   public RectifiedGridDomain getGridDomain( )
@@ -107,9 +107,9 @@ public class AsciiRasterInfo
 
   /**
    * Method tries to set a new coordinate system.
-   *
+   * 
    * @param cs
-   *            A coordinate system that sjould be set
+   *          A coordinate system that sjould be set
    * @return true on success; false otherwise
    */
   public boolean setCoordinateSystem( final String cs )
@@ -121,11 +121,9 @@ public class AsciiRasterInfo
       origin.setCoordinateSystem( cs );
 
       m_gridDomain = new RectifiedGridDomain( origin, m_gridDomain.getOffsetX(), m_gridDomain.getOffsetY(), m_gridDomain.getGridRange() );
-      // TODO
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return true;
