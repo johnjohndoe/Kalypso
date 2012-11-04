@@ -61,27 +61,13 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public class ImportFromExternalLocationAction extends Action
 {
-  /**
-   * The shell.
-   */
   private final Shell m_shell;
 
-  /**
-   * The coverage management widget.
-   */
   private final CoverageManagementWidget m_widget;
 
-  /**
-   * The constructor.
-   * 
-   * @param shell
-   *          The shell.
-   * @param widget
-   *          The coverage management widget.
-   */
   public ImportFromExternalLocationAction( final Shell shell, final CoverageManagementWidget widget )
   {
-    super( Messages.getString("ImportFromExternalLocationAction_0") ); //$NON-NLS-1$
+    super( Messages.getString( "ImportFromExternalLocationAction_0" ) ); //$NON-NLS-1$
 
     m_shell = shell;
     m_widget = widget;
