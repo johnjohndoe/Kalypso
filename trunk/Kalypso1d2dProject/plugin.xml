@@ -165,9 +165,7 @@
    </extension>
    
    <extension point="org.eclipse.ui.commandImages">
-        <!--
-        <image commandId="org.kalypso.model.1d2d.workflow.Preprocessing" icon="icons/workflow/"/>
-        -->
+        <image commandId="org.kalypso.model.1d2d.workflow.Preprocessing" icon="icons/workflow/Preprocessing.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.DataLoad" icon="icons/workflow/DataLoad.gif"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ElevLoad" icon="icons/workflow/ElevLoad.gif"/>
         <image commandId="org.kalypso.model.1d2d.workflow.WindDataLoad" icon="icons/workflow/WindDataLoad.png"/>
