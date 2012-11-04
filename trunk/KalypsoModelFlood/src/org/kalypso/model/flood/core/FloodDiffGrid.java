@@ -276,18 +276,4 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
   {
     return m_max;
   }
-
-  @Override
-  public void setMax( final BigDecimal maxValue )
-  {
-    if( maxValue != null )
-      m_max = maxValue;
-  }
-
-  @Override
-  public void setMin( final BigDecimal minValue )
-  {
-    if( minValue != null )
-      m_min = minValue;
-  }
 }
