@@ -194,7 +194,7 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
     }
     catch( final PdbConnectException ex )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("PdbExportConnectionChooserData_1"), ex ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "PdbExportConnectionChooserData_1" ), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -242,10 +242,19 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
     if( "bin".equals( extension ) ) //$NON-NLS-1$
       return "image/bin"; //$NON-NLS-1$
 
+    if( "asc".equals( extension ) ) //$NON-NLS-1$
+      return "image/asc"; //$NON-NLS-1$
+
+    if( "dat".equals( extension ) ) //$NON-NLS-1$
+      return "image/dat"; //$NON-NLS-1$
+
+    if( "dat".equals( extension ) ) //$NON-NLS-1$
+      return "image/dat"; //$NON-NLS-1$
+
     if( "tif".equals( extension ) || "tiff".equals( extension ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return "image/tiff"; //$NON-NLS-1$
 
-    return Messages.getString("PdbExportConnectionChooserData_15"); //$NON-NLS-1$
+    return Messages.getString( "PdbExportConnectionChooserData_15" ); //$NON-NLS-1$
   }
 
   private Polygon findLocation( final int srid ) throws CoreException
@@ -263,7 +272,7 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
       final GeometryFactory factory = new GeometryFactory( new PrecisionModel(), srid );
       final Geometry geometry = factory.toGeometry( envelope );
 
-      return (Polygon) geometry;
+      return (Polygon)geometry;
     }
     catch( final Exception e )
     {
