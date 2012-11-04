@@ -9,31 +9,31 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/SpecificDamagePotentialCoverage.sld" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=%.2f €/m²</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=%.2f €/m²</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="Spezifischer Schaden (HQ5)" featurePath="#fid#AnnualCoverage124767940214012/coverageMember" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/RasterDataModel.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/SpecificDamagePotentialCoverage.sld" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=%.2f €/m²</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=%.2f €/m²</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="Spezifischer Schaden (HQ10)" featurePath="#fid#AnnualCoverage124767953601520/coverageMember" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/RasterDataModel.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/SpecificDamagePotentialCoverage.sld" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=%.2f €/m²</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=%.2f €/m²</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="Spezifischer Schaden (HQ20)" featurePath="#fid#AnnualCoverage124767967267118/coverageMember" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/RasterDataModel.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/SpecificDamagePotentialCoverage.sld" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=%.2f €/m²</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=%.2f €/m²</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="Spezifischer Schaden (HQ100)" featurePath="#fid#AnnualCoverage124767912398422/coverageMember" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/RasterDataModel.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/SpecificDamagePotentialCoverage.sld" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=%.2f €/m²</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=%.2f €/m²</templ:property>
         </mapv:layer>
     </mapv:layers>
 </mapv:gismapview>

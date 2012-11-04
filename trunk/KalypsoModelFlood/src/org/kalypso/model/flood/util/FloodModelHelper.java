@@ -83,7 +83,7 @@ public class FloodModelHelper
 {
   /**
    * gets the index of a given wsp theme inside the cascading "wasserspiegellagen" theme.
-   *
+   * 
    * @return index of the wsp theme or -1 if none is found
    */
   public static int findWspTheme( final IRunoffEvent runoffEvent, final IKalypsoCascadingTheme wspTheme )
@@ -95,7 +95,7 @@ public class FloodModelHelper
       final IKalypsoTheme theme = themes[i];
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)theme;
         final FeatureList featureList = ft.getFeatureList();
         if( featureList != null && featureList.getPropertyType().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
         {
@@ -110,7 +110,7 @@ public class FloodModelHelper
 
   /**
    * gets the index of a given result theme inside the cascading "wasserspiegellagen" theme.
-   *
+   * 
    * @return index of the result theme or -1 if none is found
    */
   public static int findResultTheme( final IRunoffEvent runoffEvent, final IKalypsoCascadingTheme wspTheme )
@@ -122,7 +122,7 @@ public class FloodModelHelper
       final IKalypsoTheme theme = themes[i];
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)theme;
         final FeatureList featureList = ft.getFeatureList();
         if( featureList != null && featureList.getOwner() != null )
         {
@@ -151,7 +151,7 @@ public class FloodModelHelper
     {
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)theme;
         final FeatureList featureList = ft.getFeatureList();
         if( featureList == null )
           continue;
@@ -206,7 +206,7 @@ public class FloodModelHelper
     layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
 
     final String infoFormat = String.format( Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.10" ), event.getName() ); //$NON-NLS-1$
-    final String infoValue = String.format( "%s?format=%s", CoverageThemeInfo.class.getName(), infoFormat );//$NON-NLS-1$
+    final String infoValue = String.format( "%s?format=%s", CoverageThemeInfo.ID, infoFormat );//$NON-NLS-1$
     layerPropertyThemeInfoId.setValue( infoValue );
 
     final List<Property> layerPropertyList = wspLayer.getProperty();
@@ -263,11 +263,10 @@ public class FloodModelHelper
 
   /**
    * shows a {@link ListSelectionDialog} in which the user can select {@link IRunoffEvent} for further processing
-   *
+   * 
    * @param shell
    * @param events
    *          the RunoffEvents
-   *
    * @return a array of selected {@link IRunoffEvent}
    */
   public static IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureBindingCollection<IRunoffEvent> events )
@@ -287,7 +286,7 @@ public class FloodModelHelper
     {
       if( object instanceof IRunoffEvent )
       {
-        selectedEventList.add( (IRunoffEvent) object );
+        selectedEventList.add( (IRunoffEvent)object );
       }
     }
     return selectedEventList.toArray( new IRunoffEvent[selectedEventList.size()] );
@@ -305,6 +304,6 @@ public class FloodModelHelper
     if( index == -1 )
       return null;
 
-    return (IKalypsoFeatureTheme) wspThemes.getAllThemes()[index];
+    return (IKalypsoFeatureTheme)wspThemes.getAllThemes()[index];
   }
 }
