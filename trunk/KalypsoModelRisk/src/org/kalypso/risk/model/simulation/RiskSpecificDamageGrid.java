@@ -61,7 +61,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author barbarins
- *
  */
 public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
 {
@@ -139,9 +138,10 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
 
     for( final ILandusePolygon polygon : list )
     {
+      // TODO: hotspot, slow. Consider using the statistics object that already has a specialized geo index for all areas (associate area with its class,
+      // so we do not have to look up the class as well)
       if( polygon.contains( position ) )
       {
-        final Integer landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
         final double damageValue = polygon.getDamageValue( wspHeight );
 
         if( Double.isNaN( damageValue ) )
@@ -150,10 +150,11 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
         if( damageValue <= 0.0 )
           return Double.NaN;
 
-        /* set statistic for landuse class */
-        final ILanduseClass landuseClass = m_landuseClasses.get( landuseClassOrdinalNumber );
-        if( landuseClass == null )
-          System.out.println( String.format( "Unknown landuse class: %s", landuseClassOrdinalNumber ) ); //$NON-NLS-1$
+      // /* set statistic for landuse class */
+      // final Integer landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
+      // final ILanduseClass landuseClass = m_landuseClasses.get( landuseClassOrdinalNumber );
+      // if( landuseClass == null )
+      //  System.out.println( String.format( "Unknown landuse class: %s", landuseClassOrdinalNumber ) ); //$NON-NLS-1$
 
         return damageValue;
       }
