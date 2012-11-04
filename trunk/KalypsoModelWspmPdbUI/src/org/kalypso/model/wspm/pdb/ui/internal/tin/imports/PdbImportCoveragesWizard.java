@@ -120,7 +120,7 @@ public class PdbImportCoveragesWizard extends Wizard
     m_dataContainer = dataContainer;
     m_data = new ImportCoverageData();
 
-    setWindowTitle( Messages.getString("PdbImportCoveragesWizard_0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "PdbImportCoveragesWizard_0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -137,12 +137,12 @@ public class PdbImportCoveragesWizard extends Wizard
   {
     final IWizardContainer oldContainer = getContainer();
     if( oldContainer instanceof WizardDialog )
-      ((WizardDialog) oldContainer).removePageChangingListener( m_pageListener );
+      ((WizardDialog)oldContainer).removePageChangingListener( m_pageListener );
 
     super.setContainer( container );
 
     if( container instanceof WizardDialog )
-      ((WizardDialog) container).addPageChangingListener( m_pageListener );
+      ((WizardDialog)container).addPageChangingListener( m_pageListener );
   }
 
   @Override
@@ -159,6 +159,11 @@ public class PdbImportCoveragesWizard extends Wizard
   {
     /* Get the selected dhm index. */
     final DhmIndex dhmIndex = m_settingsData.getDhmIndex();
+    if( dhmIndex == null )
+    {
+      // TODO: message?
+      return false;
+    }
 
     /* Build the path. */
     final String filename = dhmIndex.getFilename();
@@ -209,7 +214,7 @@ public class PdbImportCoveragesWizard extends Wizard
 
     /* Set a message to the current page. */
     final IMessage message = MessageUtilitites.convertStatus( result );
-    ((WizardPage) event.getCurrentPage()).setMessage( message.getMessage(), message.getMessageType() );
+    ((WizardPage)event.getCurrentPage()).setMessage( message.getMessage(), message.getMessageType() );
   }
 
   public ICoverage[] getNewCoverages( )
