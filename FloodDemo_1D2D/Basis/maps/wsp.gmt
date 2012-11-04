@@ -23,7 +23,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="waterdepthUserStyle" linktype="sld" xlink:type="simple" xlink:href="../maps/results.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fliesstiefen (HQ_002) %.2f m</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fließtiefen (HQ_002) %.2f m</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="Wasserspiegel (HQ_002)" id="ID_3" featurePath="#fid#RunoffEvent12330525988331/tinMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
@@ -42,7 +42,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="waterdepthUserStyle" linktype="sld" xlink:type="simple" xlink:href="../maps/results.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fliesstiefen (HQ_005) %.2f m</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=Fließtiefen (HQ_005) %.2f m</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="Wasserspiegel (HQ_005)" id="ID_6" featurePath="#fid#RunoffEvent12330526113330/tinMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
@@ -61,7 +61,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="waterdepthUserStyle" linktype="sld" xlink:type="simple" xlink:href="../maps/results.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fliesstiefen (HQ_010) %.2f m</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=Fließtiefen (HQ_010) %.2f m</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="Wasserspiegel (HQ_010)" id="ID_9" featurePath="#fid#RunoffEvent12330526159110/tinMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
@@ -80,7 +80,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="waterdepthUserStyle" linktype="sld" xlink:type="simple" xlink:href="../maps/results.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fliesstiefen (HQ_020) %.2f m</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=Fließtiefen (HQ_020) %.2f m</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="Wasserspiegel (HQ_020)" id="ID_12" featurePath="#fid#RunoffEvent12330526217392/tinMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
@@ -99,7 +99,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="waterdepthUserStyle" linktype="sld" xlink:type="simple" xlink:href="../maps/results.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fliesstiefen (HQ_100) %.2f m</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=Fließtiefen (HQ_100) %.2f m</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="Wasserspiegel (HQ_100)" id="ID_15" featurePath="#fid#RunoffEvent12330526286925/tinMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>

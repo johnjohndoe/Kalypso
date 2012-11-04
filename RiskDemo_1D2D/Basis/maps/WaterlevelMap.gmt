@@ -9,31 +9,31 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/WaterlevelCoverage.sld" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=Wassertiefe %.2f m</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="HQ 5" featurePath="#fid#AnnualCoverage12331399161910/coverageMember" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/Basis/models/RasterDataModel.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/WaterlevelCoverage.sld" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=Wassertiefe %.2f m</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="HQ 10" featurePath="#fid#AnnualCoverage12331399553774/coverageMember" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/Basis/models/RasterDataModel.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/WaterlevelCoverage.sld" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=Wassertiefe %.2f m</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="HQ 20" featurePath="#fid#AnnualCoverage123313999387513/coverageMember" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/Basis/models/RasterDataModel.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/WaterlevelCoverage.sld" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=Wassertiefe %.2f m</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="HQ 100" featurePath="#fid#AnnualCoverage12331398389474/coverageMember" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/Basis/models/RasterDataModel.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/WaterlevelCoverage.sld" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeInfoId">org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m</templ:property>
+            <templ:property name="themeInfoId">org.kalypso.gml.ui.coverage.CoverageThemeInfo?format=Wassertiefe %.2f m</templ:property>
         </mapv:layer>
     </mapv:layers>
 </mapv:gismapview>
