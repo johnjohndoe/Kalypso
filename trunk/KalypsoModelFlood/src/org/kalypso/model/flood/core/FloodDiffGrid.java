@@ -59,15 +59,17 @@ import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IFloodVolumePolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
-import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -89,9 +91,9 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 
   private final IRunoffEvent m_event;
 
-  private final IGeoTransformer m_gridToPolygonTransformer;
+  private final JTSTransformer m_gridToPolygonTransformer;
 
-  private final String m_polygonSRS;
+  private final JTSTransformer m_polygonToGridTransformer;
 
   public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ITinReference> tins, final IFeatureBindingCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException, GeoGridException
   {
@@ -102,11 +104,21 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     m_event = event;
 
     // REMARK: we assume that the polygons are in the kalypso srs
-    m_polygonSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    m_gridToPolygonTransformer = GeoTransformerFactory.getGeoTransformer( m_polygonSRS );
+    final String polygonSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final String gridSRS = getSourceCRS();
 
     m_min = Double.MAX_VALUE;
     m_max = -Double.MAX_VALUE;
+
+    try
+    {
+      m_gridToPolygonTransformer = new JTSTransformer( gridSRS, polygonSRS );
+      m_polygonToGridTransformer = new JTSTransformer( polygonSRS, gridSRS );
+    }
+    catch( final FactoryException e )
+    {
+      throw new GeoGridException( "Failed to initialize geo transformers", e ); //$NON-NLS-1$
+    }
   }
 
   @Override
@@ -215,20 +227,19 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     try
     {
       final GM_Position position = refPoint.getPosition();
-      final String gridSrs = getSourceCRS();
 
-      final GM_Position gridPos = position.transform( m_polygonSRS, gridSrs );
+      final Coordinate crd = JTSAdapter.export( position );
 
-      final Coordinate crd = JTSAdapter.export( gridPos );
+      final Coordinate gridCrd = m_polygonToGridTransformer.transform( crd );
 
       // get wsp value
-      final double wspValue = getWspValue( crd );
+      final double wspValue = getWspValue( gridCrd );
 
       m_polygonWsps.put( polygon, wspValue );
 
       return wspValue;
     }
-    catch( final GeoTransformerException e )
+    catch( final TransformException e )
     {
       throw new GeoGridException( "Failed to transform polygons to srs of grid", e ); //$NON-NLS-1$
     }
@@ -268,10 +279,9 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
   {
     try
     {
-      final GM_Position pos = GeometryFactory.createGM_Position( crd.x, crd.y );
-
       // REMARK: must transform to srs of polyogons
-      final GM_Position polygonPos = m_gridToPolygonTransformer.transform( pos, getSourceCRS() );
+      final Coordinate polygonCrd = m_gridToPolygonTransformer.transform( crd );
+      final GM_Position polygonPos = GeometryFactory.createGM_Position( polygonCrd.x, polygonCrd.y );
 
       final List<IFloodPolygon> list = m_polygons.query( polygonPos );
 
@@ -287,7 +297,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 
       return polygonList;
     }
-    catch( final GeoTransformerException e )
+    catch( final TransformException e )
     {
       throw new GeoGridException( "Failed to transform grid position to srs of polygons", e ); //$NON-NLS-1$
     }
