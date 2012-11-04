@@ -46,6 +46,7 @@ import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -62,7 +63,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
@@ -126,8 +129,8 @@ public class SearchDhmIndexPage extends WizardPage
     m_searchViewer = null;
     m_dhmIndexComposite = null;
 
-    setTitle( Messages.getString("SearchDhmIndexPage_0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("SearchDhmIndexPage_1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "SearchDhmIndexPage_0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "SearchDhmIndexPage_1" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -147,7 +150,7 @@ public class SearchDhmIndexPage extends WizardPage
     final Group filterGroup = new Group( main, SWT.NONE );
     filterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     filterGroup.setLayout( new GridLayout( 1, false ) );
-    filterGroup.setText( Messages.getString("SearchDhmIndexPage_2") ); //$NON-NLS-1$
+    filterGroup.setText( Messages.getString( "SearchDhmIndexPage_2" ) ); //$NON-NLS-1$
 
     /* Create the filter textbox. */
     final Text filterText = new Text( filterGroup, SWT.BORDER | SWT.SEARCH );
@@ -156,7 +159,7 @@ public class SearchDhmIndexPage extends WizardPage
     /* Create the filter button. */
     final Button filterButton = new Button( filterGroup, SWT.CHECK );
     filterButton.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    filterButton.setText( Messages.getString("SearchDhmIndexPage_3") ); //$NON-NLS-1$
+    filterButton.setText( Messages.getString( "SearchDhmIndexPage_3" ) ); //$NON-NLS-1$
 
     /* Create a tree viewer. */
     m_searchViewer = new TreeViewer( main, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL );
@@ -214,7 +217,11 @@ public class SearchDhmIndexPage extends WizardPage
     /* Do the data binding. */
     final IObservableValue targetIndex = ViewersObservables.observeSinglePostSelection( m_searchViewer );
     final IObservableValue modelIndex = BeansObservables.observeValue( m_settingsData, PdbImportConnectionChooserData.PROPERTY_DHM_INDEX );
-    dataBinding.bindValue( targetIndex, modelIndex );
+
+    final DataBinder dhmIndexBinder = new DataBinder( targetIndex, modelIndex );
+    dhmIndexBinder.addTargetBeforeSetValidator( new NotNullValidator<>( DhmIndex.class, IStatus.ERROR, Messages.getString("SearchDhmIndexPage.0") ) ); //$NON-NLS-1$
+    // dhmIndexBinder.addModelAfterGetValidator( new NotNullValidator<>( DhmIndex.class, IStatus.ERROR, "Please select an entry." ) );
+    dataBinding.bindValue( dhmIndexBinder );
 
     /* Add a listener. */
     modelIndex.addValueChangeListener( new IValueChangeListener()
@@ -244,6 +251,9 @@ public class SearchDhmIndexPage extends WizardPage
 
     /* Set the control to the page. */
     setControl( main );
+
+    /* the user needs to do something first! */
+    setPageComplete( false );
   }
 
   /**
@@ -270,7 +280,7 @@ public class SearchDhmIndexPage extends WizardPage
     filenameColumn.setLabelProvider( new DhmIndexFilenameLabelProvider() );
 
     final ViewerColumnItem filenameItem = new ViewerColumnItem( filenameColumn );
-    filenameItem.setText( Messages.getString("SearchDhmIndexPage_4") ); //$NON-NLS-1$
+    filenameItem.setText( Messages.getString( "SearchDhmIndexPage_4" ) ); //$NON-NLS-1$
     filenameItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( filenameItem.getColumn() );
@@ -281,7 +291,7 @@ public class SearchDhmIndexPage extends WizardPage
     descriptionColumn.setLabelProvider( new DhmIndexDescriptionLabelProvider() );
 
     final ViewerColumnItem descriptionItem = new ViewerColumnItem( descriptionColumn );
-    descriptionItem.setText( Messages.getString("SearchDhmIndexPage_5") ); //$NON-NLS-1$
+    descriptionItem.setText( Messages.getString( "SearchDhmIndexPage_5" ) ); //$NON-NLS-1$
     descriptionItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( descriptionItem.getColumn() );
@@ -292,7 +302,7 @@ public class SearchDhmIndexPage extends WizardPage
     measurementDateColumn.setLabelProvider( new DhmIndexMeasurementDateLabelProvider() );
 
     final ViewerColumnItem measurementDateItem = new ViewerColumnItem( measurementDateColumn );
-    measurementDateItem.setText( Messages.getString("SearchDhmIndexPage_6") ); //$NON-NLS-1$
+    measurementDateItem.setText( Messages.getString( "SearchDhmIndexPage_6" ) ); //$NON-NLS-1$
     measurementDateItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( measurementDateItem.getColumn() );
@@ -303,7 +313,7 @@ public class SearchDhmIndexPage extends WizardPage
     measurementAccuracyColumn.setLabelProvider( new DhmIndexMeasurementAccuracyLabelProvider() );
 
     final ViewerColumnItem measurementAccuracyItem = new ViewerColumnItem( measurementAccuracyColumn );
-    measurementAccuracyItem.setText( Messages.getString("SearchDhmIndexPage_7") ); //$NON-NLS-1$
+    measurementAccuracyItem.setText( Messages.getString( "SearchDhmIndexPage_7" ) ); //$NON-NLS-1$
     measurementAccuracyItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( measurementAccuracyItem.getColumn() );
