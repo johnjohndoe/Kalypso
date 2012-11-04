@@ -51,39 +51,24 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.tin.imports.PdbImportConnectionChooserData;
 
 /**
+ * Exports coverage data to the central repository of the cross section database.
+ * 
  * @author Holger Albert
  */
 public class ExportToExternalLocationAction extends Action
 {
-  /**
-   * The shell.
-   */
   private final Shell m_shell;
 
-  /**
-   * The data object.
-   */
   private final ImportCoverageData m_data;
 
-  /**
-   * The constructor.
-   * 
-   * @param shell
-   *          The shell.
-   * @param data
-   *          The data object.
-   */
   public ExportToExternalLocationAction( final Shell shell, final ImportCoverageData data )
   {
-    super( Messages.getString("ExportToExternalLocationAction_0") ); //$NON-NLS-1$
+    super( Messages.getString( "ExportToExternalLocationAction_0" ) ); //$NON-NLS-1$
 
     m_shell = shell;
     m_data = data;
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#run()
-   */
   @Override
   public void run( )
   {

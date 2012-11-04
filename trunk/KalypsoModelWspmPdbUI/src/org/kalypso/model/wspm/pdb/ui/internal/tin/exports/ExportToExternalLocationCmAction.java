@@ -54,22 +54,13 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
  */
 public class ExportToExternalLocationCmAction extends CoverageManagementAction
 {
-  /**
-   * The shell.
-   */
   private Shell m_shell;
 
-  /**
-   * The data object.
-   */
   private ImportCoverageData m_data;
 
-  /**
-   * The constructor.
-   */
   public ExportToExternalLocationCmAction( )
   {
-    super( Messages.getString("ExportToExternalLocationCmAction_0") ); //$NON-NLS-1$
+    super( Messages.getString( "ExportToExternalLocationCmAction_0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -91,10 +82,10 @@ public class ExportToExternalLocationCmAction extends CoverageManagementAction
   }
 
   @Override
-  public void preExecute( final Shell shell, final Object data )
+  public void init( final Shell shell, final Object data )
   {
     m_shell = shell;
-    m_data = (ImportCoverageData) data;
+    m_data = (ImportCoverageData)data;
   }
 
   @Override
