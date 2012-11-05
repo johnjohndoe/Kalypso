@@ -118,7 +118,7 @@ public class SobekProfileDatExportOperation extends AbstractSobekFileExportOpera
     {
       final String message = String.format( Messages.getString( "SobekDefExportOperation_2" ), markerLabel, profil.getStation(), profil.getName() ); //$NON-NLS-1$
       getLog().add( IStatus.WARNING, message );
-      return null;
+      return new IRecord[] { points[0], points[points.length - 1] };
     }
 
     final IRecord startPoint = markers[0].getPoint();
