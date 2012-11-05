@@ -275,23 +275,21 @@
 			</and>
 		</visibleWhen>
      </command>
-     <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio"/>
+     <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio">
+        <visibleWhen checkEnabled="false">
+          <with variable="activeEditorId">
+             <equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor"/>
+          </with>
+        </visibleWhen>
+     </command>
      <separator name="profiles" visible="true"/>
-     <command
-           commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile"
-           style="radio">
-        <visibleWhen
-              checkEnabled="false">
+     <command commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile" style="radio">
+        <visibleWhen checkEnabled="false">
            <and>
-              <with
-                    variable="activeEditorId">
-                 <equals
-                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
-                 </equals>
+              <with variable="activeEditorId">
+                 <equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor"/>
               </with>
-              <reference
-                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
-              </reference>
+              <reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
            </and>
         </visibleWhen>
      </command>
