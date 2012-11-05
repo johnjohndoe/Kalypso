@@ -22,6 +22,7 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
@@ -98,12 +99,13 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
       final Rectangle rect = getScreenRect( record );
       if( rect != null )
       {
-        // new MarkerFigure( getPointStyle() );
+        // new MarkerFigure( );
+        final IPointStyle style = getPointStyle();
+        style.setWidth( rect.width );
+        style.setHeight( rect.height );
 
-        final PointFigure ps = new PointFigure();
-        ps.setPoints( new Point[] { RectangleUtils.getCenterPoint( rect ) } );
-        ps.getStyle().setWidth( rect.width );
-        ps.getStyle().setHeight( rect.height );
+        final PointFigure ps = new PointFigure( style );
+        ps.setCenterPoint( RectangleUtils.getCenterPoint( rect ) );
         ps.paint( gc );
 
         addInfo( rect, record, i );
@@ -131,7 +133,7 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     if( uK.isNaN() || dN.isNaN() || sT.isNaN() )
       return null;
 
-    final ICoordinateMapper<Double,Double> coordinateMapper = getCoordinateMapper();
+    final ICoordinateMapper<Double, Double> coordinateMapper = getCoordinateMapper();
 
     final Point pOK = coordinateMapper.numericToScreen( sT, uK );
     final Point pBase = coordinateMapper.numericToScreen( 0.0, 0.0 );
