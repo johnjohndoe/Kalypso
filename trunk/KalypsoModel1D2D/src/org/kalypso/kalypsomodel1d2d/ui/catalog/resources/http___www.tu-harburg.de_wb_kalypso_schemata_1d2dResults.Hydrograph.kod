@@ -286,7 +286,7 @@
           <MinValue>5.0</MinValue>
           <MaxValue>10.0</MaxValue>
         </NumberRange>
-        <PreferredAdjustment before="1" range="20" after="1" />
+        <PreferredAdjustment before="1" range="98" after="1" />
         <RendererRef ref="NumberWspAxisRenderer" />
       </Axis>
       <Axis id="m3sAxis">
@@ -302,7 +302,7 @@
         <Label>Geschwindigkeit [m/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="1" range="20" after="1" />
+        <PreferredAdjustment before="1" range="98" after="1" />
         <RendererRef ref="NumberVelAxisRenderer" />
       </Axis>
       <Axis id="hsigAxis">
@@ -310,7 +310,7 @@
         <Label>signifikante Wellenhöhe [m]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <PreferredAdjustment before="5" range="100" after="5" />
+        <PreferredAdjustment before="5" range="90" after="5" />
         <RendererRef ref="NumberHeightAxisRenderer" />
       </Axis>
       <Axis id="periodAxis">
@@ -318,7 +318,7 @@
         <Label>Wellenperiode [s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="5" range="100" after="5" />
+        <PreferredAdjustment before="5" range="90" after="5" />
         <RendererRef ref="NumberPeriodAxisRenderer" />
       </Axis>
       <Axis id="dirAxis">
@@ -330,7 +330,7 @@
         <RendererRef ref="NumberDirAxisRenderer" />
       </Axis>
       <Axis id="timeAxis">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.GenericCalendarAxisProvider" />
         <Label>Datum</Label>
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>
@@ -338,6 +338,7 @@
           <MinValue>-P14D</MinValue>
           <MaxValue>P1D</MaxValue>
         </DurationRange>
+        <PreferredAdjustment range="98" before="1" after="1"/>
         <RendererRef ref="CalendarAxisRenderer" />
       </Axis>
       <!-- NOT USED <Axis id="wsp_Axis"> <Provider epid="org.kalypso.chart.ext.axis.provider.Number" /> <Label>Wassertiefe [m]</Label> <Direction>POSITIVE</Direction> <Position>BOTTOM</Position> <NumberRange> <MinValue>5.0</MinValue> <MaxValue>10.0</MaxValue> </NumberRange> <RendererRef ref="NumberAxisRenderer" /> </Axis> -->
@@ -348,7 +349,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -375,7 +375,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -428,7 +427,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -455,7 +453,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -482,7 +479,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -509,8 +505,7 @@
           <Parameters>
             <Parameter name="date-format" value="dd.MM.\nHH:mm" />
             <Parameter name="inset_tick" value="1" />
-            <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
+            <Parameter name="hide_cut" value="false" />
           </Parameters>
         </Provider>
       </AxisRenderer>

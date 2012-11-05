@@ -41,10 +41,10 @@
     </Styles>
     <Mappers>
       <Axis id="date" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.GenericCalendarAxisProvider" />
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.GenericDateAxisProvider" />
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>
-        <PreferredAdjustment before="0" range="100" after="0" />
+        <PreferredAdjustment before="1" range="98" after="1" />
         <RendererRef ref="DateAxisRenderer" />
         <AxisNumberRangeRestriction minRange="1000" />
       </Axis>

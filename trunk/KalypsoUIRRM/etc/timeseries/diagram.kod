@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="diagram" legend="true">
-    <!-- FIXME: does not work correctly <ChartInsets id="insets" top="10" /> -->
+    <ChartInsets top="10" left="10" right="1" bottom="1"/>
     <Layers>
       <CascadingParameters>
         <Parameter name="request.strategy" value="request.strategy.observation.provider" />
