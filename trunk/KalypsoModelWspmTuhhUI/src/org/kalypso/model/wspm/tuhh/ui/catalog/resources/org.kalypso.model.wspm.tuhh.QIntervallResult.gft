@@ -119,7 +119,7 @@
         <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
         <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.3g" optional="true"/>
         <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaRunoff" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
-        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffChannel" alignment="SWT.RIGHT" editable="true" width="100" displayFormat="%.3g" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffChannel" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.3g" optional="true"/>
         <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffFloodplain" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.3g" optional="true"/>
         <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
         <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
