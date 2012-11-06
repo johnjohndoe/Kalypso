@@ -231,6 +231,24 @@
       </extension>
 
 	<extension point="org.eclipse.core.expressions.definitions">
+    <definition
+          id="org.kalypso.model.wspm.tuhh.ui.definition.resourceInModule">
+       <with
+             variable="selection">
+          <and>
+             <count
+                   value="1">
+             </count>
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <test
+                      property="org.kalypso.model.wspm.tuhh.ui.resourceInModule">
+                </test>
+             </iterate>
+          </and>
+       </with>
+    </definition>
 		<definition id="org.kalypso.model.wspm.tuhh.ui.definition.oneProfileThemeSelected">
 			<with variable="selection">
 				<and>
@@ -816,6 +834,17 @@
         </wizard>
      </extension>
      <extension point="org.kalypso.ui.importWizards">
+       <wizard
+             category="importWizards"
+             class="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
+             icon="icons/obj16/landuse.import.png"
+             id="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
+             name="%org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard.name">
+          <description>
+             %org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard.description
+          </description>
+       </wizard>
+     
         <wizard
               class="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard"
               id="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard"
@@ -927,6 +956,19 @@
                 </reference>
            </enablement>
         </wizardEnablement>
+       <wizardEnablement
+             wizardID="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard">
+          <enablement>
+             <or>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.reachThemeSelected">
+                </reference>
+                <reference
+                      definitionId="org.kalypso.model.wspm.tuhh.ui.definition.resourceInModule">
+                </reference>
+             </or>
+          </enablement>
+       </wizardEnablement>
         <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard">
            <enablement>
                 <with variable="selection">
@@ -1053,6 +1095,14 @@
      </extension>
 
      <extension point="org.eclipse.core.expressions.propertyTesters">
+       <propertyTester
+              class="org.kalypso.model.wspm.tuhh.ui.utils.ResourceInModulePropertyTester"
+              id="org.kalypso.model.wspm.tuhh.ui.utils.ResourceInModulePropertyTester"
+              namespace="org.kalypso.model.wspm.tuhh.ui"
+              properties="resourceInModule"
+              type="org.eclipse.core.resources.IResource">
+        </propertyTester>
+     
         <propertyTester class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportTester"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportTester"
               namespace="wspmTuhhChart"
