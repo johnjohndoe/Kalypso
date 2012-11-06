@@ -81,6 +81,7 @@
           <MinValue>0.0</MinValue>
           <MaxValue>100.0</MaxValue>
         </NumberRange>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <RendererRef ref="NumberAxisRendererRunoff" />
       </Axis>
       <Axis id="runoff_Axis">
@@ -198,6 +199,7 @@
           <MinValue>0.0</MinValue>
           <MaxValue>100.0</MaxValue>
         </NumberRange>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <RendererRef ref="NumberAxisRendererArea" />
       </Axis>
     </Mappers>

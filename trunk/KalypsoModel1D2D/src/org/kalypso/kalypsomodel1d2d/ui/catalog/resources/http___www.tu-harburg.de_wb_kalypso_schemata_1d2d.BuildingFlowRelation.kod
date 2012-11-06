@@ -73,6 +73,7 @@
           <MinValue>0</MinValue>
           <MaxValue>1</MaxValue>
         </NumberRange>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="h_ow_Axis">
