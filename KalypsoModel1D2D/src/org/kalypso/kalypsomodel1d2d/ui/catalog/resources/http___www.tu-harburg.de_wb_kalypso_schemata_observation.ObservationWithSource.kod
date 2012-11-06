@@ -309,6 +309,7 @@
           <MinValue>-P14D</MinValue>
           <MaxValue>P1D</MaxValue>
         </DurationRange>
+        <PreferredAdjustment range="98" before="1" after="1"/>
         <RendererRef ref="CalendarAxisRenderer" />
       </Axis>
       <Axis id="wspXAxis">
@@ -316,7 +317,7 @@
         <Label>Wasserpiegel [m+NN]</Label>
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>
-        <PreferredAdjustment before="1" range="100" after="1" />
+        <PreferredAdjustment before="1" range="98" after="1" />
         <RendererRef ref="NumberWspXAxisRenderer" />
       </Axis>
       <Axis id="wspAxis">
@@ -382,7 +383,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -409,7 +409,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -436,7 +435,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -463,7 +461,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -490,7 +487,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -517,7 +513,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -545,7 +540,6 @@
           <Parameters>
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
         <Styles>
@@ -573,7 +567,6 @@
             <Parameter name="date-format" value="dd.MM.\nHH:mm" />
             <Parameter name="inset_tick" value="1" />
             <Parameter name="hide_cut" value="true" />
-            <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>
       </AxisRenderer>

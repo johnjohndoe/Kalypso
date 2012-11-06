@@ -150,11 +150,11 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_VERTICAL_SCREEN", POSITION.RIGHT );//$NON-NLS-1$
     m_screenAxisVertical.setPreferredAdjustment( new AxisAdjustment( 0, 1, 0 ) );
     m_domainAxis = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_DOMAIN", POSITION.BOTTOM, axisRendererConfigD );//$NON-NLS-1$
-    m_domainAxis.setPreferredAdjustment( new AxisAdjustment( 3, 94, 3 ) );
+    m_domainAxis.setPreferredAdjustment( new AxisAdjustment( 1, 98, 1 ) );
     m_targetAxisLeft = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_LEFT", POSITION.LEFT, axisRendererConfigLR );//$NON-NLS-1$
-    m_targetAxisLeft.setPreferredAdjustment( new AxisAdjustment( 15, 75, 10 ) );
+    m_targetAxisLeft.setPreferredAdjustment( new AxisAdjustment( 15, 80, 5 ) );
     m_targetAxisRight = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_RIGHT", POSITION.RIGHT, axisRendererConfigLR );//$NON-NLS-1$
-    m_targetAxisRight.setPreferredAdjustment( new AxisAdjustment( 2, 40, 58 ) );
+    m_targetAxisRight.setPreferredAdjustment( new AxisAdjustment( 2, 25, 73 ) );
   }
 
   // FIXME: once, this was nice and object oriented; we should do it again like this: encapsulate adding layer into a class! -> this class is presented in the ui
