@@ -52,6 +52,9 @@ public class Waterlevel2dWorker
 
   private final Collection<WaterlevelsForStation> m_waterlevels2d = new ArrayList<>();
 
+  // FIXME: get that from outside
+  private final double m_douglasPeuckerDistance = 0.01; // 1 cm
+
   public Waterlevel2dWorker( final String eventName, final Collection<WaterlevelFixation> waterlevels, final ISectionProvider[] sections )
   {
     m_eventName = eventName;
@@ -69,7 +72,7 @@ public class Waterlevel2dWorker
     /* hash by station */
     final Map<BigDecimal, Collection<WaterlevelFixation>> waterlevelsByStation = hashWaterlevelsByStation();
 
-    monitor.beginTask( Messages.getString("Waterlevel2dWorker_0"), m_sections.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "Waterlevel2dWorker_0" ), m_sections.length ); //$NON-NLS-1$
 
     for( final ISectionProvider sectionProvider : m_sections )
     {
@@ -89,7 +92,7 @@ public class Waterlevel2dWorker
 
     monitor.done();
 
-    return m_log.asMultiStatusOrOK( Messages.getString("Waterlevel2dWorker_1") ); //$NON-NLS-1$
+    return m_log.asMultiStatusOrOK( Messages.getString( "Waterlevel2dWorker_1" ) ); //$NON-NLS-1$
   }
 
   private IStatus createWaterlevel( final ISectionProvider sectionProvider, final Collection<WaterlevelFixation> waterlevels )
@@ -101,7 +104,7 @@ public class Waterlevel2dWorker
 
     m_waterlevels2d.add( waterlevelsForStation );
 
-    return waterlevelsForStation.create2DWaterlevels( m_eventName, sectionProvider );
+    return waterlevelsForStation.create2DWaterlevels( m_eventName, sectionProvider, m_douglasPeuckerDistance );
   }
 
   private Map<BigDecimal, Collection<WaterlevelFixation>> hashWaterlevelsByStation( )

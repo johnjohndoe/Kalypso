@@ -131,7 +131,7 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
     final IStatusCollector status = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
     /* raw stati of levels */
-    final IStatus levelsStatus = m_levelsLog.asMultiStatus( Messages.getString("WaterlevelsForStation_0") ); //$NON-NLS-1$
+    final IStatus levelsStatus = m_levelsLog.asMultiStatus( Messages.getString( "WaterlevelsForStation_0" ) ); //$NON-NLS-1$
     status.add( levelsStatus );
 
     /* section present? */
@@ -141,19 +141,19 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
     return status.asMultiStatus( m_station.toString() );
   }
 
-  public IStatus create2DWaterlevels( final String eventName, final ISectionProvider section )
+  public IStatus create2DWaterlevels( final String eventName, final ISectionProvider section, final double douglasPeuckerDistance )
   {
-    m_waterlevel2dStatus = update2dWaterlevels( eventName, section );
+    m_waterlevel2dStatus = update2dWaterlevels( eventName, section, douglasPeuckerDistance );
     return m_waterlevel2dStatus;
   }
 
-  private IStatus update2dWaterlevels( final String eventName, final ISectionProvider section )
+  private IStatus update2dWaterlevels( final String eventName, final ISectionProvider section, final double douglasPeuckerDistance )
   {
     m_section = section;
     m_waterlevels2DObjecs = null;
 
     if( section == null )
-      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("WaterlevelsForStation_1") ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "WaterlevelsForStation_1" ) ); //$NON-NLS-1$
 
     final IStatusCollector log = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
@@ -165,22 +165,22 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
 
       if( profileLine != null )
       {
-        log.add( IStatus.OK, Messages.getString("WaterlevelsForStation_2") ); //$NON-NLS-1$
+        log.add( IStatus.OK, Messages.getString( "WaterlevelsForStation_2" ) ); //$NON-NLS-1$
 
         final ProjectedWaterlevels projected = new ProjectedWaterlevels( eventName, m_station, profileLine, waterlevels );
 
-        m_waterlevels2DObjecs = projected.createParts();
+        m_waterlevels2DObjecs = projected.createParts( douglasPeuckerDistance );
 
         log.add( projected.getStatus() );
       }
       else
-        log.add( IStatus.WARNING, Messages.getString("WaterlevelsForStation_3") ); //$NON-NLS-1$
+        log.add( IStatus.WARNING, Messages.getString( "WaterlevelsForStation_3" ) ); //$NON-NLS-1$
 
-      return log.asMultiStatus( Messages.getString("WaterlevelsForStation_4") ); //$NON-NLS-1$
+      return log.asMultiStatus( Messages.getString( "WaterlevelsForStation_4" ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
-      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("WaterlevelsForStation_5"), e ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "WaterlevelsForStation_5" ), e ); //$NON-NLS-1$
     }
   }
 
