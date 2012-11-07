@@ -115,7 +115,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor );
-    progress.beginTask( Messages.getString("ReadWaterLevelsOperation.6"), 100 ); //$NON-NLS-1$
+    progress.beginTask( Messages.getString( "ReadWaterLevelsOperation.6" ), 100 ); //$NON-NLS-1$
 
     reloadSections( m_data, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
 
@@ -145,7 +145,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
       }
     };
 
-    final PdbExecutorOperation runnable = new PdbExecutorOperation( connection, operation, Messages.getString("ReadWaterLevelsOperation.7") ); //$NON-NLS-1$
+    final PdbExecutorOperation runnable = new PdbExecutorOperation( connection, operation, Messages.getString( "ReadWaterLevelsOperation.7" ) ); //$NON-NLS-1$
     runnable.execute( monitor );
   }
 
@@ -157,7 +157,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
       final int numRecords = shapeFile.getNumRecords();
 
-      final String taskName = String.format( Messages.getString("ReadWaterLevelsOperation.8"), m_data.getShapeName() ); //$NON-NLS-1$
+      final String taskName = String.format( Messages.getString( "ReadWaterLevelsOperation.8" ), m_data.getShapeName() ); //$NON-NLS-1$
       monitor.beginTask( taskName, numRecords );
 
       final int progressStep = Math.max( 1, numRecords / 1000 );
@@ -175,7 +175,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
         if( row % progressStep == 0 )
         {
           ProgressUtilities.worked( monitor, progressStep );
-          monitor.subTask( String.format( Messages.getString("ReadWaterLevelsOperation.9"), row ) ); //$NON-NLS-1$
+          monitor.subTask( String.format( Messages.getString( "ReadWaterLevelsOperation.9" ), row ) ); //$NON-NLS-1$
         }
       }
     }
@@ -336,8 +336,8 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
       case WaterlevelFixation.PROPERTY_WATERLEVEL:
         final BigDecimal waterlevel = parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_WATERLEVEL );
-        // FIXME: UGLY!
-        if( waterlevel != null && waterlevel.doubleValue() < 0.01 )
+        // REMARK: -9999 is the official no data value; we ignore everything below -9998
+        if( waterlevel != null && waterlevel.doubleValue() < -9998.0 )
           return null;
 
         return waterlevel;
@@ -409,7 +409,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     final Event event = m_data.getEvent();
     final String eventName = event.getName();
 
-    monitor.beginTask( Messages.getString("ReadWaterLevelsOperation.10"), m_waterlevels.size() ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "ReadWaterLevelsOperation.10" ), m_waterlevels.size() ); //$NON-NLS-1$
 
     for( final WaterlevelsForStation waterlevel : m_waterlevels.values() )
     {
