@@ -274,10 +274,14 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     int objectLayer = 0;
     for( final IProfileObject profileObject : profileObjects )
     {
-      if( shouldHaveOwnLayer( profileObject ) )
+      if( shouldHaveOwnLayer( profile, profileObject ) )
       {
         final String id = profileObject.getType() + objectLayer++;
-        layersToAdd.add( new ProfileObjectsLayer( id, profile, profileObject, null ) );
+
+        final ProfileObjectsLayer subLayer = new ProfileObjectsLayer( id, profile, profileObject, null );
+        subLayer.setCoordinateMapper( cmLeft );
+
+        layersToAdd.add( subLayer );
       }
     }
 
@@ -462,9 +466,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     m_targetAxisRight.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_targetAxisRight.getPosition(), rightLabel, new Insets( 1, 2, 4, 2 ), StyleUtils.getDefaultTextStyle() ) );
   }
 
-  private static boolean shouldHaveOwnLayer( final IProfileObject profileObject )
+  private static boolean shouldHaveOwnLayer( final IProfile profile, final IProfileObject profileObject )
   {
-    // ignore ojects that have own specialized layers and will never have own records
+    // ignore objects that have own specialized layers and will never have own records
 
     if( profileObject instanceof IProfileBuilding )
       return false;
@@ -479,12 +483,24 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     {
       final GenericProfileHorizon horizon = (GenericProfileHorizon)profileObject;
       final String type = horizon.getType();
-      // TODO: get constant from elsewhere?
-      if( type.startsWith( "W" ) ) //$NON-NLS-1$
+
+      if( IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS.equals( type ) )
+        return false;
+      if( IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_SEGMENT.equals( type ) )
         return false;
 
       if( BuildingBruecke.ID_OK.equals( type ) )
-        return false;
+      {
+        final BuildingBruecke[] bridges = profile.getProfileObjects( BuildingBruecke.class );
+        for( final BuildingBruecke bridge : bridges )
+        {
+          final IProfileObject bridgeOK = bridge.findOkProfileObject( profile );
+          if( bridgeOK == profileObject )
+            return false;
+        }
+
+        return true;
+      }
     }
 
     return true;
