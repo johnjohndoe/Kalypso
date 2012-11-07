@@ -87,7 +87,7 @@ public class BuildingTubesTheme extends AbstractProfilTheme
       return new IProfilChartLayer[] { culvertLayer };
 
     final String id = IWspmTuhhConstants.THEME_TUBES + "_records"; //$NON-NLS-1$
-    final IProfilChartLayer profilePartLayer = new ProfileObjectsLayer( id, profile, culvert, Messages.getString("BuildingTubesTheme.0") ); //$NON-NLS-1$
+    final IProfilChartLayer profilePartLayer = new ProfileObjectsLayer( id, profile, culvert, Messages.getString( "BuildingTubesTheme.0" ) ); //$NON-NLS-1$
 
     return new IProfilChartLayer[] { culvertLayer, profilePartLayer };
   }
