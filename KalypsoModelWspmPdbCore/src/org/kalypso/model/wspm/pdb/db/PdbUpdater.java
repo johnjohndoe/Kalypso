@@ -278,7 +278,11 @@ public class PdbUpdater
     for( final String name : names )
     {
       final String value = variables.getProperty( name );
-      inputReplacer.addReplacer( new ConstantReplacer( name, value ) );
+
+      // REMARK: '\' causes problem, at least with postgres, and is only every used in pathes. So we replace it with '/' here.
+      final String cleanValue = value.replace( '\\', '/' );
+
+      inputReplacer.addReplacer( new ConstantReplacer( name, cleanValue ) );
     }
 
     return inputReplacer;
