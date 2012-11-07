@@ -67,7 +67,7 @@ public class PdbExportOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString("PdbExportOperation_0"); //$NON-NLS-1$
+    return Messages.getString( "PdbExportOperation_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -75,22 +75,25 @@ public class PdbExportOperation implements IPdbOperation
   {
     try
     {
-      final File sourceFile = m_settingsData.getSourceFile();
       final DhmIndex dhmIndex = m_settingsData.getDhmIndex();
       final IPath demServerPath = m_settingsData.getDemServerPath();
-      final IPath targetPath = demServerPath.append( dhmIndex.getFilename() );
+
+      final File[] sourceFiles = m_settingsData.getRealSourceFiles();
 
       session.saveOrUpdate( dhmIndex );
 
-      FileUtils.copyFile( sourceFile, targetPath.toFile() );
+      /* copy all source files to the server directory */
+      final File targetDir = demServerPath.toFile();
+      for( final File sourceFile : sourceFiles )
+        FileUtils.copyFileToDirectory( sourceFile, targetDir );
     }
     catch( final HibernateException ex )
     {
-      throw new PdbConnectException( Messages.getString("PdbExportOperation_1"), ex ); //$NON-NLS-1$
+      throw new PdbConnectException( Messages.getString( "PdbExportOperation_1" ), ex ); //$NON-NLS-1$
     }
     catch( final IOException ex )
     {
-      throw new PdbConnectException( Messages.getString("PdbExportOperation_2"), ex ); //$NON-NLS-1$
+      throw new PdbConnectException( Messages.getString( "PdbExportOperation_2" ), ex ); //$NON-NLS-1$
     }
   }
 }

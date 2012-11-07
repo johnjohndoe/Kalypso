@@ -146,6 +146,7 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
 
   public File getSourceFile( )
   {
+    // FIXME: will not work any more if we would be able to import several files at once
     return m_data.getSelectedFiles()[0];
   }
 
@@ -278,5 +279,13 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
     {
       throw new CoreException( new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e ) );
     }
+  }
+
+  /**
+   * Gets all underlying source files. Can be multiple files e.g. in case of Shape
+   */
+  public File[] getRealSourceFiles( )
+  {
+    return m_data.getRealSourceFiles( getSourceFile() );
   }
 }
