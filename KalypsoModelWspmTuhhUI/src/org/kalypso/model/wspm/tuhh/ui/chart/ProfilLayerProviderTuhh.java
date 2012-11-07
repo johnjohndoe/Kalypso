@@ -247,6 +247,22 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( TuhhProfiles.hasVegetation( profile ) )
       layersToAdd.add( TuhhLayers.createVegetationLayer( profile, cmLeft, m_styleProvider ) );
 
+    /* profile objects, not handled by other layers */
+    final IProfileObject[] profileObjects = profile.getProfileObjects();
+    int objectLayer = 0;
+    for( final IProfileObject profileObject : profileObjects )
+    {
+      if( shouldHaveOwnLayer( profile, profileObject ) )
+      {
+        final String id = profileObject.getType() + objectLayer++;
+
+        final ProfileObjectsLayer subLayer = new ProfileObjectsLayer( id, profile, profileObject, null );
+        subLayer.setCoordinateMapper( cmLeft );
+
+        layersToAdd.add( subLayer );
+      }
+    }
+
     /* profile buildings layer(s) */
     final IProfileObject[] buildings = profile.getProfileObjects( IProfileBuilding.class );
     for( final IProfileObject building : buildings )
@@ -268,22 +284,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     final SecondProfileData[] secondProfileData = secondProfileManager.findData( profile );
     for( final SecondProfileData data : secondProfileData )
       layersToAdd.add( new SecondProfileDataLayer( profile, data, cmLeft ) );
-
-    /* profile objects, not handled by other layers */
-    final IProfileObject[] profileObjects = profile.getProfileObjects();
-    int objectLayer = 0;
-    for( final IProfileObject profileObject : profileObjects )
-    {
-      if( shouldHaveOwnLayer( profile, profileObject ) )
-      {
-        final String id = profileObject.getType() + objectLayer++;
-
-        final ProfileObjectsLayer subLayer = new ProfileObjectsLayer( id, profile, profileObject, null );
-        subLayer.setCoordinateMapper( cmLeft );
-
-        layersToAdd.add( subLayer );
-      }
-    }
 
     /* sinuosität */
     final ISinuositaetProfileObject[] sinObj = profile.getProfileObjects( ISinuositaetProfileObject.class );
