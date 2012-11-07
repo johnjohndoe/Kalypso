@@ -210,12 +210,12 @@ public class PdbInfo
     final String property = m_properties.getProperty( PROPERTY_DEM_SERVER );
     if( StringUtils.isBlank( property ) )
     {
-      final String message = Messages.getString("PdbInfo.3"); //$NON-NLS-1$
+      final String message = Messages.getString( "PdbInfo.3" ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
       throw new CoreException( status );
     }
 
-    return Path.fromOSString( property );
+    return Path.fromPortableString( property );
   }
 
   public Entry<String, String>[] getEntries( )
@@ -231,6 +231,6 @@ public class PdbInfo
       entries.add( entry );
     }
 
-    return entries.toArray( (Entry<String, String>[]) Array.newInstance( Entry.class, entries.size() ) );
+    return entries.toArray( (Entry<String, String>[])Array.newInstance( Entry.class, entries.size() ) );
   }
 }
