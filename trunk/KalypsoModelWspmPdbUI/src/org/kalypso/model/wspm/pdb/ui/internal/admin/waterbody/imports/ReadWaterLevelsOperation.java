@@ -419,8 +419,10 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
       final BigDecimal station = waterlevel.getStation();
       final CrossSection section = m_data.getCrossSection( station );
 
+      final double douglasPeuckerDistance = m_data.getDouglasPeuckerDistance();
+
       final CrossSectionProvider sectionProvider = new CrossSectionProvider( section, m_sectionFactory );
-      waterlevel.create2DWaterlevels( eventName, sectionProvider );
+      waterlevel.create2DWaterlevels( eventName, sectionProvider, douglasPeuckerDistance );
 
       ProgressUtilities.worked( monitor, 1 );
     }

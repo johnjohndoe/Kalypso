@@ -79,6 +79,8 @@ import org.kalypso.shape.dbf.DBaseException;
  */
 public class ImportWaterLevelsData extends AbstractModelObject implements IEditEventPageData
 {
+  public final static String PROPERTY_DOUGLAS_PEUCKER_DISTANCE = "douglasPeuckerDistance"; //$NON-NLS-1$
+
   private final Event m_event = new Event();
 
   private final IPdbConnection m_connection;
@@ -97,6 +99,9 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
   private final Map<BigDecimal, CrossSection> m_sections = new HashMap<>();
 
   private final ExistingEventsFetcher m_eventsFetcher;
+
+  // FIXME: edit in an options page for waterlevel2d import
+  private double m_douglasPeuckerDistance = 0.01; // 1 cm
 
   public ImportWaterLevelsData( final IPdbConnection connection )
   {
@@ -244,5 +249,19 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
   public CrossSection getCrossSection( final BigDecimal station )
   {
     return m_sections.get( station );
+  }
+
+  public double getDouglasPeuckerDistance( )
+  {
+    return m_douglasPeuckerDistance;
+  }
+
+  public void setDouglasPeuckerDistance( final double distance )
+  {
+    final double oldValue = m_douglasPeuckerDistance;
+
+    m_douglasPeuckerDistance = distance;
+
+    firePropertyChange( PROPERTY_DOUGLAS_PEUCKER_DISTANCE, oldValue, distance );
   }
 }
