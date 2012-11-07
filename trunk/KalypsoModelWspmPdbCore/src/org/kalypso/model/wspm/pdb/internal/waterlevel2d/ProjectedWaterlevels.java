@@ -79,10 +79,10 @@ public class ProjectedWaterlevels
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatus( Messages.getString("ProjectedWaterlevels_0") ); //$NON-NLS-1$
+    return m_log.asMultiStatus( Messages.getString( "ProjectedWaterlevels_0" ) ); //$NON-NLS-1$
   }
 
-  public IProfileObject[] createParts( ) throws MismatchedDimensionException, FactoryException, TransformException
+  public IProfileObject[] createParts( final double douglasPeuckerDistance ) throws MismatchedDimensionException, FactoryException, TransformException
   {
     /* create 'original' waterlevel: just the fixation points projected to the profile line */
     final ProjectOriginalWaterlevelWorker originalWorker = new ProjectOriginalWaterlevelWorker( m_eventName, m_waterlevels );
@@ -95,14 +95,12 @@ public class ProjectedWaterlevels
     /* ignore empty waterlevels */
     if( originalWaterlevel.getRecords().size() == 0 )
     {
-      m_log.add( IStatus.WARNING, Messages.getString("ProjectedWaterlevels_1"), null, m_station ); //$NON-NLS-1$
+      m_log.add( IStatus.WARNING, Messages.getString( "ProjectedWaterlevels_1" ), null, m_station ); //$NON-NLS-1$
       return new IProfileObject[] {};
     }
 
-    // FIXME
-    final double maxDistance = 0.001; // 1 cm
     /* simplify original waterlevel, to avoid too many points */
-    final SimplifyProjectedWaterlevelWorker simplifyWorker = new SimplifyProjectedWaterlevelWorker( originalWaterlevel, maxDistance );
+    final SimplifyProjectedWaterlevelWorker simplifyWorker = new SimplifyProjectedWaterlevelWorker( originalWaterlevel, douglasPeuckerDistance );
     final IStatus simplifyStatus = simplifyWorker.execute();
     if( !simplifyStatus.isOK() )
       m_log.add( simplifyStatus );
@@ -112,9 +110,17 @@ public class ProjectedWaterlevels
     /* create 2d waterlevels */
     final IProfileObject[] waterlevels2d = create2Dwaterlevels( simplifiedWaterlevel );
 
+    /* clean obviously bad points from original waterlevel */
+    final CleanProjectedWaterlevelWorker cleanWorker = new CleanProjectedWaterlevelWorker( m_profileLine, simplifiedWaterlevel );
+    final IStatus cleanStatus = cleanWorker.execute();
+    if( !cleanStatus.isOK() )
+      m_log.add( cleanStatus );
+
+    final IProfileObject cleanedOriginalWaterlevel = cleanWorker.getResult();
+
     /* build return set */
     final Collection<IProfileObject> allParts = new ArrayList<>();
-    allParts.add( simplifiedWaterlevel );
+    allParts.add( cleanedOriginalWaterlevel );
     allParts.addAll( Arrays.asList( waterlevels2d ) );
 
     return allParts.toArray( new IProfileObject[allParts.size()] );
@@ -251,7 +257,7 @@ public class ProjectedWaterlevels
       }
       catch( final MGeometryException | MismatchedDimensionException | FactoryException | TransformException e )
       {
-        m_log.add( IStatus.WARNING, Messages.getString("ProjectedWaterlevels_2"), e ); //$NON-NLS-1$
+        m_log.add( IStatus.WARNING, Messages.getString( "ProjectedWaterlevels_2" ), e ); //$NON-NLS-1$
       }
     }
 
