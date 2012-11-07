@@ -245,7 +245,7 @@ INSERT INTO style_parameter (id, key, value, style_id) VALUES (2, 'strokeWidth',
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (3, 'strokeColor', '#FF9600', 1);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (4, 'type', 'line', 2);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (5, 'strokeWidth', '2', 2);
-INSERT INTO style_parameter (id, key, value, style_id) VALUES (6, 'strokeColor', '#C85F08', 2);
+INSERT INTO style_parameter (id, key, value, style_id) VALUES (6, 'strokeColor', '#BE2CBE', 2);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (7, 'type', 'point', 3);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (8, 'markerWidth', '8', 3);
 INSERT INTO style_parameter (id, key, value, style_id) VALUES (9, 'markerHeight', '8', 3);
