@@ -134,12 +134,12 @@ public class NodalBCSelectionWizard extends Wizard
     /* Create new feature */
     final IFeatureType newFT = GMLSchemaUtilities.getFeatureTypeQuiet( IBoundaryCondition.QNAME );
     final Feature newFeature = m_workspace.createFeature( m_parentFeature, m_parentRelation, newFT, -1 );
-    final IBoundaryCondition bc = (IBoundaryCondition) newFeature.getAdapter( IBoundaryCondition.class );
+    final IBoundaryCondition bc = (IBoundaryCondition)newFeature.getAdapter( IBoundaryCondition.class );
     // System.out.println("PROP="+m_parentFeature.getProperty( m_parentRelation ));
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         bc.setName( descriptor.getName() );
@@ -171,8 +171,9 @@ public class NodalBCSelectionWizard extends Wizard
         else
         {
           lStrSteadyValue = WaveStepDescriptor.SWAN_BC_DEFAULT_STEADY_VALUE_PREFIX + lStrSteadyValue;
-          bc.setIsAbsolute( ((WaveStepDescriptor) descriptor).isStateAbsoluteCond() );
+          bc.setIsAbsolute( ((WaveStepDescriptor)descriptor).isStateAbsoluteCond() );
         }
+
         bc.setStationaryCondition( lStrSteadyValue );
         bc.setParentElement( m_parentModelElement );
 
@@ -181,9 +182,6 @@ public class NodalBCSelectionWizard extends Wizard
           bc.setPosition( m_boundaryPosition );
           final AddFeatureCommand command = new AddFeatureCommand( m_workspace, m_parentFeature, m_parentRelation, -1, newFeature, m_selectionManager, true, true )
           {
-            /**
-             * @see org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand#process()
-             */
             @Override
             public void process( ) throws Exception
             {
@@ -239,10 +237,9 @@ public class NodalBCSelectionWizard extends Wizard
 
   /**
    * Sets the target position of the boundary condition to be created.
-   *
+   * 
    * @param boundaryPosition
    *          the target position
-   *
    */
   public void setBoundaryPosition( final GM_Point boundaryPosition )
   {
@@ -253,5 +250,4 @@ public class NodalBCSelectionWizard extends Wizard
   {
     m_selectionManager = selectionManager;
   }
-
 }

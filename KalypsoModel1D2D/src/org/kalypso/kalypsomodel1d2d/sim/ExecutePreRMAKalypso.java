@@ -61,6 +61,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.service.wps.client.WPSRequest;
@@ -73,13 +74,10 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author kurzbach
- *
  */
 public class ExecutePreRMAKalypso
 {
   private final String m_serviceEndpoint;
-
-  private final String m_calcUnitID;
 
   private final Modeldata m_modelInput;
 
@@ -102,33 +100,15 @@ public class ExecutePreRMAKalypso
   private final IContainer m_scenarioFolder;
 
   /**
-   * Create execute request to PreRMAKalypso WPS with no restart infos and default calcUnit defined in control model
-   */
-  public ExecutePreRMAKalypso( final String serviceEndpoint )
-  {
-    this( serviceEndpoint, null );
-  }
-
-  /**
    * Create execute request to PreRMAKalypso WPS with given restart infos and default calcUnit defined in control model
    */
   public ExecutePreRMAKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos )
   {
-    this( serviceEndpoint, restartInfos, null );
-  }
-
-  /**
-   * Create execute request to PreRMAKalypso WPS with given restart infos and calcUnit
-   */
-  public ExecutePreRMAKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos, final String calcUnitID )
-  {
-
     m_caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     m_scenarioFolder = m_caseDataProvider.getScenarioFolder();
 
     m_serviceEndpoint = serviceEndpoint;
     m_modelInput = createInputs( restartInfos );
-    m_calcUnitID = calcUnitID;
     // currently 60 minutes timeout
     m_wpsRequest = new WPSRequest( PreRMAKalypso.ID, m_serviceEndpoint, 60 * 60 * 1000 );
   }
@@ -139,12 +119,6 @@ public class ExecutePreRMAKalypso
 
     try
     {
-      // final List<IRestartInfo> restartInfos;
-      // if( m_controlModel.getRestart() )
-      // restartInfos = m_controlModel.getRestartInfos();
-      // else
-      // restartInfos = Collections.emptyList();
-
       // for getting WPS input list relative to scenario
       final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
@@ -154,23 +128,19 @@ public class ExecutePreRMAKalypso
       final ProcessDescriptionType processDescription = m_wpsRequest.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) );
       final Map<String, Object> inputs = delegate.createInputs( processDescription, progress.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) );
 
-      // add calc unit input if desired
-      if( m_calcUnitID != null )
-      {
-        inputs.put( PreRMAKalypso.INPUT_CALCULATION_UNIT_ID, m_calcUnitID );
-      }
-
       // the delegate is not used for outputs
       final List<String> outputs = new ArrayList<>();
-      outputs.add( PreRMAKalypso.OUTPUT_MESH );
-      outputs.add( PreRMAKalypso.OUTPUT_CONTROL );
-      outputs.add( PreRMAKalypso.OUTPUT_BUILDINGS );
-      outputs.add( PreRMAKalypso.OUTPUT_BC_WQ );
-      outputs.add( PreRMAKalypso.OUTPUT_WIND );
-      outputs.add( PreRMAKalypso.OUTPUT_WIND_COORD );
+      outputs.add( IRMAPreprocessing.OUTPUT_MESH );
+      outputs.add( IRMAPreprocessing.OUTPUT_CONTROL );
+      outputs.add( IRMAPreprocessing.OUTPUT_BUILDINGS );
+      outputs.add( IRMAPreprocessing.OUTPUT_BC_WQ );
+      outputs.add( IRMAPreprocessing.OUTPUT_WIND );
+      outputs.add( IRMAPreprocessing.OUTPUT_WIND_COORD );
 
       // run the preprocessing, this will create references to ascii files from gml files
       final IStatus preRMAstatus = m_wpsRequest.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
+
+      // FIXME: check log messages!
 
       // abort on error
       if( !preRMAstatus.isOK() )
@@ -199,21 +169,21 @@ public class ExecutePreRMAKalypso
   private final Modeldata createInputs( final List<IRestartInfo> restartInfos )
   {
     final Map<String, String> inputs = new HashMap<>();
-    inputs.put( PreRMAKalypso.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$
-    inputs.put( PreRMAKalypso.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
-    inputs.put( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$
-    inputs.put( PreRMAKalypso.INPUT_WIND_RELATIONSHIPS, "models/wind.gml" ); //$NON-NLS-1$
-    inputs.put( PreRMAKalypso.INPUT_ROUGHNESS, "../.metadata/roughness.gml" ); //$NON-NLS-1$
+    inputs.put( IRMAPreprocessing.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$
+    inputs.put( IRMAPreprocessing.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
+    inputs.put( IRMAPreprocessing.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$
+    inputs.put( IRMAPreprocessing.INPUT_WIND_RELATIONSHIPS, "models/wind.gml" ); //$NON-NLS-1$
+    inputs.put( IRMAPreprocessing.INPUT_ROUGHNESS, "../.metadata/roughness.gml" ); //$NON-NLS-1$
 
     if( restartInfos != null )
     {
-      // fill restart inputs
+      // fill restart ip
       int restartCount = 0;
       if( restartInfos.size() > 0 && !WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
       {
         final String restartFilePath = zipRestartInfos( restartInfos );
         if( restartFilePath != null )
-          inputs.put( PreRMAKalypso.INPUT_RESTART_FILE_PREFIX + restartCount++, restartFilePath );
+          inputs.put( IRMAPreprocessing.INPUT_RESTART_FILE_PREFIX + restartCount++, restartFilePath );
       }
     }
 
@@ -222,7 +192,7 @@ public class ExecutePreRMAKalypso
     final Modeldata data = SimulationUtilitites.createModelData( RMAKalypsoSimulation.ID, inputs, true, outputs, true );
 
     /* Special case for roughness.gml: NOT relative to calc case */
-    final Input input = SimulationUtilitites.createInput( PreRMAKalypso.INPUT_ROUGHNESS, ".metadata/roughness.gml", false, false ); //$NON-NLS-1$
+    final Input input = SimulationUtilitites.createInput( IRMAPreprocessing.INPUT_ROUGHNESS, ".metadata/roughness.gml", false, false ); //$NON-NLS-1$
     data.getInput().add( input );
 
     return data;
@@ -257,25 +227,30 @@ public class ExecutePreRMAKalypso
   {
     try
     {
-      final ComplexValueReference modelFileReference = references.get( PreRMAKalypso.OUTPUT_MESH );
+      final ComplexValueReference modelFileReference = references.get( IRMAPreprocessing.OUTPUT_MESH );
       m_modelFileUrl = modelFileReference.getReference();
 
-      final ComplexValueReference controlFileReference = references.get( PreRMAKalypso.OUTPUT_CONTROL );
+      final ComplexValueReference controlFileReference = references.get( IRMAPreprocessing.OUTPUT_CONTROL );
       m_controlFileUrl = controlFileReference.getReference();
 
-      final ComplexValueReference buildingFileReference = references.get( PreRMAKalypso.OUTPUT_BUILDINGS );
+      final ComplexValueReference buildingFileReference = references.get( IRMAPreprocessing.OUTPUT_BUILDINGS );
       m_buildingFileUrl = buildingFileReference.getReference();
 
-      final ComplexValueReference bcwqFileReference = references.get( PreRMAKalypso.OUTPUT_BC_WQ );
+      final ComplexValueReference bcwqFileReference = references.get( IRMAPreprocessing.OUTPUT_BC_WQ );
       m_bcwqFileUrl = bcwqFileReference.getReference();
 
-      final ComplexValueReference windFileReference = references.get( PreRMAKalypso.OUTPUT_WIND );
+      final ComplexValueReference windFileReference = references.get( IRMAPreprocessing.OUTPUT_WIND );
       m_windFileUrl = windFileReference.getReference();
 
-      final ComplexValueReference windCoordFileReference = references.get( PreRMAKalypso.OUTPUT_WIND_COORD );
+      final ComplexValueReference windCoordFileReference = references.get( IRMAPreprocessing.OUTPUT_WIND_COORD );
       m_windCoordFileUrl = windCoordFileReference.getReference();
 
       return Status.OK_STATUS;
+    }
+    catch( final NullPointerException e )
+    {
+      // FIXME: still ugly!
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "ExecutePreRMAKalypso.0" ) ); //$NON-NLS-1$
     }
     catch( final Throwable e )
     {

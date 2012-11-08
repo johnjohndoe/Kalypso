@@ -172,7 +172,7 @@ public class RMA10CalculationPage extends WizardPage
     buttonComposite.setLayout( layout );
     buttonComposite.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
 
-    final Label spinnerLabel1 = new Label( buttonComposite, SWT.NONE );
+    final Label spinnerLabel1 = new Label( buttonComposite, SWT.BORDER );
     spinnerLabel1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.8" ) ); //$NON-NLS-1$
     final GridData gridData1 = new GridData( SWT.FILL, SWT.CENTER, true, false );
     spinnerLabel1.setLayoutData( gridData1 );
@@ -258,11 +258,11 @@ public class RMA10CalculationPage extends WizardPage
       if( isCoupledSimulation() )
       {
         // if coupled simulation is selected, display one iteration composite per subunit
-        final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D) calculationUnit;
+        final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D)calculationUnit;
         final IFeatureBindingCollection<ICalculationUnit> subUnits = calculationUnit1D2D.getSubCalculationUnits();
 
         final int numSubunits = subUnits.size();
-        m_iterGroup.setLayout( new GridLayout( (int) Math.ceil( numSubunits / 2.0 ), true ) );
+        m_iterGroup.setLayout( new GridLayout( (int)Math.ceil( numSubunits / 2.0 ), true ) );
         m_iterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
         final Control[] newIterComps = new Control[numSubunits];
@@ -404,7 +404,7 @@ public class RMA10CalculationPage extends WizardPage
     if( container instanceof WizardDialog2 )
     {
       /* Do not block the UI while simulation is running... */
-      final WizardDialog2 wd2 = (WizardDialog2) container;
+      final WizardDialog2 wd2 = (WizardDialog2)container;
       wd2.executeUnblocked( true, true, calculationOperation );
     }
     else

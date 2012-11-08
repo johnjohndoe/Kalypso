@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.wind;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Date;
@@ -49,7 +50,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
@@ -70,7 +70,7 @@ public class SWANWindDataWriter extends AbstractWindDataWriter
 
   Formatter m_formatterWindSeries = null;
 
-  public SWANWindDataWriter( final FileObject outputDirectory, final GM_Envelope gmEnvelopeTarget, final Date[] dates, final List<IWindDataModelSystem> pListSystemsToWrite )
+  public SWANWindDataWriter( final File outputDirectory, final GM_Envelope gmEnvelopeTarget, final Date[] dates, final List<IWindDataModelSystem> pListSystemsToWrite )
   {
     super( outputDirectory, gmEnvelopeTarget, dates, pListSystemsToWrite );
 
@@ -186,15 +186,15 @@ public class SWANWindDataWriter extends AbstractWindDataWriter
     {
       final IWindDataProvider windData = (IWindDataProvider)pObject;
 
-      final FileObject lFileWindData = m_fileOutputDir.resolveFile( getFileNameForWindDataProvider( windData ) );
+      final File lFileWindData = new File( m_fileOutputDir, getFileNameForWindDataProvider( windData ) );
 
-      return new Formatter( lFileWindData.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
+      return new Formatter( lFileWindData, Charset.defaultCharset().name(), Locale.US );
     }
 
     if( pObject instanceof String )
     {
-      final FileObject lFileWindDataAdditional = m_fileOutputDir.resolveFile( (String)pObject + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT );
-      return new Formatter( lFileWindDataAdditional.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
+      final File lFileWindDataAdditional = new File( m_fileOutputDir, (String)pObject + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT );
+      return new Formatter( lFileWindDataAdditional, Charset.defaultCharset().name(), Locale.US );
     }
 
     return null;

@@ -41,18 +41,20 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.eclipse.core.runtime.CoreException;
 
 /**
- * Interface for classes that can convert discretisation model to another file format 
+ * Interface for classes that can convert discretisation model to another file format
  * 
  * @author felipe maximino
- *
  */
 public interface I2DMeshConverter
 {
-  public void writeMesh( final File file ) throws Exception;
-  
-  public boolean supportMidsideNodes();
-  
-  public boolean supportFlowResistanceClasses();
+  void writeMesh( final File file ) throws CoreException, IOException;
+
+  boolean supportMidsideNodes( );
+
+  boolean supportFlowResistanceClasses( );
 }

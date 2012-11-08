@@ -81,7 +81,6 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * @author kurzbach
  * @author ig
- *
  */
 public class ExecutePreSWANKalypso
 {
@@ -106,22 +105,6 @@ public class ExecutePreSWANKalypso
   private final IWindModel m_windRelationshipModel;
 
   /**
-   * Create execute request to PreSWANKalypso WPS with no restart infos and default calcUnit defined in control model
-   */
-  public ExecutePreSWANKalypso( final String serviceEndpoint ) throws CoreException
-  {
-    this( serviceEndpoint, null );
-  }
-
-  /**
-   * Create execute request to PreSWANKalypso WPS with no restart infos and default calcUnit defined in control model
-   */
-  public ExecutePreSWANKalypso( final String serviceEndpoint, final String calcUnitID ) throws CoreException
-  {
-    this( serviceEndpoint, calcUnitID, null );
-  }
-
-  /**
    * Create execute request to PreRMAKalypso WPS with given restart infos and calcUnit
    */
   public ExecutePreSWANKalypso( final String serviceEndpoint, final String calcUnitID, final URI rmaCalcPath ) throws CoreException
@@ -132,10 +115,12 @@ public class ExecutePreSWANKalypso
     final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
 
     m_boolDoHotStart = controlModel.getINITialValuesSWAN() == 3;
-    try{
+    try
+    {
       m_urlAdditionalCoordFile = new URL( controlModel.getInputFileAdditionalCoordSWAN() );
     }
-    catch (final Exception e) {
+    catch( final Exception e )
+    {
       m_urlAdditionalCoordFile = null;
     }
 
@@ -151,7 +136,7 @@ public class ExecutePreSWANKalypso
 
   }
 
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings( "deprecation" )
   public IStatus run( final IProgressMonitor monitor )
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 1000 );
@@ -168,7 +153,7 @@ public class ExecutePreSWANKalypso
       // add calc unit input if desired
       if( m_calcUnitID != null )
       {
-        inputs.put( PreRMAKalypso.INPUT_CALCULATION_UNIT_ID, m_calcUnitID );
+        inputs.put( IRMAPreprocessing.INPUT_CALCULATION_UNIT_ID, m_calcUnitID );
       }
 
       // the delegate is not used for outputs
@@ -205,10 +190,10 @@ public class ExecutePreSWANKalypso
   private final Modeldata createInputs( )
   {
     final Map<String, String> inputs = new HashMap<>();
-    inputs.put( PreRMAKalypso.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$
-    inputs.put( PreRMAKalypso.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
-    inputs.put( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$
-    inputs.put( PreRMAKalypso.INPUT_WIND_RELATIONSHIPS, "models/wind.gml" ); //$NON-NLS-1$
+    inputs.put( IRMAPreprocessing.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$
+    inputs.put( IRMAPreprocessing.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
+    inputs.put( IRMAPreprocessing.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$
+    inputs.put( IRMAPreprocessing.INPUT_WIND_RELATIONSHIPS, "models/wind.gml" ); //$NON-NLS-1$
     try
     {
       inputs.put( PreSWANKalypso.OUTPUT_PATH_RMA, m_rmaOutputPath.toURL().toExternalForm() );
@@ -219,8 +204,10 @@ public class ExecutePreSWANKalypso
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
-    if( m_serviceEndpoint.equals( WPSRequest.SERVICE_LOCAL ) ){
-      if( m_urlAdditionalCoordFile != null ){
+    if( m_serviceEndpoint.equals( WPSRequest.SERVICE_LOCAL ) )
+    {
+      if( m_urlAdditionalCoordFile != null )
+      {
         inputs.put( PreSWANKalypso.ADDITIONAL_DATA_FILE, m_urlAdditionalCoordFile.toExternalForm() );
       }
     }
@@ -263,7 +250,6 @@ public class ExecutePreSWANKalypso
       }
     }
 
-
     // TODO: implement selection if it will be needed for restart files... write now it is just taken from last run of
     // this calc unit
     if( m_boolDoHotStart )
@@ -297,7 +283,7 @@ public class ExecutePreSWANKalypso
     {
       for( final Object lWindDataObject : lWindSystem.getWindDataModels() )
       {
-        final IWindDataProvider lWindData = (IWindDataProvider) lWindDataObject;
+        final IWindDataProvider lWindData = (IWindDataProvider)lWindDataObject;
         try
         {
           listFilesToPutIn.add( new File( lWindData.getDataFileURL().toURI() ) );
@@ -321,7 +307,7 @@ public class ExecutePreSWANKalypso
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("ExecutePreSWANKalypso.2") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "ExecutePreSWANKalypso.2" ) ); //$NON-NLS-1$
     }
   }
 

@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,14 +74,12 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
 
   private final IdMap m_nodesIDProvider = new IdMap();
 
-  HMOSerializer hmoSerializer;
-
   public GmlMesh2HmoConverter( final IFEDiscretisationModel1d2d discretisationModel1d2d )
   {
     m_discretisationModel1d2d = discretisationModel1d2d;
   }
 
-  public void writeElements( final IFE1D2DElement[] elementsInBBox ) throws CoreException
+  public void writeElements( final HMOSerializer hmoSerializer, final IFE1D2DElement[] elementsInBBox ) throws CoreException
   {
     final List<IFE1D2DNode[]> triangularElements = new ArrayList<>();
 
@@ -92,7 +91,7 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
       if( element instanceof IPolyElement )
       {
         final IFE1D2DNode[] nodes = element.getNodes();
-        writeNodes( nodes );
+        writeNodes( hmoSerializer, nodes );
 
         if( nodes.length == 4 )
         {
@@ -105,7 +104,7 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
       }
     }
 
-    writeTriangles( triangularElements );
+    writeTriangles( hmoSerializer, triangularElements );
   }
 
   /* splits quadrangular element in 2 triangular elements */
@@ -115,7 +114,7 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
     triangularElements.add( new IFE1D2DNode[] { nodes[0], nodes[2], nodes[3] } );
   }
 
-  private void writeTriangles( final List<IFE1D2DNode[]> triangularElements )
+  private void writeTriangles( final HMOSerializer hmoSerializer, final List<IFE1D2DNode[]> triangularElements )
   {
     int count = 1;
     for( final IFE1D2DNode[] triangle : triangularElements )
@@ -125,10 +124,9 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
       final int nodeID3 = getConversionID( triangle[2] );
       hmoSerializer.formatTriangle( count++, nodeID1, nodeID2, nodeID3 );
     }
-
   }
 
-  private void writeNodes( final IFE1D2DNode[] nodes )
+  private void writeNodes( final HMOSerializer hmoSerializer, final IFE1D2DNode[] nodes )
   {
     for( final IFE1D2DNode node : nodes )
     {
@@ -143,19 +141,16 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
   }
 
   @Override
-  public void writeHmo( final File file ) throws Exception
+  public void writeHmo( final File file ) throws CoreException, IOException
   {
-    hmoSerializer = new HMOSerializer( file );
+    final HMOSerializer hmoSerializer = new HMOSerializer( file );
     final IFE1D2DElement[] elements = m_discretisationModel1d2d.getElements();
-    writeElements( elements );
+    writeElements( hmoSerializer, elements );
     hmoSerializer.finish();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#writeMesh(java.io.File)
-   */
   @Override
-  public void writeMesh( final File file ) throws Exception
+  public void writeMesh( final File file ) throws CoreException, IOException
   {
     writeHmo( file );
   }
@@ -173,9 +168,6 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
     return 0;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
-   */
   @Override
   public int getConversionID( final String featureGmlID )
   {
@@ -185,18 +177,12 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
     return 0;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#supportFlowResistanceClasses()
-   */
   @Override
   public boolean supportFlowResistanceClasses( )
   {
     return SUPPORT_FLOW_RESISTANCE_CLASSES;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter#supportMidsideNodes()
-   */
   @Override
   public boolean supportMidsideNodes( )
   {

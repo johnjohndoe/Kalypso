@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -59,9 +62,8 @@ import org.kalypso.observation.result.TupleResultUtilities;
 
 /**
  * Helper class to write the building file of a RMA·Kalypso calculation.
- *
+ * 
  * @author Gernot Belger
- *
  */
 public class Building1D2DConverter
 {
@@ -72,29 +74,26 @@ public class Building1D2DConverter
     m_buildingProvider = buildingProvider;
   }
 
-  public void writeBuildingFile( final OutputStream outputStream ) throws IOException
+  public void writeBuildingFile( final File outputFile ) throws IOException
   {
-    Formatter formatter = null;
-    try
+    try( OutputStream outputStream = new BufferedOutputStream( new FileOutputStream( outputFile ) ) )
     {
-      // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
-      // so no locale parameter for each format is needed any more .
-      formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US );
+      writeBuildingFile( outputStream );
+    }
+  }
+
+  private void writeBuildingFile( final OutputStream outputStream ) throws IOException
+  {
+    // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
+    // so no locale parameter for each format is needed any more .
+    try( Formatter formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US ) )
+    {
       writeBuildingFile( formatter );
       FormatterUtils.checkIoException( formatter );
     }
-    finally
-    {
-      if( formatter != null )
-      {
-        // REMARK: do not check io-exception here, else other exception would be hidden by this on
-        formatter.close();
-      }
-    }
-
   }
 
-  public void writeBuildingFile( final Formatter formatter ) throws IOException
+  private void writeBuildingFile( final Formatter formatter ) throws IOException
   {
     formatter.format( "TI      %s%n", "Bauwerksdaten" ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -106,12 +105,12 @@ public class Building1D2DConverter
       BuildingParameters buildingParameters = null;
       if( building instanceof IBuildingFlowRelation )
       {
-        buildingParameters = ((IBuildingFlowRelation) building).getBuildingParameters();
+        buildingParameters = ((IBuildingFlowRelation)building).getBuildingParameters();
       }
       else if( building instanceof IBuildingFlowRelation2D )
       {
-        buildingParameters = ((IBuildingFlowRelation2D) building).getBuildingParameters();
-        qSymmetry = ((IBuildingFlowRelation2D) building).getQSymmetry();
+        buildingParameters = ((IBuildingFlowRelation2D)building).getBuildingParameters();
+        qSymmetry = ((IBuildingFlowRelation2D)building).getQSymmetry();
       }
 
       // writeBuildingBlock( formatter, buildingID, buildingParameters );
@@ -139,9 +138,9 @@ public class Building1D2DConverter
 
     for( final IRecord record : values )
     {
-      final BigDecimal q = (BigDecimal) record.getValue( qComp );
-      final BigDecimal huw = (BigDecimal) record.getValue( huwComp );
-      final BigDecimal how = (BigDecimal) record.getValue( howComp );
+      final BigDecimal q = (BigDecimal)record.getValue( qComp );
+      final BigDecimal huw = (BigDecimal)record.getValue( huwComp );
+      final BigDecimal how = (BigDecimal)record.getValue( howComp );
 
       formatter.format( "CST     %.3f %.5f %.5f%n", q, huw, how ); //$NON-NLS-1$
     }
