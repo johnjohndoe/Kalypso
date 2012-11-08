@@ -50,32 +50,32 @@ import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey;
 /**
  * Convenience class for storing references to image descriptors used by the readme tool.
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class WspmPdbUiImages
 {
   public static enum IMAGE implements ImageKey
   {
-    CONNECT_TO_PDB("icons/led24/connect.png"), //$NON-NLS-1$
-    DISCONNECT_FROM_PDB("icons/led24/disconnect.png"), //$NON-NLS-1$
-    SHOW_INFO("icons/showInfo.gif"), //$NON-NLS-1$
+    CONNECT_TO_PDB( "icons/led24/connect.png" ), //$NON-NLS-1$
+    DISCONNECT_FROM_PDB( "icons/led24/disconnect.png" ), //$NON-NLS-1$
+    SHOW_INFO( "icons/showInfo.gif" ), //$NON-NLS-1$
 
-    PDB_CONNECTED("icons/led24/connect.png"), //$NON-NLS-1$
-    PDB_DISCONNECTED("icons/led24/disconnect.png"), //$NON-NLS-1$
+    PDB_CONNECTED( "icons/led24/connect.png" ), //$NON-NLS-1$
+    PDB_DISCONNECTED( "icons/led24/disconnect.png" ), //$NON-NLS-1$
 
-    STATE("icons/state.gif"), //$NON-NLS-1$
-    EVENT("icons/event.gif"), //$NON-NLS-1$
-    WATER_BODY("icons/waterBody.gif"), //$NON-NLS-1$
-    CROSS_SECTION("icons/crossSection.gif"), //$NON-NLS-1$
+    STATE( "icons/state.gif" ), //$NON-NLS-1$
+    EVENT( "icons/event.gif" ), //$NON-NLS-1$
+    WATER_BODY( "icons/waterBody.png" ), //$NON-NLS-1$
+    CROSS_SECTION( "icons/crossSection.gif" ), //$NON-NLS-1$
 
-    REFRESH_CONTENT_VIEWER("icons/refresh.gif"), //$NON-NLS-1$
-    PENDING("icons/pending.gif"), //$NON-NLS-1$ 
+    REFRESH_CONTENT_VIEWER( "icons/refresh.gif" ), //$NON-NLS-1$
+    PENDING( "icons/pending.gif" ), //$NON-NLS-1$ 
 
-    IMPORT("icons/import.gif"), //$NON-NLS-1$
-    EXPORT("icons/export.gif"), //$NON-NLS-1$
+    IMPORT( "icons/import.gif" ), //$NON-NLS-1$
+    EXPORT( "icons/export.gif" ), //$NON-NLS-1$
 
-    WARNING_DECORATION("icons/warning_small.gif"), //$NON-NLS-1$
+    WARNING_DECORATION( "icons/warning_small.gif" ), //$NON-NLS-1$
 
-    ADD_FROM_EXTERNAL_LOCATION("icons/addFromExternalLocation.gif"); //$NON-NLS-1$
+    ADD_FROM_EXTERNAL_LOCATION( "icons/addFromExternalLocation.gif" ); //$NON-NLS-1$
 
     private final String m_imagePath;
 

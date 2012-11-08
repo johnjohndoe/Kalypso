@@ -279,11 +279,11 @@
             name="%wizard.name.1">
         <description>%wizard.description.1</description>
       </wizard>
-      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="%wizard.name.2" icon="icons/waterBody.gif">
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="%wizard.name.2" icon="icons/waterBody.png">
         <description>%wizard.description.2</description>
       </wizard>
       <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.WspmImportWaterBodiesWizard"
-            icon="icons/waterBody.gif" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.WspmImportWaterBodiesWizard"
+            icon="icons/waterBody.png" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.WspmImportWaterBodiesWizard"
             name="%wizard.name.6">
          <description> %wizard.description.6</description>
       </wizard>
@@ -495,7 +495,7 @@
      <image commandId="org.kalypso.model.wspm.pdb.ui.command.removeElement" icon="icons/removeElement.png"/>
      <image
            commandId="org.kalypso.model.wspm.pdb.ui.command.addWaterBody"
-           icon="icons/createWaterBody.gif">
+           icon="icons/createWaterBody.png">
      </image>
      <image
            commandId="org.kalypso.model.wspm.pdb.ui.command.download"
