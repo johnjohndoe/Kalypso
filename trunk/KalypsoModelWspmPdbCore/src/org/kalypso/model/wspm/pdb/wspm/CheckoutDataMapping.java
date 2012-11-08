@@ -59,7 +59,6 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.pdb.db.constants.EventConstants.TYPE;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -137,7 +136,7 @@ public class CheckoutDataMapping
       return null;
 
     final String stateName = state.getName();
-    return (TuhhReach) wspmWaterBody.findReachByName( stateName );
+    return (TuhhReach)wspmWaterBody.findReachByName( stateName );
   }
 
   private void buildEventMapping( final Event[] events )
@@ -158,18 +157,22 @@ public class CheckoutDataMapping
       return null;
 
     final String eventName = event.getName();
-    final TYPE type = event.getType();
-    switch( type )
-    {
-      case Measurement:
-        return wspmWaterBody.findFixationByName( eventName );
 
-      case Simulation:
-        final String simulationName = String.format( "%s_%s", waterBody.getName(), eventName ); //$NON-NLS-1$
-        return m_project.findCalculationByName( simulationName );
-    }
+    return wspmWaterBody.findFixationByName( eventName );
 
-    throw new IllegalStateException();
+    // REMARK / FIX: waterlevels from pdb are always checked out as fixations, so we only need
+    // to compare with those
+//    final TYPE type = event.getType();
+//    switch( type )
+//    {
+//      case Measurement:
+//
+//      case Simulation:
+//        final String simulationName = String.format( "%s_%s", waterBody.getName(), eventName ); //$NON-NLS-1$
+//        return m_project.findCalculationByName( simulationName );
+//    }
+//
+//    throw new IllegalStateException();
   }
 
   public TuhhWspmProject getProject( )
