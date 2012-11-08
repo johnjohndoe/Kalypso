@@ -51,7 +51,9 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
@@ -203,14 +205,15 @@ public class ConnectionContentControl extends Composite
     m_waterViewer = createContentTree( toolkit, parent, null );
     m_waterViewer.setInput( PdbLabelProvider.PENDING );
 
-//    m_waterViewer.addSelectionChangedListener( new ISelectionChangedListener()
-//    {
-//      @Override
-//      public void selectionChanged( final SelectionChangedEvent event )
-//      {
-//        handleSelectionChanged( (IStructuredSelection)event.getSelection() );
-//      }
-//    } );
+    m_waterViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        handleSelectionChanged( (IStructuredSelection)event.getSelection() );
+      }
+    } );
+
     return m_waterViewer.getControl();
   }
 
@@ -253,15 +256,15 @@ public class ConnectionContentControl extends Composite
     return viewer;
   }
 
-  // protected void handleSelectionChanged( final IStructuredSelection selection )
-  // {
+  protected void handleSelectionChanged( final IStructuredSelection selection )
+  {
     // m_stateTreeUpdater.setSelection( selection );
 
     /* Preserve selection from user, i.e. if the selection is changed during refresh, use that new selection */
-    // final ElementSelector selector = new ElementSelector();
-    // selector.setElemensToSelect( selection.toArray() );
-    // m_refreshJob.setElementToSelect( selector );
-  // }
+    final ElementSelector selector = new ElementSelector();
+    selector.setElemensToSelect( selection.toArray() );
+    m_refreshJob.setElementToSelect( selector );
+  }
 
   private void createActions( )
   {
