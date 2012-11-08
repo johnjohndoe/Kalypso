@@ -102,12 +102,11 @@ import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * Converts discretisation model to RMA�Kalypso model
+ * Converts discretisation model to RMA-Kalypso model
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author ig
  */
-@SuppressWarnings( "unchecked" )
 public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 {
   private static final String VIRTUAL_MIDDLE_NODE_PREFIX = "VirtualMiddleNode"; //$NON-NLS-1$
@@ -223,10 +222,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     return getConversionID( feature, null );
   }
 
-  /**
-   * @return <code>0</code>, if feature is <code>null</code> or of unknown type.
-   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
-   */
   public int getConversionID( final Feature feature, final String pGMLId )
   {
     if( feature == null ) // TODO: this is probably an error in the data, throw an exception instead?
@@ -256,9 +251,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     return 0;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
-   */
   @Override
   public int getConversionID( final String featureGmlID )
   {
@@ -284,47 +276,31 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
   }
 
   @Override
-  public void writeMesh( final File file ) throws IOException
+  public void writeMesh( final File file ) throws IOException, CoreException
   {
-    OutputStream outputStream = null;
-    try
+    try( OutputStream outputStream = new BufferedOutputStream( new FileOutputStream( file ) ) )
     {
-      outputStream = new BufferedOutputStream( new FileOutputStream( file ) );
       writeRMA10sModel( outputStream );
-    }
-    finally
-    {
-      if( outputStream != null )
-      {
-        // REMARK: do not check io-exception here, else other exception would be hidden by this on
-        outputStream.close();
-      }
     }
   }
 
-  public void writeRMA10sModel( final OutputStream outputStream ) throws IOException
+  private void writeRMA10sModel( final OutputStream outputStream ) throws IOException, CoreException
   {
-    Formatter formatter = null;
-    try
+    try( final Formatter formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US ) )
     {
       // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
       // so no locale parameter for each format is needed any more .
-      formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US );
       writeRMA10sModel( formatter );
       FormatterUtils.checkIoException( formatter );
+    }
+    catch( final CoreException e )
+    {
+      throw e;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       throw new IOException();
-    }
-    finally
-    {
-      if( formatter != null )
-      {
-        // REMARK: do not check io-exception here, else other exception would be hidden by this on
-        formatter.close();
-      }
     }
   }
 
@@ -468,7 +444,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         middleNodeID = writeMiddleNode( edge.getId(), edge.getMiddleNodePoint(), formatter );
 
       /* Directly format into the string, this is quickest! */
-      IFE1D2DElement[] els = edge.getLinkedElements();
+      final IFE1D2DElement[] els = edge.getLinkedElements();
       if( els[0] instanceof IElement1D )
       {
         int leftRightID = 0;
@@ -756,7 +732,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         station = teschkeRelation.getStation();
         if( station == null )
         {
-          final String msg = Messages.getString("Gml2RMA10SConv.0"); //$NON-NLS-1$
+          final String msg = Messages.getString( "Gml2RMA10SConv.0" ); //$NON-NLS-1$
           final GM_Object location = node.getPoint();
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
           throw new CoreException( status );
@@ -912,9 +888,9 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     }
 
     for( final IFE1D2DElement element : elementsInBBox )
-    {
-      // TODO: shouldn't the check for calculation unit always happens? -> So export is per calculation unit?
-      // -> why not iterate through calc unit's elements instead?
+    {// FIXME: new hot spot!!
+     // TODO: shouldn't the check for calculation unit always happens? -> So export is per calculation unit?
+     // -> why not iterate through calc unit's elements instead?
       if( !m_exportRequest && !isCalcUnitElement( element ) )
         continue;
 
@@ -951,7 +927,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
           }
           else
           {
-            // TODO: give hint what 1D-element is was?
+            // TODO: give hint what 1D-element it was?
             final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.43", element1D.getId() );//$NON-NLS-1$
             final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
             throw new CoreException( status );
@@ -975,6 +951,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         }
         catch( final Exception e )
         {
+          e.printStackTrace();
           continue;
         }
       }
@@ -1060,15 +1037,19 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
           formatter.format( "FE%10d%10d%n", id, roughnessID ); //$NON-NLS-1$
 
           // print roughness correction parameters only if there is any correction
+
           Double correctionKS = element.getRoughnessCorrectionKS();
-          Double correctionAxAy = element.getRoughnessCorrectionAxAy();
-          Double correctionDP = element.getRoughnessCorrectionDP();
           if( correctionKS == null || correctionKS.isNaN() )
             correctionKS = 1.0;
+
+          Double correctionAxAy = element.getRoughnessCorrectionAxAy();
           if( correctionAxAy == null || correctionAxAy.isNaN() )
             correctionAxAy = 1.0;
+
+          Double correctionDP = element.getRoughnessCorrectionDP();
           if( correctionDP == null || correctionDP.isNaN() )
             correctionDP = 1.0;
+
           if( correctionKS != 1.0 || correctionAxAy != 1.0 || correctionDP != 1.0 )
             formatter.format( "RC%10d%10.6f%10.6f%10.6f%n", id, correctionKS.doubleValue(), correctionAxAy.doubleValue(), correctionDP.doubleValue() ); //$NON-NLS-1$
         }
@@ -1286,11 +1267,28 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     // Right now it is set to '0' which means the element is deactivated for the simulation
     final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31", element.getId() ); //$NON-NLS-1$
 
-    final IFE1D2DNode node = element.getNodes()[0];
-    final GM_Point point = node.getPoint();
-    m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, msg, point, null );
+    final GM_Object geometry = getErrorGeometry( element );
+
+    m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, msg, geometry, null );
 
     return 0;
+  }
+
+  private GM_Object getErrorGeometry( final IFE1D2DElement element )
+  {
+    if( element instanceof IElement1D )
+    {
+      final IFE1D2DEdge edge = ((IElement1D)element).getEdge();
+      if( edge == null )
+        return null;
+
+      return edge.getGeometry();
+    }
+
+    if( element instanceof IPolyElement )
+      return ((IPolyElement)element).getGeometry();
+
+    return null;
   }
 
   public BuildingIDProvider getBuildingProvider( )

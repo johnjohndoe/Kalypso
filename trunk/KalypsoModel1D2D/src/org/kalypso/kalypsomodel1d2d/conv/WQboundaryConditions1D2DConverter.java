@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -68,28 +71,26 @@ public class WQboundaryConditions1D2DConverter
     m_boundaryConditionsIDProvider = boundaryConditionsIDProvider;
   }
 
-  public void writeWQbcFile( final OutputStream outputStream ) throws IOException
+  public void writeWQbcFile( final File outputFile ) throws IOException
   {
-    Formatter formatter = null;
-    try
+    try( OutputStream outputStream = new BufferedOutputStream( new FileOutputStream( outputFile ) ) )
     {
-      // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
-      // so no locale parameter for each format is needed any more .
-      formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US );
-      writeWQbcFile( formatter );
-      FormatterUtils.checkIoException( formatter );
-    }
-    finally
-    {
-      if( formatter != null )
-      {
-        // REMARK: do not check io-exception here, else other exception would be hidden by this on
-        formatter.close();
-      }
+      writeWQbcFile( outputStream );
     }
   }
 
-  public void writeWQbcFile( final Formatter format ) throws IOException
+  private void writeWQbcFile( final OutputStream outputStream ) throws IOException
+  {
+    // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
+    // so no locale parameter for each format is needed any more .
+    try( Formatter formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US ) )
+    {
+      writeWQbcFile( formatter );
+      FormatterUtils.checkIoException( formatter );
+    }
+  }
+
+  private void writeWQbcFile( final Formatter format ) throws IOException
   {
     format.format( "TIT     %s%n", "stage discharge data file" ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -116,8 +117,8 @@ public class WQboundaryConditions1D2DConverter
       while( tupleIterator.hasNext() )
       {
         final IRecord record = tupleIterator.next();
-        final BigDecimal w = (BigDecimal) record.getValue( wIndex );
-        final BigDecimal q = (BigDecimal) record.getValue( qIndex );
+        final BigDecimal w = (BigDecimal)record.getValue( wIndex );
+        final BigDecimal q = (BigDecimal)record.getValue( qIndex );
         format.format( "STD%13.4f%8.3f%n", w, q ); //$NON-NLS-1$
       }
 

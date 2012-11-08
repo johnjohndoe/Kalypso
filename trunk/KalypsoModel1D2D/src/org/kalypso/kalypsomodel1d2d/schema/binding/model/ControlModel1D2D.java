@@ -591,9 +591,6 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_p_bottom()
-   */
   @Override
   public Double get_P_BOTTOM( )
   {
@@ -601,23 +598,11 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     return property != null ? property : 0.0;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_RelaxationsFactor() changed to string
-   *      to allow more flexible expansion of "Relaxation Factor"
-   */
   @Override
   public String get_RelaxationsFactor( )
   {
     return (String)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
   }
-
-  // /**
-  // * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_RelaxationsFactor()
-  // */
-  // public Double get_RelaxationsFactor( )
-  // {
-  // return (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
-  // }
 
   @Override
   public boolean isSteadySelected( )
@@ -633,18 +618,12 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     return property != null ? property.booleanValue() : false;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#addRestartInfo()
-   */
   @Override
   public IRestartInfo addRestartInfo( )
   {
     return m_restartInfos.addNew( IRestartInfo.QNAME, IRestartInfo.class );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#calculateSWAN()
-   */
   @Override
   public boolean calculateSWAN( )
   {
@@ -654,9 +633,6 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     return ((Boolean)swan).booleanValue();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getVersionSWAN()
-   */
   @Override
   public String getVersionSWAN( )
   {

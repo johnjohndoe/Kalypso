@@ -86,23 +86,23 @@ public class RMAKalypsoSimulation implements ISimulation
 {
   public static final String ID = "org.kalypso.model1d2d"; //$NON-NLS-1$
 
-  public static final String INPUT_RMA_VERSION = PreRMAKalypso.OUTPUT_RMA_VERSION;
+  public static final String INPUT_RMA_VERSION = IRMAPreprocessing.OUTPUT_RMA_VERSION;
 
-  public static final String INPUT_MESH = PreRMAKalypso.OUTPUT_MESH;
+  public static final String INPUT_MESH = IRMAPreprocessing.OUTPUT_MESH;
 
-  public static final String INPUT_BC_WQ = PreRMAKalypso.OUTPUT_BC_WQ;
+  public static final String INPUT_BC_WQ = IRMAPreprocessing.OUTPUT_BC_WQ;
 
-  public static final String INPUT_BUILDINGS = PreRMAKalypso.OUTPUT_BUILDINGS;
+  public static final String INPUT_BUILDINGS = IRMAPreprocessing.OUTPUT_BUILDINGS;
 
-  public static final String INPUT_CONTROL = PreRMAKalypso.OUTPUT_CONTROL;
+  public static final String INPUT_CONTROL = IRMAPreprocessing.OUTPUT_CONTROL;
 
   public static final String INPUT_WORKING_DIR = "workingDirectory"; //$NON-NLS-1$
 
   public static final String OUTPUT_RESULTS = "results"; //$NON-NLS-1$
 
-  public static final String INPUT_WIND = PreRMAKalypso.OUTPUT_WIND;
+  public static final String INPUT_WIND = IRMAPreprocessing.OUTPUT_WIND;
 
-  public static final String INPUT_WIND_COORD = PreRMAKalypso.OUTPUT_WIND_COORD;
+  public static final String INPUT_WIND_COORD = IRMAPreprocessing.OUTPUT_WIND_COORD;
 
   private IGeoLog m_log;
 

@@ -158,7 +158,7 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
       final ExecutePreRMAKalypso executePreRMAKalypso = new ExecutePreRMAKalypso( m_serviceEndpoint, restartInfos );
       m_wpsRequest = executePreRMAKalypso.getWpsRequest();
       final IStatus preStatus = executePreRMAKalypso.run( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
-
+      // FIXME: fetch pre-log and use as status instead!
       // abort on error
       if( !preStatus.isOK() )
         return preStatus;
@@ -247,8 +247,7 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
   }
 
   /**
-   * @see org.kalypso.service.wps.refactoring.DefaultWpsObserver#handleStarted(org.eclipse.core.runtime.IProgressMonitor,
-   *      net.opengeospatial.wps.ExecuteResponseType)
+   * @see org.kalypso.service.wps.refactoring.DefaultWpsObserver#handleStarted(org.eclipse.core.runtime.IProgressMonitor, net.opengeospatial.wps.ExecuteResponseType)
    */
   @Override
   public void handleStarted( final IProgressMonitor monitor, final ExecuteResponseType exState ) throws WPSException
@@ -322,7 +321,8 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
     return m_log.log( IStatus.WARNING, CODE_RMA10S, message, location, null );
   }
 
-  private GM_Object getLocationFromStatusMsg( final String errorMessage ){
+  private GM_Object getLocationFromStatusMsg( final String errorMessage )
+  {
     GM_Object location = null;
     int posR = errorMessage.indexOf( RECHTSWERT_NAME );
     int posH = errorMessage.indexOf( HOCHWERT_NAME );
@@ -334,15 +334,18 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
       for( final String line : lines )
       {
         posR = line.indexOf( RECHTSWERT_NAME );
-        if( posR >= 0  ){
+        if( posR >= 0 )
+        {
           posH = line.indexOf( HOCHWERT_NAME );
 
-          final BigDecimal rw = toBigDecimal( line.substring( posR + lenR, posH ) ) ;
+          final BigDecimal rw = toBigDecimal( line.substring( posR + lenR, posH ) );
           final BigDecimal hw = toBigDecimal( line.substring( posH + lenH ) );
-          try{
+          try
+          {
             location = GeometryFactory.createGM_Point( rw.doubleValue(), hw.doubleValue(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
           }
-          catch (final Exception e) {
+          catch( final Exception e )
+          {
             location = null;
           }
           break;
@@ -355,11 +358,13 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
   private BigDecimal toBigDecimal( final String msg )
   {
     BigDecimal newBd = null;
-    try{
+    try
+    {
       newBd = new BigDecimal( msg.trim() );
     }
-    catch (final Exception e) {
-      final String msgNew = msg.trim().replace( ";", "" ).replace( ",", "." );  //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    catch( final Exception e )
+    {
+      final String msgNew = msg.trim().replace( ";", "" ).replace( ",", "." ); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       newBd = new BigDecimal( msgNew );
     }
     return newBd;
@@ -381,9 +386,6 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
     return lResStatus;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.sim.IKalypsoSimulationRunnerComposite#getCalculationTypeName()
-   */
   @Override
   public String getCalculationTypeName( )
   {

@@ -84,16 +84,19 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
       lIntCountAllElements += calculationUnit.size();
     }
 
+    // TODO: ugly: this 1d2d calc unit is heavily hashed, but the normal 2d calc unit is not...
+
     if( m_virtualElements == null || m_virtualElements.length != lIntCountAllElements )
     {
-
+      // FIXME: dangerous! as the simulation operates on the already loaded calculation units, these big arrays remain in memory forever
+      // TODO: it is probably enough to hash the items once before calculation
       m_virtualElements = new IFENetItem[lIntCountAllElements];
 
       // FIXME: check if this works correctly for sub-sub-units
       int pos = 0;
       for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
       {
-        IFENetItem[] elements = calculationUnit.getElements();
+        final IFENetItem[] elements = calculationUnit.getElements();
         System.arraycopy( elements, 0, m_virtualElements, pos, elements.length );
         pos += elements.length;
       }
@@ -142,9 +145,11 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   {
     if( member == null )
       return false;
+
     return getVirtualMemberIDs().contains( member.getId() );
   }
 
+  // FIXME: only used to show number of 1d elements... all this hashnig just for that...
   @Override
   public List<IElement1D> getElements1D( )
   {
@@ -169,6 +174,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
     }
   }
 
+  // FIXME: only used to show number of 1d elements... all this hashnig just for that...
   @Override
   public List<IPolyElement> getElements2D( )
   {
@@ -196,9 +202,8 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   public List<IFENetItem> query( final GM_Envelope env, List<IFENetItem> result )
   {
     if( result == null )
-    {
       result = new ArrayList<>( 100 );
-    }
+
     for( final ICalculationUnit subUnit : m_subCalculationUnits )
       subUnit.query( env, result );
     return result;

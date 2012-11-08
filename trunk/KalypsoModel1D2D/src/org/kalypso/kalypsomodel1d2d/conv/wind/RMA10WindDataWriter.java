@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.wind;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -49,7 +50,6 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
@@ -60,7 +60,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * @author ig
- *
  */
 public class RMA10WindDataWriter extends AbstractWindDataWriter
 {
@@ -68,12 +67,12 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
 
   private Formatter m_formatter = null;
 
-  public RMA10WindDataWriter( final FileObject outputDirectory, final GM_Envelope gmEnvelopeTarget, final Date[] dates, final List<IWindDataModelSystem> pListSystemsToWrite )
+  public RMA10WindDataWriter( final File outputDirectory, final GM_Envelope gmEnvelopeTarget, final Date[] dates, final List<IWindDataModelSystem> pListSystemsToWrite )
   {
     super( outputDirectory, gmEnvelopeTarget, dates, pListSystemsToWrite );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   @Override
   protected void writeWindFile( final IWindDataProvider windData ) throws IOException
   {
@@ -88,7 +87,7 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
       {
         m_descriptorWrittenGrid = lRMA10Walker.getGridDescriptorVisited();
         m_listRMA10Nodes = new ArrayList<>();
-        m_listRMA10Nodes.addAll( (List<GM_Position>) lResulWalk );
+        m_listRMA10Nodes.addAll( (List<GM_Position>)lResulWalk );
         setHasWritten( true );
       }
     }
@@ -111,7 +110,7 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
     final Calendar lCal = Calendar.getInstance();
     lCal.setTime( actDate );
     double lDoubleTime = lCal.get( Calendar.HOUR_OF_DAY );
-    lDoubleTime += ((double) lCal.get( Calendar.MINUTE )) / 60;
+    lDoubleTime += ((double)lCal.get( Calendar.MINUTE )) / 60;
     formatterWindData.format( "DY          %2.2f %7d %7d\n", lDoubleTime, lCal.get( Calendar.DAY_OF_YEAR ), lCal.get( Calendar.YEAR ) ); //$NON-NLS-1$
   }
 
@@ -174,9 +173,6 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
 
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.wind.AbstractWindDataWriter#beforeStart()
-   */
   @Override
   protected void doBeforeStart( )
   {
@@ -191,9 +187,6 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.wind.AbstractWindDataWriter#getFormatter(org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider)
-   */
   @Override
   protected Formatter getFormatter( final Object pObject ) throws IOException
   {
@@ -201,14 +194,14 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
     {
       if( m_formatter == null )
       {
-        final FileObject lFileWindData = m_fileOutputDir.resolveFile( ISimulation1D2DConstants.WIND_RMA10_File );
-        m_formatter = new Formatter( lFileWindData.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
+        final File lFileWindData = new File( m_fileOutputDir, ISimulation1D2DConstants.WIND_RMA10_File );
+        m_formatter = new Formatter( lFileWindData, Charset.defaultCharset().name(), Locale.US );
       }
     }
     else if( pObject instanceof String )
     {
-      final FileObject lFileWindDataAdditional = m_fileOutputDir.resolveFile( (String) pObject );
-      m_formatter = new Formatter( lFileWindDataAdditional.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
+      final File lFileWindDataAdditional = new File( m_fileOutputDir, (String)pObject );
+      m_formatter = new Formatter( lFileWindDataAdditional, Charset.defaultCharset().name(), Locale.US );
     }
     else
     {
@@ -217,5 +210,4 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
 
     return m_formatter;
   }
-
 }

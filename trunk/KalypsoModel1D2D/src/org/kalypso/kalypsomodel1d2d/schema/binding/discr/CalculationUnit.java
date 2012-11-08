@@ -118,6 +118,9 @@ public abstract class CalculationUnit extends Feature_Impl implements ICalculati
   public boolean contains( final IFENetItem member )
   {
     Assert.throwIAEOnNullParam( member, "member" ); //$NON-NLS-1$
+
+    // FIXME: very slow
+
     return elementsInternal().containsOrLinksTo( member );
   }
 

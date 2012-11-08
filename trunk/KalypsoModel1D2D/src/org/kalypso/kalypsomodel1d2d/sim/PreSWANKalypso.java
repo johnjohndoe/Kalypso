@@ -136,6 +136,7 @@ public class PreSWANKalypso implements ISimulation
       // reload such models.
       manager = VFSUtilities.getNewManager();
       final String lStrURL = (String)inputProvider.getInputForID( OUTPUT_PATH_RMA );
+
       final FileObject lFileObjPreResultsDir = manager.resolveFile( lStrURL );
 
       final URL controlUrl = (URL)inputProvider.getInputForID( "control" ); //$NON-NLS-1$
@@ -143,8 +144,12 @@ public class PreSWANKalypso implements ISimulation
       final IControlModelGroup controlModelGroup = (IControlModelGroup)controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
       m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
 
+      // FIXME: arg! who the HELL does this! this is really worst / bad / evil for of copy paste! Shame on you + exclusion from the club of programmers!
+      // TODO: use IPreData instead!
+
       final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
+      // / FIXME us pre data instead!
       m_discretisationModel = null;
       try
       {
@@ -155,7 +160,7 @@ public class PreSWANKalypso implements ISimulation
       }
       if( m_discretisationModel == null )
       {
-        final URL meshUrl = (URL)inputProvider.getInputForID( PreRMAKalypso.INPUT_MESH );
+        final URL meshUrl = (URL)inputProvider.getInputForID( IRMAPreprocessing.INPUT_MESH );
         final GMLWorkspace discWorkspace = GmlSerializer.createGMLWorkspace( meshUrl, null );
         m_discretisationModel = (IFEDiscretisationModel1d2d)discWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
       }
@@ -170,7 +175,7 @@ public class PreSWANKalypso implements ISimulation
       }
       if( m_flowRelationshipModel == null )
       {
-        final URL flowRelURL = (URL)inputProvider.getInputForID( PreRMAKalypso.INPUT_FLOW_RELATIONSHIPS );
+        final URL flowRelURL = (URL)inputProvider.getInputForID( IRMAPreprocessing.INPUT_FLOW_RELATIONSHIPS );
         final GMLWorkspace flowRelWorkspace = GmlSerializer.createGMLWorkspace( flowRelURL, null );
         m_flowRelationshipModel = (IFlowRelationshipModel)flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
       }
@@ -199,7 +204,7 @@ public class PreSWANKalypso implements ISimulation
       }
       if( m_windRelationshipModel == null )
       {
-        final URL windURL = (URL)inputProvider.getInputForID( PreRMAKalypso.INPUT_WIND_RELATIONSHIPS );
+        final URL windURL = (URL)inputProvider.getInputForID( IRMAPreprocessing.INPUT_WIND_RELATIONSHIPS );
         final GMLWorkspace windWorkspace = GmlSerializer.createGMLWorkspace( windURL, null );
         m_windRelationshipModel = (IWindModel)windWorkspace.getRootFeature().getAdapter( IWindModel.class );
       }
@@ -207,9 +212,10 @@ public class PreSWANKalypso implements ISimulation
       if( inputProvider.hasID( ADDITIONAL_DATA_FILE ) )
         m_additionalDataURL = (URL)inputProvider.getInputForID( ADDITIONAL_DATA_FILE );
 
+      // FIXME: makes not much sense: we know that it is a java file, so just use it!
       final FileObject lFileObjWorkingDir = manager.toFileObject( tmpdir );
 
-      writeSWANFiles( lFileObjWorkingDir, lFileObjPreResultsDir, progressMonitor );
+      writeSWANFiles( tmpdir, lFileObjWorkingDir, lFileObjPreResultsDir, progressMonitor );
 
       resultEater.addResult( OUTPUT_PATH_SWAN, new File( tmpdir.toURI() ) );
 
@@ -374,7 +380,7 @@ public class PreSWANKalypso implements ISimulation
     return lListPositions;
   }
 
-  private void writeSWANFiles( final FileObject pFileObjWorkingDir, final FileObject pFileObjPreResultsDir, final IProgressMonitor monitor ) throws CoreException
+  private void writeSWANFiles( final File tmpdir, final FileObject pFileObjWorkingDir, final FileObject pFileObjPreResultsDir, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
     ProgressUtilities.worked( progress, 1 );
@@ -412,7 +418,7 @@ public class PreSWANKalypso implements ISimulation
       writeAdditionaData( pFileObjWorkingDir, resultManager, progress );
 
       ProgressUtilities.worked( progress, 60 );
-      final SWANWindDataWriter lWindWriter = writeWindData( pFileObjWorkingDir );
+      final SWANWindDataWriter lWindWriter = writeWindData( tmpdir );
 
       ProgressUtilities.worked( progress, 10 );
 
@@ -435,10 +441,10 @@ public class PreSWANKalypso implements ISimulation
     }
   }
 
-  private SWANWindDataWriter writeWindData( final FileObject pFileObjWorkingDir ) throws IOException
+  private SWANWindDataWriter writeWindData( final File tmpdir ) throws IOException
   {
     final GM_Envelope lGmEnvelope = m_controlModel.getCalculationUnit().getBoundingBox();
-    final SWANWindDataWriter lWindWriter = new SWANWindDataWriter( pFileObjWorkingDir, lGmEnvelope, m_calculatedSteps, m_windRelationshipModel.getWindDataModelSystems() );
+    final SWANWindDataWriter lWindWriter = new SWANWindDataWriter( tmpdir, lGmEnvelope, m_calculatedSteps, m_windRelationshipModel.getWindDataModelSystems() );
     lWindWriter.setWindDataModel( m_windRelationshipModel );
     lWindWriter.write( m_controlModel.isConstantWindSWAN() );
     return lWindWriter;

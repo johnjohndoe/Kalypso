@@ -170,20 +170,10 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
   @Override
   public void writeMesh( final File outputFile ) throws CoreException, IOException
   {
-    Formatter formatter = null;
-    try
+    try( Formatter formatter = new Formatter( outputFile, Charset.defaultCharset().name(), Locale.US ) )
     {
-      formatter = new Formatter( outputFile, Charset.defaultCharset().name(), Locale.US );
       writeRMA10sModel( formatter );
       FormatterUtils.checkIoException( formatter );
-    }
-    finally
-    {
-      if( formatter != null )
-      {
-        // REMARK: do not check io-exception here, else other exception would be hidden by this on
-        formatter.close();
-      }
     }
   }
 

@@ -94,6 +94,7 @@ public interface IBoundaryCondition extends IFlowRelationship
 
   public IObservation<TupleResult> getObservation( );
 
+  // FIXME: ugly and evil: who does such a thing?! using string here....
   // public double getStationaryCondition( );
   public String getStationaryCondition( );
 
@@ -101,6 +102,7 @@ public interface IBoundaryCondition extends IFlowRelationship
 
   public void setInflowVelocity( final double value );
 
+  // FIXME: ugly and evil: who does such a thing?! using string here....
   // public void setStationaryCondition( double statCond );
   public void setStationaryCondition( final String statCond );
 

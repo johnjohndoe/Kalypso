@@ -43,6 +43,8 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -86,6 +88,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -101,11 +104,6 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConstants
 {
   private final ResultManager m_resultManager;
-
-  public ResultManager getResultManager( )
-  {
-    return m_resultManager;
-  }
 
   private IStatus m_simulationStatus;
 
@@ -129,11 +127,14 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
 
   protected boolean m_evaluateFullResults;
 
+  private final DateFormat m_timeStepFormat = new SimpleDateFormat( ISimulation1D2DConstants.TIMESTEP_DISPLAY_FORMAT );
+
   protected RMA10ResultPage( final String pageName, final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IGeoLog geoLog, final IContainer unitFolder, final IScenarioDataProvider caseDataProvider, final RMA10CalculationWizard parentWizard ) throws CoreException
   {
     super( pageName );
     final ResultManager resultManager = new ResultManager( fileObjectRMA, fileObjectSWAN, caseDataProvider, geoLog );
 
+    m_timeStepFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
     m_resultManager = resultManager;
     m_unitFolder = unitFolder;
     m_caseDataProvider = caseDataProvider;
@@ -147,9 +148,6 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.2" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -181,9 +179,6 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
     deleteAllCheck.setSelection( m_deleteAllResults );
     deleteAllCheck.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -198,9 +193,6 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
     evaluateFullCheck.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.19" ) ); //$NON-NLS-1$
     evaluateFullCheck.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -225,25 +217,23 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
     m_resultProcessViewer.setContentProvider( new ArrayContentProvider() );
     m_resultProcessViewer.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
         if( element instanceof Date )
         {
-          final Date date = (Date) element;
+          final Date date = (Date)element;
           if( date.equals( MAXI_DATE ) )
             return Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.9" ); //$NON-NLS-1$
           else if( date.equals( STEADY_DATE ) )
             return Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.10" ); //$NON-NLS-1$
+
+          return getTimeStepFormat().format( date );
         }
+
         return super.getText( element );
       }
-    }
-
-    );
+    } );
 
     try
     {
@@ -259,7 +249,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
     getContainer().updateButtons();
 
     /* Info View for one result */
-    final ResultInfoViewer infoViewer = new ResultInfoViewer( resultChooserComp, SWT.NONE );
+    final ResultInfoViewer infoViewer = new ResultInfoViewer( resultChooserComp, SWT.NONE, m_timeStepFormat );
 
     if( m_selection != null )
       m_resultProcessViewer.setCheckedElements( m_selection );
@@ -269,7 +259,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleSelectionChanged( (IStructuredSelection) event.getSelection(), infoViewer );
+        handleSelectionChanged( (IStructuredSelection)event.getSelection(), infoViewer );
       }
     } );
 
@@ -285,6 +275,11 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
     addSelectionButtons( m_resultProcessViewer, resultChooserGroup );
 
     setControl( composite );
+  }
+
+  protected DateFormat getTimeStepFormat( )
+  {
+    return m_timeStepFormat;
   }
 
   protected void handleSelectionChanged( final IStructuredSelection selection, final ResultInfoViewer infoViewer )
@@ -338,14 +333,12 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
   /**
    * Creates a new button with the given id.
    * <p>
-   * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers it for
-   * selection events including button presses, and registers default buttons with its shell. The button id is stored as
-   * the button's client data. If the button id is <code>IDialogConstants.CANCEL_ID</code>, the new button will be
-   * accessible from <code>getCancelButton()</code>. If the button id is <code>IDialogConstants.OK_ID</code>, the new
-   * button will be accessible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
-   * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
+   * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers it for selection events including button presses, and registers default buttons with its
+   * shell. The button id is stored as the button's client data. If the button id is <code>IDialogConstants.CANCEL_ID</code>, the new button will be accessible from <code>getCancelButton()</code>. If
+   * the button id is <code>IDialogConstants.OK_ID</code>, the new button will be accessible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a <code>GridLayout</code>
+   * and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
-   *
+   * 
    * @param parent
    *          the parent composite
    * @param id
@@ -361,7 +354,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
   protected Button createButton( final Composite parent, final int id, final String label, final boolean defaultButton )
   {
     // increment the number of columns in the button bar
-    ((GridLayout) parent.getLayout()).numColumns++;
+    ((GridLayout)parent.getLayout()).numColumns++;
     final Button button = new Button( parent, SWT.PUSH );
     button.setText( label );
     button.setFont( JFaceResources.getDialogFont() );
@@ -386,7 +379,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
     for( final Object element : selection )
     {
       if( element instanceof Date )
-        dateList.add( (Date) element );
+        dateList.add( (Date)element );
     }
 
     m_selection = dateList.toArray( new Date[dateList.size()] );
@@ -463,7 +456,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
       final Object data = items[i].getData();
       if( data instanceof Date )
       {
-        final Date date = (Date) data;
+        final Date date = (Date)data;
         if( date == MAXI_DATE || date == STEADY_DATE )
         {
           start++;
@@ -521,7 +514,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
     final IWizardContainer container = getContainer();
     if( container instanceof WizardDialog2 )
     {
-      final WizardDialog2 wd2 = (WizardDialog2) container;
+      final WizardDialog2 wd2 = (WizardDialog2)container;
       m_resultStatus = wd2.executeUnblocked( true, false, processingOperation );
     }
     else
@@ -535,7 +528,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
       try
       {
         // set the dirty flag of the results model
-        ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+        ((ICommandPoster)m_caseDataProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
       }
       catch( final InvocationTargetException e )
       {
@@ -554,7 +547,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
 
       if( container instanceof WizardDialog2 )
       {
-        final WizardDialog2 wd2 = (WizardDialog2) container;
+        final WizardDialog2 wd2 = (WizardDialog2)container;
         m_resultStatus = wd2.executeUnblocked( false, false, dataOperation );
       }
       else
@@ -564,7 +557,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
       try
       {
         m_unitFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
-        ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+        ((ICommandPoster)m_caseDataProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
         m_caseDataProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
       }
       catch( final CoreException e )

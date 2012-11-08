@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -58,15 +61,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author ilya
- * 
  */
 public class SWANResults2RmaConverter
 {
-  private Map<String, Map<GM_Position, Double>> m_mapSWANResults;
+  private final Map<String, Map<GM_Position, Double>> m_mapSWANResults;
 
-  private List<GM_Position> m_listOriginalPositions;
+  private final List<GM_Position> m_listOriginalPositions;
 
-  private Date[] m_arraySteps;
+  private final Date[] m_arraySteps;
 
   private String[] m_arrayNamesForOutput = new String[] { "WForce_x", "WForce_y" }; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -93,10 +95,10 @@ public class SWANResults2RmaConverter
     m_doubleShiftY = pDoubleShiftY;
     if( m_mapSWANResults.size() > 0 )
     {
-      Iterator<Map<GM_Position, Double>> lIterator = m_mapSWANResults.values().iterator();
+      final Iterator<Map<GM_Position, Double>> lIterator = m_mapSWANResults.values().iterator();
       if( lIterator.hasNext() )
       {
-        Map<GM_Position, Double> lMapValues = lIterator.next();
+        final Map<GM_Position, Double> lMapValues = lIterator.next();
         m_intAmountOfValues = lMapValues.size();
       }
     }
@@ -104,29 +106,26 @@ public class SWANResults2RmaConverter
       m_arrayNamesForOutput = pListValuesNames.toArray( new String[pListValuesNames.size()] );
   }
 
-  public void writeRMAWaterSurfaceASCDataFile( final OutputStream pOutputStream ) throws IOException
+  public void writeRMAWaterSurfaceASCDataFile( final File outputFile ) throws IOException
   {
-    Formatter formatter = null;
-    try
+    try( OutputStream outputStream = new BufferedOutputStream( new FileOutputStream( outputFile ) ) )
     {
-      // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
-      // so no local parameter for each format is needed any more .
-
-      formatter = new Formatter( pOutputStream, Charset.defaultCharset().name(), Locale.US );
-      writeASCFile( formatter );
-      FormatterUtils.checkIoException( formatter );
-    }
-    finally
-    {
-      if( formatter != null )
-      {
-        // REMARK: do not check io-exception here, else other exception would be hidden by this on
-        formatter.close();
-      }
+      writeRMAWaterSurfaceASCDataFile( outputStream );
     }
   }
 
-  private void writeASCFile( Formatter formatter )
+  private void writeRMAWaterSurfaceASCDataFile( final OutputStream pOutputStream ) throws IOException
+  {
+    // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
+    // so no local parameter for each format is needed any more .
+    try( Formatter formatter = new Formatter( pOutputStream, Charset.defaultCharset().name(), Locale.US ) )
+    {
+      writeASCFile( formatter );
+      FormatterUtils.checkIoException( formatter );
+    }
+  }
+
+  private void writeASCFile( final Formatter formatter )
   {
     writeHeader( formatter );
     if( m_arraySteps != null )
@@ -141,7 +140,7 @@ public class SWANResults2RmaConverter
 
   }
 
-  private void writeEndLine( Formatter formatter )
+  private void writeEndLine( final Formatter formatter )
   {
     formatter.format( "ENDDATA\n" ); //$NON-NLS-1$
   }
@@ -150,9 +149,9 @@ public class SWANResults2RmaConverter
    * 01-02 ID A "DY" 03-08 Blank 09-16 IDYY I Julian day of year 17-24 TTT R Hour of day 25-32 NV I Number of external
    * stress values 33-40 IYDD I Year
    */
-  private void writeDateLine( Formatter formatter, Date actDate )
+  private void writeDateLine( final Formatter formatter, final Date actDate )
   {
-    Calendar lCal = Calendar.getInstance();
+    final Calendar lCal = Calendar.getInstance();
     lCal.setTime( actDate );
     formatter.format( "DY     %7d %7d %7d %7d", lCal.get( Calendar.DAY_OF_YEAR ), lCal.get( Calendar.HOUR_OF_DAY ), m_intAmountOfValues, lCal.get( Calendar.YEAR ) ); // actDate.getHours() //$NON-NLS-1$
                                                                                                                                                                       // actDate.getYear()
@@ -164,21 +163,20 @@ public class SWANResults2RmaConverter
    * 33-48 STR21 R Surface traction in y-direction (Pascals). 49-56 SPWP R Spectral peak wave period (secs) 57-64 AWL R
    * Average wave length (m) 65-72 SWH R Significant wave height (m) 73-80 WVDR R Wave direction measure counter
    * clockwise from the x –axis. This is the direction the waves are blowing to (deg)
-   * 
    * real data output should be provided only for surface tractions - because the reading procedure in RMA in the fact
    * for now needs only this information.
    */
-  private void writeData( Formatter formatter, Date actDate )
+  private void writeData( final Formatter formatter, final Date actDate )
   {
-    String lStrActDatePartName = getSWANFormatedDate( actDate );
+    final String lStrActDatePartName = getSWANFormatedDate( actDate );
     for( int i = 0; i < m_listOriginalPositions.size(); ++i )
     {
-      String lStrFormatedDataLine = getActLine( i, lStrActDatePartName );
+      final String lStrFormatedDataLine = getActLine( i, lStrActDatePartName );
       formatter.format( "ST      %7d %s\n", i, lStrFormatedDataLine ); //$NON-NLS-1$
     }
   }
 
-  private String getActLine( final int pIntIndex, String pStrActDatePartName )
+  private String getActLine( final int pIntIndex, final String pStrActDatePartName )
   {
     String lStrRes = ""; //$NON-NLS-1$
     GM_Position lGMPosition = m_listOriginalPositions.get( pIntIndex );
@@ -186,13 +184,13 @@ public class SWANResults2RmaConverter
 
     for( final String lStrName : m_arrayNamesForOutput )
     {
-      Map<GM_Position, Double> lMapAct = m_mapSWANResults.get( lStrName + pStrActDatePartName );
+      final Map<GM_Position, Double> lMapAct = m_mapSWANResults.get( lStrName + pStrActDatePartName );
       lStrRes += String.format( "%15f ", lMapAct.get( lGMPosition ) ); //$NON-NLS-1$
     }
     return lStrRes;
   }
 
-  private void writeHeader( Formatter formatter )
+  private void writeHeader( final Formatter formatter )
   {
     formatter.format( "HEADWT    A\n" ); //$NON-NLS-1$
   }
@@ -202,14 +200,14 @@ public class SWANResults2RmaConverter
     String lStrTimeRes = ""; //$NON-NLS-1$
     if( pObjTime instanceof String )
     {
-      lStrTimeRes = (String) pObjTime;
+      lStrTimeRes = (String)pObjTime;
     }
     else if( pObjTime instanceof Date )
     {
       SimpleDateFormat lDateFormatter;
       lDateFormatter = new SimpleDateFormat( "_yyyyMMdd_HHmmss" ); //$NON-NLS-1$
 
-      Date lDate = (Date) pObjTime;
+      final Date lDate = (Date)pObjTime;
       lStrTimeRes = lDateFormatter.format( lDate );
     }
     return lStrTimeRes;

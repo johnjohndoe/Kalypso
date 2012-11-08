@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.wind;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +49,6 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
 
-import org.apache.commons.vfs2.FileObject;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
@@ -57,7 +57,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
  * @author ig
- *
  */
 abstract public class AbstractWindDataWriter implements IWindDataWriter
 {
@@ -65,7 +64,7 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
 
   protected List<IWindDataModelSystem> m_listWindSystemsToWrite = null;
 
-  protected FileObject m_fileOutputDir = null;
+  protected File m_fileOutputDir = null;
 
   protected RectifiedGridDomain m_descriptorWrittenGrid = null;
 
@@ -81,7 +80,7 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
 
   protected int m_intScale = 1;
 
-  protected AbstractWindDataWriter( final FileObject pOutputDirectory, final GM_Envelope pGmEnvelopeTarget, final Date[] pDates, final List<IWindDataModelSystem> pListSystemsToWrite )
+  protected AbstractWindDataWriter( final File pOutputDirectory, final GM_Envelope pGmEnvelopeTarget, final Date[] pDates, final List<IWindDataModelSystem> pListSystemsToWrite )
   {
     m_listWrittenDates = new ArrayList<>();
     m_gmEnvelope = pGmEnvelopeTarget;
@@ -90,10 +89,6 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
     m_listWindSystemsToWrite = pListSystemsToWrite;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter#write(org.apache.commons.vfs.FileObject,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, java.util.Date[])
-   */
   @Override
   public boolean write( final boolean pBoolConstantWind ) throws IOException
   {
@@ -129,7 +124,7 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
 
       for( final Object lWindDataObject : lWindSystem.getWindDataModels() )
       {
-        final IWindDataProvider lWindData = (IWindDataProvider) lWindDataObject;
+        final IWindDataProvider lWindData = (IWindDataProvider)lWindDataObject;
         if( lWindData.getDateStep().getTime() >= m_dates[0].getTime() && lWindData.getDateStep().getTime() <= m_dates[m_dates.length - 1].getTime() )
         {
           writeWindFile( lWindData );
@@ -167,37 +162,18 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
    */
   abstract protected Formatter getFormatter( final Object pObject ) throws IOException;
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter#getListWritenDates()
-   */
   @Override
   public List<Date> getListWritenDates( )
   {
     return m_listWrittenDates;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter#getWrittenGrid()
-   */
   @Override
   public RectifiedGridDomain getWrittenGrid( )
   {
     return m_descriptorWrittenGrid;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter#setOutputDirectory(org.apache.commons.vfs.FileObject)
-   */
-  @Override
-  public void setOutputDirectory( final FileObject outputDirectory )
-  {
-    m_fileOutputDir = outputDirectory;
-
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter#setWindDataProvider(org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataCollectionProvider)
-   */
   @Override
   public void setWindDataModel( final IWindModel pWindModel ) throws IllegalArgumentException
   {
@@ -211,7 +187,6 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
 
   protected final void setHasWritten( final boolean pHasWritten )
   {
-    this.m_hasWritten = pHasWritten;
+    m_hasWritten = pHasWritten;
   }
-
 }
