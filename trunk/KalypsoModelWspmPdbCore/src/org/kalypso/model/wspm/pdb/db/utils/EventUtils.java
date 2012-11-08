@@ -64,16 +64,6 @@ public final class EventUtils
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * Load the event with the given name from the session
-   */
-  public static Event findEventByName( final Session session, final String name )
-  {
-    final Criteria criteria = session.createCriteria( Event.class );
-    criteria.add( Restrictions.eq( Event.PROPERTY_NAME, name ) );
-    return (Event)criteria.uniqueResult();
-  }
-
   public static Event findEventByName( final Event[] events, final String name )
   {
     for( final Event event : events )
@@ -136,5 +126,12 @@ public final class EventUtils
 
     final List<Event> list = criteria.list();
     return list.toArray( new Event[list.size()] );
+  }
+
+  public static Event findEventById( final Session session, final long id )
+  {
+    final Criteria criteria = session.createCriteria( Event.class );
+    criteria.add( Restrictions.eq( Event.PROPERTY_ID, id ) );
+    return (Event)criteria.uniqueResult();
   }
 }
