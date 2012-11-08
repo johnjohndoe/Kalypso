@@ -49,15 +49,15 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 /**
  * @author Gernot Belger
  */
-class EventByNameFinder implements IWaterBodyTreeVisitor
+class EventByIdFinder implements IWaterBodyTreeVisitor
 {
-  private final String m_searchName;
+  private final long m_searchId;
 
   private Event m_result;
 
-  public EventByNameFinder( final String searchName )
+  public EventByIdFinder( final long searchId )
   {
-    m_searchName = searchName;
+    m_searchId = searchId;
   }
 
   @Override
@@ -67,7 +67,7 @@ class EventByNameFinder implements IWaterBodyTreeVisitor
 
     for( final Event event : events )
     {
-      if( m_searchName.equals( event.getName() ) )
+      if( m_searchId == event.getId() )
       {
         m_result = event;
         throw new CancelException();

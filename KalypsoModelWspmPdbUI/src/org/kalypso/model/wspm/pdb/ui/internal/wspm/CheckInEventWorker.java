@@ -127,7 +127,7 @@ public class CheckInEventWorker implements ICheckInWorker
   @Override
   public void configureSelector( final ElementSelector selector )
   {
-    selector.addEventName( m_data.getEvent().getName() );
+    selector.addEventId( m_data.getEvent().getId() );
   }
 
   @Override

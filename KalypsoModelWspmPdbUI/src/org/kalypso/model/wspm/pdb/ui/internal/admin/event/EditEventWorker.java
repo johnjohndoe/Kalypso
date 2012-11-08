@@ -70,7 +70,7 @@ public class EditEventWorker implements IEditWorker
 {
   private final Event m_selectedItem;
 
-  private String m_nameToSelect;
+  private long m_idToSelect;
 
   Event m_clone;
 
@@ -85,7 +85,7 @@ public class EditEventWorker implements IEditWorker
     m_connection = connection;
     m_selectedItem = selectedItem;
     m_username = username;
-    m_nameToSelect = m_selectedItem.getName();
+    m_idToSelect = m_selectedItem.getId();
   }
 
   @Override
@@ -99,7 +99,7 @@ public class EditEventWorker implements IEditWorker
   {
     monitor.subTask( Messages.getString( "EditEventWorker_1" ) ); //$NON-NLS-1$
 
-    m_eventToEdit = EventUtils.findEventByName( session, m_selectedItem.getName() );
+    m_eventToEdit = EventUtils.findEventById( session, m_selectedItem.getId() );
 
     final Collection<State> states = WaterBodyUtils.getPossibleStates( m_eventToEdit.getWaterBody() );
 
@@ -115,14 +115,14 @@ public class EditEventWorker implements IEditWorker
   @Override
   public void afterWizardOK( )
   {
-    m_nameToSelect = m_clone.getName();
+    m_idToSelect = m_clone.getId();
     uncloneData();
   }
 
   @Override
   public void addElementsToSelect( final ElementSelector selector )
   {
-    selector.addEventName( m_nameToSelect );
+    selector.addEventId( m_idToSelect );
   }
 
   private Event cloneForEdit( final Event other, final Collection<State> states )
