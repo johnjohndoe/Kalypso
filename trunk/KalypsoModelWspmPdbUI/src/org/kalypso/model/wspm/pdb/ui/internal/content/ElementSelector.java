@@ -56,7 +56,7 @@ public class ElementSelector
 
   private final Collection<String> m_stateNames = new ArrayList<>();
 
-  private final Collection<String> m_eventNames = new ArrayList<>();
+  private final Collection<Long> m_eventIds = new ArrayList<>();
 
   public void addWaterBodyName( final String waterBodyName )
   {
@@ -68,9 +68,9 @@ public class ElementSelector
     m_stateNames.add( stateName );
   }
 
-  public void addEventName( final String eventName )
+  public void addEventId( final long eventId )
   {
-    m_eventNames.add( eventName );
+    m_eventIds.add( eventId );
   }
 
   public Object[] getElements( final ConnectionInput input )
@@ -83,8 +83,8 @@ public class ElementSelector
     for( final String stateName : m_stateNames )
       elements.add( input.getState( stateName ) );
 
-    for( final String eventName : m_eventNames )
-      elements.add( input.getEvent( eventName ) );
+    for( final Long eventId : m_eventIds )
+      elements.add( input.getEvent( eventId ) );
 
     /* null might have been added, remove it now */
     elements.remove( null );
@@ -97,11 +97,11 @@ public class ElementSelector
     for( final Object element : elements )
     {
       if( element instanceof WaterBody )
-        addWaterBodyName( ((WaterBody) element).getName() );
+        addWaterBodyName( ((WaterBody)element).getName() );
       else if( element instanceof State )
-        addStateName( ((State) element).getName() );
+        addStateName( ((State)element).getName() );
       else if( element instanceof Event )
-        addEventName( ((Event) element).getName() );
+        addEventId( ((Event)element).getId() );
     }
   }
 }

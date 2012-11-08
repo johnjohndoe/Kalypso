@@ -81,9 +81,9 @@ public class WaterBodyStructure implements IWaterBodyTreeVisitor, IWaterBodyStru
     return visitor.getResult();
   }
 
-  public Event findEventName( final String eventName )
+  public Event findEventById( final long eventName )
   {
-    final EventByNameFinder visitor = new EventByNameFinder( eventName );
+    final EventByIdFinder visitor = new EventByIdFinder( eventName );
     m_rootNode.accept( visitor );
     return visitor.getResult();
   }
@@ -93,7 +93,7 @@ public class WaterBodyStructure implements IWaterBodyTreeVisitor, IWaterBodyStru
   {
     if( waterBody == null || waterBody instanceof WaterBody )
     {
-      final WaterBodyTreeNode node = findNode( (WaterBody) waterBody );
+      final WaterBodyTreeNode node = findNode( (WaterBody)waterBody );
       return node.getAllChildren();
     }
 

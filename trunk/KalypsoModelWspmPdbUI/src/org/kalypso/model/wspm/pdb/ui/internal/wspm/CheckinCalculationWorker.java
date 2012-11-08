@@ -116,7 +116,7 @@ public class CheckinCalculationWorker implements ICheckInWorker
     final MODE calcMode = calculation.getCalcMode();
     if( calcMode != MODE.WATERLEVEL )
     {
-      final IValuePropertyType modeProperty = (IValuePropertyType) calculation.getFeatureType().getProperty( TuhhCalculation.PROPERTY_MODE );
+      final IValuePropertyType modeProperty = (IValuePropertyType)calculation.getFeatureType().getProperty( TuhhCalculation.PROPERTY_MODE );
       final Map<Object, String> labelHash = PropertyUtils.createComboEntries( modeProperty );
       final String label = labelHash.get( MODE.WATERLEVEL.name() );
 
@@ -159,7 +159,7 @@ public class CheckinCalculationWorker implements ICheckInWorker
   @Override
   public void configureSelector( final ElementSelector selector )
   {
-    selector.addEventName( m_data.getEvent().getName() );
+    selector.addEventId( m_data.getEvent().getId() );
   }
 
   @Override

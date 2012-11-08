@@ -91,6 +91,8 @@ public interface EventConstants
   // FIXME
   int DESCRIPTION_LIMIT = 256;
 
+  String PROPERTY_ID = "id"; //$NON-NLS-1$
+
   String PROPERTY_NAME = "name"; //$NON-NLS-1$
 
   String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$

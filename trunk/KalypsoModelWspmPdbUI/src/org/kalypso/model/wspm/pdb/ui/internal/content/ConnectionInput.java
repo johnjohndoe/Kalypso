@@ -140,12 +140,12 @@ public class ConnectionInput
     return m_waters.findWaterBodyByName( waterBodyName );
   }
 
-  public Event getEvent( final String eventName )
+  public Event getEvent( final Long eventId )
   {
-    if( eventName == null )
+    if( eventId == null )
       return null;
-    // FIXME: not unique, so we may find the wrong one here!
-    return m_waters.findEventName( eventName );
+
+    return m_waters.findEventById( eventId );
   }
 
   public WaterBodyStructure getStructure( )

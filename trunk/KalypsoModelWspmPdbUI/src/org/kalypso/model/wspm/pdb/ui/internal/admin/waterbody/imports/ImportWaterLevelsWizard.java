@@ -247,7 +247,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
     /* Select new element in tree */
     final ElementSelector selector = new ElementSelector();
-    selector.addEventName( event.getName() );
+    selector.addEventId( event.getId() );
     m_viewer.reload( selector );
 
     return !status.matches( IStatus.ERROR );
@@ -257,7 +257,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   {
     final SaveEventOperation operation = createCheckinOperation( connection, event );
 
-    final PdbExecutorOperation runnable = new PdbExecutorOperation( connection, operation, Messages.getString("ImportWaterLevelsWizard.6") ); //$NON-NLS-1$
+    final PdbExecutorOperation runnable = new PdbExecutorOperation( connection, operation, Messages.getString( "ImportWaterLevelsWizard.6" ) ); //$NON-NLS-1$
 
     return RunnableContextHelper.execute( getContainer(), true, false, runnable );
   }
