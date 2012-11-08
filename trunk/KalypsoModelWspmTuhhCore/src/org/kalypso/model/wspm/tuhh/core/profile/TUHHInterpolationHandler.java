@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IInterpolationHandler;
@@ -115,8 +116,8 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
     if( !(v1 instanceof Number) || !(v2 instanceof Number) )
       return null;
 
-    final Number n1 = (Number) v1;
-    final Number n2 = (Number) v2;
+    final Number n1 = (Number)v1;
+    final Number n2 = (Number)v2;
 
     final double d1 = n1.doubleValue();
     final double d2 = n2.doubleValue();
@@ -130,9 +131,15 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
     if( template.getClass() == Double.class )
       return Double.valueOf( value );
     if( template.getClass() == BigDecimal.class )
-      return BigDecimal.valueOf( value ).setScale( ((BigDecimal) template).scale(), BigDecimal.ROUND_HALF_UP );
+      return BigDecimal.valueOf( value ).setScale( ((BigDecimal)template).scale(), BigDecimal.ROUND_HALF_UP );
     if( template.getClass() == Integer.class )
-      return Integer.valueOf( (int) Math.round( value ) );
+      return Integer.valueOf( (int)Math.round( value ) );
     return template;
+  }
+
+  @Override
+  public String[] getExtrapolationsIDs( )
+  {
+    return ArrayUtils.addAll( INTERPOLATION_IDS, CONSTANT_IDS );
   }
 }
