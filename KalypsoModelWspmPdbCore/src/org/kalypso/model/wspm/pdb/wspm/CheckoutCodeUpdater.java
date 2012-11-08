@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.gml.classifications.ICodeClass;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
@@ -85,6 +86,11 @@ public class CheckoutCodeUpdater
   {
     final String description = m_code.getDescription();
     final String oldDescription = m_codeClass.getComment();
+
+    if( StringUtils.isEmpty( oldDescription ) && StringUtils.isEmpty( description ) )
+      return;
+
+    // gml resets to null if empty -> prevent to many false changes
     if( ObjectUtils.equals( description, oldDescription ) )
       return;
 
