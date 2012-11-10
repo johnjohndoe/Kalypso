@@ -68,7 +68,7 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
   {
     final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
     final IWorkbenchPage page = window.getActivePage();
-    final TimeseriesManagementView managementView = (TimeseriesManagementView) page.findView( TimeseriesManagementView.ID );
+    final TimeseriesManagementView managementView = (TimeseriesManagementView)page.findView( TimeseriesManagementView.ID );
     if( managementView == null )
       throw new ExecutionException( "Failed to access timeseries view" ); //$NON-NLS-1$
 
@@ -77,7 +77,7 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
     try
     {
       /* Hook properties view and management view */
-      final TreePropertiesView propertiesView = (TreePropertiesView) page.showView( TreePropertiesView.ID );
+      final TreePropertiesView propertiesView = (TreePropertiesView)page.showView( TreePropertiesView.ID );
       if( propertiesView == null )
         throw new ExecutionException( "Failed to access properties view" ); //$NON-NLS-1$
 
@@ -88,9 +88,10 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
       if( !(diagramView instanceof RrmDiagramView) )
         throw new ExecutionException( "Failed to access diagram view" ); //$NON-NLS-1$
 
-      final RrmDiagramView rrmDiagramView = (RrmDiagramView) diagramView;
+      final RrmDiagramView rrmDiagramView = (RrmDiagramView)diagramView;
       rrmDiagramView.hookSelection( selectionProvider );
       rrmDiagramView.setSelectionFilter( managementView.getFilterControl() );
+      rrmDiagramView.setSelectionTraverseLevel( 2 );
 
       final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
