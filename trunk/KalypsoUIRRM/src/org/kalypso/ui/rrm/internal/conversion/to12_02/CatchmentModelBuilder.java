@@ -76,7 +76,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Helper that guesses a CatchmentModel for each existing calculation case.
- *
+ * 
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -90,14 +90,14 @@ public class CatchmentModelBuilder
 
   private final File m_simulationDir;
 
-  private final TimeseriesIndex m_timeseriesIndex;
+  private final GlobalConversionData m_globalData;
 
-  public CatchmentModelBuilder( final NaModell naModel, final ICatchmentModel catchmentModel, final File simulationDir, final TimeseriesIndex timeseriesIndex )
+  public CatchmentModelBuilder( final NaModell naModel, final ICatchmentModel catchmentModel, final File simulationDir, final GlobalConversionData globalData )
   {
     m_naModel = naModel;
     m_catchmentModel = catchmentModel;
     m_simulationDir = simulationDir;
-    m_timeseriesIndex = timeseriesIndex;
+    m_globalData = globalData;
   }
 
   public IStatus execute( final QName modelTimeseriesLink, final String parameterType )
@@ -168,8 +168,11 @@ public class CatchmentModelBuilder
     final String href = String.format( "%s#%s", RrmScenario.FILE_MODELL_GML, modelCatchment.getId() ); //$NON-NLS-1$
     newCatchment.setAreaLink( href );
 
+    final TimeseriesIndex timeseriesIndex = m_globalData.getTimeseriesIndex();
+    final Map<String, TimeseriesIndexEntry> oldMapping = m_globalData.getOldMapping( parameterType );
+
     /* Guess timeseries link... */
-    final CatchmentTimeseriesGuesser timeseriesGuesser = new CatchmentTimeseriesGuesser( modelTargetLink, parameterType, m_timeseriesIndex );
+    final CatchmentTimeseriesGuesser timeseriesGuesser = new CatchmentTimeseriesGuesser( modelTargetLink, parameterType, timeseriesIndex, oldMapping );
     final IStatus guessStatus = timeseriesGuesser.execute();
     final String timeseriesPath = timeseriesGuesser.getResult();
     final Period timestep = timeseriesGuesser.getResultTimestep();

@@ -431,7 +431,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   private NAControl convertMetaControl( final org.kalypso.model.hydrology.binding._11_6.NAControl oldControl ) throws GMLSchemaException
   {
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( NAControl.FEATURE_NACONTROL, null, null );
-    final NAControl newControl = (NAControl) workspace.getRootFeature();
+    final NAControl newControl = (NAControl)workspace.getRootFeature();
 
     /* Metadata. */
     newControl.setDescription( oldControl.getDescription2() );
@@ -485,7 +485,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   private NAModellControl convertExpertControl( final org.kalypso.model.hydrology.binding._11_6.NAModellControl oldControl ) throws GMLSchemaException
   {
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( NAModellControl.FEATURE_NA_MODELL_CONTROL, null, null );
-    final NAModellControl newControl = (NAModellControl) workspace.getRootFeature();
+    final NAModellControl newControl = (NAModellControl)workspace.getRootFeature();
 
     /* Copy all boolean values that exists in both models. */
     final IFeatureType oldType = oldControl.getFeatureType();
@@ -497,7 +497,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       final IPropertyType newProperty = newType.getProperty( new QName( NAModellControl.NS_NACONTROL, oldProperty.getQName().getLocalPart() ) );
       if( oldProperty instanceof IValuePropertyType && newProperty instanceof IValuePropertyType )
       {
-        if( ((IValuePropertyType) oldProperty).getValueClass() == Boolean.class )
+        if( ((IValuePropertyType)oldProperty).getValueClass() == Boolean.class )
         {
           final Object oldValue = oldControl.getProperty( oldProperty );
           newControl.setProperty( newProperty, oldValue );
@@ -531,7 +531,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       return null;
 
     /* Create the builder. */
-    final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, catchmentModel, new File( m_targetScenarioDir, m_simulationPath ), m_globalData.getTimeseriesIndex() );
+    final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, catchmentModel, new File( m_targetScenarioDir, m_simulationPath ), m_globalData );
 
     /* If there is no design rainfall, create the catchment models. */
     if( !hasSynth )
@@ -557,7 +557,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       return null;
 
     /* Create the builder. */
-    final TimeseriesMappingBuilder builder = new TimeseriesMappingBuilder( m_globalData.getSourceDir(), naModel, mappings, new File( m_targetScenarioDir, m_simulationPath ), m_globalData.getTimeseriesIndex(), m_globalData.getConversionMap() );
+    final TimeseriesMappingBuilder builder = new TimeseriesMappingBuilder( m_globalData, naModel, mappings, new File( m_targetScenarioDir, m_simulationPath ) );
 
     /* Always create the node inflow timeseries mapping. */
     guessTimeseriesMapping( builder, TimeseriesMappingType.nodeInflow, mappingLog );
