@@ -78,13 +78,13 @@ public class TimeseriesMappingGuesser
 
   private final Map<String, Set<TimeseriesIndexEntry>> m_conversionMap;
 
-  public TimeseriesMappingGuesser( final ZmlLink modelTimeseriesLink, final TimeseriesMappingType mappingType, final TimeseriesIndex timeseriesIndex, final Map<String, TimeseriesIndexEntry> oldMappings, final Map<String, Set<TimeseriesIndexEntry>> convertsionMap )
+  public TimeseriesMappingGuesser( final ZmlLink modelTimeseriesLink, final TimeseriesMappingType mappingType, final TimeseriesIndex timeseriesIndex, final Map<String, TimeseriesIndexEntry> oldMappings, final Map<String, Set<TimeseriesIndexEntry>> conversionMap )
   {
     m_modelTimeseriesLink = modelTimeseriesLink;
     m_mappingType = mappingType;
     m_timeseriesIndex = timeseriesIndex;
     m_oldMappings = oldMappings;
-    m_conversionMap = convertsionMap;
+    m_conversionMap = conversionMap;
   }
 
   public String getResult( )

@@ -91,7 +91,13 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
 
       /* Build global data. */
       final TimeseriesIndex timeseriesIndex = basicModelConverter.getTimeseriesIndex();
-      final GlobalConversionData globalData = new GlobalConversionData( m_sourceDir, m_targetDir, timeseriesIndex );
+
+      /* read mapping files */
+      final MappingData mappingData = new MappingData( m_sourceDir, timeseriesIndex );
+      final IStatus mappingStatus = mappingData.read();
+      getLog().add( mappingStatus );
+
+      final GlobalConversionData globalData = new GlobalConversionData( m_sourceDir, m_targetDir, timeseriesIndex, mappingData );
 
       /* Convert calc cases. */
       monitor.subTask( Messages.getString( "RrmProjectConverter103to230_3" ) ); //$NON-NLS-1$

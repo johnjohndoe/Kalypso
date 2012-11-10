@@ -41,7 +41,9 @@
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
+import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -70,11 +72,14 @@ public class CatchmentTimeseriesGuesser
 
   private final TimeseriesIndex m_index;
 
-  public CatchmentTimeseriesGuesser( final ZmlLink modelTargetLink, final String parameterType, final TimeseriesIndex index )
+  private final Map<String, TimeseriesIndexEntry> m_oldMappings;
+
+  public CatchmentTimeseriesGuesser( final ZmlLink modelTargetLink, final String parameterType, final TimeseriesIndex index, final Map<String, TimeseriesIndexEntry> oldMappings )
   {
     m_modelTargetLink = modelTargetLink;
     m_parameterType = parameterType;
     m_index = index;
+    m_oldMappings = oldMappings;
   }
 
   public String getResult( )
@@ -151,8 +156,25 @@ public class CatchmentTimeseriesGuesser
 
   private TimeseriesIndexEntry guessByMapping( )
   {
-    // TODO: try 1: use mapping file
-    return null;
+    final File targetFile = m_modelTargetLink.getJavaFile();
+    if( targetFile == null )
+      return null;
+
+    m_log.add( IStatus.INFO, Messages.getString( "TimeseriesMappingGuesser.1" ) ); //$NON-NLS-1$
+
+    final String name = targetFile.getName();
+    final String timeseriesName = FilenameUtils.removeExtension( name );
+
+    final TimeseriesIndexEntry entry = m_oldMappings.get( timeseriesName );
+    if( entry != null )
+    {
+      final String message = String.format( Messages.getString( "TimeseriesMappingGuesser.2" ), entry.getOldProjectRelativePath() ); //$NON-NLS-1$
+      m_log.add( IStatus.OK, message );
+    }
+    else
+      m_log.add( IStatus.INFO, Messages.getString( "TimeseriesMappingGuesser.3" ) ); //$NON-NLS-1$
+
+    return entry;
   }
 
   private TimeseriesIndexEntry guessByValues( )

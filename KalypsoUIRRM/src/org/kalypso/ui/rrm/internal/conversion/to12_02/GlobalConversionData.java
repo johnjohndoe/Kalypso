@@ -108,6 +108,8 @@ public class GlobalConversionData
    */
   private final Map<String, Set<TimeseriesIndexEntry>> m_convert = new HashMap<>();
 
+  private final MappingData m_mappingData;
+
   /**
    * The constructor.
    * 
@@ -120,11 +122,12 @@ public class GlobalConversionData
    * @param timeseriesIndex
    *          The timeseries index.
    */
-  public GlobalConversionData( final File sourceDir, final File targetDir, final TimeseriesIndex timeseriesIndex )
+  public GlobalConversionData( final File sourceDir, final File targetDir, final TimeseriesIndex timeseriesIndex, final MappingData mappingData )
   {
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
     m_timeseriesIndex = timeseriesIndex;
+    m_mappingData = mappingData;
     m_baseScenarioDir = new File( targetDir, RrmProject.FOLDER_BASIS );
     m_caseList = null;
   }
@@ -181,7 +184,7 @@ public class GlobalConversionData
     {
       if( oneCase.getName().equals( "Basis" ) ) //$NON-NLS-1$
       {
-        updateCase( (Scenario) oneCase, scenarioDir );
+        updateCase( (Scenario)oneCase, scenarioDir );
         break;
       }
     }
@@ -206,7 +209,7 @@ public class GlobalConversionData
     }
 
     final URL url = casesXml.toURI().toURL();
-    return (CaseList) JAXB_CONTEXT.createUnmarshaller().unmarshal( url );
+    return (CaseList)JAXB_CONTEXT.createUnmarshaller().unmarshal( url );
   }
 
   private void updateCase( final Scenario oneCase, final File scenarioDir )
@@ -250,5 +253,10 @@ public class GlobalConversionData
   public Map<String, Set<TimeseriesIndexEntry>> getConversionMap( )
   {
     return m_convert;
+  }
+
+  public Map<String, TimeseriesIndexEntry> getOldMapping( final Object key )
+  {
+    return m_mappingData.getMapping( key );
   }
 }
