@@ -72,7 +72,7 @@ public class HydrolgyManagementSearchControl extends Composite implements IRrmDi
     final Group groupTextSearch = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupTextSearch );
     GridLayoutFactory.swtDefaults().spacing( 0, 0 ).applyTo( groupTextSearch );
-    groupTextSearch.setText( "Freitext-Suche" );
+    groupTextSearch.setText( Messages.getString("HydrolgyManagementSearchControl.0") ); //$NON-NLS-1$
     groupTextSearch.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_textSearchControl = new ResultTextSearchFilterControl( groupTextSearch, toolkit );

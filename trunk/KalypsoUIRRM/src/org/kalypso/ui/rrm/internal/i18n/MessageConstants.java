@@ -45,9 +45,9 @@ package org.kalypso.ui.rrm.internal.i18n;
  */
 public interface MessageConstants
 {
-  String STR_ACTION_OPEN_CALC_STATUS_TEXT = "Calculation Status"; //$NON-NLS-1$
+  String STR_ACTION_OPEN_CALC_STATUS_TEXT = Messages.getString("MessageConstants.0"); //$NON-NLS-1$
 
-  String STR_ACTION_OPEN_CALC_STATUS_TOOLTIP = "Displays the status of the last calculation"; //$NON-NLS-1$
+  String STR_ACTION_OPEN_CALC_STATUS_TOOLTIP = Messages.getString("MessageConstants.1"); //$NON-NLS-1$
 
   String STR_ACTION_OPEN_CALC_LOG_TEXT = Messages.getString( "SimulationCalculationFeatureControl.4" ); //$NON-NLS-1$
 
