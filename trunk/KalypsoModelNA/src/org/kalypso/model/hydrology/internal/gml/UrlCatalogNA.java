@@ -77,7 +77,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     catalog.put( NaModelConstants.NS_NACONTROL, myClass.getResource( "/etc/schema/gml/nacontrol.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "/etc/schema/gml/hydrotop.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAPARAMETER, myClass.getResource( "/etc/schema/gml/parameter.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "/etc/schema/gml/ombrometer.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "/etc/schema/gml/11.6/ombrometer.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_SYNTHN, myClass.getResource( "/etc/schema/gml/synthN.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_INIVALUES, myClass.getResource( "/etc/schema/gml/initialValues.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAFORTRANLOG, myClass.getResource( "/etc/schema/gml/NAFortranLog.xsd" ) ); //$NON-NLS-1$

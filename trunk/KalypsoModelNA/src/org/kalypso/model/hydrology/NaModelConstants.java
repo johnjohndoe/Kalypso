@@ -71,6 +71,7 @@ public interface NaModelConstants
 
   String NS_NAPARAMETER = "http://www.tuhh.de/parameter"; //$NON-NLS-1$
 
+  @Deprecated
   String NS_OMBROMETER = "http://org.kalypso.ombrometer"; //$NON-NLS-1$
 
   String NS_SYNTHN = "http://www.tuhh.de/synthN"; //$NON-NLS-1$
