@@ -83,7 +83,7 @@ public class RrmDiagramSelectionConverter
       final Object ptr = iterator.next();
       if( ptr instanceof TreeNode )
       {
-        final Object[] tsObject = doConvert( (TreeNode) ptr );
+        final Object[] tsObject = doConvert( (TreeNode)ptr );
         for( final Object object : tsObject )
         {
           if( object != null )
@@ -111,7 +111,6 @@ public class RrmDiagramSelectionConverter
       if( timeseries != null )
         items.add( timeseries );
     }
-
     else if( isResultReference( node ) )
     {
       items.add( doConvertResultReference( node ) );
@@ -171,7 +170,7 @@ public class RrmDiagramSelectionConverter
 
     final Set<ITimeseries> selected = new LinkedHashSet<>();
 
-    final IStation station = (IStation) objStation;
+    final IStation station = (IStation)objStation;
     final IFeatureBindingCollection<ITimeseries> timeserieses = station.getTimeseries();
     for( final ITimeseries timeseries : timeserieses )
     {
@@ -190,7 +189,7 @@ public class RrmDiagramSelectionConverter
 
   private ITimeseries doConvertTimeseries( final TreeNode node )
   {
-    final ITimeseries timeseries = (ITimeseries) node.getAdapter( ITimeseries.class );
+    final ITimeseries timeseries = (ITimeseries)node.getAdapter( ITimeseries.class );
     if( doSelectTimeseries( timeseries ) )
       return timeseries;
 
@@ -248,7 +247,7 @@ public class RrmDiagramSelectionConverter
     if( !(objReference instanceof IHydrologyResultReference) )
       return null;
 
-    final IHydrologyResultReference reference = (IHydrologyResultReference) objReference;
+    final IHydrologyResultReference reference = (IHydrologyResultReference)objReference;
     if( !reference.isValid() )
       return null;
 

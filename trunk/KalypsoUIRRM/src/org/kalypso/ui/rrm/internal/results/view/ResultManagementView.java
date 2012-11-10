@@ -100,7 +100,7 @@ public class ResultManagementView extends ViewPart
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
 
     final Composite body = toolkit.createComposite( parent );
-    GridLayoutFactory.swtDefaults().applyTo( body );
+    GridLayoutFactory.fillDefaults().applyTo( body );
 
     createResultTreeView( body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createSearchControls( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
@@ -145,7 +145,7 @@ public class ResultManagementView extends ViewPart
       @Override
       public ISelection getSelection( )
       {
-        return m_stack.getSelection( (IStructuredSelection) super.getSelection() );
+        return m_stack.getSelection( (IStructuredSelection)super.getSelection() );
       }
     };
 
@@ -160,7 +160,7 @@ public class ResultManagementView extends ViewPart
       @Override
       public void doubleClick( final DoubleClickEvent event )
       {
-        final TreeNode[] changes = m_stack.add( (IStructuredSelection) event.getSelection() );
+        final TreeNode[] changes = m_stack.add( (IStructuredSelection)event.getSelection() );
         for( final TreeNode changed : changes )
           m_treeViewer.refresh( changed );
       }
@@ -232,6 +232,6 @@ public class ResultManagementView extends ViewPart
 
   public IStructuredSelection getSelection( )
   {
-    return (IStructuredSelection) m_treeViewer.getSelection();
+    return (IStructuredSelection)m_treeViewer.getSelection();
   }
 }
