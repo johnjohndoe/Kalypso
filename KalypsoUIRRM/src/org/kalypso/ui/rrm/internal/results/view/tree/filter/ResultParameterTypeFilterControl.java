@@ -140,15 +140,14 @@ public class ResultParameterTypeFilterControl extends Composite
     m_viewer.setSelection( new StructuredSelection( StringUtils.EMPTY ) );
   }
 
-  public void setParameterType( final String type )
-  {
-    m_viewer.setSelection( new StructuredSelection( type ) );
-    m_viewer.getCombo().setEnabled( false );
-  }
+//  public void setParameterType( final String type )
+//  {
+//    m_viewer.setSelection( new StructuredSelection( type ) );
+//    m_viewer.getCombo().setEnabled( false );
+//  }
 
   public boolean doSelect( final IHydrologyResultReference reference )
   {
     return m_filter.doSelect( reference );
   }
-
 }

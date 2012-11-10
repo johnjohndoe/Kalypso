@@ -88,7 +88,7 @@ public class ResultParameterTypeFilter extends AbstractResultViewerFilter
   private boolean doSelectNode( final TreeNode node, final Object type )
   {
     if( type instanceof RRM_RESULT )
-      return doSelecType( node, (RRM_RESULT) type );
+      return doSelecType( node, (RRM_RESULT)type );
 
     return false;
   }
@@ -98,10 +98,6 @@ public class ResultParameterTypeFilter extends AbstractResultViewerFilter
     final int level = getLevel( node );
     if( level == 3 )
     {
-      final Object data = node.getData();
-      if( Objects.notEqual( RRM_RESULT.class, data ) )
-        return false;
-
       final TreeNode[] children = node.getChildren();
       for( final TreeNode child : children )
       {
@@ -125,7 +121,7 @@ public class ResultParameterTypeFilter extends AbstractResultViewerFilter
       return false;
     }
 
-    final IHydrologyResultReference reference = (IHydrologyResultReference) adapter;
+    final IHydrologyResultReference reference = (IHydrologyResultReference)adapter;
     if( Objects.notEqual( type, reference.getType() ) )
       return false;
 
