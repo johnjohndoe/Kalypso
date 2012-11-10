@@ -44,7 +44,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -72,20 +71,22 @@ public class HydrolgyManagementSearchControl extends Composite implements IRrmDi
 
     final Group groupTextSearch = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupTextSearch );
-    groupTextSearch.setLayout( new FillLayout() );
-    groupTextSearch.setText( "Freitext-Suche" ); //$NON-NLS-1$
+    GridLayoutFactory.swtDefaults().spacing( 0, 0 ).applyTo( groupTextSearch );
+    groupTextSearch.setText( "Freitext-Suche" );
     groupTextSearch.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_textSearchControl = new ResultTextSearchFilterControl( groupTextSearch, toolkit );
+    m_textSearchControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, true ) );
     m_textSearchControl.setViewer( viewer );
 
     final Group groupParameter = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupParameter );
-    groupParameter.setLayout( new FillLayout() );
-    groupParameter.setText( Messages.getString("HydrolgyManagementSearchControl_0") ); //$NON-NLS-1$
+    GridLayoutFactory.swtDefaults().applyTo( groupParameter );
+    groupParameter.setText( Messages.getString( "HydrolgyManagementSearchControl_0" ) ); //$NON-NLS-1$
     groupParameter.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_parameterTypeFilterControl = new ResultParameterTypeFilterControl( groupParameter, toolkit );
+    m_parameterTypeFilterControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, true ) );
     m_parameterTypeFilterControl.setViewer( viewer );
 
     final ResultTreeFilterControl currentResultsControl = new ResultTreeFilterControl( this, toolkit );
@@ -115,25 +116,15 @@ public class HydrolgyManagementSearchControl extends Composite implements IRrmDi
       m_parameterTypeFilterControl.reset();
   }
 
-  public void setParameterType( final String parameterType )
-  {
-    m_parameterType = parameterType;
-    m_parameterTypeFilterControl.setParameterType( parameterType );
-  }
-
   @Override
   public boolean doSelect( final IHydrologyResultReference reference )
   {
     return m_parameterTypeFilterControl.doSelect( reference );
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl#doSelect(java.lang.String)
-   */
   @Override
   public boolean doSelect( final String parameterType )
   {
     return false;
   }
-
 }
