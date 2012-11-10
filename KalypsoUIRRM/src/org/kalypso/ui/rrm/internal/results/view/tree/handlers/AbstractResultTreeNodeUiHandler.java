@@ -138,7 +138,10 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     {
       // TODO: would be nice to have different icons for different type of results
 
-      actions.add( new OpenStatusLogAction( MessageConstants.STR_ACTION_OPEN_CALC_STATUS_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_STATUS_TOOLTIP, getCalculation().getCalculationStatusGml() ) );
+      final OpenStatusLogAction openStatusLogAction = new OpenStatusLogAction( MessageConstants.STR_ACTION_OPEN_CALC_STATUS_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_STATUS_TOOLTIP, getCalculation().getCalculationStatusGml() );
+      actions.add( openStatusLogAction );
+      openStatusLogAction.updateStatus();
+
       actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_CALC_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_LOG_TOOLTIP, getCalculation().getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       actions.add( new OpenOutputZipAction( MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TOOLTIP, getCalculation().getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.", m_simulation, false ) );
@@ -162,7 +165,7 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
       imageHyperlink.setText( action.getText() );
 
       if( action instanceof IUpdateable )
-        ((IUpdateable) action).update();
+        ((IUpdateable)action).update();
     }
 
   }
@@ -182,26 +185,26 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
     final Iterator< ? > itr = selection.iterator();
     while( itr.hasNext() )
     {
-      final TreeNode node = (TreeNode) itr.next();
+      final TreeNode node = (TreeNode)itr.next();
       final Object data = node.getData();
 
       if( data instanceof CalculationFeatureBean )
       {
-        final CalculationFeatureBean bean = (CalculationFeatureBean) data;
+        final CalculationFeatureBean bean = (CalculationFeatureBean)data;
         results.add( bean.getCalculation() );
       }
       else if( data instanceof RrmResultBean )
       {
-        final RrmResultBean bean = (RrmResultBean) data;
+        final RrmResultBean bean = (RrmResultBean)data;
         results.add( bean.getCalculation() );
       }
       else if( data instanceof HydrologyResultReference )
       {
-        final HydrologyResultReference reference = (HydrologyResultReference) data;
+        final HydrologyResultReference reference = (HydrologyResultReference)data;
         results.add( reference.getCalculation() );
       }
       else if( data instanceof RrmCalculationResult )
-        results.add( (RrmCalculationResult) data );
+        results.add( (RrmCalculationResult)data );
     }
 
     return results.toArray( new RrmCalculationResult[] {} );
