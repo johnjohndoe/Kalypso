@@ -49,14 +49,13 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
  */
 public abstract class AbstractResultViewerFilter extends ViewerFilter
 {
-
   @Override
   public final boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
     if( !(element instanceof TreeNode) )
       return false;
 
-    return doSelect( (TreeNode) element );
+    return doSelect( (TreeNode)element );
   }
 
   protected abstract boolean doSelect( TreeNode node );
