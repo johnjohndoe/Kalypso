@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.conversion;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -86,7 +87,8 @@ public class RrmProjectConverter implements IProjectConverter
   @Override
   public String getLabel( )
   {
-    return String.format( Messages.getString( "RrmProjectConverter.0" ), m_sourceDir.getName() ); //$NON-NLS-1$
+    //return String.format( Messages.getString( "RrmProjectConverter.0" ), m_sourceDir.getName() ); //$NON-NLS-1$
+    return StringUtils.EMPTY;
   }
 
   @Override
@@ -117,21 +119,5 @@ public class RrmProjectConverter implements IProjectConverter
       return new RrmProjectConverter11_06to12_02( m_sourceDir, m_targetDir, targetVersion );
 
     return null;
-
-    // TODO: implement x -> 10.10 -> 12.02
-
-    /* everything that is below 10.10 */
-    // if( m_sourceVersion == null || m_sourceVersion.compareTo( V_10_10 ) < 0 )
-
-    // For the moment, just everything, the converter should work well for all projects.
-    // If we ever need another converter from some version on, we should start to check the version number.
-
-    // return new RrmProjectConverterXto10_10( m_sourceDir, m_targetDir, targetVersion );
-
-    // TODO: we should implement a converter for 11.xxx;
-    // First ideas what the converter needs to do (in comparison to the 10.10 converter):
-    // - keep geologie.gml data (gets lost with the old converter)
-
-// return null;
   }
 }
