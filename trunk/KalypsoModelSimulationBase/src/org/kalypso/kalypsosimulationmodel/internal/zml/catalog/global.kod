@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
-  <Chart id="global">
+  <Chart id="global" legend="true">
     <Styles>
       <LineStyle role="axisLine">
         <Width>2</Width>
