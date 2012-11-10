@@ -54,7 +54,7 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 
 /**
  * This action opens a status log.
- *
+ * 
  * @author Holger Albert
  */
 public class OpenStatusLogAction extends Action implements IUpdateable
@@ -105,6 +105,9 @@ public class OpenStatusLogAction extends Action implements IUpdateable
       m_loadJob.join();
 
       final IStatus statusLog = m_loadJob.getStatusLog();
+      if( statusLog == null )
+        // FIXME: should never happen; error message?
+        return;
 
       /* Always show dialog. */
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
