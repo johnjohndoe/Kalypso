@@ -47,6 +47,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.Interval;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -104,6 +105,14 @@ public class CatchmentTimeseriesGuesser
       return null;
 
     return m_result.getTimestamp();
+  }
+
+  public Interval getResultRange( )
+  {
+    if( m_result == null )
+      return null;
+
+    return m_result.getDateRange();
   }
 
   public IStatus execute( )

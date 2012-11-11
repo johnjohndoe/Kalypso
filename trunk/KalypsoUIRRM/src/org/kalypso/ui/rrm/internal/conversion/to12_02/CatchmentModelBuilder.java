@@ -46,15 +46,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.Interval;
 import org.joda.time.LocalTime;
-import org.joda.time.MutablePeriod;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -117,11 +115,8 @@ public class CatchmentModelBuilder
     generator.setAreaNamePath( new GMLXPath( NaModell.QN_NAME ) );
     generator.setAreaDescriptionPath( new GMLXPath( NaModell.QN_DESCRIPTION ) );
 
-    /* Very big period, so everything is smaller. */
-    final MutablePeriod smallestPeriod = Period.days( 10000 ).toMutablePeriod();
-
-    /* Memory for the timestamps. */
-    final Map<LocalTime, Integer> timestamps = new HashMap<>();
+    /* memory for global values to be set afterwards */
+    final GeneratorStatistics statistics = new GeneratorStatistics();
 
     /* Add catchments */
     final IFeatureBindingCollection<Catchment> catchments = m_naModel.getCatchments();
@@ -129,7 +124,7 @@ public class CatchmentModelBuilder
     {
       try
       {
-        final IStatus status = buildCatchment( generator, catchment, modelTimeseriesLink, parameterType, smallestPeriod, timestamps );
+        final IStatus status = buildCatchment( generator, catchment, modelTimeseriesLink, parameterType, statistics );
         log.add( status );
       }
       catch( final MalformedURLException e )
@@ -138,22 +133,15 @@ public class CatchmentModelBuilder
       }
     }
 
-    /* Use the smallest period of all involved timeseries as timestep for the generator. */
-    final int timestepMinutes = smallestPeriod.toPeriod().toStandardMinutes().getMinutes();
-    if( timestepMinutes > 0 )
-      generator.setTimestep( timestepMinutes );
-
-    /* Set the timestamp. */
-    final LocalTime timestamp = findMostUsedTimestamp( timestamps );
-    if( timestamp != null )
-      generator.setTimestamp( timestamp );
+    /* set data gathered from timeseries */
+    statistics.apply( generator );
 
     final String parameterName = TimeseriesUtils.getName( parameterType );
     final String message = String.format( Messages.getString( "CatchmentModelBuilder_1" ), parameterName ); //$NON-NLS-1$
     return log.asMultiStatusOrOK( message, message );
   }
 
-  private IStatus buildCatchment( final ILinearSumGenerator generator, final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType, final MutablePeriod smallestTimestep, final Map<LocalTime, Integer> timestamps ) throws MalformedURLException
+  private IStatus buildCatchment( final ILinearSumGenerator generator, final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType, final GeneratorStatistics statistics ) throws MalformedURLException
   {
     // IMPORTANT: we use the simulation-models folder as context, because this is the right relative location
     // for the fixed timeseries links.
@@ -177,6 +165,7 @@ public class CatchmentModelBuilder
     final String timeseriesPath = timeseriesGuesser.getResult();
     final Period timestep = timeseriesGuesser.getResultTimestep();
     final LocalTime timestamp = timeseriesGuesser.getResultTimestamp();
+    final Interval dateRange = timeseriesGuesser.getResultRange();
 
     if( !StringUtils.isBlank( timeseriesPath ) )
     {
@@ -187,43 +176,9 @@ public class CatchmentModelBuilder
       timeseries.setTimeseriesLink( timeseriesPath );
     }
 
-    if( timestep != null )
-    {
-      if( timestep.toStandardSeconds().getSeconds() < smallestTimestep.toPeriod().toStandardSeconds().getSeconds() )
-        smallestTimestep.setPeriod( timestep );
-    }
-
-    if( timestamp != null )
-    {
-      final Integer number = timestamps.get( timestamp );
-      if( number != null )
-        timestamps.put( timestamp, new Integer( number.intValue() + 1 ) );
-      else
-        timestamps.put( timestamp, new Integer( 1 ) );
-    }
+    statistics.addTimeseriesData( timestep, timestamp, dateRange );
 
     return guessStatus;
-  }
-
-  private LocalTime findMostUsedTimestamp( final Map<LocalTime, Integer> timestamps )
-  {
-    LocalTime timestamp = null;
-    int number = 0;
-
-    final Set<Entry<LocalTime, Integer>> entrySet = timestamps.entrySet();
-    for( final Entry<LocalTime, Integer> entry : entrySet )
-    {
-      final LocalTime key = entry.getKey();
-      final Integer value = entry.getValue();
-
-      if( value.intValue() > number )
-      {
-        timestamp = key;
-        number = value.intValue();
-      }
-    }
-
-    return timestamp;
   }
 
   public String getGeneratorPath( final String parameterType )
