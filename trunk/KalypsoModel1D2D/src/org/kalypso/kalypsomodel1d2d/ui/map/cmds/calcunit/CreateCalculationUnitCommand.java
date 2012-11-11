@@ -57,15 +57,14 @@ final class CreateCalculationUnitCommand extends AddFeatureCommand
   {
     super.process();
 
-    final Feature newControlFeature = getNewFeature();
-    final IControlModel1D2D newControlModel = (IControlModel1D2D)newControlFeature.getAdapter( IControlModel1D2D.class );
+    final IControlModel1D2D newControlModel = (IControlModel1D2D)getNewFeature();
 
     // FIXME: m_calculationUnit is always null at this point; shouldn't it be newControlModel?
     newControlModel.setCalculationUnit( m_calculationUnit );
 
     m_parentFeature.setActiveControlModel( newControlModel );
 
-    final Feature obsFeature = (Feature)newControlFeature.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+    final Feature obsFeature = (Feature)newControlModel.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
 
     /* Create an observation from it. */
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );

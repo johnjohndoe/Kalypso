@@ -40,37 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.afgui.model.Util;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Command to create new calculation unit
  * 
- * @author Patrice Congo
+ * @author Gernot Belger
  */
-public class CreateCalculationUnitCmd implements IFeatureChangeCommand
+public class CloneCalculationUnitCmd implements IFeatureChangeCommand
 {
   /**
    * the created calculation unit
    */
   private ICalculationUnit m_calculationUnit;
+
+  /**
+   * the original calculation unit, that should be cloned to the new one
+   */
+  private ICalculationUnit1D2D m_calculationUnitOrig = null;
 
   /**
    * the discretisation model holding the calculation unit
@@ -84,8 +83,6 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
 
   private final IControlModelGroup m_controlModels;
 
-  private final QName m_calculationUnitType;
-
   private final String m_description;
 
   /**
@@ -97,18 +94,18 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
    *          the model that should hold the new calculation unit
    * @param name
    *          a name for the calculation unit if one has to be set or null
-   * @param description
-   *          text describing the calculation unit or null
+   * @param calcUnitToClone
+   *          original calculation unit that will be cloned in to new one
    * @throws IllegalArgumentException
    *           if cuFeatureQName or model1d2d is null
    */
-  public CreateCalculationUnitCmd( final IFEDiscretisationModel1d2d model1d2d, final IControlModelGroup controlModels, final QName calculationUnitType, final String name, final String description )
+  public CloneCalculationUnitCmd( final IFEDiscretisationModel1d2d model1d2d, final IControlModelGroup controlModels, final String name, final String description, final ICalculationUnit1D2D calcUnitToClone )
   {
     m_model1d2d = model1d2d;
     m_controlModels = controlModels;
-    m_calculationUnitType = calculationUnitType;
     m_calcUnitName = name;
     m_description = description;
+    m_calculationUnitOrig = calcUnitToClone;
   }
 
   @Override
@@ -135,14 +132,35 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
   @Override
   public void process( ) throws Exception
   {
-    m_calculationUnit = m_model1d2d.createCalculationUnit( m_calculationUnitType );
+    m_calculationUnit = (ICalculationUnit)FeatureHelper.cloneFeature( m_calculationUnitOrig.getOwner(), m_calculationUnitOrig.getParentRelation(), m_calculationUnitOrig );
 
     m_calculationUnit.setName( m_calcUnitName );
     m_calculationUnit.setDescription( m_description );
 
-    createControlModel();
+    copyDataControlModel();
 
-    fireProcessChanges( m_calculationUnit, true );
+    fireProcessChanges( m_calculationUnit );
+  }
+
+  private void copyDataControlModel( ) throws Exception
+  {
+    final IControlModel1D2DCollection controlModel1D2DCollection = m_controlModels.getModel1D2DCollection();
+
+    final IControlModel controlModelOrig = controlModel1D2DCollection.findControlModel( m_calculationUnitOrig );
+    if( controlModelOrig == null )
+    {
+      // error message or can this actually happen?
+      return;
+    }
+
+    /* create clone of that model */
+    final Feature controlModelFeature = FeatureHelper.cloneFeature( controlModelOrig.getOwner(), controlModelOrig.getParentRelation(), controlModelOrig );
+    final IControlModel1D2D newControlModel = (IControlModel1D2D)controlModelFeature.getAdapter( IControlModel1D2D.class );
+
+    newControlModel.setCalculationUnit( m_calculationUnit );
+
+    // TODO: what for ?? :
+    controlModel1D2DCollection.setActiveControlModel( newControlModel );
   }
 
   /**
@@ -151,15 +169,10 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
    * @param added
    *          true if the calculation unit was added false otherwise
    */
-  private final void fireProcessChanges( final ICalculationUnit calculationUnit, final boolean added )
+  private final void fireProcessChanges( final ICalculationUnit calculationUnit )
   {
-    final int changedType;
-    if( added )
-      changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD;
-    else
-      changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE;
     final GMLWorkspace workspace = calculationUnit.getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d, new Feature[] { calculationUnit }, changedType );
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d, calculationUnit, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
     workspace.fireModellEvent( event );
   }
 
@@ -178,20 +191,5 @@ public class CreateCalculationUnitCmd implements IFeatureChangeCommand
   public ICalculationUnit getCreatedCalculationUnit( )
   {
     return m_calculationUnit;
-  }
-
-  private void createControlModel( ) throws Exception
-  {
-    final IControlModel1D2DCollection parentFeature = m_controlModels.getModel1D2DCollection();
-
-    final IRelationType relationType = (IRelationType)parentFeature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
-    final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
-    final int pos = 0;
-    final IGMLSchema schema = parentFeature.getFeatureType().getGMLSchema();
-    final IFeatureType controlModelFeatureType = schema.getFeatureType( ControlModel1D2D.WB1D2DCONTROL_F_MODEL );
-
-    // FIXME: who does this? this is SO ugly...!
-    final AddFeatureCommand command = new CreateCalculationUnitCommand( commandableWorkspace, controlModelFeatureType, parentFeature, relationType, pos, null, null, -1, parentFeature, m_calculationUnit );
-    commandableWorkspace.postCommand( command );
   }
 }

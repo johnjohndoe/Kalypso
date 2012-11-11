@@ -46,10 +46,12 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CloneCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
@@ -58,13 +60,13 @@ public class CloneCalculationUnitWizard extends Wizard
 {
   private CloneCalculationUnitWizardPage m_page;
 
-  private final ICalculationUnit m_calcUnitToClone;
+  private final ICalculationUnit1D2D m_calcUnitToClone;
 
   private final KeyBasedDataModel m_dataModel;
 
   private final CalculationUnitDataModel m_calcUnitDataModel;
 
-  public CloneCalculationUnitWizard( final KeyBasedDataModel dataModel, final ICalculationUnit calcUnitToClone, final CalculationUnitDataModel calcUnitDataModel )
+  public CloneCalculationUnitWizard( final KeyBasedDataModel dataModel, final ICalculationUnit1D2D calcUnitToClone, final CalculationUnitDataModel calcUnitDataModel )
   {
     m_dataModel = dataModel;
     m_calcUnitToClone = calcUnitToClone;
@@ -84,30 +86,25 @@ public class CloneCalculationUnitWizard extends Wizard
   public boolean performFinish( )
   {
     final String calcUnitName = m_page.getCalculationUnitName();
+    final String description = m_page.getCalculationUnitDescription();
 
     final KeyBasedDataModel dataModel = m_dataModel;
 
-    final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( (IFEDiscretisationModel1d2d)Util.getModel( IFEDiscretisationModel1d2d.class.getName() ), calcUnitName, m_calcUnitToClone )
-    {
-      @Override
-      public void process( ) throws Exception
-      {
-        super.process();
+    final IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class.getName() );
+    final IControlModelGroup controlModels = Util.getModel( IControlModelGroup.class.getName() );
 
-        // TODO: this is not the right place!
-        // Move it outside where this wizard is executed
-
-        // reset list of calculation units
-        final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d)dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-        final List<ICalculationUnit> calcUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
-        dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calcUnits );
-
-        // set the create unit as selected
-        dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, getCreatedCalculationUnit() );
-      }
-    };
+    final CloneCalculationUnitCmd cmd = new CloneCalculationUnitCmd( model, controlModels, calcUnitName, description, m_calcUnitToClone );
 
     KeyBasedDataModelUtil.postCommand( m_dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+
+    // reset list of calculation units
+    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d)dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+    final List<ICalculationUnit> calcUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
+    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calcUnits );
+
+    // set the create unit as selected
+    dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, cmd.getCreatedCalculationUnit() );
+
     return true;
   }
 }

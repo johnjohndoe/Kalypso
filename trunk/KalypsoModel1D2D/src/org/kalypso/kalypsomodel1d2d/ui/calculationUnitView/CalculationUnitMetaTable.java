@@ -53,9 +53,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -534,11 +536,20 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
     final KeyBasedDataModel dataModel = getDataModel();
     final ICalculationUnit calcUnitToClone = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+
     if( calcUnitToClone == null )
+      return;
+
+    if( !(calcUnitToClone instanceof ICalculationUnit1D2D) )
     {
+      final String toolTipText = m_btnCloneCalcUnit.getToolTipText();
+      final String message = "The calculation unit is not a combined unit. Only combined units can be copied at the moment.";
+      MessageDialog.openInformation( shell, toolTipText, message );
       return;
     }
-    final CloneCalculationUnitWizard calculationCloneWizard = new CloneCalculationUnitWizard( getDataModel(), calcUnitToClone, m_dataModel );
+
+    final CloneCalculationUnitWizard calculationCloneWizard = new CloneCalculationUnitWizard( getDataModel(), (ICalculationUnit1D2D)calcUnitToClone, m_dataModel );
+
     final WizardDialog wizardDialog = new WizardDialog( shell, calculationCloneWizard );
     wizardDialog.open();
   }
@@ -620,7 +631,11 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       @SuppressWarnings( "synthetic-access" )
       public void run( )
       {
-        tableViewer.refresh();
+        final ISelection selection = tableViewer.getSelection();
+        final StructuredSelection newSelection = new StructuredSelection( currentSelection );
+        if( !newSelection.equals( selection ) )
+          tableViewer.setSelection( newSelection );
+
         final boolean isEnabled = currentSelection instanceof Feature;
         if( m_btnDeleteCalcUnit != null )
         {
