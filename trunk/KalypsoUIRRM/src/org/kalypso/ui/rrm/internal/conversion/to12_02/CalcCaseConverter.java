@@ -42,7 +42,10 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
@@ -55,6 +58,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -74,6 +78,7 @@ import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -197,14 +202,12 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       /* Fix timeseries link: relative to simulations model folder, and new sub directories */
       fixTimeseriesLinks( naModel, getLog() );
 
-      /* The catchment model builder and the timeseries mapping builder. */
-      CatchmentModelBuilder catchmentModelBuilder = null;
-      TimeseriesMappingBuilder timeseriesMappingBuilder = null;
-
       /* Do the timeseries mappings. */
       final IStatusCollector mappingLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
-      catchmentModelBuilder = guessCatchmentModel( hasSynth, naModel, catchmentModel, mappingLog );
-      timeseriesMappingBuilder = guessTimeseriesMappings( hasSynth, naModel, mappings, mappingLog );
+
+      final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( hasSynth, naModel, catchmentModel, mappingLog );
+      final TimeseriesMappingBuilder timeseriesMappingBuilder = guessTimeseriesMappings( hasSynth, naModel, mappings, mappingLog );
+
       getLog().add( mappingLog.asMultiStatus( Messages.getString( "CalcCaseConverter.18" ) ) ); //$NON-NLS-1$
 
       /* IMPORTANT: Update the categories before the links have been fixed. */
@@ -408,6 +411,9 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     /* Convert the old meta control to the new meta control. */
     final NAControl newControl = convertMetaControl( oldControl );
+
+    /* tweaks start and end time */
+    tweakStartTime( newControl );
 
     /* Save the new meta control, overwriting the file with the old meta control. */
     m_data.saveModel( calculationGmlPath, newControl );
@@ -661,5 +667,79 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     final IStatus status = localLog.asMultiStatus( Messages.getString( "CalcCaseConverter.28" ) ); //$NON-NLS-1$
     log.add( status );
+  }
+
+  private void tweakStartTime( final NAControl metaControl )
+  {
+    /* The simulation time is irrelevant for syntetic events -> no need for correction */
+    if( metaControl.isUsePrecipitationForm() )
+      return;
+
+    /* We are going to set the hours to 0 in the current time zone */
+    final DateFormat displayDateTimeFormat = KalypsoGisPlugin.getDefault().getDisplayDateTimeFormat();
+
+    /* Tweak simulation start */
+    final Date simulationStart = metaControl.getSimulationStart();
+    final Date newSimulationStart = tweakStartDate( simulationStart );
+    if( newSimulationStart != null )
+    {
+      metaControl.setSimulationStart( newSimulationStart );
+      final String simulationStartText = displayDateTimeFormat.format( simulationStart );
+      final String statusMsg = String.format( Messages.getString( "CalcCaseConverter.2" ), simulationStartText ); //$NON-NLS-1$
+      getLog().add( IStatus.WARNING, statusMsg, null ); //$NON-NLS-1$
+    }
+
+    /* Tweak simulation end */
+    final Date simulationEnd = metaControl.getSimulationEnd();
+    final Date newSimulationEnd = tweakStartDate( simulationEnd );
+    if( newSimulationEnd != null )
+    {
+      metaControl.setSimulationEnd( newSimulationEnd );
+      final String simulationEndText = displayDateTimeFormat.format( simulationEnd );
+      final String statusMsg = String.format( "Simulationsende der Rechenvariante muss 00:00 Uhr sein. Zeit (%s) wurde automatisch angepasst.", simulationEndText );
+      getLog().add( IStatus.WARNING, statusMsg, null ); //$NON-NLS-1$
+    }
+
+//    /* Tweak start condition */
+//    final InitialValues initialValues = m_data.getInitialValues();
+//    if( initialValues == null )
+//      return;
+//
+//    final Date initialDate = initialValues.getInitialDate();
+//    final Date newInitialDate = tweakStartDate( initialDate );
+//    if( newInitialDate != null )
+//    {
+//      initialValues.setInitialDate( newInitialDate );
+//      final String initialValuesText = displayDateTimeFormat.format( initialDate );
+//      final String statusMsg = String.format( Messages.getString( "CalcCaseConverter.3" ), initialValuesText ); //$NON-NLS-1$
+//      final int severity = IStatus.WARNING;
+//      saveModel( initialValues, INaCalcCaseConstants.ANFANGSWERTE_FILE, severity, statusMsg );
+//    }
+  }
+
+  private Date tweakStartDate( final Date oldDate )
+  {
+    if( oldDate == null )
+    {
+      getLog().add( IStatus.WARNING, "Starting date is not set. Check calculation case." );
+      return null;
+    }
+
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    final Calendar cal = Calendar.getInstance( timeZone );
+    cal.setTime( oldDate );
+
+    final int oldHour = cal.get( Calendar.HOUR_OF_DAY );
+    if( oldHour == 0 )
+      return null;
+
+    cal.set( Calendar.HOUR_OF_DAY, 0 );
+
+    if( oldHour > 12 )
+    {
+      // should we round up in this case (i.e. add one day)?
+    }
+
+    return cal.getTime();
   }
 }
