@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -59,9 +60,11 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.joda.time.Interval;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -97,7 +100,7 @@ import com.google.common.base.Charsets;
 
 /**
  * Helper that imports the timeseries from the old 'Zeitreihen' folder into the new timeseries management.
- *
+ * 
  * @author Gernot Belger
  */
 public class TimeseriesImporter
@@ -130,7 +133,7 @@ public class TimeseriesImporter
     try
     {
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_stationsFile, null );
-      m_stations = (IStationCollection) workspace.getRootFeature();
+      m_stations = (IStationCollection)workspace.getRootFeature();
     }
     catch( final Exception e )
     {
@@ -295,7 +298,9 @@ public class TimeseriesImporter
     final IPath sourcePath = new Path( zmlFile.getAbsolutePath() );
     final IPath relativeSourcePath = sourcePath.makeRelativeTo( sourceDirPath );
 
-    final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep, timestamp );
+    final Interval interval = toInterval( dateRange );
+
+    final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep, timestamp, interval );
     m_timeseriesIndex.addEntry( newEntry );
 
     final MultiStatus status = stati.asMultiStatus( String.format( Messages.getString( "TimeseriesImporter.0" ), baseName ) ); //$NON-NLS-1$
@@ -303,6 +308,20 @@ public class TimeseriesImporter
     stati.add( storeStatusOperation.execute( new NullProgressMonitor() ) );
 
     return status;
+  }
+
+  private Interval toInterval( final DateRange dateRange )
+  {
+    if( dateRange == null )
+      return null;
+
+    final Date to = dateRange.getTo();
+    final Date from = dateRange.getFrom();
+
+    if( Objects.isNull( from, to ) )
+      return null;
+
+    return new Interval( from.getTime(), to.getTime() );
   }
 
   private IObservation readObservation( final File zmlFile, final String relativePath ) throws SensorException, MalformedURLException

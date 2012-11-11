@@ -99,7 +99,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * The linear sum generator.
- *
+ * 
  * @author Holger Albert
  */
 public class LinearSumGenerator extends AbstractRainfallGenerator implements ILinearSumGenerator
@@ -112,11 +112,12 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   /**
    * The validity range is used to check the length of the timeseries against.
    */
+  // FIXME: does not belong into the binding class! It is not clear how/if this is connected to validFrom/validTo
   private DateRange m_validityRange;
 
   /**
    * The constructor.
-   *
+   * 
    * @param parent
    *          The parent.
    * @param parentRelation
@@ -138,8 +139,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
   /**
    * @param catchmentFeatures
-   *          The catchment features will be taken from the generator itself, so they are not needed here. Leave them
-   *          <code>null</code>.
+   *          The catchment features will be taken from the generator itself, so they are not needed here. Leave them <code>null</code>.
    */
   @Override
   public IObservation[] createRainfall( final Feature[] catchmentFeatures, final IStringResolver variables, final ILog log, IProgressMonitor monitor ) throws CoreException
@@ -441,9 +441,6 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     return m_catchments;
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#adjustValidities()
-   */
   @Override
   public void adjustValidities( )
   {
