@@ -40,9 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
@@ -50,15 +49,17 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  * Interface for classes representing the feature collection c1d2d:ControModelCollection
  * 
  * @author Dejan Antanaskovic
- * 
  */
 public interface IControlModel1D2DCollection extends Feature
 {
-  public static final QName QNAME_PROP = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" ); //$NON-NLS-1$
-  
-  public FeatureBindingCollection<IControlModel1D2D> getControlModels( );
+  FeatureBindingCollection<IControlModel1D2D> getControlModels( );
 
-  public void setActiveControlModel( IControlModel1D2D newControlModel );
+  void setActiveControlModel( IControlModel1D2D newControlModel );
 
-  public IControlModel1D2D getActiveControlModel( );
+  IControlModel1D2D getActiveControlModel( );
+
+  /**
+   * Search the control model associated to the given calculationUnit.
+   */
+  IControlModel findControlModel( ICalculationUnit searchUnit );
 }

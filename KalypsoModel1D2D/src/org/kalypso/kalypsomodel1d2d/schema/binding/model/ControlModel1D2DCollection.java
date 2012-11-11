@@ -48,6 +48,8 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -57,10 +59,9 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Default implementation of {@link IControlModel1D2DCollection} based on {@link FeatureWrapperCollection}
- *
+ * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
- *
  */
 public class ControlModel1D2DCollection extends Feature_Impl implements IControlModel1D2DCollection
 {
@@ -92,7 +93,7 @@ public class ControlModel1D2DCollection extends Feature_Impl implements IControl
     try
     {
       /* post empty command in order to make pool dirty. */
-      ((ICommandPoster) modelProvider).postCommand( IControlModelGroup.class.getName(), new EmptyCommand( "You are dirty now, pool!", false ) ); //$NON-NLS-1$
+      ((ICommandPoster)modelProvider).postCommand( IControlModelGroup.class.getName(), new EmptyCommand( "You are dirty now, pool!", false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -100,9 +101,6 @@ public class ControlModel1D2DCollection extends Feature_Impl implements IControl
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection#getActiveControlModelID()
-   */
   @Override
   public IControlModel1D2D getActiveControlModel( )
   {
@@ -111,7 +109,24 @@ public class ControlModel1D2DCollection extends Feature_Impl implements IControl
     if( feature == null )
       return null;
 
-    return (IControlModel1D2D) feature.getAdapter( IControlModel1D2D.class );
+    return (IControlModel1D2D)feature.getAdapter( IControlModel1D2D.class );
   }
 
+  @Override
+  public IControlModel findControlModel( final ICalculationUnit searchUnit )
+  {
+    final FeatureBindingCollection<IControlModel1D2D> controlModels = getControlModels();
+
+    for( final IControlModel1D2D controlModel : controlModels )
+    {
+      final ICalculationUnit calcUnit = controlModel.getCalculationUnit();
+      if( calcUnit != null )
+      {
+        if( searchUnit.getId().equals( calcUnit.getId() ) )
+          return controlModel;
+      }
+    }
+
+    return null;
+  }
 }

@@ -47,6 +47,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -424,7 +426,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       if( node.getLinkedEdges().length != 0 )
         throw new IllegalStateException( "Node is referenced by one or more edges." ); //$NON-NLS-1$
     }
-    
+
     final FeatureList nodes = getNodesInternal();
     nodes.removeAll( nodesToRemove );
   }
@@ -498,7 +500,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   {
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, CLUSTER_TOLERANCE );
     final List<IFE1D2DElement> elements = queryElements( reqEnvelope, null );
-    for( Iterator<IFE1D2DElement> iterator = elements.iterator(); iterator.hasNext(); )
+    for( final Iterator<IFE1D2DElement> iterator = elements.iterator(); iterator.hasNext(); )
     {
       final IFE1D2DElement element = iterator.next();
       if( element instanceof IPolyElement )
@@ -553,40 +555,11 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   }
 
   @Override
-  public ICalculationUnit1D createCalculationUnit1D( )
+  public ICalculationUnit createCalculationUnit( final QName calcUnitType )
   {
     try
     {
-      final ICalculationUnit1D calcUnit = (ICalculationUnit1D)FeatureHelper.createFeatureForListProp( getComplexElementsInternal(), ICalculationUnit1D.QNAME, -1 );
-      return calcUnit;
-    }
-    catch( final GMLSchemaException e )
-    {
-      throw new IllegalStateException( e );
-    }
-  }
-
-  @Override
-  public ICalculationUnit2D createCalculationUnit2D( )
-  {
-    try
-    {
-      final ICalculationUnit2D calcUnit = (ICalculationUnit2D)FeatureHelper.createFeatureForListProp( getComplexElementsInternal(), ICalculationUnit2D.QNAME, -1 );
-      return calcUnit;
-    }
-    catch( final GMLSchemaException e )
-    {
-      throw new IllegalStateException( e );
-    }
-  }
-
-  @Override
-  public ICalculationUnit1D2D createCalculationUnit1D2D( )
-  {
-    try
-    {
-      final ICalculationUnit1D2D calcUnit = (ICalculationUnit1D2D)FeatureHelper.createFeatureForListProp( getComplexElementsInternal(), ICalculationUnit1D2D.QNAME, -1 );
-      return calcUnit;
+      return (ICalculationUnit)FeatureHelper.createFeatureForListProp( getComplexElementsInternal(), calcUnitType, -1 );
     }
     catch( final GMLSchemaException e )
     {

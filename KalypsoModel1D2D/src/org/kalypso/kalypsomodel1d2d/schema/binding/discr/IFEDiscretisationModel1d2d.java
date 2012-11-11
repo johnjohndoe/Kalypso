@@ -126,11 +126,7 @@ public interface IFEDiscretisationModel1d2d extends IModel
 
   // complex elements
 
-  ICalculationUnit1D createCalculationUnit1D( );
-
-  ICalculationUnit2D createCalculationUnit2D( );
-
-  ICalculationUnit1D2D createCalculationUnit1D2D( );
+  ICalculationUnit createCalculationUnit( QName calculationUnitType );
 
   ITransitionElement createTransitionElement( );
 
