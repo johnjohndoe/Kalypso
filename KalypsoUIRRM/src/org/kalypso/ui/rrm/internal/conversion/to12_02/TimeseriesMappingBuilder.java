@@ -98,7 +98,7 @@ public class TimeseriesMappingBuilder
     if( id == null )
       return null;
 
-    return String.format( "%s#%s", RrmScenario.FILE_CATCHMENT_MODELS_GML, id ); //$NON-NLS-1$
+    return String.format( "%s#%s", RrmScenario.FILE_TIMESERIES_MAPPINGS_GML, id ); //$NON-NLS-1$
   }
 
   public IStatus execute( final TimeseriesMappingType mappingType )
@@ -142,6 +142,7 @@ public class TimeseriesMappingBuilder
           log.add( guessStatus );
 
           final String timeseriesPath = timeseriesGuesser.getResult();
+
           final String modelElementRef = String.format( "%s#%s", RrmScenario.FILE_MODELL_GML, modelElement.getId() ); //$NON-NLS-1$
 
           /* always add a mapping if link exists */
@@ -168,6 +169,8 @@ public class TimeseriesMappingBuilder
       mappings.remove( newMapping );
       log.add( IStatus.OK, Messages.getString( "TimeseriesMappingBuilder.1" ) ); //$NON-NLS-1$
     }
+    else
+      m_mappingIndex.put( mappingType, newMapping.getId() );
 
     final String typeLabel = mappingType.getLabel();
     final String message = String.format( Messages.getString( "TimeseriesMappingBuilder.2" ), typeLabel ); //$NON-NLS-1$
