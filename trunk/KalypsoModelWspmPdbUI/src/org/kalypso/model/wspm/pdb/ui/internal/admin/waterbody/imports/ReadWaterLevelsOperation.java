@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbExecutorOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
+import org.kalypso.model.wspm.pdb.db.utils.PdbMappingUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CrossSectionProvider;
@@ -331,8 +332,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     switch( info.getProperty() )
     {
       case WaterlevelFixation.PROPERTY_STATION:
-        // FIXME: variable unit?
-        return parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_STATION ).movePointRight( 3 );
+        return parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_STATION );
 
       case WaterlevelFixation.PROPERTY_WATERLEVEL:
         final BigDecimal waterlevel = parseDecimal( value, field.getName(), WaterlevelFixation.PROPERTY_WATERLEVEL );
@@ -371,11 +371,11 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
   private BigDecimal parseDecimal( final Object value, final String label, final String precisionProperty ) throws CoreException
   {
-//    final int scale = PdbMappingUtils.findScale( WaterlevelFixation.class, precisionProperty );
-    final int scale = 4;
-
     if( value == null )
       return null;
+
+    /* use correct scale for each property, so espacially the station comparison works correctly */
+    final int scale = PdbMappingUtils.findScale( WaterlevelFixation.class, precisionProperty );
 
     if( value instanceof Number )
       return new BigDecimal( ((Number)value).doubleValue() ).setScale( scale, BigDecimal.ROUND_HALF_UP );
