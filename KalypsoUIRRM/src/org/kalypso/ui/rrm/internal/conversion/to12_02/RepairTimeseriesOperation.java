@@ -93,14 +93,18 @@ public class RepairTimeseriesOperation implements ICoreRunnableWithProgress
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     IObservation observation = m_observation;
+
+    // FIXME: bad and very slow
     if( !hasDatasourceAxis( observation ) )
+      // DataSourceProxyObservation is badly implemented, it seems that the intrnal observation is created multiple times, wasting memory and time.
+      // instead, we should create once a new simple observation, and thats it.
       observation = new DataSourceProxyObservation( observation, m_zmlFile, m_zmlFile, KalypsoStati.BIT_OK );
 
     observation = doRepairTimestamps( observation, stati, monitor );
     observation = doRepairRueckspruenge( observation, stati, monitor );
     m_repaired = doRepairMissingTimesteps( observation, stati, monitor );
 
-    return stati.asMultiStatus( String.format( Messages.getString("RepairTimeseriesOperation_0"), m_zmlFile ) ); //$NON-NLS-1$
+    return stati.asMultiStatus( String.format( Messages.getString( "RepairTimeseriesOperation_0" ), m_zmlFile ) ); //$NON-NLS-1$
   }
 
   private boolean hasDatasourceAxis( final IObservation observation )
