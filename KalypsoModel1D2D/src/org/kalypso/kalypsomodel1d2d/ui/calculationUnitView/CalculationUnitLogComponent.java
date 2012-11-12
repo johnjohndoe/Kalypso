@@ -78,7 +78,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * This component shows the geo-log of the selected calculation unit in a table view.
- *
+ * 
  * @author Gernot Belger
  */
 public class CalculationUnitLogComponent
@@ -170,22 +170,21 @@ public class CalculationUnitLogComponent
 
   protected void handleSelectionChanged( final SelectionChangedEvent event )
   {
-    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-
+    final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
     if( selection.isEmpty() )
       return;
 
     final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof IGeoStatus )
     {
-      final IGeoStatus status = (IGeoStatus) firstElement;
+      final IGeoStatus status = (IGeoStatus)firstElement;
       final GM_Object location = status.getLocation();
 
       final IMapPanel mapPanel = m_dataModel.getData( IMapPanel.class, ICommonKeys.KEY_MAP_PANEL );
 
       if( location instanceof GM_Point )
       {
-        final GM_Envelope panedBBox = mapPanel.getBoundingBox().getPaned( (GM_Point) location );
+        final GM_Envelope panedBBox = mapPanel.getBoundingBox().getPaned( (GM_Point)location );
         final GM_Envelope scaledEnvelope = GeometryUtilities.scaleEnvelope( panedBBox, 0.7 );
         mapPanel.setBoundingBox( scaledEnvelope );
       }
@@ -215,7 +214,7 @@ public class CalculationUnitLogComponent
         return null;
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( logResource ), null );
-      return (IStatusCollection) workspace.getRootFeature().getAdapter( IStatusCollection.class );
+      return (IStatusCollection)workspace.getRootFeature().getAdapter( IStatusCollection.class );
     }
     catch( final Throwable e )
     {
