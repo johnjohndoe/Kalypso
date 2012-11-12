@@ -53,13 +53,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Default implementation of {@link IGeoLog}.<br>
- * The logged stati will we added to a gml-workspace whose root feature is a
- * {@link org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection}.
- * 
+ * The logged stati will we added to a gml-workspace whose root feature is a {@link org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection}.
  * TODO: move to common place<br>
  * 
  * @author Gernot Belger
- * 
  */
 public class GeoLog implements IGeoLog
 {
@@ -84,33 +81,24 @@ public class GeoLog implements IGeoLog
 
     // create GML-Workspace which will hold the geo-stati
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IStatusCollection.QNAME, null, null );
-    m_statusCollection = (IStatusCollection) workspace.getRootFeature().getAdapter( IStatusCollection.class );
+    m_statusCollection = (IStatusCollection)workspace.getRootFeature().getAdapter( IStatusCollection.class );
 
     if( m_log != null )
       m_pluginId = m_log.getBundle().getSymbolicName();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#getStatusCollection()
-   */
   @Override
   public IStatusCollection getStatusCollection( )
   {
     return m_statusCollection;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#close()
-   */
   @Override
   public void close( )
   {
     m_statusCollection.getWorkspace().dispose();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#formatLog(int, int, java.lang.String, java.lang.Object[])
-   */
   @Override
   public IGeoStatus formatLog( final int severity, final int code, final String message, final Object... args )
   {
@@ -118,10 +106,6 @@ public class GeoLog implements IGeoLog
     return log( severity, code, msg, null, null );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#log(int, int, java.lang.String,
-   *      org.kalypsodeegree.model.geometry.GM_Object, java.lang.Throwable)
-   */
   @Override
   public IGeoStatus log( final int severity, final int code, final String message, final GM_Object location, final Throwable t )
   {
@@ -146,9 +130,6 @@ public class GeoLog implements IGeoLog
       m_startTime = time;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#log(org.eclipse.core.runtime.IStatus)
-   */
   @Override
   public void log( final IStatus status )
   {
@@ -166,7 +147,7 @@ public class GeoLog implements IGeoLog
     final int severity = status.getSeverity();
     final String message = status.getMessage();
     final int code = status.getCode();
-    final GM_Object location = status instanceof IGeoStatus ? ((IGeoStatus) status).getLocation() : null;
+    final GM_Object location = status instanceof IGeoStatus ? ((IGeoStatus)status).getLocation() : null;
     final Throwable t = status.getException();
 
     final IGeoStatus newStatus = m_statusCollection.createGeoStatus( severity, m_pluginId, code, message, t, location, time );
@@ -178,13 +159,9 @@ public class GeoLog implements IGeoLog
     return newStatus;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#getStartTime()
-   */
   @Override
   public Date getStartTime( )
   {
     return m_startTime;
   }
-
 }
