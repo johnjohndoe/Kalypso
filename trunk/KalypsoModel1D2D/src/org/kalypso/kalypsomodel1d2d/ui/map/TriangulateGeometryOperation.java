@@ -38,61 +38,65 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.quadmesh;
+package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.Add2DElementsCommand;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
- * Imports a QuadMesh into a discretisation model.
- * 
  * @author Gernot Belger
  */
-public class ImportQuadMeshWorker implements ICoreRunnableWithProgress
+public class TriangulateGeometryOperation
 {
-  private final CommandableWorkspace m_discretisationWorkspace;
+  private final TriangulateGeometryWidget m_widget;
 
-  private final QuadMesh[] m_grids;
-
-  public ImportQuadMeshWorker( final CommandableWorkspace discretisationWorkspace, final QuadMesh... grids )
+  public TriangulateGeometryOperation( final TriangulateGeometryWidget widget )
   {
-    m_discretisationWorkspace = discretisationWorkspace;
-    m_grids = grids;
+    m_widget = widget;
   }
 
-  @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  // FIXME: move into operation
+  public void convertTriangulationToModel( )
   {
+    final IKalypsoFeatureTheme theme = m_widget.getDiscTheme();
+    final CommandableWorkspace workspace = theme.getWorkspace();
+
     try
     {
-      /* Fetch all rings */
-      final List<GM_PolygonPatch> rings = new ArrayList<>();
-      for( final QuadMesh mesh : m_grids )
-      {
-        final List<GM_PolygonPatch> meshRings = mesh.toRings();
-        rings.addAll( meshRings );
-      }
+      final List<GM_PolygonPatch> elements = getTinRings();
+      if( elements == null )
+        return;
 
-      /* Add rings as 2d elements to net */
-      final Add2DElementsCommand command = new Add2DElementsCommand( m_discretisationWorkspace, rings );
-      m_discretisationWorkspace.postCommand( command );
+      final Add2DElementsCommand command = new Add2DElementsCommand( workspace, elements );
+      workspace.postCommand( command );
     }
-    catch( final Exception e )
+    catch( final Exception e1 )
     {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.2" ), e ); //$NON-NLS-1$
+      e1.printStackTrace();
+      SWT_AWT_Utilities.showSwtMessageBoxError( m_widget.getName(), Messages.getString( "TriangulateGeometryData_0" ) + e1.toString() ); //$NON-NLS-1$
     }
+    finally
+    {
+      m_widget.reinit();
+    }
+  }
 
-    return Status.OK_STATUS;
+  private List<GM_PolygonPatch> getTinRings( )
+  {
+    final GM_TriangulatedSurface tin = m_widget.getBuilder().getTin();
+    if( tin == null )
+      return null;
+
+    final List<GM_PolygonPatch> rings = new ArrayList<>( tin.size() );
+    rings.addAll( tin );
+    return rings;
   }
 }

@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -64,6 +63,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen.TriangulationBuilder;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -75,11 +75,6 @@ import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.Fill;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -87,24 +82,21 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This widget is used to triangulate a boundary with breaklines. The user gets a preview before he starts the
  * refinement of the model.
- *
+ * 
  * @author Stefan Kurzbach
  */
 public class TriangulateGeometryWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private final TriangulateGeometryData m_data = new TriangulateGeometryData( this );
+  private TriangulationBuilder m_builder = new TriangulationBuilder();
+
+  private final TriangulateGeometryOperation m_data = new TriangulateGeometryOperation( this );
 
   private boolean m_modePolygon = true;
 
@@ -127,10 +119,6 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<>();
 
   private IFEDiscretisationModel1d2d m_discModel;
-
-  private PolygonSymbolizer m_polySymb;
-
-  private LineSymbolizer m_lineSymb;
 
   private IKalypsoFeatureTheme m_theme;
 
@@ -173,22 +161,16 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     m_boundaryGeometryBuilder = new PolygonGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
     m_breaklineGeometryBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
 
-    m_data.resetGeometries();
+    m_builder.reset();
 
     m_nodesNameConversionMap.clear();
 
-    m_polySymb = new PolygonSymbolizer_Impl();
-    final Fill fill = StyleFactory.createFill( new Color( 255, 255, 255 ) );
-    fill.setOpacity( 0.0 );
-    final Stroke polyStroke = StyleFactory.createStroke( new Color( 255, 0, 0 ) );
-    m_polySymb.setFill( fill );
-    m_polySymb.setStroke( polyStroke );
+    repaint();
+  }
 
-    m_lineSymb = new LineSymbolizer_Impl();
-    final Stroke lineStroke = StyleFactory.createStroke( new Color( 0, 255, 0 ) );
-    m_lineSymb.setStroke( lineStroke );
-
-    repaintMap();
+  TriangulationBuilder getBuilder( )
+  {
+    return m_builder;
   }
 
   @Override
@@ -244,16 +226,16 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     {
       if( m_modePolygon )
       {
-        final GM_Polygon boundaryGeom = (GM_Polygon) m_boundaryGeometryBuilder.finish();
-        m_data.setBoundary( boundaryGeom );
+        final GM_Polygon boundaryGeom = (GM_Polygon)m_boundaryGeometryBuilder.finish();
+        m_builder.setBoundary( boundaryGeom, true );
       }
       else
       {
-        final GM_Curve finish = (GM_Curve) m_breaklineGeometryBuilder.finish();
-        m_data.addBreakLine( finish );
+        final GM_Curve finish = (GM_Curve)m_breaklineGeometryBuilder.finish();
+        m_builder.addBreakLine( finish, true );
       }
 
-      final GM_MultiCurve breaklines = m_data.getBreaklines();
+      final GM_MultiCurve breaklines = m_builder.getBreaklines();
       if( breaklines != null )
       {
         final GM_Curve[] curves = breaklines.getAllCurves();
@@ -264,7 +246,10 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
         }
       }
 
-      m_data.finishGeometry();
+      m_builder.finish();
+      m_boundaryGeometryBuilder.reset();
+      m_breaklineGeometryBuilder.reset();
+      repaint();
     }
     catch( final Exception e )
     {
@@ -277,6 +262,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     }
   }
 
+  @SuppressWarnings( "unchecked" )
   private String validatePolygon( final GM_Point point )
   {
     if( point == null || m_boundaryGeometryBuilder == null )
@@ -286,11 +272,11 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     {
       m_boundaryGeometryBuilder.addPoint( point );
 
-      final GM_Polygon finish = (GM_Polygon) m_boundaryGeometryBuilder.finish();
+      final GM_Polygon finish = (GM_Polygon)m_boundaryGeometryBuilder.finish();
       if( finish == null )
         return null;
 
-      if( GeometryUtilities.isSelfIntersecting( finish.get( 0 ).getExteriorRing() ) )
+      if( GeometryUtilities.isSelfIntersecting( finish.getSurfacePatch().getExteriorRing() ) )
         return Messages.getString( "TriangulateGeometryWidget.0" ); //$NON-NLS-1$
 
       final List<Feature> possiblyIntersecting = m_featureList.query( finish.getEnvelope(), null );
@@ -342,7 +328,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       m_warningRenderer.setTooltip( warning );
     }
 
-    repaintMap();
+    repaint();
   }
 
   @Override
@@ -388,32 +374,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
         m_breaklineGeometryBuilder.paint( g, projection, m_currentMapPoint );
     }
 
-    drawTinAndBreaklines( g, projection );
-  }
-
-  private void drawTinAndBreaklines( final Graphics g, final GeoTransform projection )
-  {
-    try
-    {
-      final GM_TriangulatedSurface tin = m_data.getTin();
-
-      if( tin != null && !tin.isEmpty() )
-      {
-        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( null, tin, m_polySymb );
-        de.paint( g, projection, new NullProgressMonitor() );
-      }
-
-      final GM_MultiCurve breaklines = m_data.getBreaklines();
-      if( breaklines != null && !breaklines.isEmpty() )
-      {
-        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, breaklines, m_lineSymb );
-        de.paint( g, projection, new NullProgressMonitor() );
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+    m_builder.paint( g, projection );
   }
 
   @Override
@@ -434,7 +395,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
         m_modePolygon = !m_modePolygon;
         m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.TriangulateGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
       }
-      repaintMap();
+      repaint();
     }
 
     else if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
@@ -446,7 +407,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       else
         m_breaklineGeometryBuilder.removeLastPoint();
 
-      repaintMap();
+      repaint();
     }
     else if( e.getKeyCode() == KeyEvent.VK_ENTER )
       m_data.convertTriangulationToModel();
@@ -474,7 +435,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_composite = new TriangulateGeometryComposite( toolkit, parent, m_data );
+    m_composite = new TriangulateGeometryComposite( toolkit, parent, this, m_data );
     return m_composite;
   }
 
@@ -491,16 +452,13 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     return Messages.getString( "TriangulateGeometryWidget.15" ); //$NON-NLS-1$
   }
 
-  public void onTinUpdated( )
-  {
-    m_boundaryGeometryBuilder.reset();
-    m_breaklineGeometryBuilder.reset();
-
-    repaintMap();
-  }
-
   IKalypsoFeatureTheme getDiscTheme( )
   {
     return m_theme;
+  }
+
+  void repaint( )
+  {
+    repaintMap();
   }
 }

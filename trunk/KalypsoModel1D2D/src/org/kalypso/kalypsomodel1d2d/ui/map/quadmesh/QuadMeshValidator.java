@@ -49,12 +49,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -84,7 +82,7 @@ public class QuadMeshValidator
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString("QuadMeshValidator.0"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "QuadMeshValidator.0" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -93,15 +91,15 @@ public class QuadMeshValidator
     if( discModel == null )
       return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.4" ) ); //$NON-NLS-1$
 
-    final List<GM_Ring> rings = m_mesh.toRings();
-    for( final GM_Ring ring : rings )
+    final List<GM_PolygonPatch> rings = m_mesh.toRings();
+    for( final GM_PolygonPatch ring : rings )
     {
       // 4) New Element self-intersects
-      if( GeometryUtilities.isSelfIntersecting( ring.getPositions() ) )
+      if( GeometryUtilities.isSelfIntersecting( ring.getExteriorRing() ) )
         return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.5" ) ); //$NON-NLS-1$
 
       // New Element intersects other elements
-      final GM_Polygon newSurface = GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Polygon newSurface = GeometryFactory.createGM_Surface( ring );
       final List<IFE1D2DElement> elements = discModel.queryElements( newSurface.getEnvelope(), null );
       for( final IFE1D2DElement element : elements )
       {

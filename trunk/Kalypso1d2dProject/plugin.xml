@@ -135,6 +135,7 @@
         <command id="org.kalypso.model.1d2d.workflow.EditNet2D" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.EditNet2D.name" description="%org.kalypso.model.1d2d.workflow.EditNet2D.description"/>
         <command id="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.EditFlowRelations2D.name" description="%org.kalypso.model.1d2d.workflow.EditFlowRelations2D.description"/>
         <command id="org.kalypso.model.1d2d.workflow.Chan2DGen" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.Chan2DGen.name" description="%org.kalypso.model.1d2d.workflow.Chan2DGen.description"/>
+        <command id="org.kalypso.model.1d2d.workflow.DikeDitchGen" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.DikeDitchGen.name" description="%org.kalypso.model.1d2d.workflow.DikeDitchGen.description"/>
         <command id="org.kalypso.model.1d2d.workflow.BandGen" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.BandGen.name" description="%org.kalypso.model.1d2d.workflow.BandGen.description"/>
         <command id="org.kalypso.model.1d2d.workflow.AssignElevs" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.AssignElevs.name" description="%org.kalypso.model.1d2d.workflow.AssignElevs.description"/>
         <command id="org.kalypso.model.1d2d.workflow.ShowWindData" categoryId="org.kalypso.model.1d2d.workflow" name="%org.kalypso.model.1d2d.workflow.ShowWindData.name" description="%org.kalypso.model.1d2d.workflow.ShowWindData.description"/>
@@ -165,7 +166,9 @@
    </extension>
    
    <extension point="org.eclipse.ui.commandImages">
-        <image commandId="org.kalypso.model.1d2d.workflow.Preprocessing" icon="icons/workflow/Preprocessing.png"/>
+        <!--
+        <image commandId="org.kalypso.model.1d2d.workflow.Preprocessing" icon="icons/workflow/"/>
+        -->
         <image commandId="org.kalypso.model.1d2d.workflow.DataLoad" icon="icons/workflow/DataLoad.gif"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ElevLoad" icon="icons/workflow/ElevLoad.gif"/>
         <image commandId="org.kalypso.model.1d2d.workflow.WindDataLoad" icon="icons/workflow/WindDataLoad.png"/>
@@ -192,6 +195,7 @@
         <image commandId="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" icon="icons/workflow/EditFlowRelations2D.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.Chan2DGen" icon="icons/workflow/Chan2DGen.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.BandGen" icon="icons/workflow/BandGen.png"/>
+        <image commandId="org.kalypso.model.1d2d.workflow.DikeDitchGen" icon="icons/workflow/BandGen.png"/>
         <image commandId="org.kalypso.model.1d2d.workflow.AssignElevs" icon="icons/workflow/AssignElevs.gif"/>
         <image commandId="org.kalypso.model.1d2d.workflow.ShowWindData" icon="icons/workflow/ShowWindData.png"/>
         <!--
@@ -289,7 +293,17 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
-
+		 <handler
+	           commandId="org.kalypso.model.1d2d.workflow.DikeDitchGen">
+           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen.GenerateDikeOrDitchWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
+	     </handler>
 	     <handler
 	     	   commandId="org.kalypso.model.1d2d.workflow.AssignElevs">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
