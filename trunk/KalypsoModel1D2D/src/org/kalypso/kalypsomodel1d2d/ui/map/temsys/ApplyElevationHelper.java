@@ -97,7 +97,7 @@ public class ApplyElevationHelper
       try
       {
         final GM_Point point = node.getPoint();
-        if( !Double.isNaN( point.getZ() ) )
+        if( Double.isNaN( point.getZ() ) )
         {
           noElevationNodes.add( node );
         }
