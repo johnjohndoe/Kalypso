@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -51,11 +52,13 @@ import java.util.Map;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
@@ -64,11 +67,14 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -109,7 +115,7 @@ public class ExecutePreRMAKalypso
 
     m_serviceEndpoint = serviceEndpoint;
     m_modelInput = createInputs( restartInfos );
-    // currently 60 minutes timeout
+    // currently 60 minutes timeout... is this ok? 1h calculation with rma is not unusual...
     m_wpsRequest = new WPSRequest( PreRMAKalypso.ID, m_serviceEndpoint, 60 * 60 * 1000 );
   }
 
@@ -130,6 +136,7 @@ public class ExecutePreRMAKalypso
 
       // the delegate is not used for outputs
       final List<String> outputs = new ArrayList<>();
+      outputs.add( IRMAPreprocessing.OUTPUT_LOG );
       outputs.add( IRMAPreprocessing.OUTPUT_MESH );
       outputs.add( IRMAPreprocessing.OUTPUT_CONTROL );
       outputs.add( IRMAPreprocessing.OUTPUT_BUILDINGS );
@@ -138,23 +145,35 @@ public class ExecutePreRMAKalypso
       outputs.add( IRMAPreprocessing.OUTPUT_WIND_COORD );
 
       // run the preprocessing, this will create references to ascii files from gml files
-      final IStatus preRMAstatus = m_wpsRequest.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
-
-      // FIXME: check log messages!
-
-      // abort on error
-      if( !preRMAstatus.isOK() )
-        return preRMAstatus;
+      /* final IStatus preRMAstatus = */
+      m_wpsRequest.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
 
       final Map<String, ComplexValueReference> references = m_wpsRequest.getReferences();
+      final IStatus logStatus = readLogfile( references );
+      if( logStatus.matches( IStatus.ERROR ) )
+        return logStatus;
+
       final IStatus resultStatus = checkResults( references );
 
       // abort if results are missing
       if( !resultStatus.isOK() )
-        return resultStatus;
+      {
+        /* append to end of preprocessing status */
+        final IStatus[] logChildren = logStatus.getChildren();
 
-      // if we get here, everything is OK
-      return Status.OK_STATUS;
+        final IStatus[] children = ArrayUtils.add( logChildren, resultStatus );
+
+        return new MultiStatus( KalypsoModel1D2DPlugin.PLUGIN_ID, ISimulation1D2DConstants.CODE_PRE, children, logStatus.getMessage(), null );
+      }
+
+      return logStatus;
+
+      // FIXME: preserve ascii files: we could now already zip the rma ascii files as output.zip; this would be nice,as we would even keep the files in the cae we get an error later.
+      // TODO: also keep control files etc, not only the model.2d file.
+
+      // abort on error
+      // if( !preRMAstatus.isOK() )
+      // return preRMAstatus;
     }
     catch( final Throwable e )
     {
@@ -166,9 +185,36 @@ public class ExecutePreRMAKalypso
     }
   }
 
+  private IStatus readLogfile( final Map<String, ComplexValueReference> references )
+  {
+    final ComplexValueReference logReference = references.get( IRMAPreprocessing.OUTPUT_LOG );
+    if( logReference == null )
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "Preprocessing: missing log file, internal error." ); //$NON-NLS-1$
+
+    try
+    {
+      final String logFileUrl = logReference.getReference();
+
+      final URL logFile = new URL( logFileUrl );
+
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( logFile, null );
+
+      final IStatusCollection stati = (IStatusCollection)workspace.getRootFeature();
+
+      final IStatus status = stati.toStatus();
+      return new MultiStatus( KalypsoModel1D2DPlugin.PLUGIN_ID, 0, status.getChildren(), "Preprocessing", null ); //$NON-NLS-1$
+    }
+    catch( final Exception e )
+    {
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "Preprocessing: failed to read log file, internal error.", e ); //$NON-NLS-1$
+    }
+  }
+
   private final Modeldata createInputs( final List<IRestartInfo> restartInfos )
   {
     final Map<String, String> inputs = new HashMap<>();
+
+    // FIXME: bad, get pathes from central place instead
     inputs.put( IRMAPreprocessing.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$
     inputs.put( IRMAPreprocessing.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
     inputs.put( IRMAPreprocessing.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$

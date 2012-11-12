@@ -18,7 +18,6 @@
  */
 package org.kalypso.kalypsomodel1d2d.sim;
 
-
 /**
  * @author Gernot Belger
  */
@@ -37,6 +36,9 @@ public interface IRMAPreprocessing
   String INPUT_MESH = "mesh"; //$NON-NLS-1$
 
   String INPUT_CONTROL = "control"; //$NON-NLS-1$
+
+  /** the log of geo status elements i.e. the log file of the preprocessing */
+  String OUTPUT_LOG = "log"; //$NON-NLS-1$
 
   String OUTPUT_MESH = ISimulation1D2DConstants.MODEL_2D;
 

@@ -65,7 +65,6 @@ import org.kalypso.service.wps.refactoring.IWPSProcess;
 
 /**
  * @author kurzbach
- *
  */
 public class ExecuteRMAKalypsoSimulation
 {
@@ -85,7 +84,7 @@ public class ExecuteRMAKalypsoSimulation
 
   /**
    * Create execute request to RMAKalypsoSimulation WPS
-   *
+   * 
    * @throws URISyntaxException
    *           if any of the inputs is not a valid URI
    */
@@ -111,6 +110,8 @@ public class ExecuteRMAKalypsoSimulation
       m_wpsRequest.startProcess( m_inputs, outputs, progress );
 
       final AsynchronousWPSWatchdog rmaWatchdog = new AsynchronousWPSWatchdog( m_wpsRequest, m_wpsObserver, 0 );
+
+      // TODO: check this status, seems to return always 'OK', don't we have a real log file from rma-kalypso?
       final IStatus executeStatus = rmaWatchdog.waitForProcess( progress );
 
       return executeStatus;
@@ -128,9 +129,8 @@ public class ExecuteRMAKalypsoSimulation
   /**
    * Return results dir if it is already available, null otherwise. <br>
    * It is the caller's responsibility to close the {@link FileSystemManagerWrapper} of the results dir. <br>
-   *
+   * 
    * @see VFSUtilities#getNewManager()
-   *
    * @throws Exception
    *           if something goes wrong parsing the execute response or resolving the results dir
    */
@@ -143,7 +143,7 @@ public class ExecuteRMAKalypsoSimulation
       if( resultArray == null )
         return null;
 
-      final ComplexValueReference complexValueReference = (ComplexValueReference) resultArray[0];
+      final ComplexValueReference complexValueReference = (ComplexValueReference)resultArray[0];
       final String resultsDirReference = complexValueReference.getReference();
       m_resultsDir = m_manager.resolveFile( resultsDirReference );
     }
