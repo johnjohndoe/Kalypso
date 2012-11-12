@@ -684,6 +684,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       // could happen that the node only has x and y coordinates
       // ignore now, case will be handled soon, z = Double.NaN;
     }
+
     if( Double.isNaN( z ) )
     {
       final GM_Point position = node.getPoint();
@@ -1011,7 +1012,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
               m_mapPolyWeir2DSubElement.put( id, lListEdges );
               final int upstreamNodeID = getConversionID( lListEdges.get( upstreamNodePositionInEachElement ).getFirstNode() );
               formatter.format( "FE%10d%10d%10s%10s%10d%10d%n", id, buildingID, "", "", upstreamNodeID, lIntWeirDirection ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
             }
             for( final IFE1D2DEdge edge : ((IPolyElement)element).getEdges() )
             {
@@ -1025,7 +1025,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
           // final int roughnessID = m_roughnessIDProvider == null ? 0 : getRoughnessID( element );
           //          formatter.format( "FE%10d%10d%n", id, roughnessID ); //$NON-NLS-1$
         }
-
         else
         {
           for( final IFE1D2DEdge edge : ((IPolyElement)element).getEdges() )
@@ -1058,7 +1057,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     FormatterUtils.checkIoException( formatter );
 
     // write edge set nodes
-    // TODO: only write nodes, which are within the requested calculation unit!
     for( final IFE1D2DEdge edge : edgeSet )
     {
       for( final IFE1D2DNode node : edge.getNodes() )
@@ -1265,7 +1263,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
     // TODO: use default zone instead.
     // Right now it is set to '0' which means the element is deactivated for the simulation
-    final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31", element.getId() ); //$NON-NLS-1$
+    final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31" ); //$NON-NLS-1$
 
     final GM_Object geometry = getErrorGeometry( element );
 
