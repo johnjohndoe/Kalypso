@@ -223,12 +223,8 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
     // - no results
     // - some results
 
-    // TODO: show dialog to user where he can
-    // - choose, which steps to process
-    // - choose, which results to be deleted
-
-    if( simulationStatus.isOK() )
-      return new Status( IStatus.OK, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), null ); //$NON-NLS-1$
+    if( simulationStatus.isOK() || simulationStatus.matches( IStatus.INFO ) )
+      return new MultiStatus( KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, simulationStatus.getChildren(), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), null ); //$NON-NLS-1$
 
     if( simulationStatus.matches( IStatus.CANCEL ) )
       return new Status( IStatus.CANCEL, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2" ), null ); //$NON-NLS-1$
