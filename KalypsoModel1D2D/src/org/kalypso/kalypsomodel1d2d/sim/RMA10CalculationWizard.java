@@ -75,7 +75,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * A wizard showing the progress of a RMA·Kalypso calculation.
- *
+ * 
  * @author Gernot Belger
  */
 public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DConstants
@@ -146,7 +146,7 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
     final IWizardContainer container = getContainer();
     if( container instanceof WizardDialog2 )
     {
-      final Button button = ((WizardDialog2) container).getButton( IDialogConstants.FINISH_ID );
+      final Button button = ((WizardDialog2)container).getButton( IDialogConstants.FINISH_ID );
       button.setEnabled( enabled );
     }
   }
@@ -156,7 +156,7 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
     final IWizardContainer container = getContainer();
     if( container instanceof WizardDialog2 )
     {
-      final Button button = ((WizardDialog2) container).getButton( IDialogConstants.FINISH_ID );
+      final Button button = ((WizardDialog2)container).getButton( IDialogConstants.FINISH_ID );
       button.setText( buttonText );
     }
   }
@@ -166,12 +166,12 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
   {
     final IWizardContainer oldContainer = getContainer();
     if( oldContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageChangeListener );
+      ((IPageChangeProvider)oldContainer).removePageChangedListener( m_pageChangeListener );
 
     super.setContainer( wizardContainer );
 
     if( wizardContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageChangeListener );
+      ((IPageChangeProvider)wizardContainer).addPageChangedListener( m_pageChangeListener );
   }
 
   @Override
@@ -179,7 +179,7 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
   {
     final IWizardContainer oldContainer = getContainer();
     if( oldContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageChangeListener );
+      ((IPageChangeProvider)oldContainer).removePageChangedListener( m_pageChangeListener );
 
     super.dispose();
   }
@@ -224,9 +224,9 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
       final IWizardContainer container = getContainer();
       if( container instanceof WizardDialog2 )
       {
-        final Button cancelButton = ((WizardDialog2) container).getButton( IDialogConstants.CANCEL_ID );
+        final Button cancelButton = ((WizardDialog2)container).getButton( IDialogConstants.CANCEL_ID );
         cancelButton.setEnabled( false );
-        final Button nextButton = ((WizardDialog2) container).getButton( IDialogConstants.NEXT_ID );
+        final Button nextButton = ((WizardDialog2)container).getButton( IDialogConstants.NEXT_ID );
         nextButton.setEnabled( false );
       }
 
@@ -279,9 +279,6 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
     return canFinish;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
@@ -323,7 +320,7 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
       // HACK: disable cancel, after result processing, as canceling will not change anything from now on
       if( container instanceof WizardDialog2 )
       {
-        final Button button = ((WizardDialog2) container).getButton( IDialogConstants.CANCEL_ID );
+        final Button button = ((WizardDialog2)container).getButton( IDialogConstants.CANCEL_ID );
         button.setEnabled( false );
       }
 
@@ -334,9 +331,6 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
     return true;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performCancel()
-   */
   @Override
   public boolean performCancel( )
   {
@@ -372,7 +366,7 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
       // change this?
       // YES, WE SHOULD!
       if( !m_unitFolder.exists() && m_unitFolder instanceof IFolder )
-        ((IFolder) m_unitFolder).create( true, true, new NullProgressMonitor() );
+        ((IFolder)m_unitFolder).create( true, true, new NullProgressMonitor() );
 
       final File simDir = m_unitFolder.getLocation().toFile();
       final File loggerFile = new File( simDir, SIMULATION_LOG_GML );
@@ -385,7 +379,6 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
     }
     finally
     {
-      // SimulationUtilitites.clearTmpDir( m_calcPage.getResultDir() );
       if( m_resultPage != null )
         SimulationUtilitites.clearTmpDir( m_resultPage.getResultDir() );
     }
