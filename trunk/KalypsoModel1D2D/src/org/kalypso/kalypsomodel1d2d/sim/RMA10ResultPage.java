@@ -412,7 +412,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
     final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     spinnerLabel.setLayoutData( gridData );
 
-    final Spinner spinNumStepProcessing = new Spinner( buttonComposite, SWT.NONE );
+    final Spinner spinNumStepProcessing = new Spinner( buttonComposite, SWT.BORDER );
 
     final GridData gridDataSpin = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
 

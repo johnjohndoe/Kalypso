@@ -172,7 +172,7 @@ public class RMA10CalculationPage extends WizardPage
     buttonComposite.setLayout( layout );
     buttonComposite.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
 
-    final Label spinnerLabel1 = new Label( buttonComposite, SWT.BORDER );
+    final Label spinnerLabel1 = new Label( buttonComposite, SWT.NONE );
     spinnerLabel1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.8" ) ); //$NON-NLS-1$
     final GridData gridData1 = new GridData( SWT.FILL, SWT.CENTER, true, false );
     spinnerLabel1.setLayoutData( gridData1 );
@@ -195,8 +195,6 @@ public class RMA10CalculationPage extends WizardPage
     spinnerLabel2.setLayoutData( gridData2 );
 
     /* Iteration viewer */
-    // final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
-
     m_iterGroup = new Group( composite, SWT.NONE );
     m_iterGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.11" ) ); //$NON-NLS-1$
 
@@ -214,20 +212,6 @@ public class RMA10CalculationPage extends WizardPage
     {
       m_isCoupledSimulation = false;
       m_coupledSimulationCheck.setEnabled( false );
-      // m_isCoupledSimulation = ((ICoupledCalculationUnit) calculationUnit).isCoupledSimulation();
-      // m_coupledSimulationCheck.setSelection( m_isCoupledSimulation );
-      // m_coupledSimulationCheck.addSelectionListener( new SelectionAdapter()
-      // {
-      // /**
-      // * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-      // */
-      // @Override
-      // public void widgetSelected( final SelectionEvent e )
-      // {
-      // m_isCoupledSimulation = m_coupledSimulationCheck.getSelection();
-      // ((ICoupledCalculationUnit) calculationUnit).setCoupledSimulation( m_isCoupledSimulation );
-      // }
-      // } );
     }
     updateIterationViewerGroup( null );
 
