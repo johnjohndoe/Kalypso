@@ -112,8 +112,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
     m_minElevation = minElevation;
     m_maxElevation = maxElevation;
 
-    m_noElevationColor = noElevationColor;
-
     m_minColor = minColor;
     m_maxColor = maxColor;
 
@@ -130,8 +128,11 @@ public class SimpleElevationColorModel implements IElevationColorModel
     m_maxBri = m_maxhsb[2];
 
     m_numOfClasses = numOfClasses;
-    m_transparency = (255 - (int) (transparency * 255.0 / 100.0));
+    m_transparency = (255 - (int)(transparency * 255.0 / 100.0));
     m_goDarkerFromMinToMax = goDarkerFromMinToMax;
+
+    m_noElevationColor = new Color( noElevationColor.getRed(), noElevationColor.getGreen(), noElevationColor.getBlue(), m_transparency );
+
     try
     {
       fillColorList();
@@ -149,7 +150,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   private void fillColorList( ) throws FilterEvaluationException
   {
     /* min Color */
-    Color hsbColor = Color.getHSBColor( (float) m_minHue, (float) m_minSat, (float) m_minBri );
+    Color hsbColor = Color.getHSBColor( (float)m_minHue, (float)m_minSat, (float)m_minBri );
     Color rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), m_transparency );
     m_colorList.add( rgbColor );
 
@@ -162,7 +163,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
       final double Sat = m_minSat + (i * (m_maxSat - m_minSat) / (m_numOfClasses - 1));
       final double Bri = m_minBri + (i * (m_maxBri - m_minBri) / (m_numOfClasses - 1));
 
-      hsbColor = Color.getHSBColor( (float) Hue, (float) Sat, (float) Bri );
+      hsbColor = Color.getHSBColor( (float)Hue, (float)Sat, (float)Bri );
       rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), m_transparency );
       m_colorList.add( rgbColor );
 
@@ -171,7 +172,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     }
 
     /* max Color */
-    hsbColor = Color.getHSBColor( (float) m_maxHue, (float) m_maxSat, (float) m_maxBri );
+    hsbColor = Color.getHSBColor( (float)m_maxHue, (float)m_maxSat, (float)m_maxBri );
     rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), m_transparency );
     m_colorList.add( rgbColor );
 
@@ -213,13 +214,13 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
   /**
    * gets the corresponding color class for the given elevation
-   *
+   * 
    * @param elevation
    *          given elevation
    */
   private final Color interpolateColor( final double elevation )
   {
-    final int colorClass = (int) ((elevation - m_minElevation) / (m_maxElevation - m_minElevation) * m_numOfClasses);
+    final int colorClass = (int)((elevation - m_minElevation) / (m_maxElevation - m_minElevation) * m_numOfClasses);
     int red = 0;
     int green = 0;
     int blue = 0;
@@ -321,7 +322,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
       final double hue = m_minHue + elevation * (m_maxHue - m_minHue) / (m_maxElevation - m_minElevation);
       final double sat = m_minSat + elevation * (m_maxSat - m_minSat) / (m_maxElevation - m_minElevation);
       final double bri = m_minBri + elevation * (m_maxBri - m_minBri) / (m_maxElevation - m_minElevation);
-      return new float[] { (float) hue, (float) sat, (float) bri };
+      return new float[] { (float)hue, (float)sat, (float)bri };
     }
     else
     {
@@ -413,7 +414,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
       @Override
       public void visitItem( final Object item )
       {
-        result[0] = (ElevationColorEntry) item;
+        result[0] = (ElevationColorEntry)item;
       }
     };
     m_entryIndex.query( elevation, elevation, visitor );

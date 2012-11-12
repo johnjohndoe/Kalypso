@@ -57,6 +57,8 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
 {
   static private IPreferenceStore m_preferenceStore = KalypsoModel1D2DPlugin.getDefault().getPreferenceStore();
 
+  // FIXME: argg, everything static here, makes really no sense...!
+
   private static final Color DEFAULT_MIN_COLOR = Color.RED;
 
   private static final Color DEFAULT_MAX_COLOR = Color.GREEN;
@@ -234,7 +236,6 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
 
   public static int getTransparencyIndex( )
   {
-
     return transparencyIndex;
   }
 
