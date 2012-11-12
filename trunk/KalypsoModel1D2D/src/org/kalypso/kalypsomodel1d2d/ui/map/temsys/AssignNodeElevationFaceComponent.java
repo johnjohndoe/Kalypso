@@ -75,6 +75,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListe
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -350,9 +351,37 @@ public class AssignNodeElevationFaceComponent extends Composite
     m_selectionNodeList.addAll( selection.toList() );
 
     m_dataModel.setSelectedNodeList( m_selectionNodeList );
+
     final IMapPanel mapPanel = m_dataModel.getMapPanel();
     if( mapPanel != null )
+    {
       mapPanel.repaintMap();
+
+      /* center on selected point */
+      centerMapOnSelection( mapPanel, selection );
+    }
+  }
+
+  private void centerMapOnSelection( final IMapPanel mapPanel, final IStructuredSelection selection )
+  {
+    if( selection.size() != 1 )
+      return;
+
+    final Object firstElement = selection.getFirstElement();
+    if( !(firstElement instanceof IFE1D2DNode) )
+      return;
+
+    final IFE1D2DNode selectedNode = (IFE1D2DNode)firstElement;
+    final GM_Point point = selectedNode.getPoint();
+    if( point == null )
+      return;
+
+    final GM_Envelope boundingBox = mapPanel.getBoundingBox();
+    if( boundingBox == null )
+      return;
+
+    final GM_Envelope panedBBox = mapPanel.getBoundingBox().getPaned( point );
+    mapPanel.setBoundingBox( panedBBox );
   }
 
   protected void handleDataChanged( final String key, final Object newValue )
