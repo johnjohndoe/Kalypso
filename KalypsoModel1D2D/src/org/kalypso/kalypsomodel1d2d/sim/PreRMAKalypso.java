@@ -1,25 +1,32 @@
 package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
-import java.io.OutputStream;
+import java.io.IOException;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.sim.preprocessing.IPreRMAData;
 import org.kalypso.kalypsomodel1d2d.sim.preprocessing.PreRMAData;
 import org.kalypso.kalypsomodel1d2d.sim.preprocessing.PreRMAFiles;
 import org.kalypso.kalypsomodel1d2d.sim.preprocessing.PreRMAKalypsoWorker;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
+
+import com.google.common.base.Charsets;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -30,36 +37,6 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  */
 public class PreRMAKalypso implements ISimulation, IRMAPreprocessing
 {
-//  public static final String INPUT_RESTART_FILE_PREFIX = "restartFile"; //$NON-NLS-1$
-//
-//  public static final String INPUT_ROUGHNESS = "roughness"; //$NON-NLS-1$
-//
-//  public static final String INPUT_FLOW_RELATIONSHIPS = "flowRelationships"; //$NON-NLS-1$
-//
-//  public static final String INPUT_WIND_RELATIONSHIPS = "wind"; //$NON-NLS-1$
-//
-//  public static final String INPUT_CALCULATION_UNIT_ID = "calculationUnitID"; //$NON-NLS-1$
-//
-//  public static final String INPUT_MESH = "mesh"; //$NON-NLS-1$
-//
-//  public static final String INPUT_CONTROL = "control"; //$NON-NLS-1$
-//
-//  public static final String OUTPUT_MESH = ISimulation1D2DConstants.MODEL_2D;
-//
-//  public static final String OUTPUT_BC_WQ = ISimulation1D2DConstants.BC_WQ_File;
-//
-//  public static final String OUTPUT_BUILDINGS = ISimulation1D2DConstants.BUILDING_File;
-//
-//  public static final String OUTPUT_WIND = ISimulation1D2DConstants.WIND_RMA10_File;
-//
-//  public static final String OUTPUT_WIND_COORD = ISimulation1D2DConstants.WIND_RMA10_COORDS_File;
-//
-//  public static final String OUTPUT_CONTROL = ISimulation1D2DConstants.R10_File;
-//
-//  public static final String INPUT_RESTART_FILE = "restartFile0"; //$NON-NLS-1$
-//
-//  public static final String OUTPUT_RMA_VERSION = "rmaVersion"; //$NON-NLS-1$
-
   private static final String MODEL_SPEC = "resource/preRMAKalypso.xml"; //$NON-NLS-1$
 
   public static final String ID = "org.kalypso.simulation.rma.preRMAKalypso"; //$NON-NLS-1$
@@ -75,15 +52,16 @@ public class PreRMAKalypso implements ISimulation, IRMAPreprocessing
   {
     final SimulationMonitorAdaptor progressMonitor = new SimulationMonitorAdaptor( monitor );
 
+    final PreRMAFiles outputFiles = new PreRMAFiles( tmpdir );
+
+    /* initialize logging */
+    final File logFile = outputFiles.getLogFile();
+
     final IGeoLog log = initializeLog();
 
-    final OutputStream logOS = null;
-    final OutputStream errorOS = null;
     try
     {
       final IPreRMAData preData = initData( inputProvider );
-
-      final PreRMAFiles outputFiles = new PreRMAFiles( tmpdir );
 
       final PreRMAKalypsoWorker worker = new PreRMAKalypsoWorker( preData, log, tmpdir, outputFiles );
       worker.execute( progressMonitor );
@@ -95,16 +73,45 @@ public class PreRMAKalypso implements ISimulation, IRMAPreprocessing
       resultEater.addResult( OUTPUT_WIND, outputFiles.getWindFile() );
       resultEater.addResult( OUTPUT_WIND_COORD, outputFiles.getWindCoordFile() );
     }
-    catch( final Exception e )
+    catch( final CoreException e )
     {
-      throw new SimulationException( Messages.getString( "PreRMAKalypso.1" ), e ); //$NON-NLS-1$
+      final IStatus status = e.getStatus();
+      monitor.setFinishInfo( status.getSeverity(), status.getMessage() );
+      return;
+    }
+    catch( final SimulationException e )
+    {
+      log.log( IStatus.ERROR, 0, e.toString(), null, null );
+      monitor.setFinishInfo( IStatus.ERROR, e.toString() );
+      return;
+      // throw e;
+    }
+    catch( final IOException e )
+    {
+      log.log( IStatus.ERROR, 0, e.toString(), null, null );
+      monitor.setFinishInfo( IStatus.ERROR, e.toString() );
+      return;
     }
     finally
     {
-      IOUtils.closeQuietly( logOS );
-      IOUtils.closeQuietly( errorOS );
+      saveLog( log, logFile );
+      resultEater.addResult( OUTPUT_LOG, logFile );
 
       progressMonitor.done();
+    }
+  }
+
+  private void saveLog( final IGeoLog log, final File logFile )
+  {
+    try
+    {
+      final IStatusCollection statusCollection = log.getStatusCollection();
+      final GMLWorkspace workspace = statusCollection.getWorkspace();
+      GmlSerializer.serializeWorkspace( logFile, workspace, Charsets.UTF_8.name() );
+    }
+    catch( IOException | GmlSerializeException e )
+    {
+      e.printStackTrace();
     }
   }
 
@@ -114,7 +121,7 @@ public class PreRMAKalypso implements ISimulation, IRMAPreprocessing
     {
       return new GeoLog( KalypsoModel1D2DPlugin.getDefault().getLog() );
     }
-    catch( final Exception e )
+    catch( final GMLSchemaException e )
     {
       throw new SimulationException( "Could not initialize GeoLog", e ); //$NON-NLS-1$
     }

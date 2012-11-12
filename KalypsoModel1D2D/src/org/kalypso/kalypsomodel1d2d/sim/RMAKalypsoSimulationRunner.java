@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,6 +62,8 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
@@ -146,6 +149,8 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
   {
     final SubMonitor progress = SubMonitor.convert( progressMonitor, 1000 );
 
+    final IStatusCollector log = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
+
     try
     {
       final List<IRestartInfo> restartInfos;
@@ -158,9 +163,14 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
       final ExecutePreRMAKalypso executePreRMAKalypso = new ExecutePreRMAKalypso( m_serviceEndpoint, restartInfos );
       m_wpsRequest = executePreRMAKalypso.getWpsRequest();
       final IStatus preStatus = executePreRMAKalypso.run( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
-      // FIXME: fetch pre-log and use as status instead!
+
+      if( preStatus.isMultiStatus() )
+        log.addAll( Arrays.asList( preStatus.getChildren() ) );
+      else
+        log.add( preStatus );
+
       // abort on error
-      if( !preStatus.isOK() )
+      if( preStatus.matches( IStatus.ERROR ) )
         return preStatus;
 
       m_boolFirstDone = true;
@@ -178,9 +188,12 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
       final IStatus simulationStatus = m_executeRMAKalypsoSimulation.run( progress.newChild( 900, SubMonitor.SUPPRESS_NONE ) );
       m_wpsProcess = m_executeRMAKalypsoSimulation.getWpsRequest();
 
+      log.add( simulationStatus );
+
       // at least once update
       handleStarted( progress, null );
-      return simulationStatus;
+
+      return log.asMultiStatus( "Kalypso1D2D Simulation" );
     }
     catch( final Throwable e )
     {
@@ -221,12 +234,12 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
       return new Status( IStatus.CANCEL, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2" ), null ); //$NON-NLS-1$
 
     if( simulationStatus.matches( IStatus.ERROR ) )
-      return simulationStatus;
+      return new MultiStatus( KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, simulationStatus.getChildren(), "Simulation mit Fehler beendet.", null );
 
-    // if( simulationStatus.matches( IStatus.WARNING ) )
-    return simulationStatus; // StatusUtilities.createStatus( IStatus.WARNING, CODE_RUNNING, "Simulation mit Warnung
-    // beendet.",
-    // null );
+    if( simulationStatus.matches( IStatus.WARNING ) )
+      return new MultiStatus( KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, simulationStatus.getChildren(), "Simulation mit Warnung beendet.", null );
+
+    return simulationStatus;
   }
 
   @Override
@@ -246,16 +259,11 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
     return m_resultsDirRMA;
   }
 
-  /**
-   * @see org.kalypso.service.wps.refactoring.DefaultWpsObserver#handleStarted(org.eclipse.core.runtime.IProgressMonitor, net.opengeospatial.wps.ExecuteResponseType)
-   */
   @Override
   public void handleStarted( final IProgressMonitor monitor, final ExecuteResponseType exState ) throws WPSException
   {
     if( m_iterationJob != null )
-    {
       return;
-    }
 
     try
     {
@@ -283,13 +291,9 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
     }
   }
 
-  /**
-   * @see org.kalypso.service.wps.client.WPSRequest#doProcessFailed(net.opengeospatial.wps.ExecuteResponseType)
-   */
   @Override
   public IStatus handleFailed( final ExecuteResponseType exState )
   {
-
     final StatusType exStatus = exState.getStatus();
     final ProcessFailedType processFailed = exStatus.getProcessFailed();
     final ExceptionReport exceptionReport = processFailed.getExceptionReport();

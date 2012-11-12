@@ -27,6 +27,8 @@ import org.kalypso.kalypsomodel1d2d.sim.IRMAPreprocessing;
  */
 public class PreRMAFiles
 {
+  private static final String FILENAME_PREPROCESSING_LOG = "preprocesing.log"; //$NON-NLS-1$
+
   private final File m_outputDir;
 
   public PreRMAFiles( final File outputDir )
@@ -62,5 +64,10 @@ public class PreRMAFiles
   public File getWindCoordFile( )
   {
     return new File( m_outputDir, IRMAPreprocessing.OUTPUT_WIND_COORD );
+  }
+
+  public File getLogFile( )
+  {
+    return new File( m_outputDir, FILENAME_PREPROCESSING_LOG );
   }
 }
