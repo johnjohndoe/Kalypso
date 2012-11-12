@@ -83,16 +83,6 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
   private ICalculationUnit m_calcUnitToDelete;
 
   /**
-   * the parent/container units of the deleted calculation unit
-   */
-  private ICalculationUnit1D2D[] m_undoParentUnits;
-
-  /**
-   * the elements of the deleted calculation unit
-   */
-  private IFENetItem[] m_undoElements;
-
-  /**
    * Deletes the calculation unit
    * 
    * @param cuFeatureQName
@@ -138,14 +128,14 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
   {
     try
     {
-      if( m_undoParentUnits != null && m_undoParentUnits.length > 0 )
-      {
-        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-        final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd.1" ); //$NON-NLS-1$
-        final MessageDialog dialog = new MessageDialog( activeShell, "Info", null, message, MessageDialog.INFORMATION, new String[] { "Ok" }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
-        dialog.open();
-        return;
-      }
+//      if( m_undoParentUnits != null && m_undoParentUnits.length > 0 )
+//      {
+//        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+//        final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd.1" ); //$NON-NLS-1$
+//        final MessageDialog dialog = new MessageDialog( activeShell, "Info", null, message, MessageDialog.INFORMATION, new String[] { "Ok" }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
+//        dialog.open();
+//        return;
+//      }
 
       // // delete links to parent units
       // for( final ICalculationUnit1D2D parentUnit : m_undoParentUnits )
@@ -156,7 +146,7 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
         ((ICalculationUnit1D2D)m_calcUnitToDelete).getSubCalculationUnits().clear();
 
       // delete links to elements
-      for( final IFENetItem element : m_undoElements )
+      for( final IFENetItem element : m_calcUnitToDelete.getElements() )
       {
         m_calcUnitToDelete.removeLinkedItem( element );
       }
@@ -164,8 +154,8 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
 
       // delete unit from the model
       m_model1d2d.removeComplexElement( m_calcUnitToDelete );
+      final Feature[] changedFeatureArray = new Feature[] { m_calcUnitToDelete };
       m_calcUnitToDelete = null;
-      final Feature[] changedFeatureArray = getChangedFeatureArray();
       fireProcessChanges( changedFeatureArray, false );
     }
     catch( final Exception e )
@@ -239,29 +229,6 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
     {
       e.printStackTrace();
     }
-  }
-
-  private final Feature[] getChangedFeatureArray( )
-  {
-    final List<Feature> changedFeatures = new ArrayList<>();
-
-    if( m_calcUnitToDelete != null )
-      changedFeatures.add( m_calcUnitToDelete );
-
-    for( final Feature element : m_undoElements )
-    {
-      if( element == null )
-        continue;
-      changedFeatures.add( element );
-    }
-
-    // parent units
-    for( final ICalculationUnit1D2D parent : m_undoParentUnits )
-      changedFeatures.add( parent );
-
-    // child unit not needed since there is no back reference
-
-    return changedFeatures.toArray( new Feature[changedFeatures.size()] );
   }
 
   /**

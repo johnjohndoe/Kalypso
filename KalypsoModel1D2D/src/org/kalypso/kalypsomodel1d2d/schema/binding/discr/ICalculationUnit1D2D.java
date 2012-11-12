@@ -56,6 +56,5 @@ public interface ICalculationUnit1D2D extends ICoupledCalculationUnit
 
   QName WB1D2D_PROP_CALC_UNIT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "calculationUnit" ); //$NON-NLS-1$
 
-  // FIXME: why 'changed' sbu units?
   IFeatureBindingCollection<ICalculationUnit> getSubCalculationUnits( );
 }

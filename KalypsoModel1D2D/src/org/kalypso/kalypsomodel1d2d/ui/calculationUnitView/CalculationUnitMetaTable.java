@@ -46,6 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -632,9 +633,9 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       public void run( )
       {
         final ISelection selection = tableViewer.getSelection();
-        final StructuredSelection newSelection = new StructuredSelection( currentSelection );
-        if( !newSelection.equals( selection ) )
-          tableViewer.setSelection( newSelection );
+
+        if( !ObjectUtils.equals( selection, currentSelection ) )
+          tableViewer.setSelection( new StructuredSelection( selection ) );
 
         final boolean isEnabled = currentSelection instanceof Feature;
         if( m_btnDeleteCalcUnit != null )
