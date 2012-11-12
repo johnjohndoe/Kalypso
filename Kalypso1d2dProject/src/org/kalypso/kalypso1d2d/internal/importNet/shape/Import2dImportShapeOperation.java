@@ -89,7 +89,7 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
   public String getFilterName( )
   {
     // FIXME: get from elsewhere
-    return Messages.getString("Import2dImportShapeOperation_0"); //$NON-NLS-1$
+    return Messages.getString( "Import2dImportShapeOperation_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -113,14 +113,14 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
       final ShapeType shapeType = shapeFile.getShapeType();
       if( !(shapeType == ShapeType.POLYGON || shapeType == ShapeType.POLYGONZ) )
       {
-        final String message = String.format( Messages.getString("Import2dImportShapeOperation_1"), shapeType, ShapeType.POLYGON, ShapeType.POLYGONZ ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "Import2dImportShapeOperation_1" ), shapeType, ShapeType.POLYGON, ShapeType.POLYGONZ ); //$NON-NLS-1$
         final IStatus readStatus = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, message );
         return Pair.of( readStatus, null );
       }
 
       final int numRecords = shapeFile.getNumRecords();
 
-      monitor.beginTask( String.format( Messages.getString("Import2dImportShapeOperation_2"), filePath ), numRecords ); //$NON-NLS-1$
+      monitor.beginTask( String.format( Messages.getString( "Import2dImportShapeOperation_2" ), filePath ), numRecords ); //$NON-NLS-1$
 
       // TODO: potential heap exception here -> handle!
       final Collection<IPolygonWithName> polygons = new ArrayList<>( numRecords );
@@ -171,12 +171,14 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
       final int numGeometries = multiPolygon.getNumGeometries();
       for( int j = 0; j < numGeometries; j++ )
       {
-        final Polygon polygon = (Polygon)multiPolygon.getGeometryN( row );
+        final Polygon polygon = (Polygon)multiPolygon.getGeometryN( j );
 
         final String name = buildName( row, j );
 
         polygons.add( new PolygonWithName( name, polygon ) );
       }
+
+      return;
     }
 
     /* we test for polygon before, but now we got it, something's wrong! */
