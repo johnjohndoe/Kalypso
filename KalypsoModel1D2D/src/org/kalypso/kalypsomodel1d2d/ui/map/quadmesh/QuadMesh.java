@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -56,7 +57,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 /**
  * This class provide the mechanism to calculate the grid finit element model node and to display them. The point are
  * supposed to be in the same coordinate reference system so that no no reference system convertion is done
- *
+ * 
  * @author Patrice Congo
  * @author Thomas Jung
  */
@@ -94,9 +95,9 @@ public class QuadMesh
     return m_crs;
   }
 
-  public List<GM_Ring> toRings( ) throws GM_Exception
+  public List<GM_PolygonPatch> toRings( ) throws GM_Exception
   {
-    final List<GM_Ring> rings = new ArrayList<>();
+    final List<GM_PolygonPatch> rings = new ArrayList<>();
 
     for( int i = 0; i < m_grid.length - 1; i++ )
     {
@@ -114,7 +115,7 @@ public class QuadMesh
         final GM_Position[] checkedPoses = poses;
 
         if( checkedPoses.length >= 4 && checkedPoses[0].equals( checkedPoses[checkedPoses.length - 1] ) )
-          rings.add( GeometryFactory.createGM_Ring( checkedPoses, m_crs ) );
+          rings.add( GeometryFactory.createGM_PolygonPatch( checkedPoses, null, m_crs ) );
       }
     }
 

@@ -63,8 +63,8 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -95,9 +95,9 @@ public class Add2DElementsCommand implements ICommand
 
   private final GMLWorkspace m_discretisationModel;
 
-  private final List<GM_Ring> m_elements;
+  private final List<GM_PolygonPatch> m_elements;
 
-  public Add2DElementsCommand( final GMLWorkspace discretisationModel, final List<GM_Ring> elements )
+  public Add2DElementsCommand( final GMLWorkspace discretisationModel, final List<GM_PolygonPatch> elements )
   {
     m_discretisationModel = discretisationModel;
     m_elements = elements;
@@ -132,7 +132,7 @@ public class Add2DElementsCommand implements ICommand
   {
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d)m_discretisationModel.getRootFeature();
 
-    for( final GM_Ring ring : m_elements )
+    for( final GM_PolygonPatch ring : m_elements )
       createElementFromRing( discModel, ring );
 
     fireEvents( discModel, m_newNodeIDs );
@@ -154,9 +154,9 @@ public class Add2DElementsCommand implements ICommand
     m_discretisationModel.fireModellEvent( changeEvent );
   }
 
-  private void createElementFromRing( final IFEDiscretisationModel1d2d discModel, final GM_Ring ring ) throws GM_Exception
+  private void createElementFromRing( final IFEDiscretisationModel1d2d discModel, final GM_PolygonPatch ring ) throws GM_Exception
   {
-    final GM_Position[] positions = ring.getPositions();
+    final GM_Position[] positions = ring.getExteriorRing();
     final GM_Position[] cleanPositions = removeDuplicates( positions );
 
     final String srsName = ring.getCoordinateSystem();
@@ -202,7 +202,7 @@ public class Add2DElementsCommand implements ICommand
         final Geometry foundPolygon = JTSAdapter.export( foundGeometry );
         if( foundPolygon.overlaps( newPolygon ) )
         {
-          m_log.add( IStatus.WARNING, Messages.getString("Add2DElementsCommand_0"), null, (Object)positions ); //$NON-NLS-1$
+          m_log.add( IStatus.WARNING, Messages.getString( "Add2DElementsCommand_0" ), null, (Object)positions ); //$NON-NLS-1$
           return false;
         }
       }
@@ -234,7 +234,7 @@ public class Add2DElementsCommand implements ICommand
           if( geometry.contains( nodeLocation ) )
           {
             // do not insert nodes that are placed on existing model(overlapped elements)
-            m_log.add( IStatus.WARNING, Messages.getString("Add2DElementsCommand_1"), null, position ); //$NON-NLS-1$
+            m_log.add( IStatus.WARNING, Messages.getString( "Add2DElementsCommand_1" ), null, position ); //$NON-NLS-1$
             return false;
           }
         }

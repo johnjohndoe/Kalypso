@@ -45,6 +45,8 @@ import java.io.File;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -68,22 +70,25 @@ import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gml.processes.constDelaunay.TriangleExe;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen.TriangulationBuilder;
 
 /**
  * UI component for the {@link TriangulateGeometryWidget}.
- *
+ * 
  * @author Gernot Belger
- *
  */
 class TriangulateGeometryComposite extends Composite
 {
-  private final TriangulateGeometryData m_data;
+  protected final TriangulateGeometryOperation m_data;
 
-  public TriangulateGeometryComposite( final FormToolkit toolkit, final Composite parent, final TriangulateGeometryData data )
+  protected final TriangulateGeometryWidget m_widget;
+
+  public TriangulateGeometryComposite( final FormToolkit toolkit, final Composite parent, final TriangulateGeometryWidget widget, final TriangulateGeometryOperation data )
   {
     super( parent, SWT.NONE );
 
     m_data = data;
+    m_widget = widget;
 
     toolkit.adapt( this );
 
@@ -125,8 +130,19 @@ class TriangulateGeometryComposite extends Composite
     final Text maxArea = toolkit.createText( sectionComposite, StringUtils.EMPTY, SWT.SINGLE | SWT.BORDER );
     maxArea.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
-    final ISWTObservableValue targetMaxArea = SWTObservables.observeText( maxArea, SWT.Modify );
-    final IObservableValue modelMaxArea = BeansObservables.observeValue( m_data, TriangulateGeometryData.PROPERTY_MAX_AREA );
+    final TriangulationBuilder builder = m_widget.getBuilder();
+    final IValueChangeListener mapPanelRepainter = new IValueChangeListener()
+    {
+      @Override
+      public void handleValueChange( ValueChangeEvent event )
+      {
+        m_widget.repaint();
+      }
+    };
+
+    final ISWTObservableValue targetMaxArea = SWTObservables.observeText( maxArea, SWT.FocusOut );
+    final IObservableValue modelMaxArea = BeansObservables.observeValue( builder, TriangulationBuilder.PROPERTY_MAX_AREA );
+    modelMaxArea.addValueChangeListener( mapPanelRepainter );
     final DataBinder maxAreaBinder = new DataBinder( targetMaxArea, modelMaxArea );
     maxAreaBinder.addTargetAfterConvertValidator( new NumberNotNegativeValidator( IStatus.ERROR, Messages.getString( "TriangulateGeometryWidget.8" ) ) ); //$NON-NLS-1$
     binding.bindValue( maxAreaBinder );
@@ -136,8 +152,9 @@ class TriangulateGeometryComposite extends Composite
     final Text minAngle = toolkit.createText( sectionComposite, "22", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     minAngle.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
-    final ISWTObservableValue targetMinAngle = SWTObservables.observeText( minAngle, SWT.Modify );
-    final IObservableValue modelMinAngle = BeansObservables.observeValue( m_data, TriangulateGeometryData.PROPERTY_MIN_ANGLE );
+    final ISWTObservableValue targetMinAngle = SWTObservables.observeText( minAngle, SWT.FocusOut );
+    final IObservableValue modelMinAngle = BeansObservables.observeValue( builder, TriangulationBuilder.PROPERTY_MIN_ANGLE );
+    modelMinAngle.addValueChangeListener( mapPanelRepainter );
     final DataBinder minAngleBinder = new DataBinder( targetMinAngle, modelMinAngle );
     minAngleBinder.addTargetAfterConvertValidator( new NumberRangeValidator( IStatus.ERROR, 0, 32, Messages.getString( "TriangulateGeometryWidget.12" ) ) ); //$NON-NLS-1$
     binding.bindValue( minAngleBinder );
@@ -147,7 +164,8 @@ class TriangulateGeometryComposite extends Composite
     noSteinerButton.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false, 2, 1 ) );
 
     final ISWTObservableValue targetSteiner = SWTObservables.observeSelection( noSteinerButton );
-    final IObservableValue modelSteiner = BeansObservables.observeValue( m_data, TriangulateGeometryData.PROPERTY_NO_STEINER );
+    final IObservableValue modelSteiner = BeansObservables.observeValue( builder, TriangulationBuilder.PROPERTY_NO_STEINER_ON_BOUNDARY );
+    modelSteiner.addValueChangeListener( mapPanelRepainter );
     binding.bindValue( targetSteiner, modelSteiner );
 
     /* 'Apply to' button */
@@ -167,6 +185,6 @@ class TriangulateGeometryComposite extends Composite
     if( triangleExe != null && triangleExe.isFile() )
       return Status.OK_STATUS;
 
-    return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString("TriangulateGeometryComposite.0") ); //$NON-NLS-1$
+    return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "TriangulateGeometryComposite.0" ) ); //$NON-NLS-1$
   }
 }

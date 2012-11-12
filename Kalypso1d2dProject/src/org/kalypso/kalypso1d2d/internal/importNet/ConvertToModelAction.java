@@ -69,8 +69,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -94,7 +94,7 @@ public class ConvertToModelAction extends Action implements IUpdateable
     m_widget = widget;
 
     setText( KalypsoModel1D2DStrings.APPLY_BUTTON_LABEL ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("ConvertToModelAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "ConvertToModelAction_0" ) ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = Kalypso1d2dProjectPlugin.getImageProvider();
     setImageDescriptor( imageProvider.getImageDescriptor( Kalypso1d2dProjectImages.DESCRIPTORS.OK ) );
@@ -127,7 +127,7 @@ public class ConvertToModelAction extends Action implements IUpdateable
     final IPolygonWithName[] elements = m_data.getElements();
     if( ArrayUtils.isEmpty( elements ) )
     {
-      MessageDialog.openInformation( shell, getText(), Messages.getString("ConvertToModelAction_1") ); //$NON-NLS-1$
+      MessageDialog.openInformation( shell, getText(), Messages.getString( "ConvertToModelAction_1" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -164,7 +164,7 @@ public class ConvertToModelAction extends Action implements IUpdateable
     try
     {
       /* Create rings */
-      final List<GM_Ring> rings = createRings( elements );
+      final List<GM_PolygonPatch> rings = createRings( elements );
 
       final Add2DElementsCommand command = new Add2DElementsCommand( discWorkspace, rings );
       discWorkspace.postCommand( command );
@@ -174,13 +174,13 @@ public class ConvertToModelAction extends Action implements IUpdateable
     catch( final Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("ConvertToModelAction_2"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "ConvertToModelAction_2" ), e ); //$NON-NLS-1$
     }
   }
 
-  private List<GM_Ring> createRings( final IPolygonWithName[] elements ) throws GM_Exception
+  private List<GM_PolygonPatch> createRings( final IPolygonWithName[] elements ) throws GM_Exception
   {
-    final List<GM_Ring> rings = new ArrayList<>();
+    final List<GM_PolygonPatch> rings = new ArrayList<>();
 
     final String srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
@@ -191,7 +191,7 @@ public class ConvertToModelAction extends Action implements IUpdateable
 
       final GM_Position[] positions = JTSAdapter.wrap( exteriorRing.getCoordinates() );
 
-      final GM_Ring ring = GeometryFactory.createGM_Ring( positions, srsName );
+      final GM_PolygonPatch ring = GeometryFactory.createGM_PolygonPatch( positions, null, srsName );
 
       rings.add( ring );
     }

@@ -53,14 +53,14 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
  */
 public class TriangulateGeometryApplyToAction extends Action implements IUpdateable
 {
-  private final TriangulateGeometryData m_data;
+  private final TriangulateGeometryOperation m_operation;
 
-  public TriangulateGeometryApplyToAction( final TriangulateGeometryData data )
+  public TriangulateGeometryApplyToAction( final TriangulateGeometryOperation operation )
   {
-    m_data = data;
+    m_operation = operation;
 
     setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridWidgetFace.9" ) ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("TriangulateGeometryApplyToAction.0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "TriangulateGeometryApplyToAction.0" ) ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.OK ) );
@@ -76,6 +76,6 @@ public class TriangulateGeometryApplyToAction extends Action implements IUpdatea
   @Override
   public void runWithEvent( final Event event )
   {
-    m_data.convertTriangulationToModel();
+    m_operation.convertTriangulationToModel();
   }
 }

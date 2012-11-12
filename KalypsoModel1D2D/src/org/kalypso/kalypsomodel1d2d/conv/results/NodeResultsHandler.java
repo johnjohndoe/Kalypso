@@ -92,6 +92,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -676,7 +677,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       lListPos.add( lListPos.get( 0 ) );
     }
-    final GM_Triangle[] elements2 = ConstraintDelaunayHelper.convertToTriangles( lListPos.toArray( new GM_Position[lListPos.size()] ), crs );
+    final GM_Position[] positions = lListPos.toArray( new GM_Position[lListPos.size()] );
+    final GM_Polygon poly = GeometryFactory.createGM_Surface( positions, null, crs );
+    final GM_Triangle[] elements2 = ConstraintDelaunayHelper.convertToTriangles( poly, crs );
 
     for( final GM_Triangle element : elements2 )
     {
