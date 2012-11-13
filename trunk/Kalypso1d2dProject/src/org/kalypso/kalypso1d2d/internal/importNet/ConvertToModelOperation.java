@@ -19,7 +19,6 @@
 package org.kalypso.kalypso1d2d.internal.importNet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -66,12 +65,12 @@ class ConvertToModelOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      monitor.beginTask( Messages.getString("ConvertToModelOperation.0"), 100 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "ConvertToModelOperation.0" ), 100 ); //$NON-NLS-1$
 
       /* Create rings */
       final List<GM_PolygonPatch> rings = createRings( m_elements, new SubProgressMonitor( monitor, 50 ) );
 
-      monitor.subTask( Messages.getString("ConvertToModelOperation.1") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "ConvertToModelOperation.1" ) ); //$NON-NLS-1$
       final Add2DElementsCommand command = new Add2DElementsCommand( m_discWorkspace, rings );
       m_discWorkspace.postCommand( command );
 
@@ -102,7 +101,15 @@ class ConvertToModelOperation implements ICoreRunnableWithProgress
 
       final GM_PolygonPatch[] ringsFromPoly = createRings( polygon );
 
-      rings.addAll( Arrays.asList( ringsFromPoly ) );
+      for( final GM_PolygonPatch ring : ringsFromPoly )
+      {
+        final double area = ring.getArea();
+        // FIXME: hot fix -> triangulation seems to produce bad elements sometimes, this prohibits this
+        if( area > 1.0 )
+          rings.add( ring );
+        else
+          System.out.println( "Removed small triangle" ); //$NON-NLS-1$
+      }
 
       ProgressUtilities.worked( monitor, 1 );
     }
