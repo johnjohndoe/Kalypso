@@ -42,14 +42,13 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -80,41 +79,34 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.DisposeButtonImageListener;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
-import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CloneCalculationUnitWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Calculation unit widget component that shows the table of existing calculation units, with the corresponding buttons
@@ -124,6 +116,8 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  */
 public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 {
+  private final Collection<IAction> m_actions = new ArrayList<>();
+
   private final CalculationUnitDataModel m_dataModel;
 
   final private ISelectionChangedListener m_selectListener = new ISelectionChangedListener()
@@ -162,8 +156,6 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   private final Set<String> m_buttonsList = new HashSet<>();
 
   // FIXME: use actions and toolbar instead
-  private Button m_btnDeleteCalcUnit;
-
   private Button m_btnMaximizeCalcUnit;
 
   private Button m_btnCreateCalcUnit;
@@ -272,6 +264,9 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     final Composite btnComposite = toolkit.createComposite( parent, SWT.NONE );
     btnComposite.setLayout( new GridLayout( 1, false ) );
     btnComposite.setLayoutData( new GridData( SWT.CENTER, SWT.TOP, false, true ) );
+
+    // FIXME: convert all buttons to actions, this is horrible!
+
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_UP ) )
     {
       final Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
@@ -327,30 +322,9 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_REMOVE ) )
     {
-      m_btnDeleteCalcUnit = new Button( btnComposite, SWT.PUSH );
-      m_btnDeleteCalcUnit.setImage( AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/19_cut_calculationunit.gif" ).createImage() );//$NON-NLS-1$
-      DisposeButtonImageListener.hookToButton( m_btnDeleteCalcUnit );
-      m_btnDeleteCalcUnit.addSelectionListener( new SelectionAdapter()
-      {
-        @Override
-        public void widgetSelected( final SelectionEvent event )
-        {
-          try
-          {
-            if( MessageDialog.openConfirm( parent.getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.15" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.14" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-            {
-              deleteSelected();
-              viewer.refresh();
-            }
-          }
-          catch( final Throwable th )
-          {
-            th.printStackTrace();
-          }
-        }
-      } );
-      m_btnDeleteCalcUnit.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.Tooltip.BTN_REMOVE" ) ); //$NON-NLS-1$
-      m_btnDeleteCalcUnit.setEnabled( false );
+      final IAction deleteAction = new DeleteCalcUnitAction( viewer, m_dataModel );
+      m_actions.add( deleteAction );
+      ActionButton.createButton( toolkit, btnComposite, deleteAction );
     }
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_ADD ) )
@@ -462,62 +436,6 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     return viewer;
   }
 
-  protected IStatus deleteSelected( )
-  {
-    final KeyBasedDataModel dataModel = getDataModel();
-    final ICalculationUnit calcUnitToDel = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider)getDataModel().getData( ICommonKeys.KEY_DATA_PROVIDER );
-    if( calcUnitToDel != null )
-    {
-      // TODO: check for existing results
-      try
-      {
-        /* get result meta */
-        final IScenarioResultMeta scenarioResultMeta = caseDataProvider.getModel( IScenarioResultMeta.class.getName() );
-
-        /* find calc model */
-        final ICalcUnitResultMeta calcUnitResultMeta = scenarioResultMeta.findCalcUnitMetaResult( calcUnitToDel.getId() );
-        if( calcUnitResultMeta != null )
-        {
-          /* there are results */
-
-          // TODO: generate warning for user
-          /* delete results */
-          final IStatus status = ResultMeta1d2dHelper.removeResult( calcUnitResultMeta );
-          if( status != Status.OK_STATUS )
-          {
-            final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.4" ) + calcUnitToDel.getName(); //$NON-NLS-1$
-            return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message );
-          }
-        }
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-        return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.5" ) + calcUnitToDel.getName() ); //$NON-NLS-1$
-      }
-
-      /* delete calc unit */
-      final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-      final DeleteCalculationUnitCmd delCmd = new DeleteCalculationUnitCmd( model1d2d, calcUnitToDel )
-      {
-        @Override
-        public void process( ) throws Exception
-        {
-          super.process();
-          // reset with list from model
-          final List<ICalculationUnit> calUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
-          dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
-          // set current selection to null
-          dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, null );
-        }
-      };
-      KeyBasedDataModelUtil.postCommand( dataModel, delCmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
-
-    }
-    return Status.OK_STATUS;
-  }
-
   protected void moveSelection( @SuppressWarnings( "unused" ) final int delta )
   {
     throw new UnsupportedOperationException();
@@ -544,7 +462,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     if( !(calcUnitToClone instanceof ICalculationUnit1D2D) )
     {
       final String toolTipText = m_btnCloneCalcUnit.getToolTipText();
-      final String message = "The calculation unit is not a combined unit. Only combined units can be copied at the moment.";
+      final String message = "The calculation unit is not a combined unit. Only combined units can be copied at the moment."; //$NON-NLS-1$
       MessageDialog.openInformation( shell, toolTipText, message );
       return;
     }
@@ -632,35 +550,39 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       @SuppressWarnings( "synthetic-access" )
       public void run( )
       {
-        final ISelection selection = tableViewer.getSelection();
+        final ISelection oldSelection = tableViewer.getSelection();
 
-        if( !ObjectUtils.equals( selection, currentSelection ) )
-          tableViewer.setSelection( new StructuredSelection( selection ) );
+        final IStructuredSelection newSelection = currentSelection == null ? StructuredSelection.EMPTY : new StructuredSelection( currentSelection );
+        if( !ObjectUtils.equals( oldSelection, currentSelection ) )
+          tableViewer.setSelection( newSelection );
 
         final boolean isEnabled = currentSelection instanceof Feature;
-        if( m_btnDeleteCalcUnit != null )
-        {
-          m_btnDeleteCalcUnit.setEnabled( isEnabled );
-        }
+
         if( m_btnEditCalcUnit != null )
-        {
           m_btnEditCalcUnit.setEnabled( isEnabled );
-        }
+
         if( m_btnMaximizeCalcUnit != null )
-        {
           m_btnMaximizeCalcUnit.setEnabled( isEnabled );
-        }
+
         if( m_btnRunCalculation != null )
-        {
           m_btnRunCalculation.setEnabled( isEnabled );
-        }
+
         if( m_btnCloneCalcUnit != null )
-        {
           m_btnCloneCalcUnit.setEnabled( isEnabled && currentSelection instanceof ICalculationUnit1D2D );
-        }
+
+        updateActions();
       }
     };
     display.syncExec( runnable );
+  }
+
+  protected void updateActions( )
+  {
+    for( final IAction action : m_actions )
+    {
+      if( action instanceof IUpdateable )
+        ((IUpdateable)action).update();
+    }
   }
 
   protected void handleRunPressed( final SelectionEvent event )
