@@ -84,8 +84,8 @@ public class Import2dDatasetComposite extends Composite
 
   private void createReadStatusControls( final Composite parent, final FormToolkit toolkit )
   {
-    final Label label = toolkit.createLabel( parent, Messages.getString("Import2dDatasetComposite_0"), SWT.NONE ); //$NON-NLS-1$
-    label.setToolTipText( Messages.getString("Import2dDatasetComposite_1") ); //$NON-NLS-1$
+    final Label label = toolkit.createLabel( parent, Messages.getString( "Import2dDatasetComposite_0" ), SWT.NONE ); //$NON-NLS-1$
+    label.setToolTipText( Messages.getString( "Import2dDatasetComposite_1" ) ); //$NON-NLS-1$
 
     final StatusComposite statusComposite = new StatusComposite( toolkit, parent, StatusComposite.DETAILS );
     statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
@@ -99,9 +99,10 @@ public class Import2dDatasetComposite extends Composite
 
   private void createElementCountControls( final Composite parent, final FormToolkit toolkit )
   {
-    toolkit.createLabel( parent, Messages.getString("Import2dDatasetComposite_2") ); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString( "Import2dDatasetComposite_2" ) ); //$NON-NLS-1$
 
     final Text field = toolkit.createText( parent, StringUtils.EMPTY, SWT.READ_ONLY );
+    field.setEnabled( false );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     final ISWTObservableValue target = SWTObservables.observeText( field );
