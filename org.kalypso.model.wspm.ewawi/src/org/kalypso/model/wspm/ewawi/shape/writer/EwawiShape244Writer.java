@@ -30,8 +30,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.data.EwawiPro;
 import org.kalypso.model.wspm.ewawi.data.EwawiSta;
-import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
+import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfile;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
@@ -129,9 +129,9 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
   {
     final EwawiKey key = data.getKey();
     final EwawiSta staIndex = data.getStaIndex();
-    final Path relativeFotoPath = getRelativeFotoPath();
+    final Path relativeFotoPath = getRelativePlotPath();
 
-    final Short abrechnung = 0; // TODO ausgerechnete Meter
+    final Short abrechnung = 0; // TODO ausgerechnete Meter?
     final String alias = key.getAlias();
     final String comment = part.getComment( staIndex );
     final BigDecimal station = part.getStation();
@@ -152,9 +152,7 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     final String pdf = String.format( "%s_%s_%s_VP_BJG_QPPLOT_%d.pdf", key.getPe(), key.getAlias(), key.getModelId(), profilNummer );
     final String link = Paths.get( pfad, pdf ).toString();
 
-    final File file = new File( link );
-    if( !file.exists() )
-      System.out.println( String.format( "Die Datei '%s' existiert nicht...", file.getPath() ) );
+    checkPlotLink( link );
 
     final List<Object> values = new ArrayList<>();
     values.add( abrechnung );
@@ -180,17 +178,30 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     return values.toArray( new Object[] {} );
   }
 
-  private Path getRelativeFotoPath( )
+  private void checkPlotLink( final String link )
   {
-    /* Get the parent folder. */
     final File targetFile = getTargetFile();
     final String fullPath = FilenameUtils.getFullPath( targetFile.getAbsolutePath() );
-    final String fotoPath = FilenameUtils.normalize( String.format( "%s../%s", fullPath, "844_Plot/" ) );
 
     final Path absoluteFullPath = Paths.get( fullPath );
-    final Path absoluteFotoPath = Paths.get( fotoPath );
-    final Path relativeFotoPath = absoluteFullPath.relativize( absoluteFotoPath );
+    final Path relativePlotPath = Paths.get( link );
+    final Path absolutePlotPath = absoluteFullPath.resolve( relativePlotPath );
 
-    return relativeFotoPath;
+    final File file = absolutePlotPath.toFile();
+    if( !file.exists() )
+      System.out.println( String.format( "Die Datei '%s' existiert nicht...", file.getPath() ) );
+  }
+
+  private Path getRelativePlotPath( )
+  {
+    final File targetFile = getTargetFile();
+    final String fullPath = FilenameUtils.getFullPath( targetFile.getAbsolutePath() );
+    final String plotPath = FilenameUtils.normalize( String.format( "%s../%s", fullPath, "844_Plot/" ) );
+
+    final Path absoluteFullPath = Paths.get( fullPath );
+    final Path absolutePlotPath = Paths.get( plotPath );
+    final Path relativePlotPath = absoluteFullPath.relativize( absolutePlotPath );
+
+    return relativePlotPath;
   }
 }

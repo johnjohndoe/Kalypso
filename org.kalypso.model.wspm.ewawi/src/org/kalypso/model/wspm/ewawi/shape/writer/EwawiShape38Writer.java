@@ -71,6 +71,7 @@ public class EwawiShape38Writer extends AbstractEwawiShapeWriter
     fields.add( new DBFField( "SL_BEARB", FieldType.C, (short)3, (short)0 ) );
     fields.add( new DBFField( "SL_GEW_KNZ", FieldType.N, (short)15, (short)0 ) );
     fields.add( new DBFField( "SL_GEW_NAM", FieldType.C, (short)254, (short)0 ) );
+    fields.add( new DBFField( "Z", FieldType.N, (short)7, (short)3 ) );
     fields.add( new DBFField( "ZUSATZ", FieldType.N, (short)4, (short)0 ) );
 
     return fields.toArray( new IDBFField[] {} );
@@ -125,6 +126,7 @@ public class EwawiShape38Writer extends AbstractEwawiShapeWriter
     final String bearb = "BJG";
     final Long gewKennzahl = eplLine.getGewKennzahl();
     final String gewName = getGewShape().getName( key.getAlias() );
+    final BigDecimal hoehe = eplLine.getHoehe();
     final Short zusatz = eplLine.getZusatz();
 
     final List<Object> values = new ArrayList<>();
@@ -138,6 +140,7 @@ public class EwawiShape38Writer extends AbstractEwawiShapeWriter
     values.add( bearb );
     values.add( gewKennzahl );
     values.add( gewName );
+    values.add( hoehe );
     values.add( zusatz );
 
     return values.toArray( new Object[] {} );
