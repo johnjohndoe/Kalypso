@@ -60,7 +60,6 @@ import org.kalypso.kalypso1d2d.internal.importNet.Import2dImportData;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
-import org.kalypso.shape.ShapeFileUtils;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.geometry.ISHPGeometry;
@@ -105,11 +104,8 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
     if( filePath.endsWith( ShapeFile.EXTENSION_SHP ) )
       filePath = FilenameUtils.removeExtension( filePath );
 
-    ShapeFile shapeFile = null;
-    try
+    try( ShapeFile shapeFile = new ShapeFile( filePath, Charset.defaultCharset(), FileMode.READ ) )
     {
-      shapeFile = new ShapeFile( filePath, Charset.defaultCharset(), FileMode.READ );
-
       final ShapeType shapeType = shapeFile.getShapeType();
       if( !(shapeType == ShapeType.POLYGON || shapeType == ShapeType.POLYGONZ) )
       {
@@ -150,8 +146,6 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
     }
     finally
     {
-      ShapeFileUtils.closeQuiet( shapeFile );
-
       monitor.done();
     }
   }
@@ -169,19 +163,23 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
       final MultiPolygon multiPolygon = (MultiPolygon)geom;
 
       final int numGeometries = multiPolygon.getNumGeometries();
+
+      /* split up into single polygons */
       for( int j = 0; j < numGeometries; j++ )
       {
         final Polygon polygon = (Polygon)multiPolygon.getGeometryN( j );
 
         final String name = buildName( row, j );
 
-        polygons.add( new PolygonWithName( name, polygon ) );
+        final IPolygonWithName polyWithName = new PolygonWithName( name, polygon );
+
+        polygons.add( polyWithName );
       }
 
       return;
     }
 
-    /* we test for polygon before, but now we got it, something's wrong! */
+    // We have tested for the shape type before, so this will never happen
     throw new IllegalStateException();
   }
 
