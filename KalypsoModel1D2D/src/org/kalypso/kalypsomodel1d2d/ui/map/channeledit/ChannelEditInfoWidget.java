@@ -22,12 +22,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.jts.JTSEnvelopeProvider;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.ISegmentData;
 import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesh;
@@ -38,13 +34,10 @@ import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -59,9 +52,7 @@ class ChannelEditInfoWidget extends AbstractWidget
 
   private final SLDPainter2 m_missingHeightVertexPainter = new SLDPainter2( getClass().getResource( "resources/meshInfoNoHeight.sld" ) ); //$NON-NLS-1$
 
-  private final Collection<QuadMesh> m_indexedMeshes = new HashSet<>();
-
-  private final FeatureList m_index = new SplitSort( null, null, new JTSEnvelopeProvider() );
+  private CoordinateIndex m_index = new CoordinateIndex();
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
@@ -104,79 +95,36 @@ class ChannelEditInfoWidget extends AbstractWidget
   /* update index with current meshes */
   private void updateIndex( )
   {
-    /* theses meshes need to be remove from our index */
-    final Collection<QuadMesh> meshesToRemoveFromIndex = new HashSet<>( m_indexedMeshes );
+    m_index = new CoordinateIndex();
 
-    /* theses meshes need to be added to our index */
-    final Collection<QuadMesh> meshesToAddToIndex = new HashSet<>();
-
-    /* check which ones to add/remove */
+    /* add all to the index */
     final ISegmentData[] segments = m_data.getSegments();
     for( final ISegmentData segment : segments )
     {
       final QuadMesh mesh = segment.getMesh();
-      if( m_indexedMeshes.contains( mesh ) )
-        meshesToRemoveFromIndex.remove( mesh );
-      else if( mesh != null )
-        meshesToAddToIndex.add( mesh );
-    }
-
-    /* remove obsolete meshes */
-    for( final QuadMesh mesh : meshesToRemoveFromIndex )
-      removeMeshFromIndex( mesh );
-
-    /* add new meshes */
-    for( final QuadMesh mesh : meshesToAddToIndex )
       addMeshToIndex( mesh );
-  }
-
-  private void removeMeshFromIndex( final QuadMesh mesh )
-  {
-    final Coordinate[][] grid = mesh.getGrid();
-    for( final Coordinate[] line : grid )
-    {
-      for( final Coordinate point : line )
-        m_index.remove( point );
     }
-
-    m_indexedMeshes.remove( mesh );
   }
 
   private void addMeshToIndex( final QuadMesh mesh )
   {
+    if( mesh == null )
+      return;
+
     final Coordinate[][] grid = mesh.getGrid();
     for( final Coordinate[] line : grid )
     {
       for( final Coordinate point : line )
         m_index.add( point );
     }
-
-    m_indexedMeshes.add( mesh );
   }
 
   private GM_Point snapVertex( final GM_Point currentLocation, final double snapRadius )
   {
     final GM_Position currentPosition = currentLocation.getPosition();
-    final GM_Envelope currentRect = GeometryFactory.createGM_Envelope( currentPosition, currentPosition, currentLocation.getCoordinateSystem() );
-    final GM_Envelope searchRect = currentRect.getBuffer( snapRadius );
     final Coordinate currentCrd = JTSAdapter.export( currentPosition );
 
-    final List<Coordinate> query = m_index.query( searchRect, null );
-
-    /* find and return nearest point */
-    double minDistance = Double.MAX_VALUE;
-    Coordinate snappedPoint = null;
-
-    for( final Coordinate point : query )
-    {
-      final double distance = point.distance( currentCrd );
-      if( distance < minDistance )
-      {
-        minDistance = distance;
-        snappedPoint = point;
-      }
-    }
-
+    final Coordinate snappedPoint = m_index.findNearestPoint( currentCrd, (float)snapRadius );
     if( snappedPoint == null )
       return null;
 
@@ -200,7 +148,7 @@ class ChannelEditInfoWidget extends AbstractWidget
     {
       if( m_index.size() == 0 && m_currentPoint != null )
       {
-        m_toolTipRenderer.setTooltip( Messages.getString("ChannelEditInfoWidget_2") ); //$NON-NLS-1$
+        m_toolTipRenderer.setTooltip( Messages.getString( "ChannelEditInfoWidget_2" ) ); //$NON-NLS-1$
         m_toolTipRenderer.paintToolTip( new Point( m_currentPoint.x + 5, m_currentPoint.y - 5 ), g, screenRect );
       }
 
@@ -211,12 +159,12 @@ class ChannelEditInfoWidget extends AbstractWidget
     if( Double.isNaN( z ) )
     {
       m_missingHeightVertexPainter.paint( g, projection, m_snappedVertex );
-      m_toolTipRenderer.setTooltip( Messages.getString("ChannelEditInfoWidget_3") ); //$NON-NLS-1$
+      m_toolTipRenderer.setTooltip( Messages.getString( "ChannelEditInfoWidget_3" ) ); //$NON-NLS-1$
     }
     else
     {
       m_heightVertexPainter.paint( g, projection, m_snappedVertex );
-      m_toolTipRenderer.setTooltip( String.format( Messages.getString("ChannelEditInfoWidget_4"), z ) ); //$NON-NLS-1$
+      m_toolTipRenderer.setTooltip( String.format( Messages.getString( "ChannelEditInfoWidget_4" ), z ) ); //$NON-NLS-1$
     }
 
     final Point snappedLocation = MapUtilities.retransform( panel, m_snappedVertex );
