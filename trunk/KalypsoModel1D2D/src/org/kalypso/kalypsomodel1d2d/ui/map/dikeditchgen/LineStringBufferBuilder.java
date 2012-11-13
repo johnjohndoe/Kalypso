@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.algorithm.LineIntersector;
@@ -33,17 +31,19 @@ import com.vividsolutions.jts.algorithm.RobustLineIntersector;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Location;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.geomgraph.Edge;
 import com.vividsolutions.jts.geomgraph.EdgeList;
 import com.vividsolutions.jts.geomgraph.Label;
 import com.vividsolutions.jts.geomgraph.Node;
 import com.vividsolutions.jts.geomgraph.PlanarGraph;
 import com.vividsolutions.jts.geomgraph.Position;
-import com.vividsolutions.jts.noding.IntersectionFinderAdder;
+import com.vividsolutions.jts.noding.IntersectionAdder;
 import com.vividsolutions.jts.noding.MCIndexNoder;
 import com.vividsolutions.jts.noding.NodedSegmentString;
 import com.vividsolutions.jts.noding.SegmentString;
@@ -79,7 +79,7 @@ public class LineStringBufferBuilder
     final int orientationFactor = orientation == CGAlgorithms.CLOCKWISE ? -1 : 1;
 
     final double totalAngle = Math.abs( startAngle - endAngle );
-    final int nSegs = (int)(totalAngle * 2 / Math.PI + 0.5);
+    final int nSegs = (int)(totalAngle * 8 / Math.PI + 0.5);
 
     if( nSegs < 1 )
       return; // no segments because angle is less than increment - nothing to do!
@@ -220,12 +220,13 @@ public class LineStringBufferBuilder
       if( !leftCoordinates.get( 0 ).equals( leftCoordinates.get( leftCoordinates.size() - 1 ) ) )
         leftCoordinates.closeRing();
 
-      final NodedSegmentString left = new NodedSegmentString( leftCoordinates.toCoordinateArray(), new Label( 0, Location.BOUNDARY, Location.EXTERIOR, Location.INTERIOR ) );
+      final NodedSegmentString left = new NodedSegmentString( leftCoordinates.toCoordinateArray(), new Label( Location.BOUNDARY, Location.EXTERIOR, Location.INTERIOR ) );
       bufferSegStrList.add( left );
 
       if( !rightCoordinates.get( 0 ).equals( rightCoordinates.get( rightCoordinates.size() - 1 ) ) )
         rightCoordinates.closeRing();
-      final NodedSegmentString right = new NodedSegmentString( rightCoordinates.toCoordinateArray(), new Label( 0, Location.BOUNDARY, Location.INTERIOR, Location.EXTERIOR ) );
+
+      final NodedSegmentString right = new NodedSegmentString( rightCoordinates.toCoordinateArray(), new Label( Location.BOUNDARY, Location.INTERIOR, Location.EXTERIOR ) );
       bufferSegStrList.add( right );
     }
     else
@@ -234,9 +235,11 @@ public class LineStringBufferBuilder
 
       // we have to flip the right side coordinate list
       leftCoordinates.addAll( Lists.reverse( rightCoordinates ), false );
-      leftCoordinates.closeRing();
 
-      final NodedSegmentString result = new NodedSegmentString( leftCoordinates.toCoordinateArray(), new Label( 0, Location.BOUNDARY, Location.EXTERIOR, Location.INTERIOR ) );
+      if( !leftCoordinates.get( 0 ).equals( leftCoordinates.get( leftCoordinates.size() - 1 ) ) )
+        leftCoordinates.closeRing();
+
+      final NodedSegmentString result = new NodedSegmentString( leftCoordinates.toCoordinateArray(), new Label( Location.BOUNDARY, Location.EXTERIOR, Location.INTERIOR ) );
       bufferSegStrList.add( result );
     }
   }
@@ -246,7 +249,10 @@ public class LineStringBufferBuilder
     final int orientation = seg01.orientationIndex( seg12.p1 );
     final boolean outsideTurn = (orientation == CGAlgorithms.CLOCKWISE);
     if( orientation == 0 )
-      throw new UnsupportedOperationException( "Colinear line segments not supported near " + seg12.p1.toString() ); //$NON-NLS-1$
+    {
+      // co-linear segments seg01, seg12
+      // can savely be ignored
+    }
     final double tolerance = leftSeg01.distance( rightSeg01 ) / 3;
     if( outsideTurn )
     {
@@ -303,7 +309,7 @@ public class LineStringBufferBuilder
     // make a 180 degree turn
     final double startAngle = Math.atan2( dy0, dx0 );
 
-    final int numHalfCircleFractions = 2;
+    final int numHalfCircleFractions = 8;
     final double sectionAngle = Math.PI / numHalfCircleFractions;
     coordinates.add( from, false );
     for( int i = 1; i < numHalfCircleFractions; i++ )
@@ -322,6 +328,14 @@ public class LineStringBufferBuilder
     addRawBufferLines( linestring, leftWidth, leftWidth, rightWidth, rightWidth, bufferSegStrList );
   }
 
+  public static Geometry buffer( final LineString linestring, final double startLeftWidth, final double endLeftWidth, final double startRightWidth, final double endRightWidth )
+  {
+    final Collection<SegmentString> bufferSegStrList = new ArrayList<>( 1 );
+    addRawBufferLines( linestring, startLeftWidth, endLeftWidth, startRightWidth, endRightWidth, bufferSegStrList );
+    final Geometry resultGeom = bufferInternal( bufferSegStrList );
+    return resultGeom;
+  }
+
   public static Geometry buffer( final Geometry linearGeom, final double leftWidth, final double rightWidth )
   {
     // build raw (intersecting) buffer lines
@@ -332,13 +346,18 @@ public class LineStringBufferBuilder
       final LineString linestring = (LineString)linearGeom.getGeometryN( i );
       addRawBufferLines( linestring, leftWidth, rightWidth, bufferSegStrList );
     }
+    final Geometry resultGeom = bufferInternal( bufferSegStrList );
+    return resultGeom;
+  }
 
+  private static Geometry bufferInternal( final Collection<SegmentString> bufferSegStrList )
+  {
     // node the raw buffer lines
+    final com.vividsolutions.jts.geom.GeometryFactory geomFact = new GeometryFactory( new PrecisionModel( 1000 ) );
     final MCIndexNoder noder = new MCIndexNoder();
     final LineIntersector li = new RobustLineIntersector();
-    final com.vividsolutions.jts.geom.GeometryFactory geomFact = JTSAdapter.jtsFactory;
     li.setPrecisionModel( geomFact.getPrecisionModel() );
-    noder.setSegmentIntersector( new IntersectionFinderAdder( li ) );
+    noder.setSegmentIntersector( new IntersectionAdder( li ) );
     noder.computeNodes( bufferSegStrList );
     final Collection<SegmentString> nodedSegStrings = noder.getNodedSubstrings();
 

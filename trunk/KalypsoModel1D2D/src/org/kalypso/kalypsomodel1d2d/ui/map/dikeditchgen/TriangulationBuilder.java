@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,19 +52,23 @@ import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizerUtils;
 import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree_impl.graphics.sld.SurfacePolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.model.geometry.GM_MultiCurve_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -92,6 +97,8 @@ public class TriangulationBuilder extends AbstractModelObject
 
   private GM_TriangulatedSurface m_tin;
 
+  private final SurfacePolygonSymbolizer m_tinSymb = new SurfacePolygonSymbolizer_Impl();
+
   private final PolygonSymbolizer m_polySymb = new PolygonSymbolizer_Impl();
 
   private final LineSymbolizer m_lineSymb = new LineSymbolizer_Impl();
@@ -100,12 +107,14 @@ public class TriangulationBuilder extends AbstractModelObject
   {
     final Fill fill = StyleFactory.createFill( new Color( 255, 255, 255 ) );
     fill.setOpacity( 0.0 );
-    final Stroke polyStroke = StyleFactory.createStroke( new Color( 255, 0, 0 ) );
+    final Stroke polyStroke = StyleFactory.createStroke( new Color( 255, 20, 20 ) );
+    polyStroke.setWidth( 1.0 );
     m_polySymb.setFill( fill );
     m_polySymb.setStroke( polyStroke );
 
-    final Stroke lineStroke = StyleFactory.createStroke( new Color( 0, 200, 0 ) );
-    lineStroke.setWidth( 2.5 );
+    final Stroke lineStroke = StyleFactory.createStroke( new Color( 20, 255, 20 ) );
+    lineStroke.setWidth( 2 );
+    lineStroke.setOpacity( 0.5 );
     m_lineSymb.setStroke( lineStroke );
   }
 
@@ -186,6 +195,11 @@ public class TriangulationBuilder extends AbstractModelObject
     return m_breaklines;
   }
 
+  public GM_Polygon getBoundary( )
+  {
+    return m_boundaryGeom;
+  }
+
   public void setBoundary( final GM_Polygon boundaryGeom, final boolean buildImmediately )
   {
     m_boundaryGeom = boundaryGeom;
@@ -221,11 +235,23 @@ public class TriangulationBuilder extends AbstractModelObject
 
       final GM_Triangle[] triangles = ConstraintDelaunayHelper.createGM_Triangles( m_boundaryGeom, m_breaklines == null ? null : m_breaklines.getAllCurves(), m_boundaryGeom.getCoordinateSystem(), args.toArray( new String[args.size()] ) );
       if( triangles != null && triangles.length > 0 )
+      {
         m_tin = GeometryFactory.createGM_TriangulatedSurface( triangles, triangles[0].getCoordinateSystem() );
+
+        final Color fromColor = new Color( 0, 255, 100 );
+        final Color toColor = new Color( 200, 20, 20);
+        final BigDecimal min = new BigDecimal( m_tin.getMinElevation() - 0.2 );
+        final BigDecimal max = new BigDecimal( m_tin.getMaxElevation() + 0.2 );
+        final PolygonColorMapEntry fromEntry = StyleFactory.createPolygonColorMapEntry( fromColor, fromColor, min, BigDecimal.ZERO );
+        final PolygonColorMapEntry toEntry = StyleFactory.createPolygonColorMapEntry( toColor, toColor, BigDecimal.ZERO, max );
+        final PolygonColorMap_Impl colorMap = new PolygonColorMap_Impl();
+        colorMap.replaceColorMap( PolygonSymbolizerUtils.createColorMap( fromEntry, toEntry, new BigDecimal( 0.2 ), min, max, false ) );
+        m_tinSymb.setColorMap( colorMap );
+      }
       else
         m_tin = null;
     }
-    catch( final GM_Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -244,14 +270,14 @@ public class TriangulationBuilder extends AbstractModelObject
     {
       if( m_tin != null && !m_tin.isEmpty() )
       {
-        m_polySymb.getStroke().setWidth( 1 );
-        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( null, m_tin, m_polySymb );
+        final DisplayElement de = DisplayElementFactory.buildSurfacePolygonDisplayElement( null, m_tin, m_tinSymb );
         de.paint( g, projection, new NullProgressMonitor() );
+        final DisplayElement de2 = DisplayElementFactory.buildPolygonDisplayElement( null, m_tin, m_polySymb );
+        de2.paint( g, projection, new NullProgressMonitor() );
       }
 
       if( m_boundaryGeom != null )
       {
-        m_polySymb.getStroke().setWidth( 2.5 );
         final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( null, m_boundaryGeom, m_polySymb );
         de.paint( g, projection, new NullProgressMonitor() );
       }

@@ -24,16 +24,18 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.apache.commons.math3.util.Pair;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -41,51 +43,49 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.shape.ShapeType;
+import org.kalypso.shape.ShapeWriter;
+import org.kalypso.shape.data.SimpleShapeData;
+import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.deegree.GM_Object2Shape;
+import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.densify.Densifier;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Location;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.PrecisionModel;
-import com.vividsolutions.jts.geomgraph.Label;
 import com.vividsolutions.jts.linearref.LinearLocation;
 import com.vividsolutions.jts.linearref.LocationIndexedLine;
-import com.vividsolutions.jts.noding.NodedSegmentString;
-import com.vividsolutions.jts.noding.SegmentString;
-import com.vividsolutions.jts.noding.snapround.MCIndexSnapRounder;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
-import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author kurzbach
  */
 public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidgetWithOptions
 {
-//  private enum WidgetState
-//  {
-//    DRAW_NETWORK
-//  }
-
   private IFEDiscretisationModel1d2d m_discModel;
 
   private PointSnapper m_pointSnapper;
@@ -100,6 +100,8 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
 
   private Geometry m_network;
 
+  private LocationIndexedLine m_networkIndexedLine;
+
   private GM_TriangulatedSurface m_tin;
 
   private double m_currentZ = Double.NaN;
@@ -108,6 +110,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
   {
     super( "org.kalypso.model.1d2d.workflow.DikeDitchGen" ); //$NON-NLS-1$
     m_tinBuilder.setMinAngle( 25 );
+    m_tinBuilder.setNoSteinerOnBoundary( false, false );
   }
 
   @Override
@@ -122,6 +125,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
   {
     super.activate( commandPoster, mapPanel );
     final IKalypsoLayerModell mapModell = mapPanel.getMapModell();
+
     final String coordinateSystem = mapModell.getCoordinatesSystem();
     m_discModel = UtilMap.findFEModelTheme( mapPanel );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
@@ -136,7 +140,30 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     m_toolTipRenderer.setTooltip( mode );
     m_networkBuilder.reset();
     m_tinBuilder.reset();
-    m_network = JTSAdapter.jtsFactory.createMultiLineString( new LineString[0] );
+    try
+    {
+      final ShapeCollection network = ShapeSerializer.deserialize( "D:/scratch/simp_polder", KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final IFeatureBindingCollection<AbstractShape> shapes = network.getShapes();
+      final Collection<LineString> linestrings = new ArrayList<>( shapes.size() );
+      for( final AbstractShape shape : shapes )
+      {
+        final GM_Object geometry = shape.getGeometry();
+        final QName from = new QName( shape.getFeatureType().getQName().getNamespaceURI(), "Profilober" );
+        final QName to = new QName( shape.getFeatureType().getQName().getNamespaceURI(), "Profilunte" );
+        final Double fromValue = (Double)shape.getProperty( from );
+        final Double toValue = (Double)shape.getProperty( to );
+        final LineString linestring = (LineString)JTSAdapter.export( geometry ).getGeometryN( 0 );
+        linestring.setUserData( new Pair<>( fromValue, toValue ) );
+        linestrings.add( linestring );
+      }
+      m_network = JTSAdapter.jtsFactory.createMultiLineString( linestrings.toArray( new LineString[linestrings.size()] ) );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+    m_networkIndexedLine = new LocationIndexedLine( m_network );
+    createDikeOrDitch();
     repaintMap();
   }
 
@@ -150,15 +177,15 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     {
       try
       {
-        final Coordinate jtsPoint = JTSAdapter.export( currentPoint.getPosition() );
+        final Coordinate jtsCoord = JTSAdapter.export( currentPoint.getPosition() );
         final double buffer = MapUtilities.calculateWorldDistance( mapPanel, currentPoint, 10 );
-        final LocationIndexedLine locationIndexedLine = new LocationIndexedLine( m_network );
-        final LinearLocation projected = locationIndexedLine.project( jtsPoint );
-        projected.snapToVertex( m_network, buffer );
-        if( projected.isValid( m_network ) )
+        final com.vividsolutions.jts.geom.Point jtsPoint = JTSAdapter.jtsFactory.createPoint( jtsCoord );
+        if( m_network.getEnvelope().contains( jtsPoint ) && m_network.distance( jtsPoint ) < buffer )
         {
-          final Coordinate extractPoint = locationIndexedLine.extractPoint( projected );
-          if( extractPoint.distance( jtsPoint ) < buffer )
+          final LinearLocation projected = m_networkIndexedLine.project( jtsCoord );
+          projected.snapToVertex( m_network, buffer );
+          final Coordinate extractPoint = m_networkIndexedLine.extractPoint( projected );
+          if( extractPoint.distance( jtsCoord ) < buffer )
             currentOrSnappedPoint = GeometryFactory.createGM_Point( JTSAdapter.wrap( extractPoint ), currentPoint.getCoordinateSystem() );
         }
       }
@@ -234,37 +261,8 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
       if( curve == null )
         return;
 
-      m_network = m_network.union( JTSAdapter.export( curve ) );
-
-      final int networkSize = m_network.getNumGeometries();
-      final List<SegmentString> segmentList = new ArrayList<>( networkSize );
-      for( int i = 0; i < networkSize; i++ )
-      {
-        final LineString linestring = (LineString)m_network.getGeometryN( i );
-        segmentList.add( new NodedSegmentString( linestring.getCoordinates(), new Label( 0, Location.BOUNDARY, Location.EXTERIOR, Location.INTERIOR ) ) );
-      }
-
-      // from now on work in reduced precision
-      final PrecisionModel pm = new PrecisionModel( 1000 );
-
-      final MCIndexSnapRounder snapRounder = new MCIndexSnapRounder( pm );
-      snapRounder.computeNodes( segmentList );
-      snapRounder.computeVertexSnaps( segmentList );
-      final Collection<SegmentString> nodedSubstrings = snapRounder.getNodedSubstrings();
-
-      final LineMerger merger = new LineMerger();
-      for( SegmentString segmentString : nodedSubstrings )
-      {
-        final Coordinate[] coordinates = segmentString.getCoordinates();
-        if( coordinates.length > 1 )
-          merger.add( JTSAdapter.jtsFactory.createLineString( coordinates ) );
-      }
-
-      m_network = JTSAdapter.jtsFactory.buildGeometry( merger.getMergedLineStrings() );
-
-      JTSAdapter.jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory( pm );
+      addCurveToNetwork( curve );
       createDikeOrDitch();
-      JTSAdapter.jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory();
     }
     catch( final Exception e )
     {
@@ -274,10 +272,20 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     }
     finally
     {
-//      JTSAdapter.jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory();
       m_networkBuilder.reset();
       repaintMap();
     }
+  }
+
+  private void addCurveToNetwork( final GM_Curve curve ) throws GM_Exception
+  {
+    // merge lines
+    final LineMerger merger = new LineMerger();
+    merger.add( m_network );
+    merger.add( JTSAdapter.export( curve ) );
+    final Collection<LineString> mergedLineStrings = merger.getMergedLineStrings();
+    m_network = JTSAdapter.jtsFactory.buildGeometry( mergedLineStrings );
+    m_networkIndexedLine = new LocationIndexedLine( m_network );
   }
 
   private void createDikeOrDitch( )
@@ -290,106 +298,45 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
       if( networkSize == 0 )
         return;
 
-      final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      // parameters
+      final double outerLeftWidth = 60;
+      final double outerRightWidth = 12;
+      final double innerWidth = 4;
+      final double innerElevation = 5;
 
-      // width parameters
-      final double outerLeftWidth = 30;
-      final double outerRightWidth = 62;
-//      final double maxOuterWidth = Math.max( outerLeftWidth, outerRightWidth );
-//      final double innerOuterFrac = 0.01; // inner width as fraction of outer width
-//      final double innerWidth = (outerWidth * innerOuterFrac) / 2;
-      final double innerWidth = 2; // same left and right
-//      final double innerOuterFrac = innerWidth / maxOuterWidth;
+      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+      final ITerrainModel model = caseDataProvider.getModel( ITerrainModel.class.getName() );
+      final ITerrainElevationModelSystem terrainElevationModelSystem = model.getTerrainElevationModelSystem();
 
-      // elevations
-//      final double innerElevation = 8; // TODO: minimum depth/height
-//      final double outerElevation = 0;
-//      final double elevationDifference = outerElevation - innerElevation;
-//      final double maximumElevationDifferencePerRing = 3;
+//      final CreateStructuredNetworkStrategy createStrategy = new CreateDikeStrategy( m_network, outerLeftWidth, outerRightWidth, innerWidth, innerElevation, terrainElevationModelSystem );
 
-      final double[] ringDistancesLeft = getRingDistances( innerWidth, outerLeftWidth );
-      final int ringCountLeft = ringDistancesLeft.length;
-      final double[] ringDistancesRight = getRingDistances( innerWidth, outerRightWidth );
-      final int ringCountRight = ringDistancesRight.length;
-      final int ringCount = ringCountLeft < ringCountRight ? ringCountLeft : ringCountRight;
+      final double minimumDepth = 1;
+      final double innerWidthFraction = 0.25;
+      final double targetElevation = -2;
+      final CreateStructuredNetworkStrategy createStrategy = new CreateDitchStrategy( m_network, innerWidthFraction, targetElevation, minimumDepth, false, terrainElevationModelSystem );
 
-      // get outer boundary
-      final Polygon outer = getRingPoly( outerLeftWidth, outerRightWidth );
-      final double outerDensifyTol = innerWidth * 2 * Math.pow( 2, ringCount );
-      final Polygon outerDensified = (Polygon)Densifier.densify( outer, outerDensifyTol );
-      final GM_Polygon outerRing = (GM_Polygon)JTSAdapter.wrap( outerDensified, coordinateSystem );
-      m_tinBuilder.setBoundary( outerRing, false );
+      // add outer boundary
+      createStrategy.addBoundary( m_tinBuilder );
 
-      // add network segments as breaklines
-      double innerDensifyTolerance = innerWidth * 2;
-      final boolean addNetworkAsBreakline = false;
-      if( addNetworkAsBreakline )
-      {
-        final Geometry densifiedNetwork = Densifier.densify( m_network, innerDensifyTolerance );
-        for( int i = 0; i < networkSize; i++ )
-        {
-          final LineString linestring = (LineString)densifiedNetwork.getGeometryN( i );
-          final GM_Curve edgeCurve = (GM_Curve)JTSAdapter.wrap( linestring, coordinateSystem );
-          m_tinBuilder.addBreakLine( edgeCurve, false );
-        }
-      }
-      else
-        innerDensifyTolerance = innerDensifyTolerance * 2;
-
-      // add inner polygon rings
-      for( int j = 0; j < ringCount; j++ )
-      {
-        // add all inner polygon rings as breaklines
-        final double ringLeftWidth = ringDistancesLeft[j];
-        final double ringRightWidth = ringDistancesRight[j];
-        final Polygon inner = getRingPoly( ringLeftWidth, ringRightWidth );
-        final Polygon innerDensified = (Polygon)Densifier.densify( inner, innerDensifyTolerance );
-        final GM_Polygon innerRing = (GM_Polygon)JTSAdapter.wrap( innerDensified, coordinateSystem );
-        final GM_PolygonPatch surfacePatch = innerRing.getSurfacePatch();
-        final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
-        final GM_Curve innerRingExteriorAsCurve = GeometryFactory.createGM_Curve( exteriorRing, coordinateSystem );
-        m_tinBuilder.addBreakLine( innerRingExteriorAsCurve, false );
-        final GM_Position[][] interiorRings = surfacePatch.getInteriorRings();
-        if( interiorRings != null )
-        {
-          for( final GM_Position[] ring : interiorRings )
-          {
-            final GM_Curve innerRingHoleAsCurve = GeometryFactory.createGM_Curve( ring, coordinateSystem );
-            m_tinBuilder.addBreakLine( innerRingHoleAsCurve, false );
-          }
-        }
-        // double densification distance with each inner ring
-        innerDensifyTolerance = innerDensifyTolerance * 2;
-      }
+      // add network breaklines
+      createStrategy.addBreaklines( m_tinBuilder );
 
       // finalize mesh
       m_tinBuilder.finish();
       m_tin = m_tinBuilder.getTin();
+
+      final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      final GM_Object2Shape gm_Object2Shape = new GM_Object2Shape( ShapeType.POLYGONZ, coordinateSystem );
+      final ISHPGeometry shapeTin = gm_Object2Shape.convert( m_tin );
+      final SimpleShapeData dataProvider = new SimpleShapeData( Charset.defaultCharset(), coordinateSystem, ShapeType.POLYGONZ, new IDBFField[0] );
+      dataProvider.addRow( shapeTin, new Object[0] );
+      final ShapeWriter shapeWriter = new ShapeWriter( dataProvider );
+      shapeWriter.write( "d:/scratch/polder_tin", null );
     }
-    catch( final GM_Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
-  }
-
-  private double[] getRingDistances( final double innerWidth, final double outerWidth )
-  {
-    final double dieoffLeft = new BigDecimal( Math.log( 1 + outerWidth / innerWidth ) ).divide( new BigDecimal( Math.log( 2 ) ), RoundingMode.HALF_UP ).doubleValue() - 1;
-    final int ringCount = Math.max( (int)Math.floor( dieoffLeft ), 1 );
-    final double[] ringDistancesLeft = new double[ringCount];
-    ringDistancesLeft[0] = innerWidth;
-    for( int j = 1; j < ringCount; j++ )
-      ringDistancesLeft[j] = ringCount / dieoffLeft * innerWidth * (Math.pow( 2, j + 1 ) - 1);
-    return ringDistancesLeft;
-  }
-
-  private Polygon getRingPoly( final double leftWidth, final double rightWidth )
-  {
-    final Geometry buffer = LineStringBufferBuilder.buffer( m_network, leftWidth, rightWidth );
-    if( buffer.getNumGeometries() == 1 )
-      return (Polygon)DouglasPeuckerSimplifier.simplify( buffer.getGeometryN( 0 ), Math.max( leftWidth, rightWidth ) / 10 );
-    else
-      throw new IllegalStateException( "Network is not simply-connected." ); //$NON-NLS-1$
   }
 
   @Override
@@ -428,7 +375,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
 
       if( !Double.isNaN( m_currentZ ) )
       {
-        m_toolTipRenderer.setTooltip( String.format( "%.2f", m_currentZ ) ); //$NON-NLS-1$
+        m_toolTipRenderer.setTooltip( String.format( "%.2f", m_currentZ ) );
         m_toolTipRenderer.paintToolTip( m_currentPoint, g, mapPanel.getScreenBounds() );
       }
     }
