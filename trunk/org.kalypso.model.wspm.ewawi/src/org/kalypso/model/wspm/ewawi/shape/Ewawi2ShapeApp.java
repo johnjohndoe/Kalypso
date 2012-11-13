@@ -108,7 +108,7 @@ public class Ewawi2ShapeApp implements IApplication
     System.out.println();
     System.out.println();
     System.out.println( "Usage:" );
-    System.out.println( "C:>ewawi2shape <input dir>" );
+    System.out.println( "C:>ewawi2shape <input dir> <gew shape>" );
   }
 
   @Override

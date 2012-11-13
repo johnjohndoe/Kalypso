@@ -52,7 +52,13 @@ public class EwawiKeyUtilities
       return new EwawiKey( parts[0], parts[1], parts[2], null );
 
     if( parts.length > 3 )
-      return new EwawiKey( parts[0], parts[1], parts[2], parts[parts.length - 1] );
+    {
+      final String freeText = parts[parts.length - 1];
+      if( "ESTAMM".equals( freeText ) || "LAENGS".equals( freeText ) || "PKT".equals( freeText ) )
+        return new EwawiKey( parts[0], parts[1], parts[2], null );
+
+      return new EwawiKey( parts[0], parts[1], parts[2], freeText );
+    }
 
     throw new IllegalStateException( String.format( "File '%s' must contain at least 3 parts (pe, alias, model id)...", file.getName() ) );
   }

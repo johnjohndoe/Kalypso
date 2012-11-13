@@ -18,9 +18,17 @@
  */
 package org.kalypso.model.wspm.ewawi.shape.writer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
@@ -30,6 +38,8 @@ import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * Writes EWAWI+ shape file 32.
@@ -71,13 +81,61 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
   }
 
   @Override
-  protected void writeData( final ShapeFile shapeFile, final EwawiPlus data[] )
+  protected void writeData( final ShapeFile shapeFile, final EwawiPlus data[] ) throws IOException
   {
-    for( final EwawiPlus ewawiData : data )
-      writeData( shapeFile, ewawiData );
+    writeData( shapeFile );
   }
 
-  private void writeData( final ShapeFile shapeFile, final EwawiPlus data )
+  private void writeData( final ShapeFile shapeFile ) throws IOException
   {
+    CSVReader reader = null;
+
+    try
+    {
+      final File fotoList = getFotoList();
+      reader = new CSVReader( new BufferedReader( new FileReader( fotoList ) ), ',' );
+
+      String[] tokens = null;
+      while( (tokens = reader.readNext()) != null )
+      {
+        final String filename = tokens[0];
+        final String rechtswert = tokens[1];
+        final String hochwert = tokens[2];
+        final String hoehe = tokens[3];
+        final String datum = tokens[4];
+
+        // TODO
+      }
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+    }
+  }
+
+  private File getFotoList( )
+  {
+    final File targetFile = getTargetFile();
+    final String fullPath = FilenameUtils.getFullPath( targetFile.getAbsolutePath() );
+    final String fotoPath = FilenameUtils.normalize( String.format( "%s../%s", fullPath, "824_Fotos/" ) );
+
+    final EwawiPlus[] data = getData();
+    final EwawiKey key = data[0].getKey();
+    final String fotoName = key.getAlias();
+
+    return new File( fotoPath, fotoName );
+  }
+
+  private Path getRelativeFotoPath( )
+  {
+    final File targetFile = getTargetFile();
+    final String fullPath = FilenameUtils.getFullPath( targetFile.getAbsolutePath() );
+    final String fotoPath = FilenameUtils.normalize( String.format( "%s../%s", fullPath, "824_Fotos/" ) );
+
+    final Path absoluteFullPath = Paths.get( fullPath );
+    final Path absoluteFotoPath = Paths.get( fotoPath );
+    final Path relativeFotoPath = absoluteFullPath.relativize( absoluteFotoPath );
+
+    return relativeFotoPath;
   }
 }

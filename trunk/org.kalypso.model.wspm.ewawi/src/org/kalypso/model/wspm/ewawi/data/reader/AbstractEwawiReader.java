@@ -69,7 +69,7 @@ abstract class AbstractEwawiReader
   {
     while( reader.ready() )
     {
-      final String line = reader.readLine().trim();
+      final String line = reader.readLine();
       readLine( line );
     }
   }
@@ -78,7 +78,7 @@ abstract class AbstractEwawiReader
   {
     try
     {
-      final String[] tabs = StringUtils.split( line, '\t' ); //$NON-NLS-1$
+      final String[] tabs = StringUtils.splitPreserveAllTokens( line, '\t' ); //$NON-NLS-1$
       readTabs( tabs );
     }
     catch( final NumberFormatException e )
@@ -92,6 +92,9 @@ abstract class AbstractEwawiReader
 
   protected static EwawiObjectart asObjectArt( final String text )
   {
+    if( "-".equals( text ) ) //$NON-NLS-1$
+      return null;
+
     // REMARK: first as int, because we get '1' or '01'
     final Integer asInt = Integer.valueOf( text );
 
@@ -108,6 +111,9 @@ abstract class AbstractEwawiReader
 
   protected static EwawiPunktart asPunktart( final String text )
   {
+    if( "-".equals( text ) ) //$NON-NLS-1$
+      return null;
+
     // REMARK: first as int, because we get '1' or '01'
     final Integer asInt = Integer.valueOf( text );
 
@@ -137,6 +143,9 @@ abstract class AbstractEwawiReader
 
   protected static EwawiProfilart asProfilart( final String text )
   {
+    if( "-".equals( text ) ) //$NON-NLS-1$
+      return null;
+
     // REMARK: first as int, because we get '1' or '01'
     final Integer asInt = Integer.valueOf( text );
 
@@ -161,6 +170,9 @@ abstract class AbstractEwawiReader
 
   protected static EwawiHorizont asHorizont( final String text )
   {
+    if( "-".equals( text ) ) //$NON-NLS-1$
+      return null;
+
     // REMARK: first as int, because we get '1' or '01'
     final Integer asInt = Integer.valueOf( text );
 
