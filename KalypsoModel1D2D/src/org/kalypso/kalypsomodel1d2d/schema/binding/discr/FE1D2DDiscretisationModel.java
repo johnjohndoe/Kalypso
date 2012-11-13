@@ -146,18 +146,18 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   {
     Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" ); //$NON-NLS-1$
 
-    IFE1D2DNode node = findNode( nodeLocation, CLUSTER_TOLERANCE );
-    if( node != null )
-      return node;
+    final IFE1D2DNode existingNode = findNode( nodeLocation, CLUSTER_TOLERANCE );
+    if( existingNode != null )
+      return existingNode;
 
     if( elementsIntersect( nodeLocation ) )
       throw new IllegalStateException( "The given location is inside an existing element" ); //$NON-NLS-1$
 
     try
     {
-      node = (IFE1D2DNode)FeatureHelper.createFeatureForListProp( getNodesInternal(), null, -1 );
-      node.setPoint( nodeLocation );
-      return node;
+      final IFE1D2DNode newNode = (IFE1D2DNode)FeatureHelper.createFeatureForListProp( getNodesInternal(), null, -1 );
+      newNode.setPoint( nodeLocation );
+      return newNode;
     }
     catch( final GMLSchemaException e )
     {
