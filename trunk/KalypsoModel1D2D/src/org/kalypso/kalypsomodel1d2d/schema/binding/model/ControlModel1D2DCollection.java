@@ -51,6 +51,7 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -65,7 +66,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  */
 public class ControlModel1D2DCollection extends Feature_Impl implements IControlModel1D2DCollection
 {
-  private final FeatureBindingCollection<IControlModel1D2D> m_controlModels = new FeatureBindingCollection<>( this, IControlModel1D2D.class, WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
+  private final IFeatureBindingCollection<IControlModel1D2D> m_controlModels = new FeatureBindingCollection<>( this, IControlModel1D2D.class, WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
 
   public final static QName WB1D2DCONTROL_XP_ACTIVE_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "activeModelID" ); //$NON-NLS-1$
 
@@ -79,16 +80,20 @@ public class ControlModel1D2DCollection extends Feature_Impl implements IControl
   }
 
   @Override
-  public FeatureBindingCollection<IControlModel1D2D> getControlModels( )
+  public IFeatureBindingCollection<IControlModel1D2D> getControlModels( )
   {
     return m_controlModels;
   }
 
   @Override
-  public void setActiveControlModel( final IControlModel1D2D newControlModel )
+  public void setActiveControlModel( final IControlModel1D2D activeControlModel )
   {
-    setProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getId() );
+    if( activeControlModel == null )
+      setProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, null );
+    else
+      setProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, activeControlModel.getId() );
 
+    // FIXME: arrg! does not belong into the binding class!
     final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     try
     {
@@ -115,7 +120,7 @@ public class ControlModel1D2DCollection extends Feature_Impl implements IControl
   @Override
   public IControlModel findControlModel( final ICalculationUnit searchUnit )
   {
-    final FeatureBindingCollection<IControlModel1D2D> controlModels = getControlModels();
+    final IFeatureBindingCollection<IControlModel1D2D> controlModels = getControlModels();
 
     for( final IControlModel1D2D controlModel : controlModels )
     {

@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Interface for classes representing the feature collection c1d2d:ControModelCollection
@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  */
 public interface IControlModel1D2DCollection extends Feature
 {
-  FeatureBindingCollection<IControlModel1D2D> getControlModels( );
+  IFeatureBindingCollection<IControlModel1D2D> getControlModels( );
 
   void setActiveControlModel( IControlModel1D2D newControlModel );
 
