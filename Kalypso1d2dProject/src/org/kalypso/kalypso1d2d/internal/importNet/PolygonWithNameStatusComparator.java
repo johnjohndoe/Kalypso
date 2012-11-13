@@ -36,10 +36,17 @@ public class PolygonWithNameStatusComparator extends ViewerComparator
     final IStatus s1 = getStatus( e1 );
     final IStatus s2 = getStatus( e2 );
 
+    /* first by severity ... */
     final int sev1 = s1.getSeverity();
     final int sev2 = s2.getSeverity();
 
-    return sev1 - sev2;
+    if( sev1 != sev2 )
+      return sev1 - sev2;
+
+    /* ... then by message */
+    final String m1 = s1.getMessage();
+    final String m2 = s2.getMessage();
+    return m1.compareTo( m2 );
   }
 
   private IStatus getStatus( final Object element )
