@@ -257,7 +257,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     catch( final CoreException e )
     {
       final String title = getWindowTitle();
-      final String message = "Failed to import observation";
+      final String message = Messages.getString("ImportObservationWizard.0"); //$NON-NLS-1$
 
       final IStatus error = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, message, e );
 
