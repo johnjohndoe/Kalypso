@@ -27,6 +27,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
@@ -46,8 +47,8 @@ public class Analys2dImportAction extends Action implements IUpdateable
     m_data = data;
     m_control = control;
 
-    setText( "Analyze imported elements" );
-    setToolTipText( "Starts the analysis of the imported elements" );
+    setText( Messages.getString("Analys2dImportAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("Analys2dImportAction_1") ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = Kalypso1d2dProjectPlugin.getImageProvider();
     setImageDescriptor( imageProvider.getImageDescriptor( Kalypso1d2dProjectImages.DESCRIPTORS.OK ) );

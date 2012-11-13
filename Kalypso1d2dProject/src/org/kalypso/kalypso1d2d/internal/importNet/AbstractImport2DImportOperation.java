@@ -114,7 +114,7 @@ public abstract class AbstractImport2DImportOperation implements IImport2dImport
   // TODO: implement analysis, for now we mark every polygon with the same status
   private void analyzeElements( final IPolygonWithName[] elements )
   {
-    final IStatus infoStatus = new Status( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, "not validated" );
+    final IStatus infoStatus = new Status( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("AbstractImport2DImportOperation.0") ); //$NON-NLS-1$
 
     for( final IPolygonWithName element : elements )
       element.setStatus( infoStatus );
