@@ -136,6 +136,9 @@ public class RoughnessAssignService extends Job
   {
     final GM_Polygon geometryProperty = element.getGeometry();
 
+    if( geometryProperty == null )
+      return;
+
     final GM_Point centroid = geometryProperty.getCentroid();
     final GM_Position position = centroid.getPosition();
 
