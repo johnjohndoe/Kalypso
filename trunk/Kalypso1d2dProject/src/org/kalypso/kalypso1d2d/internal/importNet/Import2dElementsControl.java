@@ -25,6 +25,9 @@ import java.util.Collection;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -55,16 +58,17 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.bce.gis.io.zweidm.IPolygonWithName;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Control for the {@link Import2dElementsWidget}.
@@ -81,6 +85,8 @@ public class Import2dElementsControl extends Composite
   private final Import2dElementsData m_data;
 
   private final Import2dElementsWidget m_widget;
+
+  private TableViewer m_viewer;
 
   public Import2dElementsControl( final FormToolkit toolkit, final Composite parent, final Import2dElementsData data, final Import2dElementsWidget widget )
   {
@@ -185,6 +191,7 @@ public class Import2dElementsControl extends Composite
     table.setHeaderVisible( true );
 
     final TableViewer viewer = new TableViewer( table );
+    m_viewer = viewer;
     viewer.setUseHashlookup( true );
     viewer.setContentProvider( new ArrayContentProvider() );
 
@@ -227,7 +234,47 @@ public class Import2dElementsControl extends Composite
     final IObservableValue modelSelection = BeansObservables.observeValue( m_data, Import2dElementsData.PROPERTY_SELECTED_ELEMENT );
     m_binding.bindValue( targetSelection, modelSelection );
 
+    modelSelection.addValueChangeListener( new IValueChangeListener()
+    {
+      @Override
+      public void handleValueChange( final ValueChangeEvent event )
+      {
+        handleSelectionChanged( (IPolygonWithName)event.diff.getNewValue() );
+      }
+    } );
+
     return section;
+  }
+
+  protected void handleSelectionChanged( final IPolygonWithName selection )
+  {
+    try
+    {
+      /* Get the new paned bounding box to the centroid of the geometry. */
+
+      final IMapPanel mapPanel = m_widget.getMapPanel();
+      if( mapPanel == null )
+        return;
+
+      if( selection == null )
+        return;
+
+      final Polygon polygon = selection.getPolygon();
+
+      final Point centroid = polygon.getCentroid();
+      final GM_Point centerPoint = (GM_Point)JTSAdapter.wrapWithSrid( centroid );
+
+      final GM_Envelope boundingBox = mapPanel.getBoundingBox();
+      if( boundingBox == null )
+        return;
+
+      final GM_Envelope paned = boundingBox.getPaned( centerPoint );
+      m_widget.setExtent( paned );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
   protected void handleOpenElement( )
@@ -236,21 +283,11 @@ public class Import2dElementsControl extends Composite
     if( selectedElement == null )
       return;
 
-    final IMapPanel mapPanel = m_widget.getMapPanel();
-    if( mapPanel == null )
+    final IStatus status = selectedElement.getStatus();
+    if( status == null )
       return;
 
-    final String srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-    final Envelope envelope = selectedElement.getEnvelope();
-    final Coordinate centre = envelope.centre();
-    final GM_Point centroid = GeometryFactory.createGM_Point( centre.x, centre.y, srsName );
-
-    /* Get the new paned bounding box to the centroid of the geometry. */
-    final GM_Envelope boundingBox = mapPanel.getBoundingBox();
-    final GM_Envelope paned = boundingBox.getPaned( centroid );
-
-    m_widget.setExtent( paned );
+    StatusDialog.open( getShell(), status, m_widget.getName() );
   }
 
   private void createDatasetActions( final Section section )
@@ -260,7 +297,7 @@ public class Import2dElementsControl extends Composite
     final Import2dImportAction importAction = new Import2dImportAction( m_data );
     final ClearDatasetAction clearAction = new ClearDatasetAction( m_data );
     final JumpToDatasetAction jumpToAction = new JumpToDatasetAction( m_data, m_widget );
-    final Analys2dImportAction analyseAction = new Analys2dImportAction( m_data, m_widget );
+    final Analys2dImportAction analyseAction = new Analys2dImportAction( m_data, this );
 
     manager.add( importAction );
     manager.add( clearAction );
@@ -298,5 +335,12 @@ public class Import2dElementsControl extends Composite
     final IMapPanel panel = m_widget.getMapPanel();
     if( panel != null )
       panel.repaintMap();
+  }
+
+  void handleElementsValidated( )
+  {
+    m_viewer.update( m_data.getElements(), null );
+
+    updateControl();
   }
 }

@@ -69,7 +69,7 @@ public class Import2dElementsData extends AbstractModelObject
 
   public static final String PROPERTY_ANALYSIS_ENABLED = "analysisEnabled"; //$NON-NLS-1$
 
-  private static final IStatus NO_STATUS = new Status( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString("Import2dElementsData_0") ); //$NON-NLS-1$
+  private static final IStatus NO_STATUS = new Status( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "Import2dElementsData_0" ) ); //$NON-NLS-1$
 
   private IPolygonWithName[] m_elements = new IPolygonWithName[0];
 

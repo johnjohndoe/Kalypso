@@ -18,22 +18,59 @@
  */
 package org.kalypso.kalypso1d2d.internal.importNet;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 /**
  * ASnalyses the imported elements
  * 
  * @author Gernot Belger
  */
-public class Analys2dImportAction extends Action
+public class Analys2dImportAction extends Action implements IUpdateable
 {
   private final Import2dElementsData m_data;
 
-  private final Import2dElementsWidget m_widget;
+  private final Import2dElementsControl m_control;
 
-  public Analys2dImportAction( final Import2dElementsData data, final Import2dElementsWidget widget )
+  public Analys2dImportAction( final Import2dElementsData data, final Import2dElementsControl control )
   {
     m_data = data;
-    m_widget = widget;
+    m_control = control;
+
+    setText( "Analyze imported elements" );
+    setToolTipText( "Starts the analysis of the imported elements" );
+
+    final PluginImageProvider imageProvider = Kalypso1d2dProjectPlugin.getImageProvider();
+    setImageDescriptor( imageProvider.getImageDescriptor( Kalypso1d2dProjectImages.DESCRIPTORS.OK ) );
+  }
+
+  @Override
+  public void update( )
+  {
+    final boolean enabled = m_data.getElementCount() > 0;
+    setEnabled( enabled );
+  }
+
+  @Override
+  public void runWithEvent( final Event event )
+  {
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+
+    final ICoreRunnableWithProgress operation = new Validate2dImportOperation( m_data.getElements() );
+
+    final IStatus result = ProgressUtilities.busyCursorWhile( operation );
+    if( !result.isOK() )
+      StatusDialog.open( shell, result, getText() );
+
+    m_control.handleElementsValidated();
   }
 }
