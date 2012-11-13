@@ -40,33 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.model.ICommandPoster;
-import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFENetItem;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -82,6 +74,8 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
 
   private ICalculationUnit m_calcUnitToDelete;
 
+  private final IControlModelGroup m_modelGroup;
+
   /**
    * Deletes the calculation unit
    * 
@@ -96,9 +90,10 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
    * @throws IllegalArgumentException
    *           if cuFeatureQName or model1d2d is null
    */
-  public DeleteCalculationUnitCmd( final IFEDiscretisationModel1d2d model1d2d, final ICalculationUnit calcUnit )
+  public DeleteCalculationUnitCmd( final IFEDiscretisationModel1d2d model1d2d, final IControlModelGroup modelGroup, final ICalculationUnit calcUnit )
   {
     m_model1d2d = model1d2d;
+    m_modelGroup = modelGroup;
     m_calcUnitToDelete = calcUnit;
   }
 
@@ -120,143 +115,109 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
-    try
-    {
-//      if( m_undoParentUnits != null && m_undoParentUnits.length > 0 )
-//      {
-//        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-//        final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd.1" ); //$NON-NLS-1$
-//        final MessageDialog dialog = new MessageDialog( activeShell, "Info", null, message, MessageDialog.INFORMATION, new String[] { "Ok" }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
-//        dialog.open();
-//        return;
-//      }
+    final Collection<Feature> changedFeatures = new ArrayList<>();
 
-      // // delete links to parent units
-      // for( final ICalculationUnit1D2D parentUnit : m_undoParentUnits )
-      // parentUnit.getSubUnits().removeAllRefs( m_calcUnitToDelete );
+    final boolean isLinkedTo = checkIsLinkedTo( m_model1d2d, m_calcUnitToDelete );
+    if( isLinkedTo )
+      throw new IllegalStateException( "Cannot delete calculation unit that is still referenced elsewhere" ); //$NON-NLS-1$
 
-      // delete links to child units
-      if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
-        ((ICalculationUnit1D2D)m_calcUnitToDelete).getSubCalculationUnits().clear();
+    // delete links to child units
+    if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
+      ((ICalculationUnit1D2D)m_calcUnitToDelete).getSubCalculationUnits().clear();
 
-      // delete links to elements
-      for( final IFENetItem element : m_calcUnitToDelete.getElements() )
-      {
-        m_calcUnitToDelete.removeLinkedItem( element );
-      }
-      deleteControlModel( m_calcUnitToDelete.getId() );
+    // delete links to elements
+    for( final IFENetItem element : m_calcUnitToDelete.getElements() )
+      m_calcUnitToDelete.removeLinkedItem( element );
 
-      // delete unit from the model
-      m_model1d2d.removeComplexElement( m_calcUnitToDelete );
-      final Feature[] changedFeatureArray = new Feature[] { m_calcUnitToDelete };
-      m_calcUnitToDelete = null;
-      fireProcessChanges( changedFeatureArray, false );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw e;
-    }
+    /* delete control model, if present */
+    deleteControlModel( m_calcUnitToDelete );
 
-  }
+    // delete unit from the model
+    m_model1d2d.removeComplexElement( m_calcUnitToDelete );
+    changedFeatures.add( m_calcUnitToDelete );
 
-  private void deleteControlModel( final String calcUnitToDeleteGmlID )
-  {
-    final IScenarioDataProvider szenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-    IControlModelGroup modelGroup = null;
-    try
-    {
-      modelGroup = szenarioDataProvider.getModel( IControlModelGroup.class.getName() );
-    }
-    catch( final CoreException e )
-    {
-      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd.4" ), e ); //$NON-NLS-1$
-    }
-    final IControlModel1D2DCollection controlModel1D2DCollection = modelGroup.getModel1D2DCollection();
-    IControlModel1D2D controlModel1D2D = null;
-
-    final IControlModel1D2D activeControlModel = controlModel1D2DCollection.getActiveControlModel();
-    IControlModel1D2D controlModelToActivate = null;
-    boolean invalidActiveModel = activeControlModel == null || activeControlModel.getCalculationUnit() == null || activeControlModel.getCalculationUnit().getId().equals( calcUnitToDeleteGmlID );
-    for( final IControlModel1D2D controlModel : controlModel1D2DCollection.getControlModels() )
-    {
-      final ICalculationUnit cmCalcUnit = controlModel.getCalculationUnit();
-      if( cmCalcUnit != null )
-      {
-        if( calcUnitToDeleteGmlID.equals( cmCalcUnit.getId() ) )
-        {
-          controlModel1D2D = controlModel;
-          if( !invalidActiveModel )
-            break;
-        }
-        else if( invalidActiveModel )
-        {
-          controlModelToActivate = controlModel;
-          controlModel1D2DCollection.setActiveControlModel( controlModelToActivate );
-          invalidActiveModel = false;
-        }
-      }
-      else if( controlModel1D2D == null )
-      {
-        controlModel1D2D = controlModel;
-
-        // control model doesn't exists, actually we have control model without reference to any existing calculation
-        // unit
-        // so this one is invalid and should be deleted. In this case it is a needed control model
-      }
-    }
-
-    final Feature parentFeature = controlModel1D2DCollection;
-    final IFeatureType parentFT = parentFeature.getFeatureType();
-
-    final IPropertyType propType = parentFT.getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
-    if( !(propType instanceof IRelationType) )
-      return;
-    final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( controlModel1D2D.getWorkspace() );
-    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( controlModel1D2D );
-    try
-    {
-      cmdWorkspace.postCommand( delControlCmd );
-      ((ICommandPoster)szenarioDataProvider).postCommand( IControlModelGroup.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * @param calculationUnit
-   *          the added or removed calculation unit
-   * @param added
-   *          true if the calculation unit was added false otherwise
-   */
-  private final void fireProcessChanges( final Feature[] changedFeatures, final boolean added )
-  {
-    final int changedType;
-    if( added )
-      changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD;
-    else
-      changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE;
+    /* fire events */
     final GMLWorkspace workspace = m_model1d2d.getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d, changedFeatures, changedType );
+
+    final Feature[] allChanged = changedFeatures.toArray( new Feature[changedFeatures.size()] );
+
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d, allChanged, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     workspace.fireModellEvent( event );
+
+    m_calcUnitToDelete = null;
+  }
+
+  public static boolean checkIsLinkedTo( final IFEDiscretisationModel1d2d model1d2d, final ICalculationUnit calcUnitToDelete )
+  {
+    final IFE1D2DComplexElement<IFENetItem>[] complexElements = model1d2d.getComplexElements();
+    for( final IFE1D2DComplexElement<IFENetItem> complexElement : complexElements )
+    {
+      if( complexElement instanceof ICalculationUnit1D2D )
+      {
+        final IFeatureBindingCollection<ICalculationUnit> subCalculationUnits = ((ICalculationUnit1D2D)complexElement).getSubCalculationUnits();
+        for( final ICalculationUnit subUnit : subCalculationUnits )
+        {
+          if( subUnit == calcUnitToDelete )
+            return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private void deleteControlModel( final ICalculationUnit calcUnitToDelete ) throws InvocationTargetException
+  {
+    final IControlModel1D2DCollection controlModels = m_modelGroup.getModel1D2DCollection();
+
+    final IControlModel controlModelToDelete = controlModels.findControlModel( calcUnitToDelete );
+    if( controlModelToDelete == null )
+    {
+      /* nothing to do */
+      return;
+    }
+
+    /* determine the new active control model to be set */
+    final IControlModel1D2D newActiveControlModel = determinNewActiveControlModel( controlModels, controlModelToDelete );
+
+    /* delete control model if it was present */
+    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( controlModelToDelete );
+    final IScenarioDataProvider szenarioDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+    szenarioDataProvider.postCommand( IControlModelGroup.class.getName(), delControlCmd );
+
+    /* reset active control model, if it was the deleted one */
+    controlModels.setActiveControlModel( newActiveControlModel );
+  }
+
+  private IControlModel1D2D determinNewActiveControlModel( final IControlModel1D2DCollection controlModels, final IControlModel controlModelToDelete )
+  {
+    final IControlModel1D2D oldActiveControlModel = controlModels.getActiveControlModel();
+    if( oldActiveControlModel != controlModelToDelete )
+      return oldActiveControlModel;
+
+    /* activate first one that is not the deleted one */
+    final IFeatureBindingCollection<IControlModel1D2D> allControlModels = controlModels.getControlModels();
+    for( final IControlModel1D2D controlModel : allControlModels )
+    {
+      if( controlModel != controlModelToDelete )
+        return controlModel;
+    }
+
+    return null;
   }
 
   @Override
   public void redo( ) throws Exception
   {
-    process();
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public void undo( ) throws Exception
   {
+    throw new UnsupportedOperationException();
   }
 }
