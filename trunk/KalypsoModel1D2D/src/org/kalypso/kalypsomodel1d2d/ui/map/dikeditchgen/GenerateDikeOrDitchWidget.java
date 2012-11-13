@@ -106,7 +106,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
 
   public GenerateDikeOrDitchWidget( )
   {
-    super( "org.kalypso.model.1d2d.workflow.DikeDitchGen" );
+    super( "org.kalypso.model.1d2d.workflow.DikeDitchGen" ); //$NON-NLS-1$
     m_tinBuilder.setMinAngle( 25 );
   }
 
@@ -389,7 +389,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     if( buffer.getNumGeometries() == 1 )
       return (Polygon)DouglasPeuckerSimplifier.simplify( buffer.getGeometryN( 0 ), Math.max( leftWidth, rightWidth ) / 10 );
     else
-      throw new IllegalStateException( "Network is not simply-connected." );
+      throw new IllegalStateException( "Network is not simply-connected." ); //$NON-NLS-1$
   }
 
   @Override
@@ -428,7 +428,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
 
       if( !Double.isNaN( m_currentZ ) )
       {
-        m_toolTipRenderer.setTooltip( String.format( "%.2f", m_currentZ ) );
+        m_toolTipRenderer.setTooltip( String.format( "%.2f", m_currentZ ) ); //$NON-NLS-1$
         m_toolTipRenderer.paintToolTip( m_currentPoint, g, mapPanel.getScreenBounds() );
       }
     }
