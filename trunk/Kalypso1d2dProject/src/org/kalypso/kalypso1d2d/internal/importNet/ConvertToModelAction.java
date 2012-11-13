@@ -40,13 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.internal.importNet;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
@@ -61,23 +56,14 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.ui.KalypsoModel1D2DStrings;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.Add2DElementsCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.bce.gis.io.zweidm.IPolygonWithName;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author Gernot Belger
@@ -131,16 +117,8 @@ public class ConvertToModelAction extends Action implements IUpdateable
       return;
     }
 
-    final ICoreRunnableWithProgress progress = new ICoreRunnableWithProgress()
-    {
-      @Override
-      public IStatus execute( final IProgressMonitor monitor )
-      {
-        return applyElements( discWorkspace, elements );
-      }
-    };
-
-    final IStatus status = ProgressUtilities.busyCursorWhile( progress );
+    final ICoreRunnableWithProgress operation = new ConvertToModelOperation( discWorkspace, elements );
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     if( !status.isOK() )
       StatusDialog.open( shell, status, getText() );
     else
@@ -157,45 +135,5 @@ public class ConvertToModelAction extends Action implements IUpdateable
         m_widget.setExtent( wishBBox );
       }
     }
-  }
-
-  protected IStatus applyElements( final CommandableWorkspace discWorkspace, final IPolygonWithName[] elements )
-  {
-    try
-    {
-      /* Create rings */
-      final List<GM_PolygonPatch> rings = createRings( elements );
-
-      final Add2DElementsCommand command = new Add2DElementsCommand( discWorkspace, rings );
-      discWorkspace.postCommand( command );
-
-      return Status.OK_STATUS;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "ConvertToModelAction_2" ), e ); //$NON-NLS-1$
-    }
-  }
-
-  private List<GM_PolygonPatch> createRings( final IPolygonWithName[] elements ) throws GM_Exception
-  {
-    final List<GM_PolygonPatch> rings = new ArrayList<>();
-
-    final String srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-    for( final IPolygonWithName element : elements )
-    {
-      final Polygon polygon = element.getPolygon();
-      final LineString exteriorRing = polygon.getExteriorRing();
-
-      final GM_Position[] positions = JTSAdapter.wrap( exteriorRing.getCoordinates() );
-
-      final GM_PolygonPatch ring = GeometryFactory.createGM_PolygonPatch( positions, null, srsName );
-
-      rings.add( ring );
-    }
-
-    return rings;
   }
 }

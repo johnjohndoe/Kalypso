@@ -25,6 +25,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 import com.bce.gis.io.zweidm.IPolygonWithName;
@@ -47,7 +48,7 @@ class Validate2dImportOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Validating elements", m_elements.length );
+    monitor.beginTask( Messages.getString("Validate2dImportOperation_0"), m_elements.length ); //$NON-NLS-1$
 
     for( final IPolygonWithName element : m_elements )
     {
@@ -75,22 +76,22 @@ class Validate2dImportOperation implements ICoreRunnableWithProgress
       final TopologyValidationError error = isValidOp.getValidationError();
       final String jtsMessage = error.getMessage();
 
-      final String message = String.format( "Invalid geometry: %s", jtsMessage );
+      final String message = String.format( Messages.getString("Validate2dImportOperation_1"), jtsMessage ); //$NON-NLS-1$
 
       log.add( IStatus.ERROR, message );
     }
 
     /* interior rings? */
     if( polygon.getNumInteriorRing() > 0 )
-      log.add( IStatus.WARNING, "Geometry has holes" );
+      log.add( IStatus.WARNING, Messages.getString("Validate2dImportOperation_2") ); //$NON-NLS-1$
 
     /* number of vertices */
     if( polygon.getNumPoints() > 4 )
-      log.add( IStatus.WARNING, "Geometry has more than 4 vertices" );
+      log.add( IStatus.WARNING, Messages.getString("Validate2dImportOperation_3") ); //$NON-NLS-1$
 
     if( log.size() == 1 )
       return log.getAllStati()[0];
 
-    return log.asMultiStatusOrOK( "Found problem(s)" );
+    return log.asMultiStatusOrOK( Messages.getString("Validate2dImportOperation_4") ); //$NON-NLS-1$
   }
 }
