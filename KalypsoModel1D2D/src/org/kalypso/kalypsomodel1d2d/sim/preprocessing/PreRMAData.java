@@ -147,7 +147,7 @@ public class PreRMAData implements IPreRMAData
         return existingControlModel;
     }
 
-    final String message = String.format( "Calculation unit specified ('%s') but not found. Simulation aborted.", calcUnitID );
+    final String message = String.format( "Calculation unit specified ('%s') but not found. Simulation aborted.", calcUnitID ); //$NON-NLS-1$
     final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message );
     throw new CoreException( status );
   }

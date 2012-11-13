@@ -193,7 +193,7 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
       // at least once update
       handleStarted( progress, null );
 
-      return log.asMultiStatus( "Kalypso1D2D Simulation" );
+      return log.asMultiStatus( Messages.getString("RMAKalypsoSimulationRunner.0") ); //$NON-NLS-1$
     }
     catch( final Throwable e )
     {
@@ -230,10 +230,10 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
       return new Status( IStatus.CANCEL, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2" ), null ); //$NON-NLS-1$
 
     if( simulationStatus.matches( IStatus.ERROR ) )
-      return new MultiStatus( KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, simulationStatus.getChildren(), "Simulation mit Fehler beendet.", null );
+      return new MultiStatus( KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, simulationStatus.getChildren(), Messages.getString("RMAKalypsoSimulationRunner.1"), null ); //$NON-NLS-1$
 
     if( simulationStatus.matches( IStatus.WARNING ) )
-      return new MultiStatus( KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, simulationStatus.getChildren(), "Simulation mit Warnung beendet.", null );
+      return new MultiStatus( KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_RUNNING, simulationStatus.getChildren(), Messages.getString("RMAKalypsoSimulationRunner.2"), null ); //$NON-NLS-1$
 
     return simulationStatus;
   }

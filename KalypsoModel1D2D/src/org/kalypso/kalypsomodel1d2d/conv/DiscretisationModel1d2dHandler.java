@@ -352,11 +352,11 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     final IFE1D2DNode node1 = getNode( node1ID );
     if( node1 == null )
-      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.0", node1ID, id ) ); //$NON-NLS-1$
+      throw new RuntimeException( String.format( "Found multiple nodes with the same id: %s", node1ID, id ) ); //$NON-NLS-1$
 
     final IFE1D2DNode node2 = getNode( node2ID );
     if( node2 == null )
-      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.1", node2ID, id ) ); //$NON-NLS-1$
+      throw new RuntimeException( String.format( "Right node %s referring to arc %d does not exists.", node2ID, id ) ); //$NON-NLS-1$
 
     /* Create edge for the two existing nodes */
     final IFE1D2DEdge edge = getOrCreateEdge( id, node1, node2 );

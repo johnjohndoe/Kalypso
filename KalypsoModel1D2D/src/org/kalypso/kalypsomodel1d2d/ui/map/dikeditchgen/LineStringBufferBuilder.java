@@ -246,7 +246,7 @@ public class LineStringBufferBuilder
     final int orientation = seg01.orientationIndex( seg12.p1 );
     final boolean outsideTurn = (orientation == CGAlgorithms.CLOCKWISE);
     if( orientation == 0 )
-      throw new UnsupportedOperationException( "Colinear line segments not supported near " + seg12.p1.toString() );
+      throw new UnsupportedOperationException( "Colinear line segments not supported near " + seg12.p1.toString() ); //$NON-NLS-1$
     final double tolerance = leftSeg01.distance( rightSeg01 ) / 3;
     if( outsideTurn )
     {
