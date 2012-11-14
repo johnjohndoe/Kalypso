@@ -103,5 +103,4 @@ public class LinePointCollectorConfig
   {
     m_pointRectSize = pointRectSize;
   }
-
 }
