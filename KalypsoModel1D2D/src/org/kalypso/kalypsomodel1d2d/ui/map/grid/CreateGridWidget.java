@@ -42,9 +42,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * TODO/FIXME: we should separate editing the four lines and editing the grid afterwards. Interaction between those two
  * is too buggy anyways. So we should split up into two widgets, one for entering the four lines; afterwards one for
  * editing the grid.
- *
  * Provides the mechanism to create automatically fem element within a grid
- *
+ * 
  * @author Patrice Congo
  */
 public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
@@ -122,8 +121,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   {
     if( event.getButton() != 0 )
       return;
-
-    event.consume();
 
     final Point p = event.getPoint();
     final boolean snappingActive = !event.isShiftDown();
@@ -248,8 +245,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       return false;
     else
     {
-      final int x = (int) transform.getDestX( toCompare.getX() );
-      final int y = (int) transform.getDestY( toCompare.getY() );
+      final int x = (int)transform.getDestX( toCompare.getX() );
+      final int y = (int)transform.getDestY( toCompare.getY() );
 
       final double distX = Math.abs( x - ref.getX() );
       final double distY = Math.abs( y - ref.getY() );
