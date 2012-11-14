@@ -53,12 +53,12 @@
         <Position>BOTTOM</Position>
       </ScreenAxis>
       <ScreenAxis id="screenAxisY">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Position>LEFT</Position>
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" /><Direction>NEGATIVE</Direction>
+      	<Position>LEFT</Position>
       </ScreenAxis>
       <ScreenAxis id="screenAxisYinverted">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Direction>NEGATIVE</Direction>
+        <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
       </ScreenAxis>
     </Mappers>
