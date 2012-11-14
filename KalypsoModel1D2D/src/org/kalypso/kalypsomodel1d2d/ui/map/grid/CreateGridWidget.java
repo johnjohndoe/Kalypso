@@ -158,7 +158,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       /* double click */
       else if( event.getClickCount() > 1 )
       {
-        m_gridPointCollector.finishSide();
+        m_gridPointCollector.autoadjustOrAndFinishSide();
       }
       else
       {
@@ -348,6 +348,9 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     if( tempGrid == null )
       return;
 
+    // BUGFIX: duple click in the apply button inserted the mesh twice. Now we immediately reset mesh, in order to prevent this.
+    reinit();
+
     final ICoreRunnableWithProgress operation = new ImportQuadMeshWorker( workspace, tempGrid );
 
     final Display display = PlatformUI.getWorkbench().getDisplay();
@@ -357,7 +360,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       public void run( )
       {
         final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
-        reinit();
         if( !status.isOK() )
         {
           StatusDialog.open( display.getActiveShell(), status, getName() );
