@@ -56,8 +56,16 @@ import org.kalypso.kalypsomodel1d2d.ui.map.quadmesh.QuadMesher;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateList;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 public class GridPointCollector
 {
@@ -160,36 +168,26 @@ public class GridPointCollector
   }
 
   /**
-   * Auto complete this line collector and returns the completing point if done. Auto completion is only done for the
-   * last side because
+   * Auto complete this line collector and returns the completing point if done.<br/>
+   * Auto completion is only done for the last two sides.
    * 
    * @return the auto completion point
    */
   public GM_Point autoComplete( )
   {
-    if( m_actualSideKey == 3 )
+    // Last side: add very last point automatically
+    if( m_actualSideKey == 3 && m_sides[m_actualSideKey].getRemainingPointCnt() == 1 )
     {
-      if( m_sides[m_actualSideKey].getRemainingPointCnt() == 1 )
-      {
-        final GM_Point point = m_sides[0].getFirstPoint();
-        if( point instanceof MutableGMPoint )
-        {
-          m_sides[m_actualSideKey].addPoint( point );
-          return point;
-        }
-        else
-          throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.5" ) ); //$NON-NLS-1$
-      }
-      else
-        return null;
+      final GM_Point point = m_sides[0].getFirstPoint();
+      m_sides[m_actualSideKey].addPoint( point );
+      return point;
     }
-    else
-    {
-      if( m_sides[m_actualSideKey].getRemainingPointCnt() == 0 )
-        return (GM_Point)m_sides[m_actualSideKey].finish();
-      else
-        return null;
-    }
+
+    // Auto advance side if max count is reached
+    if( m_sides[m_actualSideKey].getRemainingPointCnt() == 0 )
+      return (GM_Point)m_sides[m_actualSideKey].finish();
+
+    return null;
   }
 
   public GM_Point getLastPoint( )
@@ -501,5 +499,108 @@ public class GridPointCollector
   public QuadMesh getTempGrid( )
   {
     return m_tempGrid;
+  }
+
+  /**
+   * For the last two sides: auto adjust line and try to finish.
+   */
+  public void autoadjustOrAndFinishSide( )
+  {
+    if( m_actualSideKey > 1 )
+      autoAdjust();
+
+    finishSide();
+  }
+
+  private void autoAdjust( )
+  {
+    final LinePointCollector currentSide = m_sides[m_actualSideKey];
+
+    // Do nothing, if point count is already reached
+    if( currentSide.getRemainingPointCnt() == 0 )
+      return;
+
+    // Special case last side: add last point
+    if( m_actualSideKey == 3 )
+    {
+      // hm...: actually we only want to remove the last point, if it snapped the starting point
+      currentSide.removeLastPoint( false );
+
+      final GM_Point point = m_sides[0].getFirstPoint();
+      currentSide.addPoint( point );
+    }
+
+    try
+    {
+      /* get opposite line */
+      final LinePointCollector oppositeSide = m_sides[m_actualSideKey % 2];
+      final GM_Curve oppositeCurve = oppositeSide.getAsCurve();
+
+      /* calculate structure of opposite line */
+      final LineString oppositeLine = (LineString)JTSAdapter.export( oppositeCurve );
+      final LineString reverseOppositeLine = (LineString)oppositeLine.reverse();
+
+      final double[] segmentPercents = calculateSegmentPercents( reverseOppositeLine );
+
+      /* recalculate point locations for current line */
+      final GM_Curve currentCurve = currentSide.getAsCurve();
+      final LineString currentLine = (LineString)JTSAdapter.export( currentCurve );
+      final LineString newCurrentLine = resegmentLine( currentLine, segmentPercents );
+
+      // remove all points from current Line
+      final int currentPointCount = currentSide.getCurrentPointCnt();
+      for( int i = 0; i < currentPointCount - 1; i++ )
+        currentSide.removeLastPoint( false );
+
+      // add all points
+      final Coordinate[] newCoordinates = newCurrentLine.getCoordinates();
+      for( int i = 1; i < newCoordinates.length; i++ )
+      {
+        final Coordinate coordinate = newCoordinates[i];
+
+        final GM_Point newPoint = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( coordinate.x, coordinate.y, m_srsName );
+        currentSide.addPoint( newPoint );
+      }
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  private double[] calculateSegmentPercents( final LineString line )
+  {
+    final LengthIndexedLine indexedLine = new LengthIndexedLine( line );
+
+    final double lineLength = line.getLength();
+
+    final Coordinate[] coordinates = line.getCoordinates();
+
+    final double[] indices = new double[coordinates.length];
+    for( int i = 0; i < indices.length; i++ )
+      indices[i] = indexedLine.indexOf( coordinates[i] );
+
+    final double[] percents = new double[indices.length];
+    for( int i = 0; i < percents.length; i++ )
+      percents[i] = indices[i] / lineLength;
+
+    return percents;
+  }
+
+  private LineString resegmentLine( final LineString line, final double[] segmentPercents )
+  {
+    final CoordinateList newCoordinates = new CoordinateList();
+
+    final double lineLength = line.getLength();
+    final LengthIndexedLine indexedLine = new LengthIndexedLine( line );
+
+    for( final double segmentPercent : segmentPercents )
+    {
+      final double index = segmentPercent * lineLength;
+      final Coordinate newCoordinate = indexedLine.extractPoint( index );
+      newCoordinates.add( newCoordinate, true );
+    }
+
+    return line.getFactory().createLineString( newCoordinates.toCoordinateArray() );
   }
 }

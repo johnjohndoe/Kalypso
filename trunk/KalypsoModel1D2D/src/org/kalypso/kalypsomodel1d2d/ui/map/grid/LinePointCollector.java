@@ -57,6 +57,7 @@ import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -265,14 +266,12 @@ public class LinePointCollector
   void clear( )
   {
     m_points.clear();
-    // m_maxPoints = 0;
   }
 
   void reset( final String crs )
   {
     m_points.clear();
     m_isSelected = false;
-    // m_maxPoints = 0;
     m_crs = crs;
   }
 
@@ -390,13 +389,9 @@ public class LinePointCollector
   public int getRemainingPointCnt( )
   {
     if( m_maxPoints <= 0 )
-    {
       return Integer.MAX_VALUE;
-    }
-    else
-    {
-      return m_maxPoints - m_points.size();
-    }
+
+    return m_maxPoints - m_points.size();
   }
 
   public void replaceLastPoint( final GM_Point point )
@@ -523,12 +518,6 @@ public class LinePointCollector
       return 0;
   }
 
-  @Deprecated
-  public void removeMaxNum( )
-  {
-//    m_maxPoints = 0;
-  }
-
   public boolean isSelected( )
   {
     return m_isSelected;
@@ -536,16 +525,9 @@ public class LinePointCollector
 
   public void paintLine( final Graphics g, final GeoTransform projection, final double width, final Color color )
   {
-    final GM_Position[] positions = new GM_Position[m_points.size()];
-
-    for( int i = 0; i < positions.length; i++ )
-      positions[i] = m_points.get( i ).getPosition();
-
     try
     {
-      final GM_Curve curve = GeometryFactory.createGM_Curve( positions, m_crs );
-      if( curve == null )
-        return;
+      final GM_Curve curve = getAsCurve();
 
       final LineSymbolizer symb = new LineSymbolizer_Impl();
       final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
@@ -561,5 +543,15 @@ public class LinePointCollector
     {
       e1.printStackTrace();
     }
+  }
+
+  public GM_Curve getAsCurve( ) throws GM_Exception
+  {
+    final GM_Position[] positions = new GM_Position[m_points.size()];
+
+    for( int i = 0; i < positions.length; i++ )
+      positions[i] = m_points.get( i ).getPosition();
+
+    return GeometryFactory.createGM_Curve( positions, m_crs );
   }
 }
