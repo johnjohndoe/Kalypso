@@ -48,7 +48,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -68,7 +67,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class is a geometry builder for a line.
- *
+ * 
  * @author Patrice Congo
  */
 public class LinePointCollector
@@ -76,7 +75,7 @@ public class LinePointCollector
   /**
    * Stores the count of points which this geometry must have. If it is 0, there is no rule.
    */
-  private int m_cnt_points;
+  private int m_maxPoints;
 
   private final List<MutableGMPoint> m_points = new ArrayList<>();
 
@@ -90,19 +89,19 @@ public class LinePointCollector
 
   /**
    * The constructor.
-   *
+   * 
    * @param cnt_points
    *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
    *          count of the points will apply.
    * @param targetCrs
    *          The target coordinate system.
    */
-  public LinePointCollector( final int cnt_points, final String targetCrs )
+  public LinePointCollector( final int maxCount, final String targetCrs )
   {
-    m_cnt_points = 0;
+    m_maxPoints = 0;
 
-    if( cnt_points >= 0 )
-      m_cnt_points = cnt_points;
+    if( maxCount >= 0 )
+      m_maxPoints = maxCount;
 
     m_crs = targetCrs;
   }
@@ -112,9 +111,9 @@ public class LinePointCollector
     if( !(p instanceof MutableGMPoint) )
       p = new MutableGMPoint( p );
 
-    m_points.add( (MutableGMPoint) p );
+    m_points.add( (MutableGMPoint)p );
 
-    if( m_points.size() == m_cnt_points )
+    if( m_points.size() == m_maxPoints )
       return finish();
     else
       return null;
@@ -130,17 +129,11 @@ public class LinePointCollector
       return null;
     }
 
-    if( ((m_points.size() == m_cnt_points) && m_cnt_points != 0) || (m_cnt_points == 0) )
-    {
-      m_cnt_points = m_points.size();
+    if( ((m_points.size() == m_maxPoints) && m_maxPoints != 0) || (m_maxPoints == 0) )
       return getLastPoint();
-    }
-    else
-    {
-      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector.0" ) ); //$NON-NLS-1$
-      return null;
-    }
 
+    System.out.println( "Max count not reached" ); //$NON-NLS-1$
+    return null;
   }
 
   public void paint( final Graphics g, final GeoTransform projection, final GM_Point currentPoint, final int pointRectSize )
@@ -212,8 +205,8 @@ public class LinePointCollector
     {
       final GM_Point point = m_points.get( i );
 
-      final int x = (int) projection.getDestX( point.getX() );
-      final int y = (int) projection.getDestY( point.getY() );
+      final int x = (int)projection.getDestX( point.getX() );
+      final int y = (int)projection.getDestY( point.getY() );
 
       xArray.add( new Integer( x ) );
       yArray.add( new Integer( y ) );
@@ -221,8 +214,8 @@ public class LinePointCollector
 
     if( currentPoint != null )
     {
-      final int x = (int) projection.getDestX( currentPoint.getX() );
-      final int y = (int) projection.getDestY( currentPoint.getY() );
+      final int x = (int)projection.getDestX( currentPoint.getX() );
+      final int y = (int)projection.getDestY( currentPoint.getY() );
 
       xArray.add( new Integer( x ) );
       yArray.add( new Integer( y ) );
@@ -272,14 +265,14 @@ public class LinePointCollector
   void clear( )
   {
     m_points.clear();
-    m_cnt_points = 0;
+    // m_maxPoints = 0;
   }
 
   void reset( final String crs )
   {
     m_points.clear();
     m_isSelected = false;
-    m_cnt_points = 0;
+    // m_maxPoints = 0;
     m_crs = crs;
   }
 
@@ -302,17 +295,17 @@ public class LinePointCollector
 
   /**
    * Conevniance methode to get a new builder with the same required number of point and coordinate reference system
-   *
+   * 
    * @param return a new builder
    */
   public LinePointCollector getNewBuilder( )
   {
-    return new LinePointCollector( m_cnt_points, m_crs );
+    return new LinePointCollector( m_maxPoints, m_crs );
   }
 
   /**
    * Returns the last point in this {@link LineGeometryBuilder}
-   *
+   * 
    * @return the last point included in this {@link LineGeometryBuilder}
    */
   public GM_Point getLastPoint( )
@@ -330,7 +323,7 @@ public class LinePointCollector
 
   /**
    * To get the first point included in this geometry builder
-   *
+   * 
    * @return the first point in this geometry builder
    */
   public GM_Point getFirstPoint( )
@@ -349,13 +342,13 @@ public class LinePointCollector
 
   /**
    * To set the number of points the this line geometry is required to have to be considered finished
-   *
+   * 
    * @param cntPoints
    *          the new required number of points
    */
   public void setCntPoints( final int cntPoints )
   {
-    m_cnt_points = cntPoints;
+    m_maxPoints = cntPoints;
     final int SIZE = m_points.size();
 
     if( SIZE > cntPoints && cntPoints != 0 )
@@ -373,12 +366,13 @@ public class LinePointCollector
 
   public int getPointCnt( )
   {
-    return m_cnt_points;
+    return m_maxPoints;
+//    return m_points.size();
   }
 
   /**
    * Return the number of points already in this {@link LineGeometryBuilder}
-   *
+   * 
    * @return the number of points allready included in the line geometry
    */
   public int getCurrentPointCnt( )
@@ -389,19 +383,19 @@ public class LinePointCollector
   /**
    * Return the remaining number of point to add to this {@link LineGeometryBuilder} to reach the expected number of
    * points
-   *
+   * 
    * @return the actual of number of point remaining for completion or {@link Integer#MAX_VALUE} if the required number
    *         of point was set to a zero or negativ integer
    */
   public int getRemainingPointCnt( )
   {
-    if( m_cnt_points <= 0 )
+    if( m_maxPoints <= 0 )
     {
       return Integer.MAX_VALUE;
     }
     else
     {
-      return m_cnt_points - m_points.size();
+      return m_maxPoints - m_points.size();
     }
   }
 
@@ -417,7 +411,7 @@ public class LinePointCollector
     {
       if( point instanceof MutableGMPoint )
       {
-        m_points.add( (MutableGMPoint) point );
+        m_points.add( (MutableGMPoint)point );
       }
       else
       {
@@ -507,7 +501,7 @@ public class LinePointCollector
 
   /**
    * Mark the {@link LineGeometryBuilder} as selected
-   *
+   * 
    * @param isSelected
    *          -- a boolean expressing the selection state of the {@link LineGeometryBuilder}
    */
@@ -529,9 +523,10 @@ public class LinePointCollector
       return 0;
   }
 
+  @Deprecated
   public void removeMaxNum( )
   {
-    m_cnt_points = 0;
+//    m_maxPoints = 0;
   }
 
   public boolean isSelected( )
@@ -544,9 +539,7 @@ public class LinePointCollector
     final GM_Position[] positions = new GM_Position[m_points.size()];
 
     for( int i = 0; i < positions.length; i++ )
-    {
       positions[i] = m_points.get( i ).getPosition();
-    }
 
     try
     {
@@ -557,23 +550,15 @@ public class LinePointCollector
       final LineSymbolizer symb = new LineSymbolizer_Impl();
       final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
 
-      Stroke defaultstroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
-      defaultstroke = symb.getStroke();
-
       stroke.setWidth( width );
       stroke.setStroke( color );
       symb.setStroke( stroke );
 
       final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
       de.paint( g, projection, new NullProgressMonitor() );
-
-      // Set the Stroke back to default
-      defaultstroke.setWidth( 1 );
-      symb.setStroke( defaultstroke );
     }
     catch( final Exception e1 )
     {
-      // TODO Auto-generated catch block
       e1.printStackTrace();
     }
   }

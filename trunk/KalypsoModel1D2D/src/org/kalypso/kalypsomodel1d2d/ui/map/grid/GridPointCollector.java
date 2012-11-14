@@ -162,7 +162,7 @@ public class GridPointCollector
   /**
    * Auto complete this line collector and returns the completing point if done. Auto completion is only done for the
    * last side because
-   *
+   * 
    * @return the auto completion point
    */
   public GM_Point autoComplete( )
@@ -186,7 +186,7 @@ public class GridPointCollector
     else
     {
       if( m_sides[m_actualSideKey].getRemainingPointCnt() == 0 )
-        return (GM_Point)m_sides[m_actualSideKey].finish();// getLastPoint();
+        return (GM_Point)m_sides[m_actualSideKey].finish();
       else
         return null;
     }
@@ -197,28 +197,30 @@ public class GridPointCollector
     if( m_actualSideKey >= SIDE_MAX_NUM )
       return null;
 
-    Assert.throwIAEOnNull( m_sides[m_actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.6" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( m_sides[m_actualSideKey], "builder not available for adding a point" ); //$NON-NLS-1$
     return m_sides[m_actualSideKey].getLastPoint();
   }
 
   public GM_Object finishSide( )
   {
-    Assert.throwIAEOnNull( m_sides[m_actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.7" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( m_sides[m_actualSideKey], "builder not available" ); //$NON-NLS-1$
+
     if( m_actualSideKey >= SIDE_MAX_NUM )
-    {
       return null;
-    }
+
     final LinePointCollector oldBuilder = m_sides[m_actualSideKey];
+
     final GM_Object gmObject = m_sides[m_actualSideKey].finish();
+
     if( gmObject == null )
     {
       // not finish
       return null;
     }
+
     m_actualSideKey++;
     if( m_actualSideKey < SIDE_MAX_NUM )
     {
-      // actualSideKey++;
       LinePointCollector newSide = m_sides[m_actualSideKey];
       if( newSide == null )
       {
@@ -232,7 +234,7 @@ public class GridPointCollector
       if( lastP != null )
         newSide.addPoint( lastP );
       else
-        logger.warning( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.8" ) ); //$NON-NLS-1$
+        logger.warning( "Last point is null" ); //$NON-NLS-1$
     }
     else
     {
@@ -265,30 +267,14 @@ public class GridPointCollector
 
   public void paint( final Graphics g, final GeoTransform projection, final GM_Point currentPoint )
   {
-    LinePointCollector builder = null;
+    LinePointCollector currentLine = null;
     if( m_actualSideKey < SIDE_MAX_NUM )
     {
       if( m_sides[m_actualSideKey] == null )
         return;
 
-      builder = m_sides[m_actualSideKey];
-      Assert.throwIAEOnNull( builder, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.9" ) ); //$NON-NLS-1$
-    }
-
-    final Color curColor = g.getColor();
-
-    for( int i = 0; i < m_sides.length; i++ )
-    {
-      final LinePointCollector lpc = m_sides[i];
-      if( lpc == null )
-        continue;
-
-      g.setColor( m_lpcConfigs[i].getColor() );
-      final int pointRectSize = m_lpcConfigs[i].getPointRectSize();
-      if( lpc != builder )
-        lpc.paint( g, projection, null, pointRectSize );
-      else
-        lpc.paint( g, projection, currentPoint, pointRectSize );
+      currentLine = m_sides[m_actualSideKey];
+      Assert.throwIAEOnNull( currentLine, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.9" ) ); //$NON-NLS-1$
     }
 
     /* draw temp grid */
@@ -297,19 +283,34 @@ public class GridPointCollector
       final QuadMeshPainter meshPainter = new QuadMeshPainter( m_tempGrid, m_meshEdgePainter, null );
       meshPainter.paint( g, projection );
     }
+    else
     {
       final QuadMeshPainter meshPainter = new QuadMeshPainter( m_tempGrid, m_meshEdgeInvalidPainter, null );
       meshPainter.paint( g, projection );
     }
 
     /* draw selected line */
+    // FIXME: separate the concept of the line currently created, and the selected line when editing the grid afterwards
     if( m_actualSideKey < SIDE_MAX_NUM )
     {
-      builder = m_sides[m_actualSideKey];
-      builder.paintLine( g, projection, 1, m_lpcConfigs[m_actualSideKey].getColor() );
+      final LinePointCollector selectedSide = m_sides[m_actualSideKey];
+      selectedSide.paintLine( g, projection, 3, m_lpcConfigs[m_actualSideKey].getColor() );
     }
 
-    g.setColor( curColor );
+    for( int i = 0; i < m_sides.length; i++ )
+    {
+      final LinePointCollector lpc = m_sides[i];
+      if( lpc == null )
+        continue;
+
+      g.setColor( m_lpcConfigs[i].getColor() );
+
+      final int pointRectSize = m_lpcConfigs[i].getPointRectSize();
+      if( lpc != currentLine )
+        lpc.paint( g, projection, null, pointRectSize );
+      else
+        lpc.paint( g, projection, currentPoint, pointRectSize );
+    }
   }
 
   public void clearCurrent( )
@@ -330,11 +331,16 @@ public class GridPointCollector
       }
     }
     m_hasAllSides = false;
+    m_tempGrid = null;
+
     fireStateChanged();
   }
 
   public void gotoPreviousSide( )
   {
+    m_hasAllSides = false;
+    m_tempGrid = null;
+
     LinePointCollector curBuilder;
     if( m_actualSideKey >= SIDE_MAX_NUM )
     {
@@ -350,8 +356,6 @@ public class GridPointCollector
     {
       m_actualSideKey--;
       m_sides[m_actualSideKey].removeLastPoint( false );
-      if( m_actualSideKey < 2 )
-        m_sides[m_actualSideKey].removeMaxNum();
     }
 
     fireStateChanged();
@@ -359,6 +363,9 @@ public class GridPointCollector
 
   public void removeLastPoint( )
   {
+    m_hasAllSides = false;
+    m_tempGrid = null;
+
     if( m_actualSideKey >= SIDE_MAX_NUM )
     {
       // goto to the last line builder
@@ -440,7 +447,7 @@ public class GridPointCollector
   /**
    * To get the with for the square that are drawn to show point. if ther is an active {@link LinePointCollectorConfig} its actual point rect size is resturn otherwise the point square size of the
    * first {@link LinePointCollectorConfig}
-   *
+   * 
    * @return Returns the with for the square that are drawn to show point
    */
   public int getPointRectSize( )

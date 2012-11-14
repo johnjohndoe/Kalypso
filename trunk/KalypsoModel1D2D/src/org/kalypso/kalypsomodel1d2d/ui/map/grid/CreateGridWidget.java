@@ -130,6 +130,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     m_currentPoint = currentPoint;
 
+    // TODO: makes no sense
     if( m_gridPointCollector != null && m_gridPointCollector.getHasAllSides() )
     {
       final IMapPanel mapPanel = getMapPanel();
@@ -150,11 +151,11 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     if( (event.getButton() == MouseEvent.BUTTON1) )
     {
-      /* double click */
       if( m_gridPointCollector.getHasAllSides() )
       {
         /* nothing to do, grid is finished */
       }
+      /* double click */
       else if( event.getClickCount() > 1 )
       {
         m_gridPointCollector.finishSide();
@@ -163,14 +164,17 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       {
         final boolean snappingActive = !event.isShiftDown();
 
-        m_currentPoint = snapToNode( event.getPoint(), snappingActive );
+        final Point point = event.getPoint();
 
-        if( snapToNode( event.getPoint(), snappingActive ) == null )
+        final GM_Point snapToNode = snapToNode( point, snappingActive );
+        m_currentPoint = snapToNode;
+
+        if( snapToNode == null )
           panel.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
         else
           panel.setCursor( Cursor.getDefaultCursor() );
 
-        m_gridPointCollector.addPoint( snapToNode( event.getPoint(), snappingActive ) );
+        m_gridPointCollector.addPoint( snapToNode );
       }
     }
     else if( (event.getButton() == MouseEvent.BUTTON3) )
@@ -341,6 +345,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     final CommandableWorkspace workspace = theme.getWorkspace();
 
     final QuadMesh tempGrid = m_gridPointCollector.getTempGrid();
+    if( tempGrid == null )
+      return;
 
     final ICoreRunnableWithProgress operation = new ImportQuadMeshWorker( workspace, tempGrid );
 
