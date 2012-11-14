@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
-  <Chart id="boundaryConditionChart">
+  <Chart id="boundaryConditionChart" legend="false">
     <Description>Grundlagendaten zur Erzeugung der Randbedingungen</Description>
     <ChartInsets top="10" right="10" />
     <Layers>
-      <Layer visible="true" id="gridLayer">
+      <Layer visible="true" id="gridLayer" legend="false">
         <Provider epid="de.openali.odysseus.chart.ext.layer.provider.Grid">
           <Parameters>
             <Parameter name="orientation" value="VERTICAL" />
@@ -25,7 +25,7 @@
           </LineStyle>
         </Styles>
       </Layer>
-      <Layer visible="true" id="wspLayer">
+      <Layer visible="true" id="wspLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="observationFeatureKey" />
@@ -59,7 +59,7 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer visible="true" id="wqLayer">
+      <Layer visible="true" id="wqLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="observationFeatureKey" />
@@ -93,7 +93,7 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer visible="true" id="dischargeLayer">
+      <Layer visible="true" id="dischargeLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="observationFeatureKey" />
@@ -127,7 +127,7 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer visible="true" id="spec2DdischargeLayer">
+      <Layer visible="true" id="spec2DdischargeLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="observationFeatureKey" />
@@ -161,7 +161,7 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer visible="true" id="spec1DdischargeLayer">
+      <Layer visible="true" id="spec1DdischargeLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="observationFeatureKey" />
@@ -195,7 +195,7 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer visible="true" id="waveHsigLayer">
+      <Layer visible="true" id="waveHsigLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="observationFeatureKey" />
@@ -229,7 +229,7 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer visible="true" id="waveDirectionLayer">
+      <Layer visible="true" id="waveDirectionLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="observationFeatureKey" />
@@ -263,7 +263,7 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer visible="true" id="wavePeakPeriodLayer">
+      <Layer visible="true" id="wavePeakPeriodLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="observationFeatureKey" />
