@@ -4,7 +4,7 @@
     <Description>Berechnungsergebnisse</Description>
     <ChartInsets top="10" />
     <Layers>
-      <Layer visible="true" id="gridLayer">
+      <Layer visible="true" id="gridLayer" legend="false">
         <Provider epid="de.openali.odysseus.chart.ext.layer.provider.Grid">
           <Parameters>
             <Parameter name="orientation" value="VERTICAL" />
@@ -27,7 +27,7 @@
         </Styles>
       </Layer>
 
-      <Layer visible="true" id="wspLayer">
+      <Layer visible="true" id="wspLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="hydrographFeatureKey" />
@@ -62,7 +62,7 @@
         </Styles>
       </Layer>
 
-      <Layer visible="true" id="dischargeLayer">
+      <Layer visible="true" id="dischargeLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="hydrographFeatureKey" />
@@ -98,7 +98,7 @@
         </Styles>
       </Layer>
 
-      <Layer visible="true" id="velocityLayer">
+      <Layer visible="true" id="velocityLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="hydrographFeatureKey" />
@@ -134,7 +134,7 @@
         </Styles>
       </Layer>
 
-      <Layer visible="true" id="velocityDirLayer">
+      <Layer visible="true" id="velocityDirLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="hydrographFeatureKey" />
@@ -170,7 +170,7 @@
       </Layer>
 
       <!-- Wave parameter -->
-      <Layer visible="true" id="waveHsigLayer">
+      <Layer visible="true" id="waveHsigLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="hydrographFeatureKey" />
@@ -205,7 +205,7 @@
         </Styles>
       </Layer>
 
-      <Layer visible="true" id="waveDirLayer">
+      <Layer visible="true" id="waveDirLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="hydrographFeatureKey" />
@@ -240,7 +240,7 @@
         </Styles>
       </Layer>
 
-      <Layer visible="true" id="wavePeriodLayer">
+      <Layer visible="true" id="wavePeriodLayer" hideIfNoData="true">
         <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="hydrographFeatureKey" />
