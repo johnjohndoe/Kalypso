@@ -56,7 +56,6 @@ import org.kalypso.observation.result.IComponent;
  */
 public class KnaufProfileWrapper extends ProfileWrapper
 {
-
   private final KnaufReach m_reach;
 
   public KnaufProfileWrapper( final KnaufReach reach, final IProfile profile )
@@ -89,7 +88,19 @@ public class KnaufProfileWrapper extends ProfileWrapper
     final IProfilePointMarker w1 = findMin( trennflaechen );
     final IProfilePointMarker w2 = findMax( trennflaechen );
 
-    final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( Math.min( w1.getPoint().getBreite(), w2.getPoint().getBreite() ), Math.max( w1.getPoint().getBreite(), w2.getPoint().getBreite() ) );
+    if( w1 == null || w2 == null )
+      return null;
+
+    final IProfileRecord point1 = w1.getPoint();
+    final IProfileRecord point2 = w2.getPoint();
+
+    final Double b1 = point1.getBreite();
+    final Double b2 = point2.getBreite();
+
+    final double min = Math.min( b1, b2 );
+    final double max = Math.max( b1, b2 );
+
+    final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( min, max );
     getProfile().accept( visitor, 1 );
 
     return visitor.getRoughness( m_reach );
