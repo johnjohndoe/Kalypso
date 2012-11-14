@@ -53,13 +53,12 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.IProfile
  */
 public class KnaufSA21BeanInitializer extends KnaufBeanInitializer
 {
-
   public static void init( final KnaufSA21Bean bean )
   {
     final IProfileBuilding building = getBuilding( bean.getProfile() );
     if( building instanceof BuildingBruecke )
     {
-      doInitBridge( (BuildingBruecke) building, bean );
+      doInitBridge( (BuildingBruecke)building, bean );
     }
     else
       doInit( bean );
