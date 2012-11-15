@@ -63,6 +63,8 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartType;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
+import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.utils.ByCategoryComparator;
 import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
 import org.kalypso.model.wspm.pdb.db.utils.ConsecutiveNumComparator;
@@ -80,7 +82,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
  */
 public class GafWriter
 {
-  private final String GAF_LINE = "%.3f\t%s\t%s\t%s\t%s\t%d\t%d\t%.4f\t%.4f\t%s"; //$NON-NLS-1$
+  private final String GAF_LINE = "%.3f\t%s\t%s\t%s\t%s\t%d\t%d\t%s\t%s\t%s"; //$NON-NLS-1$
 
   // TODO: maybe get as option
   private static final String EMPTY_HYK_CODE = "x"; //$NON-NLS-1$
@@ -118,8 +120,8 @@ public class GafWriter
       writer = new PrintWriter( file );
 
       /* Monitor. */
-      monitor.beginTask( Messages.getString("GafWriter_0"), 100 * crossSections.size() ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("GafWriter_1") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "GafWriter_0" ), 100 * crossSections.size() ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "GafWriter_1" ) ); //$NON-NLS-1$
 
       /* Sort the cross sections. */
       final CrossSection[] sortedCrossSections = crossSections.toArray( new CrossSection[] {} );
@@ -138,11 +140,11 @@ public class GafWriter
       /* write additional lines in separate file */
       writeAdditionalLines( file );
 
-      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("GafWriter_2") ); //$NON-NLS-1$
+      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "GafWriter_2" ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString("GafWriter_3"), ex.getLocalizedMessage() ), ex ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString( "GafWriter_3" ), ex.getLocalizedMessage() ), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -236,10 +238,20 @@ public class GafWriter
     if( height != null )
       z = String.format( "%.4f", height.doubleValue() ); //$NON-NLS-1$
 
-    final int rk = Integer.parseInt( point.getRoughness().getId().getName() );
-    final int bk = Integer.parseInt( point.getVegetation().getId().getName() );
-    final double hw = point.getLocation().getY();
-    final double rw = point.getLocation().getX();
+    final Roughness roughness = point.getRoughness();
+    final Vegetation vegetation = point.getVegetation();
+
+    final int rk = Integer.parseInt( roughness.getId().getName() );
+    final int bk = Integer.parseInt( vegetation.getId().getName() );
+
+    /* geo location */
+    final com.vividsolutions.jts.geom.Point location = point.getLocation();
+
+    final Double hw = location == null ? null : location.getY();
+    final Double rw = location == null ? null : location.getX();
+
+    final String hwStr = hw == null ? StringUtils.EMPTY : String.format( "%.4f", hw ); //$NON-NLS-1$
+    final String rwStr = rw == null ? StringUtils.EMPTY : String.format( "%.4f", rw ); //$NON-NLS-1$
 
     final String code = point.getCode();
     final String hyk = StringUtils.isBlank( point.getHyk() ) ? EMPTY_HYK_CODE : point.getHyk();
@@ -256,7 +268,7 @@ public class GafWriter
       final String tweakedCode = tweakedPair.getLeft();
       final String tweakedHyk = tweakedPair.getRight();
 
-      final String line = String.format( Locale.PRC, GAF_LINE, station, id, y, z, tweakedCode, rk, bk, hw, rw, tweakedHyk );
+      final String line = String.format( Locale.PRC, GAF_LINE, station, id, y, z, tweakedCode, rk, bk, hwStr, rwStr, tweakedHyk );
 
       // REMARK: store first line in file, additional hyk lines are stored in separate file
       // IMPORTANT: order of lines is given by order of hyk codes made by the PPPartBuilder (PA,PE, LU,RU, LBOK,RBOK)
