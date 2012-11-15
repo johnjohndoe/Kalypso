@@ -26,13 +26,10 @@ import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ewawi.data.EwawiProLine;
 import org.kalypso.model.wspm.ewawi.data.EwawiSta;
-import org.kalypso.model.wspm.ewawi.data.EwawiStaLine;
-import org.kalypso.model.wspm.ewawi.data.enums.EwawiPunktart;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePoint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.shape.geometry.SHPPoint;
 
@@ -77,16 +74,16 @@ public class EwawiProfilePointCreator
     final EwawiProLine[] proLines = m_basePart.getProLines();
     for( final EwawiProLine proLine : proLines )
     {
-      final EwawiProfilePoint profilePoint = createProfilePoint( proLine );
+      final EwawiProfilePoint profilePoint = EwawiUtilities.createProfilePoint( m_staIndex, proLine );
       final SHPPoint shape = profilePoint.getShape();
 
       final String id = String.format( "%d", proLine.getPunktNummer() ); //$NON-NLS-1$
-      final String comment = getRecordDescription( proLine );
+      final String comment = EwawiUtilities.getRecordDescription( proLine );
       final double rechtswert = shape.getX();
       final double hochwert = shape.getY();
       final double breite = profilePoint.getBreite().doubleValue();
       final double hoehe = profilePoint.getHoehe().doubleValue();
-      final String code = getRecordCode( proLine );
+      final String code = EwawiUtilities.getRecordCode( proLine );
 
       final IProfileRecord record = profil.createProfilPoint();
       record.setValue( record.indexOfProperty( idComponent ), id );
@@ -99,35 +96,5 @@ public class EwawiProfilePointCreator
 
       profil.addPoint( record );
     }
-  }
-
-  private EwawiProfilePoint createProfilePoint( final EwawiProLine proLine ) throws EwawiException
-  {
-    final EwawiStaLine leftFixPoint = m_staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._1, proLine.getGewKennzahl(), proLine.getStation() );
-    final EwawiStaLine rightFixPoint = m_staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._2, proLine.getGewKennzahl(), proLine.getStation() );
-    if( leftFixPoint == null || rightFixPoint == null )
-      throw new EwawiException( Messages.getString("EwawiProfilePointCreator.1") ); //$NON-NLS-1$
-
-    return new EwawiProfilePoint( leftFixPoint, rightFixPoint, proLine );
-  }
-
-  private String getRecordDescription( final EwawiProLine proLine )
-  {
-    final StringBuilder description = new StringBuilder();
-
-    final String comment = proLine.getComment();
-    if( comment != null && !comment.equals( "-" ) ) //$NON-NLS-1$
-    {
-      final String commentText = String.format( "%s", comment ); //$NON-NLS-1$
-      description.append( commentText );
-    }
-
-    return description.toString();
-  }
-
-  private String getRecordCode( final EwawiProLine proLine )
-  {
-    final EwawiPunktart punktArt = proLine.getPunktArt();
-    return String.format( "EWAWI_%d", punktArt.getKey() ); //$NON-NLS-1$
   }
 }

@@ -100,9 +100,8 @@ public class EwawiWorker extends AbstractEwawiWorker
 
       for( final String foto : photos )
       {
-        final File proFile = data.getProFile().getFile();
-        final File proParent = proFile.getParentFile();
-        final File fotoFile = new File( proParent, foto );
+        final File fotoDirectory = data.getFotoDirectory();
+        final File fotoFile = new File( fotoDirectory, foto );
         final URI fotoUrl = fotoFile.toURI();
 
         final Image image = profileFeature.addImage( fotoUrl );
@@ -111,6 +110,9 @@ public class EwawiWorker extends AbstractEwawiWorker
 
       final EwawiProfilePointCreator pointCreator = new EwawiProfilePointCreator( staIndex, basePart, profileFeature );
       pointCreator.createProfilePoints();
+
+      final EwawiProfileObjectCreator objectCreator = new EwawiProfileObjectCreator( staIndex, ewawiProfile, profileFeature );
+      objectCreator.createProfileObjects();
 
       return profileFeature;
     }

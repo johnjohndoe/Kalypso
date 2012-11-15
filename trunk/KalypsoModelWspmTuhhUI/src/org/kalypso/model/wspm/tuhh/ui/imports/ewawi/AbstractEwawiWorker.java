@@ -38,6 +38,8 @@ import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPPolyLinez;
 import org.kalypso.shape.tools.SHP2JTS;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -160,6 +162,19 @@ public abstract class AbstractEwawiWorker
 
     final ISHPGeometry riverShape = gewShape.getShape( gewKennzahl, geometry );
 
-    return (GM_Curve)SHP2GM_Object.transform( null, riverShape );
+    final GM_Object riverline = SHP2GM_Object.transform( null, riverShape );
+    if( riverline instanceof GM_Curve )
+      return (GM_Curve)riverline;
+
+    if( riverline instanceof GM_MultiCurve )
+    {
+      final GM_MultiCurve multiCurve = (GM_MultiCurve)riverline;
+      if( multiCurve.getSize() == 1 )
+        return multiCurve.getCurveAt( 0 );
+
+      throw new IllegalStateException( "Got a multi curve mit more than one curve..." ); //$NON-NLS-1$
+    }
+
+    throw new IllegalStateException( "Geometry of the river shape must be a curve..." ); //$NON-NLS-1$
   }
 }
