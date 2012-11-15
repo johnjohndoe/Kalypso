@@ -1,4 +1,4 @@
-This is Version 12.11.0.RC3.20121018 of Kalypso
+This is Version 12.11.0.RC4.20121115 of Kalypso
 
 For further information, visit http://kalypso.sourceforge.net
 
