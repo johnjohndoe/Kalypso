@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Risk Project Template
 Bundle-SymbolicName: org.kalypso.model.risk.project.template;singleton:=true
-Bundle-Version: 12.7.0.qualifier
+Bundle-Version: 12.11.0.qualifier
 Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Require-Bundle: org.kalypso.contribs.eclipseplatform
 Bundle-Localization: plugin

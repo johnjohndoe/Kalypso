@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.kalypso.model.wspm.pdb.ui;singleton:=true
-Bundle-Version: 12.7.0.qualifier
+Bundle-Version: 12.11.0.qualifier
 Bundle-Activator: org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.apache.commons,
