@@ -21,14 +21,23 @@ package org.kalypso.model.wspm.ewawi.utils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.io.FilenameUtils;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.geometry.ISHPGeometry;
+import org.kalypso.shape.tools.SHP2JTS;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * This file holds the shape of the rivers, containing the river number and river name.
@@ -45,15 +54,12 @@ public class GewShape
 
   private final File m_gewShape;
 
-  private final Map<Long, GewShapeRow> m_gkzFgn25Hash;
-
-  private final Map<String, GewShapeRow> m_aliasHash;
+  private final Map<Long, List<GewShapeRow>> m_gkzFgn25Hash;
 
   public GewShape( final File gewShape )
   {
     m_gewShape = gewShape;
     m_gkzFgn25Hash = new HashMap<>();
-    m_aliasHash = new HashMap<>();
   }
 
   public void init( ) throws DBaseException, IOException
@@ -70,69 +76,88 @@ public class GewShape
     {
       /* Get all values of the row. */
       final Object[] values = shapeFile.getRow( i );
+      final ISHPGeometry shape = shapeFile.getShape( i );
 
       /* Create the data object for the row. */
-      final GewShapeRow row = new GewShapeRow( fields, values );
+      final GewShapeRow row = new GewShapeRow( fields, shape, values );
 
-      /* Get the fields of the record. */
       final String gkzFgn25 = (String)row.getValue( GKZ_FGN25 );
-      final String gnAchs08 = (String)row.getValue( GN_ACHS_08 );
-      final String alias = (String)row.getValue( ALIAS );
-
-      // FIXME: The gkzFgn25 is not unique! Values will be overwritten...
       final long parsedGkzFgn25 = Long.parseLong( gkzFgn25 );
       if( !m_gkzFgn25Hash.containsKey( parsedGkzFgn25 ) )
-        System.out.println( String.format( "Gewässerkennziffer '%d' -> Gewässername: %s", parsedGkzFgn25, gnAchs08 ) );
-      else
-        System.out.println( String.format( "Doppelt: Gewässerkennziffer '%d' -> Gewässername: %s", parsedGkzFgn25, gnAchs08 ) );
+        m_gkzFgn25Hash.put( parsedGkzFgn25, new ArrayList<GewShapeRow>() );
 
-      m_gkzFgn25Hash.put( parsedGkzFgn25, row );
-
-      // FIXME: The alias is not unique! Values will be overwritten...
-      if( !m_aliasHash.containsKey( alias ) )
-        System.out.println( String.format( "Alias '%s' -> Gewässername: %s", alias, gnAchs08 ) );
-      else
-        System.out.println( String.format( "Doppelt: Alias '%s' -> Gewässername: %s", alias, gnAchs08 ) );
-
-      m_aliasHash.put( alias, row );
+      final List<GewShapeRow> gewList = m_gkzFgn25Hash.get( parsedGkzFgn25 );
+      gewList.add( row );
     }
 
     shapeFile.close();
   }
 
-  public String getName( final Long gkzFgn25 ) throws DBaseException
+  public ISHPGeometry getShape( final Long gkzFgn25, final Geometry geometry )
   {
-    final GewShapeRow row = m_gkzFgn25Hash.get( gkzFgn25 );
+    final List<GewShapeRow> rows = m_gkzFgn25Hash.get( gkzFgn25 );
+    if( rows == null || rows.size() == 0 )
+      return null;
+
+    final GewShapeRow row = GewShape.findRow( geometry, rows );
     if( row == null )
       return null;
 
-    return (String)row.getValue( GN_ACHS_08 );
+    return row.getShape();
   }
 
-  public String getName( final String alias ) throws DBaseException
+  public Object getValue( final Long gkzFgn25, final String field, final Geometry geometry ) throws DBaseException
   {
-    final GewShapeRow row = m_aliasHash.get( alias );
-    if( row == null )
+    System.out.println( String.format( "Suche Gewässerabschnitte für GKZ '%d'...", gkzFgn25.longValue() ) );
+
+    final List<GewShapeRow> rows = m_gkzFgn25Hash.get( gkzFgn25 );
+    if( rows == null || rows.size() == 0 )
+    {
+      System.out.println( "Keine Gewässerabschnitte verfügbar." );
       return null;
+    }
 
-    return (String)row.getValue( GN_ACHS_08 );
-  }
-
-  public Object getValue( final Long gkzFgn25, final String field ) throws DBaseException
-  {
-    final GewShapeRow row = m_gkzFgn25Hash.get( gkzFgn25 );
+    final GewShapeRow row = GewShape.findRow( geometry, rows );
     if( row == null )
       return null;
 
     return row.getValue( field );
   }
 
-  public Object getValue( final String alias, final String field ) throws DBaseException
+  public static GewShapeRow findRow( final Geometry geometry, final List<GewShapeRow> rows )
   {
-    final GewShapeRow row = m_aliasHash.get( alias );
-    if( row == null )
-      return null;
+    final SHP2JTS shp2jts = new SHP2JTS( geometry.getFactory() );
 
-    return row.getValue( field );
+    /* Collect the distances, so if none intersects, we can use them to return the nearest. */
+    final SortedMap<Double, GewShapeRow> distances = new TreeMap<>();
+
+    /* Check, if intersecting. */
+    for( final GewShapeRow row : rows )
+    {
+      final ISHPGeometry shape = row.getShape();
+
+      final Geometry value = shp2jts.transform( shape );
+      if( value == null )
+        continue;
+
+      if( value.intersects( geometry ) )
+      {
+        System.out.println( "Geometrie schneidet einen Gewässerabschnitt, dieser wird verwendet." );
+        return row;
+      }
+
+      final double distance = value.distance( geometry );
+      distances.put( new Double( distance ), row );
+    }
+
+    if( distances.size() == 0 )
+    {
+      System.out.println( "Keine Gewässerabschnitte verfügbar." );
+      return null;
+    }
+
+    final Entry<Double, GewShapeRow> entry = distances.entrySet().iterator().next();
+    System.out.println( String.format( "Geometrie schneidet keinen Gewässerabschnitt, nähester wird verwendet. Distanz: %f", entry.getKey().doubleValue() ) );
+    return entry.getValue();
   }
 }

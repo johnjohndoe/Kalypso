@@ -30,8 +30,6 @@ public class EwawiRiverShapeData extends AbstractModelObject
 {
   public static final String PROPERTY_SHP_FILE = "shpFile"; //$NON-NLS-1$
 
-  private static final String PROPERTY_RIVER_GEOMETRY_FIELD = "riverGeometryField"; //$NON-NLS-1$
-
   private static final String PROPERTY_RIVER_ID_FIELD = "riverIdField"; //$NON-NLS-1$
 
   private static final String PROPERTY_RIVER_NAME_FIELD = "riverNameField"; //$NON-NLS-1$
@@ -39,8 +37,6 @@ public class EwawiRiverShapeData extends AbstractModelObject
   private static final String PROPERTY_RIVER_ALIAS_FIELD = "riverAliasField"; //$NON-NLS-1$
 
   private final FileAndHistoryData m_shpFile;
-
-  private String m_riverGeometryField;
 
   private String m_riverIdField;
 
@@ -51,7 +47,6 @@ public class EwawiRiverShapeData extends AbstractModelObject
   public EwawiRiverShapeData( )
   {
     m_shpFile = new FileAndHistoryData( "shpFile" ); //$NON-NLS-1$
-    m_riverGeometryField = "SHAPE"; //$NON-NLS-1$
     m_riverIdField = GewShape.GKZ_FGN25;
     m_riverNameField = GewShape.GN_ACHS_08;
     m_riverAliasField = GewShape.ALIAS;
@@ -78,11 +73,6 @@ public class EwawiRiverShapeData extends AbstractModelObject
     return m_shpFile;
   }
 
-  public String getRiverGeometryField( )
-  {
-    return m_riverGeometryField;
-  }
-
   public String getRiverIdField( )
   {
     return m_riverIdField;
@@ -96,13 +86,6 @@ public class EwawiRiverShapeData extends AbstractModelObject
   public String getRiverAliasField( )
   {
     return m_riverAliasField;
-  }
-
-  public void setRiverGeometryField( final String riverGeometryField )
-  {
-    final String oldValue = m_riverGeometryField;
-    m_riverGeometryField = riverGeometryField;
-    firePropertyChange( PROPERTY_RIVER_GEOMETRY_FIELD, oldValue, m_riverGeometryField );
   }
 
   public void setRiverIdField( final String riverIdField )

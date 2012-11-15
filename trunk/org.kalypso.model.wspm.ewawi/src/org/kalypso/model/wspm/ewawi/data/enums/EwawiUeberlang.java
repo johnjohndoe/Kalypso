@@ -16,42 +16,42 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.ewawi.shape;
-
-import java.io.File;
+package org.kalypso.model.wspm.ewawi.data.enums;
 
 /**
- * (Input-)Data for {@link Ewawi2ShapeOperation}.
- * 
- * @author Gernot Belger
+ * @author Holger Albert
  */
-public class Ewawi2ShapeData
+public enum EwawiUeberlang
 {
-  private final File m_inputDir;
+  _0( 0, "normale Abrechnung", "" ),
+  _1( 1, "einseitig überlanges Profil", "" ),
+  _2( 2, "beidseitig überlanges Profil", "" );
 
-  private final File m_gewShape;
+  private final int m_key;
 
-  private final File m_gewWidthShape;
+  private final String m_label;
 
-  public Ewawi2ShapeData( final File inputDir, final File gewShape, final File gewWidthShape )
+  private final String m_comment;
+
+  EwawiUeberlang( final int key, final String label, final String comment )
   {
-    m_inputDir = inputDir;
-    m_gewShape = gewShape;
-    m_gewWidthShape = gewWidthShape;
+    m_key = key;
+    m_label = label;
+    m_comment = comment;
   }
 
-  public File getInputDir( )
+  public int getKey( )
   {
-    return m_inputDir;
+    return m_key;
   }
 
-  public File getGewShape( )
+  public String getLabel( )
   {
-    return m_gewShape;
+    return m_label;
   }
 
-  public File getGewWidthShape( )
+  public String getComment( )
   {
-    return m_gewWidthShape;
+    return m_comment;
   }
 }

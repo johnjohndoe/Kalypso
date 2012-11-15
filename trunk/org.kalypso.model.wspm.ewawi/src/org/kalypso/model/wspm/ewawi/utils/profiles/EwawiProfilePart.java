@@ -108,6 +108,64 @@ public class EwawiProfilePart
     m_proLines.put( proLine.getPunktReihenfolge(), proLine );
   }
 
+  /**
+   * This function returns true, if there are dyke points ({@link EwawiPunktart#_13} and {@link EwawiPunktart#_14}) within the given points.
+   * 
+   * @param leftProLine
+   *          The left pro line.
+   * @param rightProLine
+   *          The right pro line.
+   * @return True, if there are dyke points ({@link EwawiPunktart#_13} and {@link EwawiPunktart#_14}) within the given points.
+   */
+  public boolean hasDykePoints( final EwawiProLine leftProLine, final EwawiProLine rightProLine )
+  {
+    boolean foundUK = false;
+    boolean foundOK = false;
+
+    final EwawiProLine[] proLines = findProLines( leftProLine, rightProLine );
+    for( final EwawiProLine proLine : proLines )
+    {
+      final EwawiPunktart punktArt = proLine.getPunktArt();
+      if( punktArt == null )
+        continue;
+
+      if( punktArt.equals( EwawiPunktart._13 ) )
+        foundUK = true;
+
+      if( punktArt.equals( EwawiPunktart._14 ) )
+        foundOK = true;
+    }
+
+    if( foundUK && foundOK )
+      return true;
+
+    return false;
+  }
+
+  /**
+   * This function returns all points with the given punkt art. They will be in the order of the profile part (left to right, 1 to n).
+   * 
+   * @param punktArt
+   *          The punkt art to search for.
+   * @return All points with the given punkt art. They will be in the order of the profile part (left to right, 1 to n).
+   */
+  public EwawiProLine[] findPoints( final EwawiPunktart punktArt )
+  {
+    final List<EwawiProLine> results = new ArrayList<>();
+
+    for( final EwawiProLine proLine : m_proLines.values() )
+    {
+      final EwawiPunktart punktArt2 = proLine.getPunktArt();
+      if( punktArt2 == null )
+        continue;
+
+      if( punktArt2.equals( punktArt ) )
+        results.add( proLine );
+    }
+
+    return results.toArray( new EwawiProLine[] {} );
+  }
+
   // HINT: Every function downward uses the first pro point to retrieve the data.
 
   public EwawiObjectart getObjectArt( )
@@ -182,6 +240,28 @@ public class EwawiProfilePart
   {
     final EwawiStaLine leftFixPoint = getLeftFixPoint( staIndex );
     return leftFixPoint.getPhotos();
+  }
+
+  private EwawiProLine[] findProLines( final EwawiProLine leftProLine, final EwawiProLine rightProLine )
+  {
+    final List<EwawiProLine> results = new ArrayList<>();
+
+    boolean leftReached = false;
+    for( final EwawiProLine proLine : m_proLines.values() )
+    {
+      if( proLine.equals( leftProLine ) )
+        leftReached = true;
+
+      if( !leftReached )
+        continue;
+
+      results.add( proLine );
+
+      if( proLine.equals( rightProLine ) )
+        break;
+    }
+
+    return results.toArray( new EwawiProLine[] {} );
   }
 
   private EwawiStaLine getLeftFixPoint( final EwawiSta staIndex ) throws EwawiException

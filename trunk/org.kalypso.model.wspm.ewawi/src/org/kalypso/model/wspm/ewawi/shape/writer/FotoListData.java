@@ -16,53 +16,57 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.ewawi.utils;
+package org.kalypso.model.wspm.ewawi.shape.writer;
 
-import org.kalypso.shape.dbf.DBaseException;
-import org.kalypso.shape.dbf.IDBFField;
-import org.kalypso.shape.geometry.ISHPGeometry;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author Holger Albert
  */
-public class GewShapeRow
+public class FotoListData
 {
-  private final IDBFField[] m_fields;
+  private final String m_filename;
 
-  private final ISHPGeometry m_shape;
+  private final BigDecimal m_rechtswert;
 
-  private final Object[] m_values;
+  private final BigDecimal m_hochwert;
 
-  public GewShapeRow( final IDBFField[] fields, final ISHPGeometry shape, final Object[] values )
+  private final BigDecimal m_hoehe;
+
+  private final Date m_datum;
+
+  public FotoListData( final String filename, final BigDecimal rechtswert, final BigDecimal hochwert, final BigDecimal hoehe, final Date datum )
   {
-    m_fields = fields;
-    m_shape = shape;
-    m_values = values;
+    m_filename = filename;
+    m_rechtswert = rechtswert;
+    m_hochwert = hochwert;
+    m_hoehe = hoehe;
+    m_datum = datum;
   }
 
-  public ISHPGeometry getShape( )
+  public String getFilename( )
   {
-    return m_shape;
+    return m_filename;
   }
 
-  public Object getValue( final String field ) throws DBaseException
+  public BigDecimal getRechtswert( )
   {
-    final int index = getIndex( field );
-    if( index < 0 )
-      throw new DBaseException( String.format( "Unknown field '%s'", field ) );
-
-    return m_values[index];
+    return m_rechtswert;
   }
 
-  public int getIndex( final String field )
+  public BigDecimal getHochwert( )
   {
-    for( int i = 0; i < m_fields.length; i++ )
-    {
-      final IDBFField dbfField = m_fields[i];
-      if( dbfField.getName().equalsIgnoreCase( field ) )
-        return i;
-    }
+    return m_hochwert;
+  }
 
-    return -1;
+  public BigDecimal getHoehe( )
+  {
+    return m_hoehe;
+  }
+
+  public Date getDatum( )
+  {
+    return m_datum;
   }
 }

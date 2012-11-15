@@ -76,7 +76,7 @@ public class Ewawi2ShapeApp implements IApplication
 
   private static Ewawi2ShapeData readArguments( final String[] args ) throws CoreException
   {
-    if( args.length < 2 )
+    if( args.length < 3 )
     {
       final IStatus status = new Status( IStatus.ERROR, WspmEwawiPlugin.PLUGIN_ID, "Fehlende Kommandozeilenparameter" );
       throw new CoreException( status );
@@ -95,12 +95,21 @@ public class Ewawi2ShapeApp implements IApplication
     final File gewShape = new File( args[1] );
     if( !gewShape.isFile() )
     {
-      final String message = String.format( "Gewässershape ist keine Datei: %s", args[0] );
+      final String message = String.format( "Gewässershape ist keine Datei: %s", args[1] );
       final IStatus status = new Status( IStatus.ERROR, WspmEwawiPlugin.PLUGIN_ID, message );
       throw new CoreException( status );
     }
 
-    return new Ewawi2ShapeData( inputDir, gewShape );
+    /* gew width shape */
+    final File gewWidthShape = new File( args[2] );
+    if( !gewWidthShape.isFile() )
+    {
+      final String message = String.format( "Gewässerbreitenshape ist keine Datei: %s", args[2] );
+      final IStatus status = new Status( IStatus.ERROR, WspmEwawiPlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
+    }
+
+    return new Ewawi2ShapeData( inputDir, gewShape, gewWidthShape );
   }
 
   private static void printUsage( )
@@ -108,7 +117,7 @@ public class Ewawi2ShapeApp implements IApplication
     System.out.println();
     System.out.println();
     System.out.println( "Usage:" );
-    System.out.println( "C:>ewawi2shape <input dir> <gew shape>" );
+    System.out.println( "C:>ewawi2shape <input dir> <gew shape> <gew width shape>" );
   }
 
   @Override

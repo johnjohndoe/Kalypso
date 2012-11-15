@@ -78,15 +78,15 @@ public class EwawiWorker extends AbstractEwawiWorker
     {
       final EwawiProfilePart basePart = ewawiProfile.getBasePart();
       if( basePart == null )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( Messages.getString("EwawiWorker.0"), station.doubleValue() ) ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( Messages.getString( "EwawiWorker.0" ), station.doubleValue() ) ) ); //$NON-NLS-1$
 
       final String name = getName( staIndex, basePart );
       final String description = getDescription( staIndex, basePart );
       final String[] photos = basePart.getPhotos( staIndex );
 
       final String riverId = getRiverId( basePart );
-      final String riverName = getRiverName( data, gewShape, basePart );
-      final GM_Curve riverGeometry = getRiverGeometry( data, gewShape, basePart );
+      final String riverName = getRiverName( data, gewShape, staIndex, basePart );
+      final GM_Curve riverGeometry = getRiverGeometry( gewShape, staIndex, basePart );
 
       final IProfileFeature profileFeature = createNewProfile( riverId, data.isDirectionUpstreams() );
       profileFeature.setName( name );
@@ -116,7 +116,7 @@ public class EwawiWorker extends AbstractEwawiWorker
     }
     catch( final DBaseException | EwawiException | GMLSchemaException e )
     {
-      final String message = String.format( Messages.getString("EwawiWorker.1"), station.doubleValue() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "EwawiWorker.1" ), station.doubleValue() ); //$NON-NLS-1$
       final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message, e );
       throw new CoreException( status );
     }
