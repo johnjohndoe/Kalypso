@@ -25,9 +25,10 @@ import java.nio.charset.Charset;
 import org.apache.commons.io.FilenameUtils;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.data.EwawiPro;
-import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
+import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
+import org.kalypso.model.wspm.ewawi.utils.GewWidthShape;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBaseException;
@@ -45,14 +46,17 @@ public abstract class AbstractEwawiShapeWriter
 
   private final GewShape m_gewShape;
 
+  private final GewWidthShape m_gewWidthShape;
+
   private final String m_outputDirName;
 
   private final ShapeType m_shapeType;
 
-  public AbstractEwawiShapeWriter( final EwawiPlus[] data, final GewShape gewShape, final String outputDirName, final ShapeType shapeType )
+  public AbstractEwawiShapeWriter( final EwawiPlus[] data, final GewShape gewShape, final GewWidthShape gewWidthShape, final String outputDirName, final ShapeType shapeType )
   {
     m_data = data;
     m_gewShape = gewShape;
+    m_gewWidthShape = gewWidthShape;
     m_outputDirName = outputDirName;
     m_shapeType = shapeType;
   }
@@ -79,6 +83,11 @@ public abstract class AbstractEwawiShapeWriter
   public GewShape getGewShape( )
   {
     return m_gewShape;
+  }
+
+  public GewWidthShape getGewWidthShape( )
+  {
+    return m_gewWidthShape;
   }
 
   protected File getTargetFile( )

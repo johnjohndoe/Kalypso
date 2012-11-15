@@ -26,6 +26,7 @@ import org.kalypso.model.wspm.ewawi.data.EwawiEpl;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
+import org.kalypso.model.wspm.ewawi.utils.GewWidthShape;
 import org.kalypso.model.wspm.ewawi.utils.structures.EwawiLengthStructure;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
@@ -35,6 +36,10 @@ import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.geometry.SHPPolyLinez;
 import org.kalypso.shape.shp.SHPException;
+import org.kalypso.shape.tools.SHP2JTS;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * Writes EWAWI+ shape file 348.
@@ -43,9 +48,9 @@ import org.kalypso.shape.shp.SHPException;
  */
 public class EwawiShape348Writer extends AbstractEwawiShapeWriter
 {
-  public EwawiShape348Writer( final EwawiPlus[] data, final GewShape gewShape )
+  public EwawiShape348Writer( final EwawiPlus[] data, final GewShape gewShape, final GewWidthShape gewWidthShape )
   {
-    super( data, gewShape, "404_GIS", ShapeType.POLYLINEZ );
+    super( data, gewShape, gewWidthShape, "404_GIS", ShapeType.POLYLINEZ );
   }
 
   @Override
@@ -70,7 +75,7 @@ public class EwawiShape348Writer extends AbstractEwawiShapeWriter
   }
 
   @Override
-  protected void writeData( final ShapeFile shapeFile, final EwawiPlus data[] ) throws DBaseException, IOException, SHPException
+  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data ) throws DBaseException, IOException, SHPException
   {
     for( final EwawiPlus ewawiData : data )
       writeData( shapeFile, ewawiData );
@@ -81,28 +86,28 @@ public class EwawiShape348Writer extends AbstractEwawiShapeWriter
     final EwawiEpl eplIndex = data.getEplIndex();
     final EwawiLengthStructure[] structures = eplIndex.getLengthStructures();
     for( final EwawiLengthStructure structure : structures )
-      writeStructure( shapeFile, structure, data );
+      writeStructure( shapeFile, structure );
   }
 
-  private void writeStructure( final ShapeFile shapeFile, final EwawiLengthStructure structure, final EwawiPlus data ) throws DBaseException, IOException, SHPException
+  private void writeStructure( final ShapeFile shapeFile, final EwawiLengthStructure structure ) throws DBaseException, IOException, SHPException
   {
     final SHPPolyLinez shape = structure.getShape();
-    final Object[] values = getValues( structure, data );
+    final Object[] values = getValues( structure, shape );
 
     shapeFile.addFeature( shape, values );
   }
 
-  private Object[] getValues( final EwawiLengthStructure structure, final EwawiPlus data ) throws DBaseException
+  private Object[] getValues( final EwawiLengthStructure structure, final SHPPolyLinez shape ) throws DBaseException
   {
-    final EwawiKey key = data.getKey();
-
     final String comment = structure.getComment();
     final int objectArt = structure.getObjektArt().getKey();
     final Short objektNummer = structure.getObjektNummer();
     final String pak = "";
     final Short punktNummer = 0;
     final Long gewKennzahl = structure.getGewKennzahl();
-    final String gewName = getGewShape().getName( key.getAlias() );
+    final SHP2JTS shp2jts = new SHP2JTS( new GeometryFactory() );
+    final Geometry geometry = shp2jts.transform( shape );
+    final String gewName = (String)getGewShape().getValue( gewKennzahl, GewShape.GN_ACHS_08, geometry );
 
     final List<Object> values = new ArrayList<>();
     values.add( comment );

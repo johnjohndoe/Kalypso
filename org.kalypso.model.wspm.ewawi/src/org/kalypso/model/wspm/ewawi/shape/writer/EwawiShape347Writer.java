@@ -29,9 +29,10 @@ import org.kalypso.model.wspm.ewawi.data.EwawiProLine;
 import org.kalypso.model.wspm.ewawi.data.EwawiSta;
 import org.kalypso.model.wspm.ewawi.data.EwawiStaLine;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiPunktart;
-import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
+import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
+import org.kalypso.model.wspm.ewawi.utils.GewWidthShape;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePoint;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
@@ -49,9 +50,9 @@ import org.kalypso.shape.shp.SHPException;
  */
 public class EwawiShape347Writer extends AbstractEwawiShapeWriter
 {
-  public EwawiShape347Writer( final EwawiPlus[] data, final GewShape gewShape )
+  public EwawiShape347Writer( final EwawiPlus[] data, final GewShape gewShape, final GewWidthShape gewWidthShape )
   {
-    super( data, gewShape, "404_GIS", ShapeType.POINT );
+    super( data, gewShape, gewWidthShape, "404_GIS", ShapeType.POINT );
   }
 
   @Override

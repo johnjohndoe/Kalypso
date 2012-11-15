@@ -30,6 +30,7 @@ import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiObjectart;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
+import org.kalypso.model.wspm.ewawi.utils.GewWidthShape;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBFField;
@@ -38,6 +39,10 @@ import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.geometry.SHPPoint;
 import org.kalypso.shape.shp.SHPException;
+import org.kalypso.shape.tools.SHP2JTS;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * Writes EWAWI+ shape file 38.
@@ -46,9 +51,9 @@ import org.kalypso.shape.shp.SHPException;
  */
 public class EwawiShape38Writer extends AbstractEwawiShapeWriter
 {
-  public EwawiShape38Writer( final EwawiPlus[] data, final GewShape gewShape )
+  public EwawiShape38Writer( final EwawiPlus[] data, final GewShape gewShape, final GewWidthShape gewWidthShape )
   {
-    super( data, gewShape, "404_GIS", ShapeType.POINT );
+    super( data, gewShape, gewWidthShape, "404_GIS", ShapeType.POINT );
   }
 
   @Override
@@ -78,7 +83,7 @@ public class EwawiShape38Writer extends AbstractEwawiShapeWriter
   }
 
   @Override
-  protected void writeData( final ShapeFile shapeFile, final EwawiPlus data[] ) throws DBaseException, IOException, SHPException
+  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data ) throws DBaseException, IOException, SHPException
   {
     for( final EwawiPlus ewawiData : data )
       writeData( shapeFile, ewawiData );
@@ -92,14 +97,14 @@ public class EwawiShape38Writer extends AbstractEwawiShapeWriter
     {
       final EwawiObjectart objectArt = eplLine.getObjectArt();
       if( EwawiObjectart._3000 == objectArt )
-        writeEplLine( shapeFile, eplLine, data );
+        writeEplLine( shapeFile, eplLine );
     }
   }
 
-  private void writeEplLine( final ShapeFile shapeFile, final EwawiEplLine eplLine, final EwawiPlus data ) throws DBaseException, IOException, SHPException
+  private void writeEplLine( final ShapeFile shapeFile, final EwawiEplLine eplLine ) throws DBaseException, IOException, SHPException
   {
     final SHPPoint shape = getShape( eplLine );
-    final Object[] values = getValues( eplLine, data );
+    final Object[] values = getValues( eplLine, shape );
 
     shapeFile.addFeature( shape, values );
   }
@@ -112,10 +117,8 @@ public class EwawiShape38Writer extends AbstractEwawiShapeWriter
     return new SHPPoint( rechtswert, hochwert );
   }
 
-  private Object[] getValues( final EwawiEplLine eplLine, final EwawiPlus data ) throws DBaseException
+  private Object[] getValues( final EwawiEplLine eplLine, final SHPPoint shape ) throws DBaseException
   {
-    final EwawiKey key = data.getKey();
-
     final String comment = eplLine.getComment();
     final Date validity = eplLine.getValidity();
     final BigDecimal station = eplLine.getStation();
@@ -125,7 +128,9 @@ public class EwawiShape38Writer extends AbstractEwawiShapeWriter
     final int punktArt = eplLine.getPunktArt().getKey();
     final String bearb = "BJG";
     final Long gewKennzahl = eplLine.getGewKennzahl();
-    final String gewName = getGewShape().getName( key.getAlias() );
+    final SHP2JTS shp2jts = new SHP2JTS( new GeometryFactory() );
+    final Geometry geometry = shp2jts.transform( shape );
+    final String gewName = (String)getGewShape().getValue( gewKennzahl, GewShape.GN_ACHS_08, geometry );
     final BigDecimal hoehe = eplLine.getHoehe();
     final Short zusatz = eplLine.getZusatz();
 

@@ -81,14 +81,14 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
     {
       final EwawiProfilePart basePart = ewawiProfile.getBasePart();
       if( basePart == null )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( Messages.getString("ImportEwawiWorker.0"), station.doubleValue() ) ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( Messages.getString( "ImportEwawiWorker.0" ), station.doubleValue() ) ) ); //$NON-NLS-1$
 
       final String name = getName( staIndex, basePart );
       final String description = getDescription( staIndex, basePart );
       final String[] photos = basePart.getPhotos( staIndex );
 
       final String riverId = getRiverId( basePart );
-      final String riverName = getRiverName( data, gewShape, basePart );
+      final String riverName = getRiverName( data, gewShape, staIndex, basePart );
 
       final IRiverProfileNetwork network = createOrGetNetwork( data, riverId, riverName );
       final IProfileFeature profileFeature = createNewProfile( network );
@@ -115,7 +115,7 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
     }
     catch( final DBaseException | EwawiException | GMLSchemaException e )
     {
-      final String message = String.format( Messages.getString("ImportEwawiWorker.1"), station.doubleValue() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "ImportEwawiWorker.1" ), station.doubleValue() ); //$NON-NLS-1$
       final Status status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }

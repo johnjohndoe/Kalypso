@@ -93,8 +93,8 @@ public class EwawiProfilePoint
     final Vector2D projectionVector = normalizedProfileAxis.scalarMultiply( rechtswert );
 
     /* Create the start point. */
-    final double xLeft = m_left.getHochwert().doubleValue();
-    final double yLeft = m_left.getRechtswert().doubleValue();
+    final double xLeft = m_left.getRechtswert().doubleValue();
+    final double yLeft = m_left.getHochwert().doubleValue();
     final Vector2D startPoint = new Vector2D( xLeft, yLeft );
     final Vector2D projectionPoint = startPoint.add( projectionVector );
 
@@ -109,11 +109,11 @@ public class EwawiProfilePoint
 
   private Vector2D getNormalizedProfileAxis( )
   {
-    final double xLeft = m_left.getHochwert().doubleValue();
-    final double yLeft = m_left.getRechtswert().doubleValue();
+    final double xLeft = m_left.getRechtswert().doubleValue();
+    final double yLeft = m_left.getHochwert().doubleValue();
 
-    final double xRight = m_right.getHochwert().doubleValue();
-    final double yRight = m_right.getRechtswert().doubleValue();
+    final double xRight = m_right.getRechtswert().doubleValue();
+    final double yRight = m_right.getHochwert().doubleValue();
 
     final Vector2D profileAxis = new Vector2D( xRight - xLeft, yRight - yLeft );
 

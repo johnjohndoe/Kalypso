@@ -33,7 +33,14 @@ import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfile;
 import org.kalypso.model.wspm.ewawi.utils.profiles.EwawiProfilePart;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.deegree.SHP2GM_Object;
+import org.kalypso.shape.geometry.ISHPGeometry;
+import org.kalypso.shape.geometry.SHPPolyLinez;
+import org.kalypso.shape.tools.SHP2JTS;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * @author Holger Albert
@@ -72,14 +79,14 @@ public abstract class AbstractEwawiWorker
     final EwawiObjectart objectArt = basePart.getObjectArt( staIndex );
     if( objectArt != null && objectArt != EwawiObjectart._1100 )
     {
-      final String objectArtText = String.format( Messages.getString("AbstractEwawiWorker.2"), objectArt.getKey(), objectArt.getLabel() ); //$NON-NLS-1$
+      final String objectArtText = String.format( Messages.getString( "AbstractEwawiWorker.2" ), objectArt.getKey(), objectArt.getLabel() ); //$NON-NLS-1$
       description.append( objectArtText );
     }
 
     final Short zusatz = basePart.getZusatz( staIndex );
     if( zusatz != null && zusatz != 0 )
     {
-      final String zusatzText = String.format( Messages.getString("AbstractEwawiWorker.3"), zusatz ); //$NON-NLS-1$
+      final String zusatzText = String.format( Messages.getString( "AbstractEwawiWorker.3" ), zusatz ); //$NON-NLS-1$
       description.append( zusatzText );
     }
 
@@ -87,21 +94,21 @@ public abstract class AbstractEwawiWorker
     if( validity != null )
     {
       final DateFormat df = DateFormat.getDateInstance( DateFormat.MEDIUM );
-      final String validityText = String.format( Messages.getString("AbstractEwawiWorker.4"), df.format( validity ) ); //$NON-NLS-1$
+      final String validityText = String.format( Messages.getString( "AbstractEwawiWorker.4" ), df.format( validity ) ); //$NON-NLS-1$
       description.append( validityText );
     }
 
     final EwawiProfilart profilArt = basePart.getProfilArt( staIndex );
     if( profilArt != null )
     {
-      final String profilArtText = String.format( Messages.getString("AbstractEwawiWorker.5"), profilArt.getKey(), profilArt.getLabel() ); //$NON-NLS-1$
+      final String profilArtText = String.format( Messages.getString( "AbstractEwawiWorker.5" ), profilArt.getKey(), profilArt.getLabel() ); //$NON-NLS-1$
       description.append( profilArtText );
     }
 
     final String comment = basePart.getComment( staIndex );
     if( comment != null && !comment.equals( "-" ) ) //$NON-NLS-1$
     {
-      final String commentText = String.format( Messages.getString("AbstractEwawiWorker.7"), comment ); //$NON-NLS-1$
+      final String commentText = String.format( Messages.getString( "AbstractEwawiWorker.7" ), comment ); //$NON-NLS-1$
       description.append( commentText );
     }
 
@@ -117,23 +124,27 @@ public abstract class AbstractEwawiWorker
     return String.format( "%d", gewKennzahl ); //$NON-NLS-1$
   }
 
-  protected String getRiverName( final EwawiImportData data, final GewShape gewShape, final EwawiProfilePart basePart ) throws DBaseException
+  protected String getRiverName( final EwawiImportData data, final GewShape gewShape, final EwawiSta staIndex, final EwawiProfilePart basePart ) throws DBaseException, EwawiException
   {
     if( gewShape == null )
-      return Messages.getString("AbstractEwawiWorker.10"); //$NON-NLS-1$
+      return Messages.getString( "AbstractEwawiWorker.10" ); //$NON-NLS-1$
 
     final Long gewKennzahl = basePart.getGewKennzahl();
     if( gewKennzahl == null )
-      return Messages.getString("AbstractEwawiWorker.10"); //$NON-NLS-1$
+      return Messages.getString( "AbstractEwawiWorker.10" ); //$NON-NLS-1$
 
-    final String name = (String)gewShape.getValue( gewKennzahl, data.getRiverShapeData().getRiverNameField() );
+    final SHPPolyLinez shape = basePart.getShape( staIndex );
+    final SHP2JTS shp2jts = new SHP2JTS( new GeometryFactory() );
+    final Geometry geometry = shp2jts.transform( shape );
+
+    final String name = (String)gewShape.getValue( gewKennzahl, data.getRiverShapeData().getRiverNameField(), geometry );
     if( name == null )
-      return Messages.getString("AbstractEwawiWorker.10"); //$NON-NLS-1$
+      return Messages.getString( "AbstractEwawiWorker.10" ); //$NON-NLS-1$
 
     return name;
   }
 
-  protected GM_Curve getRiverGeometry( final EwawiImportData data, final GewShape gewShape, final EwawiProfilePart basePart ) throws DBaseException
+  protected GM_Curve getRiverGeometry( final GewShape gewShape, final EwawiSta staIndex, final EwawiProfilePart basePart ) throws EwawiException
   {
     if( gewShape == null )
       return null;
@@ -142,6 +153,13 @@ public abstract class AbstractEwawiWorker
     if( gewKennzahl == null )
       return null;
 
-    return (GM_Curve)gewShape.getValue( gewKennzahl, data.getRiverShapeData().getRiverGeometryField() );
+    final SHPPolyLinez shape = basePart.getShape( staIndex );
+
+    final SHP2JTS shp2jts = new SHP2JTS( new GeometryFactory() );
+    final Geometry geometry = shp2jts.transform( shape );
+
+    final ISHPGeometry riverShape = gewShape.getShape( gewKennzahl, geometry );
+
+    return (GM_Curve)SHP2GM_Object.transform( null, riverShape );
   }
 }

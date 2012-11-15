@@ -32,6 +32,7 @@ import org.kalypso.model.wspm.ewawi.shape.writer.EwawiShape348Writer;
 import org.kalypso.model.wspm.ewawi.shape.writer.EwawiShape38Writer;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
+import org.kalypso.model.wspm.ewawi.utils.GewWidthShape;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.shp.SHPException;
 
@@ -58,24 +59,27 @@ public class Ewawi2ShapeOperation implements IRunnableWithProgress
       /* Read the gew shape. */
       final GewShape gewShape = readGewShape();
 
+      /* Read the gew width shape. */
+      final GewWidthShape gewWidthShape = readGewWidthShape();
+
       /* Write shape with ID 32. */
-      final EwawiShape32Writer writer32 = new EwawiShape32Writer( ewawiData, gewShape );
+      final EwawiShape32Writer writer32 = new EwawiShape32Writer( ewawiData, gewShape, gewWidthShape );
       writer32.writeShape();
 
       /* Write shape with ID 38. */
-      final EwawiShape38Writer writer38 = new EwawiShape38Writer( ewawiData, gewShape );
+      final EwawiShape38Writer writer38 = new EwawiShape38Writer( ewawiData, gewShape, gewWidthShape );
       writer38.writeShape();
 
       /* Write shape with ID 244. */
-      final EwawiShape244Writer writer244 = new EwawiShape244Writer( ewawiData, gewShape );
+      final EwawiShape244Writer writer244 = new EwawiShape244Writer( ewawiData, gewShape, gewWidthShape );
       writer244.writeShape();
 
       /* Write shape with ID 347. */
-      final EwawiShape347Writer writer347 = new EwawiShape347Writer( ewawiData, gewShape );
+      final EwawiShape347Writer writer347 = new EwawiShape347Writer( ewawiData, gewShape, gewWidthShape );
       writer347.writeShape();
 
       /* Write shape with ID 348. */
-      final EwawiShape348Writer writer348 = new EwawiShape348Writer( ewawiData, gewShape );
+      final EwawiShape348Writer writer348 = new EwawiShape348Writer( ewawiData, gewShape, gewWidthShape );
       writer348.writeShape();
     }
     catch( DBaseException | IOException | SHPException | EwawiException e )
@@ -100,5 +104,13 @@ public class Ewawi2ShapeOperation implements IRunnableWithProgress
     gewShape.init();
 
     return gewShape;
+  }
+
+  private GewWidthShape readGewWidthShape( ) throws DBaseException, IOException
+  {
+    final GewWidthShape gewWidthShape = new GewWidthShape( m_data.getGewWidthShape() );
+    gewWidthShape.init();
+
+    return gewWidthShape;
   }
 }

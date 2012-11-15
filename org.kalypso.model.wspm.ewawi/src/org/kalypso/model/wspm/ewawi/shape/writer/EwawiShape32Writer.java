@@ -18,28 +18,28 @@
  */
 package org.kalypso.model.wspm.ewawi.shape.writer;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
+import org.kalypso.model.wspm.ewawi.utils.GewWidthShape;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
-
-import au.com.bytecode.opencsv.CSVReader;
+import org.kalypso.shape.geometry.SHPPoint;
+import org.kalypso.shape.shp.SHPException;
 
 /**
  * Writes EWAWI+ shape file 32.
@@ -48,9 +48,9 @@ import au.com.bytecode.opencsv.CSVReader;
  */
 public class EwawiShape32Writer extends AbstractEwawiShapeWriter
 {
-  public EwawiShape32Writer( final EwawiPlus[] data, final GewShape gewShape )
+  public EwawiShape32Writer( final EwawiPlus[] data, final GewShape gewShape, final GewWidthShape gewWidthShape )
   {
-    super( data, gewShape, "824_Fotos", ShapeType.POINT );
+    super( data, gewShape, gewWidthShape, "824_Fotos", ShapeType.POINT );
   }
 
   @Override
@@ -81,36 +81,73 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
   }
 
   @Override
-  protected void writeData( final ShapeFile shapeFile, final EwawiPlus data[] ) throws IOException
+  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data ) throws DBaseException, IOException, SHPException
   {
-    writeData( shapeFile );
+    writeData( shapeFile, data[0] );
   }
 
-  private void writeData( final ShapeFile shapeFile ) throws IOException
+  private void writeData( final ShapeFile shapeFile, final EwawiPlus data ) throws DBaseException, IOException, SHPException
   {
-    CSVReader reader = null;
+    final File file = getFotoList();
 
-    try
+    final FotoListReader reader = new FotoListReader();
+    reader.read( file );
+
+    final FotoListData[] fotoListData = reader.getFotoListData();
+    for( final FotoListData oneFotoListData : fotoListData )
     {
-      final File fotoList = getFotoList();
-      reader = new CSVReader( new BufferedReader( new FileReader( fotoList ) ), ',' );
+      final SHPPoint shape = getShape( oneFotoListData );
+      final Object[] values = getValues( oneFotoListData, data );
 
-      String[] tokens = null;
-      while( (tokens = reader.readNext()) != null )
-      {
-        final String filename = tokens[0];
-        final String rechtswert = tokens[1];
-        final String hochwert = tokens[2];
-        final String hoehe = tokens[3];
-        final String datum = tokens[4];
+      shapeFile.addFeature( shape, values );
+    }
+  }
 
-        // TODO
-      }
-    }
-    finally
-    {
-      IOUtils.closeQuietly( reader );
-    }
+  private SHPPoint getShape( final FotoListData oneFotoListData )
+  {
+    final double rechtswert = oneFotoListData.getRechtswert().doubleValue();
+    final double hochwert = oneFotoListData.getHochwert().doubleValue();
+
+    return new SHPPoint( rechtswert, hochwert );
+  }
+
+  private Object[] getValues( final FotoListData fotoListData, final EwawiPlus data )
+  {
+    final EwawiKey key = data.getKey();
+    final Path relativeFotoPath = getRelativeFotoPath();
+
+    final String alias = key.getAlias();
+    final String aufn_richt = getAufnRicht( fotoListData.getFilename() );
+    final String comment = "";
+    final String bildname = fotoListData.getFilename();
+    final Date datum = fotoListData.getDatum();
+    final String link = Paths.get( relativeFotoPath.toString(), fotoListData.getFilename() ).toString();
+    final String pak = "";
+    final String pfad = relativeFotoPath.toString();
+    final String bearb = "BJG";
+    final String uhrzeit = "";
+    final BigDecimal x = fotoListData.getRechtswert();
+    final BigDecimal y = fotoListData.getHochwert();
+    final BigDecimal z = fotoListData.getHoehe();
+
+    checkFotoLink( link );
+
+    final List<Object> values = new ArrayList<>();
+    values.add( alias );
+    values.add( aufn_richt );
+    values.add( comment );
+    values.add( bildname );
+    values.add( datum );
+    values.add( link );
+    values.add( pak );
+    values.add( pfad );
+    values.add( bearb );
+    values.add( uhrzeit );
+    values.add( x );
+    values.add( y );
+    values.add( z );
+
+    return values.toArray( new Object[] {} );
   }
 
   private File getFotoList( )
@@ -121,7 +158,7 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
 
     final EwawiPlus[] data = getData();
     final EwawiKey key = data[0].getKey();
-    final String fotoName = key.getAlias();
+    final String fotoName = String.format( "%s.csv", key.getAlias() );
 
     return new File( fotoPath, fotoName );
   }
@@ -137,5 +174,30 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
     final Path relativeFotoPath = absoluteFullPath.relativize( absoluteFotoPath );
 
     return relativeFotoPath;
+  }
+
+  private String getAufnRicht( final String filename )
+  {
+    final String baseName = FilenameUtils.removeExtension( filename );
+    final String[] splittedBaseName = baseName.split( "_" );
+    final String aufn_richt = splittedBaseName[splittedBaseName.length - 1];
+    if( aufn_richt.length() != 1 )
+      throw new IllegalStateException( String.format( "Die Aufnahmerichtung muss am Ende des Dateinamens angehängt sein und darf nur ein Zeichen lang sein. Gefunden: %s (%s)", filename, aufn_richt ) );
+
+    return aufn_richt;
+  }
+
+  private void checkFotoLink( final String link )
+  {
+    final File targetFile = getTargetFile();
+    final String fullPath = FilenameUtils.getFullPath( targetFile.getAbsolutePath() );
+
+    final Path absoluteFullPath = Paths.get( fullPath );
+    final Path relativeFotoPath = Paths.get( link );
+    final Path absoluteFotoPath = absoluteFullPath.resolve( relativeFotoPath );
+
+    final File file = absoluteFotoPath.toFile();
+    if( !file.exists() )
+      System.out.println( String.format( "Die Datei '%s' existiert nicht...", file.getPath() ) );
   }
 }
