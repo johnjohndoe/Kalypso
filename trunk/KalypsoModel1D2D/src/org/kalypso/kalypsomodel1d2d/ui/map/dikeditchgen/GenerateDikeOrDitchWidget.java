@@ -73,6 +73,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateFilter;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.linearref.LinearLocation;
@@ -109,7 +110,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
   public GenerateDikeOrDitchWidget( )
   {
     super( "org.kalypso.model.1d2d.workflow.DikeDitchGen" ); //$NON-NLS-1$
-    m_tinBuilder.setMinAngle( 25 );
+    m_tinBuilder.setMinAngle( 22.5 );
     m_tinBuilder.setNoSteinerOnBoundary( false, false );
   }
 
@@ -142,7 +143,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     m_tinBuilder.reset();
     try
     {
-      final ShapeCollection network = ShapeSerializer.deserialize( "D:/scratch/simp_polder", KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final ShapeCollection network = ShapeSerializer.deserialize( "D:/scratch/simp_polder_diss", KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final IFeatureBindingCollection<AbstractShape> shapes = network.getShapes();
       final Collection<LineString> linestrings = new ArrayList<>( shapes.size() );
       for( final AbstractShape shape : shapes )
@@ -310,10 +311,17 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
 
 //      final CreateStructuredNetworkStrategy createStrategy = new CreateDikeStrategy( m_network, outerLeftWidth, outerRightWidth, innerWidth, innerElevation, terrainElevationModelSystem );
 
-      final double minimumDepth = 1;
-      final double innerWidthFraction = 0.25;
-      final double targetElevation = -2;
-      final CreateStructuredNetworkStrategy createStrategy = new CreateDitchStrategy( m_network, innerWidthFraction, targetElevation, minimumDepth, false, terrainElevationModelSystem );
+      final double minimumDepth = 2;
+      final double innerWidthFraction = 0.5;
+      m_network.apply( new CoordinateFilter()
+      {
+        @Override
+        public void filter( Coordinate coord )
+        {
+          coord.z = -2;
+        }
+      } );
+      final CreateStructuredNetworkStrategy createStrategy = new CreateDitchStrategy( m_network, innerWidthFraction, minimumDepth, terrainElevationModelSystem );
 
       // add outer boundary
       createStrategy.addBoundary( m_tinBuilder );
