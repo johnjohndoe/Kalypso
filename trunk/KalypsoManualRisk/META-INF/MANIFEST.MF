@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoManualRisk Plug-in
 Bundle-SymbolicName: org.kalypso.KalypsoManualRisk;singleton:=true
-Bundle-Version: 12.7.0.qualifier
+Bundle-Version: 12.11.0.qualifier
 Require-Bundle: org.eclipse.help
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: http://sourceforge.net/projects/kalypso/

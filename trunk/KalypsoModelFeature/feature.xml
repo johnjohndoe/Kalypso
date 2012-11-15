@@ -34,129 +34,129 @@
          id="org.kalypso.KalypsoManual1D2D"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"/>
+         version="12.11.0.qualifier"/>
 
    <plugin
          id="org.kalypso.KalypsoManualFlood"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"/>
+         version="12.11.0.qualifier"/>
 
    <plugin
          id="org.kalypso.KalypsoManualRisk"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"/>
+         version="12.11.0.qualifier"/>
 
    <plugin
          id="org.kalypso.KalypsoManualWSPM"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"/>
+         version="12.11.0.qualifier"/>
 
    <plugin
          id="org.kalypso.ModelSimulationBase"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.rrm.core"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.activities"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.calculation.connectors"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.kalypso1d2d.pjt"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.flood"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.tuhh.core"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.tuhh.schema"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.tuhh.ui"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model1d2d"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.optimize"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.risk"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.rrm.kalininmiljukov"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.rrm.ui"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.wspwin.core"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
@@ -177,56 +177,56 @@
          id="org.kalypso.model.wspm.tuhh.project.demo"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.flood.project.demo"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.flood.project.demo1d2d"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.flood.project.template"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.1d2d.project.1d2d_demo"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.1d2d.project.2d_demo"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.1d2d.project.template"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.rrm.project.template"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
@@ -247,56 +247,56 @@
          id="org.kalypso.model.product"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.rcm"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.risk.project.1d2d_demo"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.risk.project.template"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.pdb.core"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.pdb.ui"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.tuhh.project.template"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.ewawi"
          download-size="0"
          install-size="0"
-         version="12.7.0.qualifier"
+         version="12.11.0.qualifier"
          unpack="false"/>
 
 </feature>

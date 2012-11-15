@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: KalypsoKM
 Bundle-SymbolicName: org.kalypso.rrm.kalininmiljukov;singleton:=true
-Bundle-Version: 12.7.0.qualifier
+Bundle-Version: 12.11.0.qualifier
 Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.commons,
