@@ -44,6 +44,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.AbstractEwawiWorker;
 import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportData;
+import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiProfileObjectCreator;
 import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiProfilePointCreator;
 import org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiProfilePointMarkerCreator;
 import org.kalypso.shape.dbf.DBaseException;
@@ -99,9 +100,8 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
 
       for( final String foto : photos )
       {
-        final File proFile = data.getProFile().getFile();
-        final File proParent = proFile.getParentFile();
-        final File fotoFile = new File( proParent, foto );
+        final File fotoDirectory = data.getFotoDirectory();
+        final File fotoFile = new File( fotoDirectory, foto );
         final URI fotoUrl = fotoFile.toURI();
 
         final Image image = profileFeature.addImage( fotoUrl );
@@ -110,6 +110,9 @@ public class ImportEwawiWorker extends AbstractEwawiWorker
 
       final EwawiProfilePointCreator pointCreator = new EwawiProfilePointCreator( staIndex, basePart, profileFeature );
       pointCreator.createProfilePoints();
+
+      final EwawiProfileObjectCreator objectCreator = new EwawiProfileObjectCreator( staIndex, ewawiProfile, profileFeature );
+      objectCreator.createProfileObjects();
 
       return profileFeature;
     }
