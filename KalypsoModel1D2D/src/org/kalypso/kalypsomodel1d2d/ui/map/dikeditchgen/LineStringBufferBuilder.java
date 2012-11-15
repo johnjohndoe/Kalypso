@@ -59,22 +59,31 @@ import com.vividsolutions.jts.operation.overlay.PolygonBuilder;
 public class LineStringBufferBuilder
 {
 
-  private static void addInsideTurn( final Coordinate p, final LineSegment seg0, final LineSegment seg1, final CoordinateList coordinates )
+  private static void addInsideTurn( final Coordinate p, final LineSegment seg0, final LineSegment seg1, final CoordinateList coordinates, final double tolerance )
   {
     final LineIntersector lineIntersector = new RobustLineIntersector();
     lineIntersector.computeIntersection( seg0.p0, seg0.p1, seg1.p0, seg1.p1 );
     if( lineIntersector.hasIntersection() )
-      coordinates.add( lineIntersector.getIntersection( 0 ), false );
+    {
+      final Coordinate intersection = lineIntersector.getIntersection( 0 );
+      intersection.z = p.z;
+      coordinates.add( intersection, false );
+    }
+    else if( seg0.p1.distance( seg1.p0 ) < tolerance )
+    {
+      final Coordinate mid = new Coordinate( (seg0.p1.x + seg1.p0.x) / 2, (seg0.p1.y + seg1.p0.y) / 2, (seg0.p1.z + seg1.p0.z) / 2 );
+      coordinates.add( mid, false );
+    }
     else
     {
-      final Coordinate mid0 = new Coordinate( (seg0.p1.x + p.x) / 2, (seg0.p1.y + p.y) / 2 );
+      final Coordinate mid0 = new Coordinate( (seg0.p1.x + p.x) / 2, (seg0.p1.y + p.y) / 2, (seg0.p1.z + p.z) / 2 );
       coordinates.add( mid0 );
-      final Coordinate mid1 = new Coordinate( (seg1.p0.x + p.x) / 2, (seg1.p0.y + p.y) / 2 );
+      final Coordinate mid1 = new Coordinate( (seg1.p0.x + p.x) / 2, (seg1.p0.y + p.y) / 2, (seg1.p0.z + p.z) / 2 );
       coordinates.add( mid1 );
     }
   }
 
-  private static void addFillet( final Coordinate p, final double startAngle, final double endAngle, final int orientation, final double radius, final CoordinateList coordinates )
+  private static void addFillet( final Coordinate center, final double startAngle, final double endAngle, final int orientation, final double radius, final CoordinateList coordinates )
   {
     final int orientationFactor = orientation == CGAlgorithms.CLOCKWISE ? -1 : 1;
 
@@ -91,13 +100,13 @@ public class LineStringBufferBuilder
     currAngleInc = totalAngle / nSegs;
 
     double currAngle = initAngle;
-    final Coordinate pt = new Coordinate();
     while( currAngle < totalAngle )
     {
       final double angle = startAngle + orientationFactor * currAngle;
-      pt.x = p.x + radius * Math.cos( angle );
-      pt.y = p.y + radius * Math.sin( angle );
-      coordinates.add( pt, false );
+      final double x = center.x + radius * Math.cos( angle );
+      final double y = center.y + radius * Math.sin( angle );
+      final double z = center.z;
+      coordinates.add( new Coordinate( x, y, z ), false );
       currAngle += currAngleInc;
     }
   }
@@ -110,15 +119,14 @@ public class LineStringBufferBuilder
     final double dxnorm = dx / len;
     final double dynorm = dy / len;
 
-    // left segment
-    final Coordinate startLeft = new Coordinate( seg.p0.x - dynorm * startLeftWidth, seg.p0.y + dxnorm * startLeftWidth );
-    final Coordinate endLeft = new Coordinate( seg.p1.x - dynorm * endLeftWidth, seg.p1.y + dxnorm * endLeftWidth );
+    final Coordinate startLeft = new Coordinate( seg.p0.x - dynorm * startLeftWidth, seg.p0.y + dxnorm * startLeftWidth, seg.p0.z );
+    final Coordinate endLeft = new Coordinate( seg.p1.x - dynorm * endLeftWidth, seg.p1.y + dxnorm * endLeftWidth, seg.p1.z );
     leftSeg.p0 = startLeft;
     leftSeg.p1 = endLeft;
 
     // right segment
-    final Coordinate startRight = new Coordinate( seg.p0.x + dynorm * startRightWidth, seg.p0.y - dxnorm * startRightWidth );
-    final Coordinate endRight = new Coordinate( seg.p1.x + dynorm * endRightWidth, seg.p1.y - dxnorm * endRightWidth );
+    final Coordinate startRight = new Coordinate( seg.p0.x + dynorm * startRightWidth, seg.p0.y - dxnorm * startRightWidth, seg.p0.z );
+    final Coordinate endRight = new Coordinate( seg.p1.x + dynorm * endRightWidth, seg.p1.y - dxnorm * endRightWidth, seg.p1.z );
     rightSeg.p0 = startRight;
     rightSeg.p1 = endRight;
   }
@@ -128,11 +136,10 @@ public class LineStringBufferBuilder
     // start
     if( from.distance( to ) < tolerance )
     {
-      coordinates.add( new Coordinate( (from.x + to.x) / 2, (from.y + to.y) / 2 ), false );
+      coordinates.add( new Coordinate( (from.x + to.x) / 2, (from.y + to.y) / 2, (from.z + to.z) / 2 ), false );
       return;
     }
-    else
-      coordinates.add( from, false );
+    coordinates.add( from, false );
 
     // fillet
     final double dx0 = from.x - center.x;
@@ -157,13 +164,13 @@ public class LineStringBufferBuilder
     coordinates.add( to, false );
   }
 
-  private static void addRawBufferLines( final LineString linestring, final double startLeftWidth, final double endLeftWidth, final double startRightWidth, final double endRightWidth, final Collection<SegmentString> bufferSegStrList )
+  public static void addRawBufferLines( final LineString linestring, final double startLeftWidth, final double endLeftWidth, final double startRightWidth, final double endRightWidth, final Collection<SegmentString> bufferSegStrList )
   {
     final int numPoints = linestring.getNumPoints();
     final boolean closeRing = linestring.getStartPoint().distance( linestring.getEndPoint() ) < 0.01;
 
-    final double leftWidthIncrement = (endLeftWidth - startLeftWidth) / numPoints;
-    final double rightWidthIncrement = (endRightWidth - startRightWidth) / numPoints;
+    final double leftWidthIncrement = (endLeftWidth - startLeftWidth) / (numPoints - 1);
+    final double rightWidthIncrement = (endRightWidth - startRightWidth) / (numPoints - 1);
 
     // left and right coordinates go in parallel, i.e. opposite order
 //    final int initialCapacity = numPoints * 2 + 6;
@@ -174,7 +181,7 @@ public class LineStringBufferBuilder
     final LineSegment first = new LineSegment( linestring.getCoordinateN( 0 ), linestring.getCoordinateN( 1 ) );
     final LineSegment firstLeft = new LineSegment();
     final LineSegment firstRight = new LineSegment();
-    computeLeftAndRightSegments( first, startLeftWidth, endLeftWidth, firstLeft, startRightWidth, endRightWidth, firstRight );
+    computeLeftAndRightSegments( first, startLeftWidth, startLeftWidth + leftWidthIncrement, firstLeft, startRightWidth, startRightWidth + rightWidthIncrement, firstRight );
 
     if( !closeRing )
       // make start tip
@@ -212,7 +219,7 @@ public class LineStringBufferBuilder
     }
 
     // make end tip or turn
-    computeLeftAndRightSegments( seg01, startLeftWidth, endLeftWidth, leftSeg01, startRightWidth, endRightWidth, rightSeg01 );
+    computeLeftAndRightSegments( seg01, endLeftWidth - leftWidthIncrement, endLeftWidth, leftSeg01, endRightWidth - rightWidthIncrement, endRightWidth, rightSeg01 );
     if( closeRing )
     {
       addTurn( seg01, leftSeg01, rightSeg01, first, firstLeft, firstRight, leftCoordinates, rightCoordinates );
@@ -259,12 +266,12 @@ public class LineStringBufferBuilder
       // outside turn on left side
       addOutsideTurn( seg01.p1, leftSeg01.p1, leftSeg12.p0, CGAlgorithms.CLOCKWISE, leftCoordinates, tolerance );
       // inside turn on right side
-      addInsideTurn( seg01.p1, rightSeg01, rightSeg12, rightCoordinates );
+      addInsideTurn( seg01.p1, rightSeg01, rightSeg12, rightCoordinates, tolerance );
     }
     else
     {
       // inside turn on left side
-      addInsideTurn( seg01.p1, leftSeg01, leftSeg12, leftCoordinates );
+      addInsideTurn( seg01.p1, leftSeg01, leftSeg12, leftCoordinates, tolerance );
       // outside turn on right side
       addOutsideTurn( seg01.p1, rightSeg01.p1, rightSeg12.p0, CGAlgorithms.COUNTERCLOCKWISE, rightCoordinates, tolerance );
     }
@@ -306,24 +313,27 @@ public class LineStringBufferBuilder
       return;
     }
 
+    // start
+    coordinates.add( from, false );
+
     // make a 180 degree turn
     final double startAngle = Math.atan2( dy0, dx0 );
-
-    final int numHalfCircleFractions = 8;
+    final int numHalfCircleFractions = 4;
     final double sectionAngle = Math.PI / numHalfCircleFractions;
-    coordinates.add( from, false );
     for( int i = 1; i < numHalfCircleFractions; i++ )
     {
       final double angleFrom = startAngle + orientationFactor * sectionAngle * i;
-      final double tipX = center.x + fromRadius * Math.cos( angleFrom );
-      final double tipY = center.y + fromRadius * Math.sin( angleFrom );
-      coordinates.add( new Coordinate( tipX, tipY ), false );
+      final double x = center.x + fromRadius * Math.cos( angleFrom );
+      final double y = center.y + fromRadius * Math.sin( angleFrom );
+      final double z = center.z;
+      coordinates.add( new Coordinate( x, y, z ), false );
     }
 
+    // end
     coordinates.add( to, false );
   }
 
-  private static void addRawBufferLines( final LineString linestring, final double leftWidth, final double rightWidth, final Collection<SegmentString> bufferSegStrList )
+  public static void addRawBufferLines( final LineString linestring, final double leftWidth, final double rightWidth, final Collection<SegmentString> bufferSegStrList )
   {
     addRawBufferLines( linestring, leftWidth, leftWidth, rightWidth, rightWidth, bufferSegStrList );
   }
@@ -332,7 +342,7 @@ public class LineStringBufferBuilder
   {
     final Collection<SegmentString> bufferSegStrList = new ArrayList<>( 1 );
     addRawBufferLines( linestring, startLeftWidth, endLeftWidth, startRightWidth, endRightWidth, bufferSegStrList );
-    final Geometry resultGeom = bufferInternal( bufferSegStrList );
+    final Geometry resultGeom = buffer( bufferSegStrList );
     return resultGeom;
   }
 
@@ -346,11 +356,11 @@ public class LineStringBufferBuilder
       final LineString linestring = (LineString)linearGeom.getGeometryN( i );
       addRawBufferLines( linestring, leftWidth, rightWidth, bufferSegStrList );
     }
-    final Geometry resultGeom = bufferInternal( bufferSegStrList );
+    final Geometry resultGeom = buffer( bufferSegStrList );
     return resultGeom;
   }
 
-  private static Geometry bufferInternal( final Collection<SegmentString> bufferSegStrList )
+  public static Geometry buffer( final Collection<SegmentString> bufferSegStrList )
   {
     // node the raw buffer lines
     final com.vividsolutions.jts.geom.GeometryFactory geomFact = new GeometryFactory( new PrecisionModel( 1000 ) );

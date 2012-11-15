@@ -153,7 +153,7 @@ public class TriangulationBuilder extends AbstractModelObject
     m_minAngle = minAngle;
     if( buildImmediately )
       finish();
-    firePropertyChange( PROPERTY_MAX_AREA, oldValue, minAngle );
+    firePropertyChange( PROPERTY_MIN_ANGLE, oldValue, minAngle );
   }
 
   public boolean getNoSteinerOnBoundary( )
@@ -163,8 +163,8 @@ public class TriangulationBuilder extends AbstractModelObject
 
   public void setNoSteiner( final boolean noSteiner )
   {
-    setNoSteinerOnBoundary( noSteiner );
     m_noSteiner = noSteiner;
+    setNoSteinerOnBoundary( noSteiner, false );
   }
 
   public void setNoSteinerOnBoundary( final boolean noSteiner )
@@ -239,11 +239,13 @@ public class TriangulationBuilder extends AbstractModelObject
         m_tin = GeometryFactory.createGM_TriangulatedSurface( triangles, triangles[0].getCoordinateSystem() );
 
         final Color fromColor = new Color( 0, 255, 100 );
-        final Color toColor = new Color( 200, 20, 20);
+        final Color toColor = new Color( 200, 20, 20 );
         final BigDecimal min = new BigDecimal( m_tin.getMinElevation() - 0.2 );
         final BigDecimal max = new BigDecimal( m_tin.getMaxElevation() + 0.2 );
         final PolygonColorMapEntry fromEntry = StyleFactory.createPolygonColorMapEntry( fromColor, fromColor, min, BigDecimal.ZERO );
+        fromEntry.getFill().setOpacity( 0.5 );
         final PolygonColorMapEntry toEntry = StyleFactory.createPolygonColorMapEntry( toColor, toColor, BigDecimal.ZERO, max );
+        toEntry.getFill().setOpacity( 0.5 );
         final PolygonColorMap_Impl colorMap = new PolygonColorMap_Impl();
         colorMap.replaceColorMap( PolygonSymbolizerUtils.createColorMap( fromEntry, toEntry, new BigDecimal( 0.2 ), min, max, false ) );
         m_tinSymb.setColorMap( colorMap );
