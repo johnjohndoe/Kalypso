@@ -52,10 +52,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -95,8 +99,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 public class TriangulateGeometryWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private TriangulationBuilder m_builder = new TriangulationBuilder();
-
-  private final TriangulateGeometryOperation m_data = new TriangulateGeometryOperation( this );
 
   private boolean m_modePolygon = true;
 
@@ -165,7 +167,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
     m_nodesNameConversionMap.clear();
 
-    repaint();
+    repaintMap();
   }
 
   TriangulationBuilder getBuilder( )
@@ -249,7 +251,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       m_builder.finish();
       m_boundaryGeometryBuilder.reset();
       m_breaklineGeometryBuilder.reset();
-      repaint();
+      repaintMap();
     }
     catch( final Exception e )
     {
@@ -328,7 +330,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       m_warningRenderer.setTooltip( warning );
     }
 
-    repaint();
+    repaintMap();
   }
 
   @Override
@@ -395,7 +397,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
         m_modePolygon = !m_modePolygon;
         m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.TriangulateGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
       }
-      repaint();
+      repaintMap();
     }
 
     else if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
@@ -407,10 +409,13 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       else
         m_breaklineGeometryBuilder.removeLastPoint();
 
-      repaint();
+      repaintMap();
     }
     else if( e.getKeyCode() == KeyEvent.VK_ENTER )
-      m_data.convertTriangulationToModel();
+    {
+      final TriangulateGeometryOperation triangulateGeometryOperation = new TriangulateGeometryOperation( m_builder, m_discModel );
+      triangulateGeometryOperation.convertTriangulationToModel();
+    }
     else
       super.keyPressed( e );
   }
@@ -435,7 +440,11 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_composite = new TriangulateGeometryComposite( toolkit, parent, this, m_data );
+    final ScrolledForm form = toolkit.createScrolledForm( parent );
+    final DatabindingForm binding = new DatabindingForm( form, toolkit );
+    final Composite body = form.getBody();
+    GridLayoutFactory.swtDefaults().applyTo( body );
+    m_composite = new TriangulateGeometryComposite( toolkit, binding, this, m_builder, m_discModel );
     return m_composite;
   }
 
@@ -455,10 +464,5 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   IKalypsoFeatureTheme getDiscTheme( )
   {
     return m_theme;
-  }
-
-  void repaint( )
-  {
-    repaintMap();
   }
 }
