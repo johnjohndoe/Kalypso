@@ -85,6 +85,9 @@ public class Element1D extends FE1D2DElement implements IElement1D
   public IFE1D2DNode[] getNodes( )
   {
     final IFE1D2DEdge edge = getEdge();
+    if( edge == null )
+      return new IFE1D2DNode[] {};
+
     return edge.getNodes();
   }
 
