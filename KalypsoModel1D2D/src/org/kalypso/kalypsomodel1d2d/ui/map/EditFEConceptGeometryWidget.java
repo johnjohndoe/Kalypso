@@ -337,13 +337,16 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
         final IStatus status = ProgressUtilities.busyCursorWhile( operation );
 
-        final String dialogTitle = Messages.getString("EditFEConceptGeometryWidget.0"); //$NON-NLS-1$
+        final String dialogTitle = Messages.getString( "EditFEConceptGeometryWidget.0" ); //$NON-NLS-1$
 
         StatusDialog.open( shell, status, dialogTitle );
         if( status.isOK() )
           return;
 
-        if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( dialogTitle, Messages.getString("EditFEConceptGeometryWidget.1") ) ) //$NON-NLS-1$
+        if( !operation.hasValidationFixes() )
+          return;
+
+        if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( dialogTitle, Messages.getString( "EditFEConceptGeometryWidget.1" ) ) ) //$NON-NLS-1$
           return;
 
         final ICommand command = operation.getValidationFix();
