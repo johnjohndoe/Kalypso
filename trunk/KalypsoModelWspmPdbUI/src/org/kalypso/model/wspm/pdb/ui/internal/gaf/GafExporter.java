@@ -76,7 +76,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * This exporter exports profile data into the gaf format.
- *
+ * 
  * @author Holger Albert
  */
 public class GafExporter
@@ -100,14 +100,17 @@ public class GafExporter
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("GafExporter_0"), 2000 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("GafExporter_1") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "GafExporter_0" ), 2000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "GafExporter_1" ) ); //$NON-NLS-1$
+
+      final File parentFile = file.getParentFile();
+      parentFile.mkdirs();
 
       /* Get the cross sections. */
       final Set<CrossSection> crossSections = getCrossSections( profiles, new SubProgressMonitor( monitor, 500 ) );
 
       /* Monitor. */
-      monitor.subTask( Messages.getString("GafExporter_2") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "GafExporter_2" ) ); //$NON-NLS-1$
 
       /* Create the gaf writer. */
       final GafCodes codes = new GafCodes();
@@ -125,10 +128,9 @@ public class GafExporter
       if( roughnessClasses.length > 0 )
       {
         /* Monitor. */
-        monitor.subTask( Messages.getString("GafExporter_3") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "GafExporter_3" ) ); //$NON-NLS-1$
 
         /* Create the kst file. */
-        final File parentFile = file.getParentFile();
         final String baseName = FilenameUtils.getBaseName( file.getName() );
         final File kstFile = new File( parentFile, String.format( "%s.kst", baseName ) ); //$NON-NLS-1$
 
@@ -150,10 +152,9 @@ public class GafExporter
       if( vegetationClasses.length > 0 )
       {
         /* Monitor. */
-        monitor.subTask( Messages.getString("GafExporter_5") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "GafExporter_5" ) ); //$NON-NLS-1$
 
         /* Create the bwp file. */
-        final File parentFile = file.getParentFile();
         final String baseName = FilenameUtils.getBaseName( file.getName() );
         final File bwpFile = new File( parentFile, String.format( "%s.bwp", baseName ) ); //$NON-NLS-1$
 
@@ -170,7 +171,7 @@ public class GafExporter
         monitor.worked( 500 );
       }
 
-      return collector.asMultiStatusOrOK( Messages.getString("GafExporter_7"), Messages.getString("GafExporter_8") ); //$NON-NLS-1$ //$NON-NLS-2$
+      return collector.asMultiStatusOrOK( Messages.getString( "GafExporter_7" ), Messages.getString( "GafExporter_8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Exception ex )
     {
