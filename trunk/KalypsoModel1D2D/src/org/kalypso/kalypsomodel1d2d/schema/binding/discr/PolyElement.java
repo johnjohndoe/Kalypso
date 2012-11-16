@@ -91,6 +91,10 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
   {
     for( final IFE1D2DEdge edge : edges )
     {
+      /* protect against corrupt net */
+      if( edge == null )
+        continue;
+
       final IFE1D2DNode[] nodes = edge.getNodes();
       final IFE1D2DNode firstNode = nodes[0];
       final IFE1D2DNode secondNode = nodes[1];
