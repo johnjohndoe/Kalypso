@@ -73,7 +73,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * Wraps a profile and keeps track of the segmented profile.
- *
+ * 
  * @author Gernot Belger
  * @author Thomas Jung
  */
@@ -241,7 +241,7 @@ class ProfileData implements IProfileData
    * (a) by Douglas-Peucker <br>
    * (b) equidistant. <br>
    * the geographical data is interpolated from the original profile data.
-   *
+   * 
    * @param wspmprofile
    *          original profile (WSPMProfile) to be intersected
    * @param prof
@@ -427,12 +427,12 @@ class ProfileData implements IProfileData
 
       final IProfile croppedProfile = cropProfile( startPoint, endPoint );
 
-      final IProfile adjustedsegmentedProfile = autoAdjustArea( croppedProfile, newWorkingProfile );
+      final IProfile adjustedSegmentedProfile = autoAdjustArea( croppedProfile, newWorkingProfile );
 
       /* force endpoint of bank lines onto endpoints of profile */
-      adjustBanklineEndpoints( m_workingProfile, adjustedsegmentedProfile );
+      adjustBanklineEndpoints( m_workingProfile, adjustedSegmentedProfile );
 
-      m_workingProfile = adjustedsegmentedProfile;
+      m_workingProfile = adjustedSegmentedProfile;
     }
     catch( GeoTransformerException | GM_Exception e )
     {

@@ -18,10 +18,20 @@
  */
 package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
 
+import java.net.URL;
+
+import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.ICodeClass;
+import org.kalypso.model.wspm.core.gml.classifications.IPartType;
+import org.kalypso.model.wspm.core.gml.classifications.IStyleDefinition;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.ewawi.data.enums.EwawiHorizont;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiPunktart;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Holger Abert
@@ -35,10 +45,17 @@ public class EwawiClassificationUpdater
     m_targetProject = targetProject;
   }
 
-  public void updateClassification( )
+  public void updateClassification( ) throws Exception
   {
     final IWspmClassification classification = m_targetProject.getClassificationMember();
 
+    updateCodeClassification( classification );
+    updateStyleDefinitions( classification );
+    updatePartTypes( classification );
+  }
+
+  private void updateCodeClassification( final IWspmClassification classification )
+  {
     final EwawiPunktart[] values = EwawiPunktart.values();
     for( final EwawiPunktart value : values )
     {
@@ -50,6 +67,44 @@ public class EwawiClassificationUpdater
         newCodeClass.setName( code );
         newCodeClass.setDescription( value.getLabel() );
         newCodeClass.setComment( value.getComment() );
+      }
+    }
+  }
+
+  private void updatePartTypes( final IWspmClassification classification )
+  {
+    final EwawiHorizont[] values = EwawiHorizont.values();
+    for( final EwawiHorizont value : values )
+    {
+      final String part = String.format( "EWAWI_%d", value.getKey() ); //$NON-NLS-1$
+      final IPartType partType = classification.findPartType( part );
+      if( partType == null )
+      {
+        final IPartType newPartType = classification.getPartTypeCollection().addNew( IPartType.FEATURE_PART_TYPE );
+        newPartType.setName( part );
+        newPartType.setDescription( value.getLabel() );
+        newPartType.setComment( value.getComment() );
+        /* HINT: The style references should have the same id as the part here. */
+        newPartType.setStyleReference( part );
+      }
+    }
+  }
+
+  private void updateStyleDefinitions( final IWspmClassification classification ) throws Exception
+  {
+    final URL url = EwawiClassificationUpdater.class.getResource( "resources/styleDefinitions.gml" );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
+    final WspmProject rootFeature = (WspmProject)workspace.getRootFeature();
+    final IWspmClassification wspmClassification = rootFeature.getClassificationMember();
+    final IFeatureBindingCollection<IStyleDefinition> definitions = wspmClassification.getStyleDefinitionCollection();
+    for( final IStyleDefinition definition : definitions )
+    {
+      final String style = definition.getName();
+      final IStyleDefinition styleDefinition = classification.findStyleDefinition( style );
+      if( styleDefinition == null )
+      {
+        // IStyleDefinition newStyleDefinition = classification.getStyleDefinitionCollection().addNew( IStyleDefinition.FEATURE_STYLE_DEFINITION );
+        FeatureHelper.cloneFeature( classification, classification.getStyleDefinitionCollection().getFeatureList().getPropertyType(), definition );
       }
     }
   }

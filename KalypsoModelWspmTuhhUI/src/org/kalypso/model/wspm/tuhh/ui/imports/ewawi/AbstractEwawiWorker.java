@@ -53,7 +53,7 @@ public abstract class AbstractEwawiWorker
   {
   }
 
-  public abstract void updateClassifications( );
+  public abstract void updateClassifications( ) throws Exception;
 
   public abstract IProfileFeature createNewProfile( EwawiImportData data, final GewShape gewShape, final EwawiSta staIndex, final EwawiProfile ewawiProfile ) throws CoreException;
 
@@ -169,10 +169,16 @@ public abstract class AbstractEwawiWorker
     if( riverline instanceof GM_MultiCurve )
     {
       final GM_MultiCurve multiCurve = (GM_MultiCurve)riverline;
+      if( multiCurve.getSize() > 1 )
+      {
+        System.out.println( "Got a multi curve mit more than one curve..." ); //$NON-NLS-1$
+        return multiCurve.getCurveAt( 0 );
+      }
+
       if( multiCurve.getSize() == 1 )
         return multiCurve.getCurveAt( 0 );
 
-      throw new IllegalStateException( "Got a multi curve mit more than one curve..." ); //$NON-NLS-1$
+      return null;
     }
 
     throw new IllegalStateException( "Geometry of the river shape must be a curve..." ); //$NON-NLS-1$

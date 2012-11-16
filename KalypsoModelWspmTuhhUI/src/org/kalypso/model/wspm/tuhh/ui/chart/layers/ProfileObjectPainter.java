@@ -24,8 +24,10 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Doubles;
+import org.kalypso.model.wspm.core.gml.classifications.IPartType;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
@@ -43,6 +45,7 @@ import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.IFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.IDefaultStyles;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -50,6 +53,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
 /**
  * Helper for a chart layer that paints profile objects.
@@ -62,6 +66,9 @@ public class ProfileObjectPainter
 
   private ICoordinateMapper m_coordinateMapper;
 
+  /**
+   * TODO: Should be for each style, so that the order can be defined. Link this, it is not clear what wins.
+   */
   private HoverIndex m_hoverIndex;
 
   private final IFigure< ? extends IStyle>[] m_figures;
@@ -79,6 +86,15 @@ public class ProfileObjectPainter
   private IFigure<IStyle>[] createFigures( )
   {
     final Collection<IFigure< ? extends IStyle>> figures = new ArrayList<>();
+
+    final IPartType partType = m_partInfo.getPartType();
+    if( partType == null )
+    {
+      // HINT: This is for 1D2D, because there no classifications are available (hence no part type).
+      // HINT: So we must create a default style here.
+      final ILineStyle defaultStyle = new LineStyle( 2, new RGB( 153, 0, 255 ), IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_DASHOFFSET, IDefaultStyles.DEFAULT_DASHARRAY, IDefaultStyles.DEFAULT_LINEJOIN, IDefaultStyles.DEFAULT_LINECAP, IDefaultStyles.DEFAULT_MITERLIMIT, IDefaultStyles.DEFAULT_VISIBILITY );
+      figures.add( new PolylineFigure( defaultStyle ) );
+    }
 
     final IStyle[] styles = m_partInfo.getStyles();
     for( final IStyle style : styles )
@@ -202,7 +218,7 @@ public class ProfileObjectPainter
       final PointFigure hoverFigure = new PointFigure( hoverStyle );
       final Rectangle hoverRect = hoverFigure.setCenterPoint( point );
 
-      final EditInfo info = m_infoBuilder.createPointInfo( object, paintPoint.getRecord(), hoverFigure, point );
+      final EditInfo info = m_infoBuilder.createPointInfo( object, paintPoint.getRecord(), hoverFigure, null );
 
       m_hoverIndex.addElement( hoverRect, info );
     }

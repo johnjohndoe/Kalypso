@@ -61,12 +61,12 @@ public class PartTypeAccessor
   {
     final IPartType partType = getPartType();
     if( partType == null )
-      return Messages.getString("PartTypeAccessor_0"); //$NON-NLS-1$
+      return Messages.getString( "PartTypeAccessor_0" ); //$NON-NLS-1$
 
     return partType.getDescription();
   }
 
-  private IPartType getPartType( )
+  public IPartType getPartType( )
   {
     final IWspmClassification classification = WspmClassifications.getClassification( m_profil );
     if( classification == null )
