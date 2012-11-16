@@ -92,12 +92,12 @@ public class Add2DElementsCommand implements ICommand
 
   private final Collection<String> m_newElementIDs = new ArrayList<>();
 
-  private final List<GM_PolygonPatch> m_elements;
-
   private final IFEDiscretisationModel1d2d m_discModel;
 
+  private final List< ? extends GM_PolygonPatch> m_elements;
+
   // FIXME: not good using patches instead of rings. We only use the outer ring anyways so this is obscure to the user of this class
-  public Add2DElementsCommand( final GMLWorkspace discretisationModel, final List<GM_PolygonPatch> elements )
+  public Add2DElementsCommand( final GMLWorkspace discretisationModel, final List< ? extends GM_PolygonPatch> elements )
   {
     m_discModel = (IFEDiscretisationModel1d2d)discretisationModel.getRootFeature();
     m_elements = elements;
