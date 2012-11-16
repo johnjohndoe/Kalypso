@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * <li>Snapping to the nearest node in the snapping radius is the default behavior.
  * <li>Snapping will not occur if SHIFT button is pressed during the operation.
  * </ul>
- *
+ * 
  * @author Dejan Antanaskovic
  * @author Gernot Belger
  */
@@ -85,12 +85,15 @@ public class PointSnapper
 
   /**
    * Move the mouse to the given position and try to snap the point.
-   *
+   * 
    * @return The snapped node, or <code>null</code> if none was found.
    */
   public IFE1D2DNode moved( final GM_Point p )
   {
     m_snapNode = null;
+
+    if( p == null )
+      return null;
 
     if( m_snappingActive )
     {
@@ -115,8 +118,8 @@ public class PointSnapper
 
       final int snapRadius = SNAPPING_RADIUS / 2;
 
-      final int lowX = (int) point.getX() - snapRadius;
-      final int lowY = (int) point.getY() - snapRadius;
+      final int lowX = (int)point.getX() - snapRadius;
+      final int lowY = (int)point.getY() - snapRadius;
 
       final Color color = g.getColor();
 
