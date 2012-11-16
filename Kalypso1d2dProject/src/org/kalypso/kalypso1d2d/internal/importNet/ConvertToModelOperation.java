@@ -105,7 +105,7 @@ class ConvertToModelOperation implements ICoreRunnableWithProgress
       {
         final double area = ring.getArea();
         // FIXME: hot fix -> triangulation seems to produce bad elements sometimes, this prohibits this
-        if( area > 1.0 )
+        if( area > 0.01 )
           rings.add( ring );
         else
           System.out.println( "Removed small triangle" ); //$NON-NLS-1$
