@@ -51,15 +51,14 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
@@ -82,47 +81,63 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
   {
     final IStatusCollector log = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
 
-    log.add( IStatus.INFO, "validate elements" );
+    monitor.beginTask( "Validating mesh", 4 );
 
-    // get the elements from discModel
-    IFE1D2DElement[] elements = m_discModel.getElements();
+    monitor.subTask( "Elements" );
+    log.add( validateElements() );
+    ProgressUtilities.worked( monitor, 1 );
 
-    for( final IFE1D2DElement element : elements )
+    monitor.subTask( "Edges" );
+    log.add( validateEdges() );
+    ProgressUtilities.worked( monitor, 1 );
+
+    monitor.subTask( "Nodes" );
+    log.add( validateNodes() );
+    ProgressUtilities.worked( monitor, 1 );
+
+    monitor.subTask( "Relation between edges and elements" );
+    log.add( validateEdgeElementRelations() );
+    ProgressUtilities.worked( monitor, 1 );
+
+    monitor.done();
+
+    return log.asMultiStatusOrOK( "Model validation has warnings", "Validation terminated without warnings" );
+  }
+
+  private IStatus validateNodes( )
+  {
+    final IStatusCollector log = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
+
+    // get nodes from discModel
+    final IFE1D2DNode[] nodes = m_discModel.getNodes();
+
+    for( final IFE1D2DNode node : nodes )
     {
-      // check geometry of 2D-Elements
-      if( element instanceof IPolyElement )
+      // check geometry of node
+      final GM_Point point = node.getPoint();
+      if( point == null )
       {
-        // get surface
-        final IPolyElement element2D = (IPolyElement)element;
-        final GM_Polygon eleGeom = element2D.getGeometry();
+        // remove point with no geometry
+        final String msg = String.format( "Node '%s': missing geometry", node.getId() );
+        log.add( IStatus.WARNING, msg );
+      }
 
-        if( eleGeom == null )
-        {
-          // delete element with no geometry
-          log.add( IStatus.WARNING, "element with id " + element2D.getId() + "has no geometry and will be removed." );
-
-          // check counter reference of the nodes of the bad element
-
-          // TODO: this check has to be made with all nodes!!
-          log.add( IStatus.INFO, "checking nodes..." );
-
-          final IFE1D2DNode[] nodes = element2D.getNodes();
-          for( final IFE1D2DNode node : nodes )
-          {
-            final IFE1D2DElement[] nodeElems = node.getAdjacentElements();
-            if( nodeElems.length == 0 )
-            {
-              // delete node
-              log.add( IStatus.WARNING, "node with id " + node.getId() + "has no corresponding element and will be removed." );
-            }
-          }
-
-        }
+      // check if node has any elements
+      final IFE1D2DElement[] nodeElems = node.getAdjacentElements();
+      if( nodeElems.length == 0 )
+      {
+        // delete node
+        final String msg = String.format( "Node '%s': no reference to an element", node.getId() );
+        log.add( IStatus.WARNING, msg );
       }
     }
 
-    /* edges */
-    log.add( IStatus.INFO, "validate edges" );
+    return log.asMultiStatus( "Nodes" );
+  }
+
+  private IStatus validateEdges( )
+  {
+    final IStatusCollector log = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
 
     // get edges from discModel
     final IFE1D2DEdge[] edges = m_discModel.getEdges();
@@ -140,73 +155,84 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
         // log.add( IStatus.WARNING, "node with id " + node.getGmlID() +
         // "has corresponding element and will be removed." );
       }
-    }
 
-    /* nodes */
-    log.add( IStatus.INFO, "validate nodes" );
+      // get containers of edge
+      final IFE1D2DElement[] elementArray = edge.getLinkedElements();
 
-    // get nodes from discModel
-    final IFE1D2DNode[] nodes = m_discModel.getNodes();
-
-    for( final IFE1D2DNode node : nodes )
-    {
-      // check geometry of node
-      final GM_Point point = node.getPoint();
-      if( point == null )
+      // check number of elements at edge
+      if( elementArray.length > 2 )
       {
-        // remove point with no geometry
-        log.add( IStatus.WARNING, "node with id " + node.getId() + " has no geometry and will be removed." );
+        final String msg = String.format( "Edge '%s': more than two adjacent elements", edge.getId() );
+        log.add( IStatus.WARNING, msg );
       }
 
-      // check containers of node
-      final IFE1D2DEdge[] containers = node.getLinkedEdges();
-
-      for( final Object container : containers )
+      // check for non-existing elements at edge
+      for( final IFE1D2DElement edgeElement : elementArray )
       {
-        // handle edges
-        if( container instanceof FE1D2DEdge )
+        if( edgeElement == null )
         {
-          final FE1D2DEdge edge = (FE1D2DEdge)container;
-
-          // get containers of edge
-          final IFE1D2DElement[] elementArray = edge.getLinkedElements();
-
-          // get nodes of edge
-          final IFE1D2DNode[] edgeNodes = edge.getNodes();
-
-          // TODO: this check was done above already
-          if( edgeNodes.length != 2 )
-            log.add( IStatus.WARNING, "edge with id " + edge.getId() + "has " + edgeNodes.length + " nodes." );
-
-          // check number of elements at edge
-          if( elementArray.length > 2 )
-            log.add( IStatus.WARNING, "edge with id " + edge.getId() + " has more than two elements adjecting. " );
-
-          // check for non-existing elements at edge
-          for( int i = 0; i < elementArray.length; i++ )
-          {
-            final IFE1D2DElement edgeElement = elementArray[i];
-            if( edgeElement == null )
-            {
-              log.add( IStatus.WARNING, "edge with id " + edge.getId() + " has invalid element. Element will be removed" );
-              removeEdgeElement( edge, i );
-            }
-          }
+          final String msg = String.format( "Edge '%s': contains invalid element reference", edge.getId() );
+          log.add( IStatus.WARNING, msg );
+          // removeEdgeElement( edge, i );
         }
       }
     }
 
-    /**
-     * checking edge <-> element relations
-     * every edge should have the information about its elements. for some reason there occur missing element references
-     * at the edge. in order to find the real relation between edges and elements, we loop over all elements, collect
-     * the edges of that element and store the relationship in a Map<edge,List<element>>. Later we loop over all edges
-     * and compare the calculated number of elements with the number of edges stored at the edge itself.
-     */
+    return log.asMultiStatus( "Edges" );
+  }
 
-    log.add( IStatus.INFO, "validate edge / element relations" );
+  private IStatus validateElements( )
+  {
+    final IStatusCollector log = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
 
-    elements = m_discModel.getElements();
+    // get the elements from discModel
+    final IFE1D2DElement[] elements = m_discModel.getElements();
+
+    for( final IFE1D2DElement element : elements )
+    {
+      // check geometry of 2D-Elements
+      if( element instanceof IPolyElement )
+      {
+        // get surface
+        final IPolyElement element2D = (IPolyElement)element;
+        final GM_Polygon eleGeom = element2D.getGeometry();
+
+        if( eleGeom == null )
+        {
+          // delete element with no geometry
+          final String msg = String.format( "Element '%s': geometry missing", element2D.getId() );
+          log.add( IStatus.WARNING, msg );
+        }
+      }
+
+      /* edge references */
+      final IFE1D2DEdge[] edges = element.getEdges();
+      for( final IFE1D2DEdge edge : edges )
+      {
+        if( edge == null )
+        {
+          final String msg = String.format( "Element '%s': contains invalid edge reference", element.getId() );
+          log.add( IStatus.WARNING, msg );
+        }
+      }
+    }
+
+    return log.asMultiStatus( "Elements" );
+  }
+
+  /**
+   * checking edge <-> element relations
+   * every edge should have the information about its elements. for some reason there occur missing element references
+   * at the edge. in order to find the real relation between edges and elements, we loop over all elements, collect
+   * the edges of that element and store the relationship in a Map<edge,List<element>>. Later we loop over all edges
+   * and compare the calculated number of elements with the number of edges stored at the edge itself.
+   */
+  private IStatus validateEdgeElementRelations( )
+  {
+    final IStatusCollector log = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
+
+    final IFE1D2DElement[] elements = m_discModel.getElements();
+    final IFE1D2DEdge[] edges = m_discModel.getEdges();
 
     final Map<IFE1D2DEdge, List<IFE1D2DElement>> edgeMap = new HashMap<>();
 
@@ -224,6 +250,7 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
         // bad element or edge???
         continue;
       }
+
       if( list.size() != numOfElementsAtEdge )
       {
         log.add( IStatus.WARNING, "edge with id " + edge.getId() + " has only " + numOfElementsAtEdge + " element defined. It should be " + list.size() );
@@ -231,9 +258,7 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
       }
     }
 
-    log.add( IStatus.OK, "finished" );
-
-    return log.asMultiStatusOrOK( "Model Validation has warnings", "Validation terminated without warnings" );
+    return log.asMultiStatus( "Edge / Element relations" );
   }
 
   private void checkEdgeEntries( final IFE1D2DElement[] elements, final Map<IFE1D2DEdge, List<IFE1D2DElement>> edgeMap, final IStatusCollector log )
@@ -313,16 +338,20 @@ public class ValidateDiscretisationOperation implements ICoreRunnableWithProgres
     return numOfContainers;
   }
 
-  private void removeEdgeElement( final FE1D2DEdge edge, final int index )
+//  private void removeEdgeElement( final FE1D2DEdge edge, final int index )
+//  {
+//    final FeatureList fList = (FeatureList)edge.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
+//    fList.remove( index );
+//  }
+
+  public boolean hasValidationFixes( )
   {
-    final FeatureList fList = (FeatureList)edge.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
-    fList.remove( index );
+    return m_commands.getCommands().length > 0;
   }
 
   public ICommand getValidationFix( )
   {
     // FIXME: is this enough or do we need to fire workspace events
-
     return m_commands;
   }
 }
