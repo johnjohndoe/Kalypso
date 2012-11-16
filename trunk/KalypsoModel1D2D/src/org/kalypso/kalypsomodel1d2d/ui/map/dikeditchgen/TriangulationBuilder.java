@@ -83,6 +83,8 @@ public class TriangulationBuilder extends AbstractModelObject
 
   public static final String PROPERTY_NO_STEINER_ON_BOUNDARY = "noSteinerOnBoundary"; //$NON-NLS-1$
 
+  public static final String PROPERTY_TIN = "tin"; //$NON-NLS-1$
+
   private Double m_maxArea = null;
 
   private double m_minAngle = 22;
@@ -257,6 +259,8 @@ public class TriangulationBuilder extends AbstractModelObject
     {
       e.printStackTrace();
     }
+    // make sure that equals is not called on tin, always fires an event
+    firePropertyChange( PROPERTY_TIN, null, m_tin );
   }
 
   public void reset( )

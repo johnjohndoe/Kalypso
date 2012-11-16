@@ -40,15 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen.TriangulationBuilder;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.Add2DElementsCommand;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
@@ -56,47 +53,36 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
  */
 public class TriangulateGeometryOperation
 {
-  private final TriangulateGeometryWidget m_widget;
+  private final TriangulationBuilder m_builder;
 
-  public TriangulateGeometryOperation( final TriangulateGeometryWidget widget )
+  private final IFEDiscretisationModel1d2d m_discretizationModel;
+
+  public TriangulateGeometryOperation( final TriangulationBuilder triangulationBuilder, final IFEDiscretisationModel1d2d discretizationModel )
   {
-    m_widget = widget;
+    m_builder = triangulationBuilder;
+    m_discretizationModel = discretizationModel;
   }
 
-  // FIXME: move into operation
   public void convertTriangulationToModel( )
   {
-    final IKalypsoFeatureTheme theme = m_widget.getDiscTheme();
-    final CommandableWorkspace workspace = theme.getWorkspace();
+    final CommandableWorkspace workspace = new CommandableWorkspace( m_discretizationModel.getWorkspace() );
 
     try
     {
-      final List<GM_PolygonPatch> elements = getTinRings();
-      if( elements == null )
+      m_builder.finish();
+
+      final GM_TriangulatedSurface tin = m_builder.getTin();
+      if( tin == null )
         return;
 
-      final Add2DElementsCommand command = new Add2DElementsCommand( workspace, elements );
+      final Add2DElementsCommand command = new Add2DElementsCommand( workspace, tin );
       workspace.postCommand( command );
     }
     catch( final Exception e1 )
     {
       e1.printStackTrace();
-      SWT_AWT_Utilities.showSwtMessageBoxError( m_widget.getName(), Messages.getString( "TriangulateGeometryData_0" ) + e1.toString() ); //$NON-NLS-1$
-    }
-    finally
-    {
-      m_widget.reinit();
+      SWT_AWT_Utilities.showSwtMessageBoxError( Messages.getString( "TriangulateGeometryData_0" ), e1.toString() ); //$NON-NLS-1$
     }
   }
 
-  private List<GM_PolygonPatch> getTinRings( )
-  {
-    final GM_TriangulatedSurface tin = m_widget.getBuilder().getTin();
-    if( tin == null )
-      return null;
-
-    final List<GM_PolygonPatch> rings = new ArrayList<>( tin.size() );
-    rings.addAll( tin );
-    return rings;
-  }
 }
