@@ -46,10 +46,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.editdata.IProfileData;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -63,6 +65,7 @@ import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
@@ -143,10 +146,10 @@ class ProfilOverlayLayer extends PointsLineLayer
 
     final IProfile profile = m_data.getActiveProfile().getOriginalProfile();
     final IProfileRecord profilePoint = ProfileVisitors.findNearestPoint( profile, curserPoint.getX() );
-    final IProfileRecord fePoint = ProfileVisitors.findNearestPoint( getProfil(), curserPoint.getX() );
+    final IProfileRecord fePoint = ProfileVisitors.findNearestPoint( m_profile, curserPoint.getX() );
 
-    final Point profilePointScreen = toScreen( profilePoint );
-    final Point fePointScreen = toScreen( fePoint );
+    final Point profilePointScreen = toScreenInternal( profilePoint );
+    final Point fePointScreen = toScreenInternal( fePoint );
 
     /**
      * set LineStyles
@@ -180,7 +183,7 @@ class ProfilOverlayLayer extends PointsLineLayer
 
     if( snapPoint != null )
     {
-      final Point spScreen = toScreen( snapPoint );
+      final Point spScreen = toScreenInternal( snapPoint );
       snapped.setPoints( new Point[] { new Point( spScreen.x, 10 ), new Point( spScreen.x, top ) } );
       hoverFigure = new IPaintable()
       {
@@ -209,13 +212,12 @@ class ProfilOverlayLayer extends PointsLineLayer
     final IProfile segmentedProfile = activeProfile.getWorkingProfile();
 
     /* data and my state should be the same, else something is wrong */
-    final IProfile profilInternal = getProfil();
-    if( profilInternal == null || profilInternal != segmentedProfile )
+    if( m_profile == null || m_profile != segmentedProfile )
       return;
 
     /* check if destination point is at least 5px away from source record, else do nothing */
     final IProfileRecord draggedRecord = segmentedProfile.getPoint( index );
-    final int draggedScreenX = toScreen( draggedRecord ).x;
+    final int draggedScreenX = toScreenInternal( draggedRecord ).x;
     if( Math.abs( point.x - draggedScreenX ) < 5 )
     {
       // force repaint
@@ -260,7 +262,7 @@ class ProfilOverlayLayer extends PointsLineLayer
   {
     /* snap to a record of the original profile near to destination */
     final IProfileRecord snappedRecord = ProfileVisitors.findNearestPoint( origProfil, unsnappedWidth );
-    final Point snappedScreen = toScreen( snappedRecord );
+    final Point snappedScreen = toScreenInternal( snappedRecord );
 
     if( snappedScreen == null || Math.abs( destinationScreenX - snappedScreen.x ) > 5 )
       return unsnappedWidth;
@@ -272,6 +274,9 @@ class ProfilOverlayLayer extends PointsLineLayer
   @Override
   public final String getTooltipInfo( final IProfileRecord point )
   {
+    if( point == null )
+      return null;
+
     return super.getTooltipInfo( point );
 
     // TODO: check if this really makes sens: show rw/hw of point, but not breite/hoehe
@@ -303,7 +308,7 @@ class ProfilOverlayLayer extends PointsLineLayer
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-    final IProfile profil = getProfil();
+    final IProfile profil = m_profile;
 
     if( profil == null )
       return;
@@ -313,7 +318,7 @@ class ProfilOverlayLayer extends PointsLineLayer
     final Point[] points = new Point[len];
 
     for( int i = 0; i < len; i++ )
-      points[i] = toScreen( profilPoints[i] );
+      points[i] = toScreenInternal( profilPoints[i] );
 
     final PolylineFigure pl = new PolylineFigure();
     pl.setStyle( getLineStyle() );
@@ -342,4 +347,21 @@ class ProfilOverlayLayer extends PointsLineLayer
   {
     return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer.1" ); //$NON-NLS-1$
   }
+
+  private Point toScreenInternal( final IProfileRecord point )
+  {
+    final ICoordinateMapper cm = getCoordinateMapper();
+    if( Objects.isNull( cm ) )
+      return null;
+
+    final Double x = ProfileUtil.getDoubleValueFor( getDomainComponent(), point );
+    final Double y = ProfileUtil.getDoubleValueFor( getTargetProperty(), point );
+    if( Objects.isNull( x, y ) )
+      return null;
+    else if( x.isNaN() || y.isNaN() )
+      return null;
+
+    return cm.numericToScreen( x, y );
+  }
+
 }

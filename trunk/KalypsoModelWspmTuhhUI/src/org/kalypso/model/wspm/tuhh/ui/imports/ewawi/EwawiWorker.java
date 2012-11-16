@@ -63,7 +63,7 @@ public class EwawiWorker extends AbstractEwawiWorker
   }
 
   @Override
-  public void updateClassifications( )
+  public void updateClassifications( ) throws Exception
   {
     final EwawiClassificationUpdater classificationUpdater = new EwawiClassificationUpdater( m_targetProject );
     classificationUpdater.updateClassification();
