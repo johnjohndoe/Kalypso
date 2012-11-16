@@ -375,7 +375,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
         {
           final GM_Polygon surface = (GM_Polygon)object;
           final GM_Position[] poses = surface.getSurfacePatch().getExteriorRing();
-          final GM_Point[] points = new GM_Point[poses.length];
+          final GM_Point[] points = new GM_Point[poses.length - 1];
           for( int i = 0; i < poses.length - 1; i++ )
             points[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], surface.getCoordinateSystem() );
 
