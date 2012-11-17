@@ -6,6 +6,7 @@
       <LineStyle role="w_line_0">
         <Width>2</Width>
         <LineColor>8FADDF</LineColor>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <PointStyle role="w_singlePoint_0">
         <Width>10</Width>
@@ -21,6 +22,7 @@
       <LineStyle role="w_line_1">
         <Width>2</Width>
         <LineColor>3460A9</LineColor>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <PointStyle role="w_singlePoint_1">
         <Width>10</Width>
@@ -36,6 +38,7 @@
       <LineStyle role="w_line_2">
         <Width>2</Width>
         <LineColor>BDD3F6</LineColor>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <PointStyle role="w_singlePoint_2">
         <Width>10</Width>
@@ -51,6 +54,7 @@
       <LineStyle role="w_line_3">
         <Width>2</Width>
         <LineColor>093689</LineColor>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <PointStyle role="w_singlePoint_3">
         <Width>10</Width>
@@ -66,6 +70,7 @@
       <LineStyle role="w_line_4">
         <Width>2</Width>
         <LineColor>6186C3</LineColor>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <PointStyle role="w_singlePoint_4">
         <Width>10</Width>

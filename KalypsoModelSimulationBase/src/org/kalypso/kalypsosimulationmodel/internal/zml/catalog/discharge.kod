@@ -4,53 +4,57 @@
     <Styles>
       <!-- Q (greenish) styles (line and point) -->
       <LineStyle role="q_line_0">
-        <Width>1</Width>
-        <LineColor>ABB985</LineColor>
+        <Width>2</Width>
+        <LineColor>33B933</LineColor>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <PointStyle role="q_singlePoint_0">
         <Width>10</Width>
         <Height>10</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>ABB985</LineColor>
+          <LineColor>33B933</LineColor>
         </Stroke>
         <FillColor>
-          <Color>ABB985</Color>
+          <Color>33B933</Color>
         </FillColor>
       </PointStyle>
       <LineStyle role="q_line_1">
-        <Width>1</Width>
-        <LineColor>65782F</LineColor>
+        <Width>2</Width>
+        <LineColor>D6ED34</LineColor>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <PointStyle role="q_singlePoint_1">
         <Width>10</Width>
         <Height>10</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>65782F</LineColor>
+          <LineColor>D6ED34</LineColor>
         </Stroke>
         <FillColor>
-          <Color>65782F</Color>
+          <Color>D6ED34</Color>
         </FillColor>
       </PointStyle>
       <LineStyle role="q_line_2">
-        <Width>1</Width>
-        <LineColor>CFDAB2</LineColor>
+        <Width>2</Width>
+        <LineColor>008000</LineColor>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <PointStyle role="q_singlePoint_2">
         <Width>10</Width>
         <Height>10</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>CFDAB2</LineColor>
+          <LineColor>008000</LineColor>
         </Stroke>
         <FillColor>
-          <Color>CFDAB2</Color>
+          <Color>008000</Color>
         </FillColor>
       </PointStyle>
       <LineStyle role="q_line_3">
-        <Width>1</Width>
+        <Width>2</Width>
         <LineColor>3D5208</LineColor>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <PointStyle role="q_singlePoint_3">
         <Width>10</Width>
@@ -64,8 +68,9 @@
         </FillColor>
       </PointStyle>
       <LineStyle role="q_line_4">
-        <Width>1</Width>
+        <Width>2</Width>
         <LineColor>879859</LineColor>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <PointStyle role="q_singlePoint_4">
         <Width>10</Width>
