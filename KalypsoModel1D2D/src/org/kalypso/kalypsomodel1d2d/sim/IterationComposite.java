@@ -57,6 +57,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -66,9 +67,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -78,8 +78,8 @@ import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
-import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
+import org.kalypso.ogc.gml.om.table.TupleResultContentProvider2;
+import org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider2;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoUIExtensions;
@@ -88,14 +88,14 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Show the iteration during calculation.
- *
+ * 
  * @author Gernot Belger
  */
 public class IterationComposite extends Composite
 {
   private static final String STR_NO_RESULTS = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationComposite.0" ); //$NON-NLS-1$
 
-  private final DefaultTableViewer m_tableViewer;
+  private final TableViewer m_tableViewer;
 
   private final ComboViewer m_comboViewer;
 
@@ -117,11 +117,10 @@ public class IterationComposite extends Composite
     unitLable.setText( m_subUnit.getName() + " - " + calculation.getCalculationTypeName() ); //$NON-NLS-1$
     unitLable.setFont( JFaceResources.getBannerFont() );
 
-    m_tableViewer = new DefaultTableViewer( this, SWT.BORDER | SWT.FULL_SELECTION );
-    final IComponentUiHandlerProvider provider = KalypsoUIExtensions.createComponentUiHandlerProvider( null );
-    final TupleResultContentProvider cp = new TupleResultContentProvider( provider );
-    m_tableViewer.setContentProvider( cp );
-    m_tableViewer.setLabelProvider( new TupleResultLabelProvider( cp ) );
+    m_tableViewer = new TableViewer( this, SWT.BORDER | SWT.FULL_SELECTION );
+
+    final IComponentUiHandlerProvider provider = KalypsoUIExtensions.createComponentUiHandlerProvider( DefaultComponentUiHandlerProvider2.ID );
+    m_tableViewer.setContentProvider( new TupleResultContentProvider2( provider ) );
 
     final Table table = m_tableViewer.getTable();
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
@@ -144,18 +143,14 @@ public class IterationComposite extends Composite
     m_comboViewer.setSelection( new StructuredSelection( STR_NO_RESULTS ) );
     m_comboViewer.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
-      @SuppressWarnings("unchecked")
       @Override
       public String getText( final Object element )
       {
         if( element instanceof IterationBean )
-          return ((IterationBean) element).name;
+          return ((IterationBean)element).name;
 
         if( element instanceof IObservation )
-          return ((IObservation<TupleResult>) element).getName();
+          return ((IObservation< ? >)element).getName();
 
         return super.getText( element );
       }
@@ -166,7 +161,7 @@ public class IterationComposite extends Composite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleComboSelectionChanged( (IStructuredSelection) event.getSelection() );
+        handleComboSelectionChanged( (IStructuredSelection)event.getSelection() );
       }
     } );
 
@@ -217,7 +212,7 @@ public class IterationComposite extends Composite
     } );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   protected void handleComboSelectionChanged( final IStructuredSelection selection )
   {
     setStatus( null );
@@ -230,14 +225,14 @@ public class IterationComposite extends Composite
 
     if( selectedObject instanceof IObservation )
     {
-      setTableInput( ((IObservation<TupleResult>) selectedObject).getResult() );
+      setTableInput( ((IObservation<TupleResult>)selectedObject).getResult() );
     }
     else if( selectedObject instanceof IterationBean )
     {
       final Cursor currentCursor = getCursor();
       try
       {
-        final IterationBean bean = (IterationBean) selectedObject;
+        final IterationBean bean = (IterationBean)selectedObject;
         if( !bean.status.isOK() )
           setStatus( bean.status );
         else
@@ -268,12 +263,15 @@ public class IterationComposite extends Composite
 
   private void setStatus( final IStatus status )
   {
-    m_statusComposite.setStatus( status );
-    ((GridData) m_statusComposite.getLayoutData()).exclude = status == null;
-    m_statusComposite.setVisible( status != null );
+    final boolean hasData = status != null;
 
-    m_tableViewer.getTable().setVisible( status == null );
-    ((GridData) m_tableViewer.getTable().getLayoutData()).exclude = status != null;
+    m_statusComposite.setStatus( status );
+    ((GridData)m_statusComposite.getLayoutData()).exclude = !hasData;
+    m_statusComposite.setVisible( hasData );
+
+    final Table table = m_tableViewer.getTable();
+    table.setVisible( !hasData );
+    ((GridData)table.getLayoutData()).exclude = hasData;
 
     layout();
   }
@@ -298,7 +296,7 @@ public class IterationComposite extends Composite
     if( iterObs != null )
       comboIterations.add( iterObs );
 
-    final Object oldComboSelection = ((IStructuredSelection) m_comboViewer.getSelection()).getFirstElement();
+    final Object oldComboSelection = ((IStructuredSelection)m_comboViewer.getSelection()).getFirstElement();
 
     if( m_comboViewer.getContentProvider() != null && comboIterations.size() > 0 )
     {
@@ -333,39 +331,12 @@ public class IterationComposite extends Composite
 
     m_tableViewer.setInput( tr );
 
-    try
-    {
-      // set explicit the property of widget, in case of to few columns, setting of only first visible column is not
-      // enough for right layout
-      m_tableViewer.getTable().getColumn( 1 ).setData( "columnWidthPercent", 6 ); //$NON-NLS-1$
-      m_tableViewer.getTable().getColumn( 1 ).setData( "columnWidth", 24 ); //$NON-NLS-1$
-    }
-    catch( final Exception e )
-    {
-    }
-    m_tableViewer.getTable().getColumn( 1 ).setWidth( 24 );
-
-    final TableColumn[] columns = m_tableViewer.getTable().getColumns();
-    final int lColumnsCount = columns.length;
-    for( int i = 2; i < lColumnsCount; ++i )
-    {
-      final TableColumn lColumnIter = columns[i];
-      if( lColumnIter != null )
-      {
-        try
-        {
-          lColumnIter.setData( "columnWidthPercent", 90 / lColumnsCount - 2 ); //$NON-NLS-1$
-        }
-        catch( final Exception e )
-        {
-        }
-      }
-    }
+    final Table table = m_tableViewer.getTable();
+    ColumnsResizeControlListener.refreshColumnsWidth( table );
 
     /* Always reveal the last element */
     final Object[] records = tr.toArray(); // use to array, the tuple result may be changing
     if( records.length > 0 )
       m_tableViewer.setSelection( new StructuredSelection( records[records.length - 1] ), true );
   }
-
 }
