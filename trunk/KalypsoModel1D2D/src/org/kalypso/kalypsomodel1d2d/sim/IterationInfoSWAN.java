@@ -48,6 +48,8 @@ import java.io.StringReader;
 import java.math.BigInteger;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -97,15 +99,14 @@ public class IterationInfoSWAN implements IIterationInfo
       this.status = pStatus;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString( )
     {
       return this.name;
     }
   }
+
+  private final DateFormat m_timeStepFormat = new SimpleDateFormat( ISimulation1D2DConstants.TIMESTEP_DISPLAY_FORMAT );
 
   private final FileObject m_itrFile;
 
@@ -142,7 +143,7 @@ public class IterationInfoSWAN implements IIterationInfo
   {
     m_itrFile = iterObsFile;
     m_outputDir = outputDir;
-    // m_timeSteps = timeSteps;
+    m_timeStepFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
     /* Create observation from template */
     final URL obsTemplate = getClass().getResource( "resource/template/iterObsTemplateSwan.gml" ); //$NON-NLS-1$
@@ -276,7 +277,12 @@ public class IterationInfoSWAN implements IIterationInfo
       // REMARK: convert to calendar with correct time zone, so formatting works correct
       final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
       calendar.setTime( stepDate );
-      m_obs.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", m_calendarFirst ) + "-" + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", calendar ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+      final String firstFormat = m_timeStepFormat.format( m_calendarFirst );
+      final String stepFormat = m_timeStepFormat.format( stepDate );
+
+      // FIXME: these string make no sense!
+      m_obs.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", firstFormat ) + "-" + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", stepFormat ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     final TupleResult result = m_obs.getResult();
@@ -292,7 +298,7 @@ public class IterationInfoSWAN implements IIterationInfo
   {
     if( stepNrObj instanceof String )
     {
-      final String strActDateSWAN = (String) stepNrObj;
+      final String strActDateSWAN = (String)stepNrObj;
       return SWANDataConverterHelper.getDateForStepFromString( strActDateSWAN.trim() );
     }
     else if( stepNrObj == null && m_strActDate != null )
@@ -341,8 +347,13 @@ public class IterationInfoSWAN implements IIterationInfo
     // REMARK: convert to calendar with correct time zone, so formatting works correct
     final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     calendar.setTime( stepDate );
-    obsName = String.format( "%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", m_calendarFirst ) + String.format( "-%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar ); //$NON-NLS-1$ //$NON-NLS-2$
-    obsDesc = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15", m_calendarFirst ) + "-" + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15", calendar ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    final String firstFormat = m_timeStepFormat.format( m_calendarFirst );
+    final String stepFormat = m_timeStepFormat.format( stepDate );
+
+    obsName = firstFormat + "-" + stepFormat;
+    // FIXME: these string make no sense!
+    obsDesc = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15", firstFormat ) + "-" + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15", stepFormat ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     fileName = String.format( "Iteration_SWAN%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ-%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ.gml", m_calendarFirst, calendar ); //$NON-NLS-1$
 
     m_obs.setName( obsName );

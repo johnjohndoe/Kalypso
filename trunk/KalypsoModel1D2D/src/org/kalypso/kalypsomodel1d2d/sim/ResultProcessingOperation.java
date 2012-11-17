@@ -64,7 +64,6 @@ import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 
 /**
  * @author barbarins
- *
  *         This part of result processing should be cancelable We only process the results, but do not move it into the
  *         database nor delete the old results
  */
@@ -136,6 +135,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
       m_originalStepsToDelete = findStepsToDelete( m_calcUnitMeta, m_bean );
 
+      // FIXME: last 10percent of monitor never used
       final IStatus processResultsStatus = m_resultManager.processResults( m_calcUnitMeta, m_bean.evaluateFullResults, progress.newChild( 90 ) );
 
       m_outputDir = m_resultManager.getOutputDir();

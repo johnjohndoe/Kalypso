@@ -48,6 +48,8 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -75,7 +77,6 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -99,15 +100,14 @@ public class IterationInfo implements IIterationInfo
       this.status = pStatus;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString( )
     {
       return this.name;
     }
   }
+
+  private final DateFormat m_timeStepFormat = new SimpleDateFormat( ISimulation1D2DConstants.TIMESTEP_DISPLAY_FORMAT );
 
   private final FileObject m_itrFile;
 
@@ -135,6 +135,8 @@ public class IterationInfo implements IIterationInfo
     m_itrFile = iterObsFile;
     m_outputDir = outputDir;
     m_timeSteps = timeSteps;
+
+    m_timeStepFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
     /* Create observation from template */
     final URL obsTemplate = getClass().getResource( "resource/template/iterObs.gml" ); //$NON-NLS-1$
@@ -258,9 +260,12 @@ public class IterationInfo implements IIterationInfo
       else
       {
         // REMARK: convert to calendar with correct time zone, so formatting works correct
-        final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+        final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
         calendar.setTime( stepDate );
-        m_obs.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", calendar ) ); //$NON-NLS-1$
+
+        final String stepName = m_timeStepFormat.format( stepDate );
+
+        m_obs.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", stepName ) ); //$NON-NLS-1$
       }
     }
 
@@ -291,7 +296,7 @@ public class IterationInfo implements IIterationInfo
       return null;
 
     final IComponent componentTime = ComponentUtilities.findComponentByID( result.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) result.get( stepNr ).getValue( componentTime );
+    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar)result.get( stepNr ).getValue( componentTime );
     return DateUtilities.toDate( stepCal );
   }
 
@@ -350,10 +355,9 @@ public class IterationInfo implements IIterationInfo
       }
       else
       {
-        // REMARK: convert to calendar with correct time zone, so formatting works correct
         final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
         calendar.setTime( stepDate );
-        obsName = String.format( "%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar ); //$NON-NLS-1$
+        obsName = m_timeStepFormat.format( stepDate );
         obsDesc = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15", calendar ); //$NON-NLS-1$
         fileName = String.format( "Iteration_%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ.gml", calendar ); //$NON-NLS-1$
       }
