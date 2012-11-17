@@ -47,6 +47,7 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -113,6 +114,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class ProcessResult2DOperation implements ICoreRunnableWithProgress
 {
+  private final DateFormat m_timeStepFormat = new SimpleDateFormat( ISimulation1D2DConstants.TIMESTEP_DISPLAY_FORMAT );
+
   private File m_outputDir;
 
   private FileObject m_inputFile;
@@ -166,6 +169,8 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
   private void init( final FileObject file, final FileObject fileResSWAN, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta, final boolean boolDoFullEvaluate )
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    m_timeStepFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
     m_inputFile = file;
     m_outputDir = outputDir;
@@ -241,7 +246,8 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
     if( m_stepDate == ResultManager.MAXI_DATE )
       return Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.6" ); //$NON-NLS-1$
 
-    return Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.7", m_stepDate ); //$NON-NLS-1$
+    final String stepName = m_timeStepFormat.format( m_stepDate );
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.7", stepName ); //$NON-NLS-1$
   }
 
   private void read2D( ) throws Exception
