@@ -1,379 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
-  <Chart id="ls">
-    <Title>Längsschnitt - 170.000</Title>
-    <Description/>
-    <Layers>
-      <Layer id="Boe_li" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Title>Böschung (links)</Title>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="NN_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <LineStyle role="line">
-            <Width>2</Width>
-            <LineColor>C83200</LineColor>
-          </LineStyle>
-          <PointStyle role="point">
-            <Width>6</Width>
-            <Height>6</Height>
-            <FillColor isVisible="true">
-              <Color>641900</Color>
-            </FillColor>
-            <Stroke isVisible="false"/>
-          </PointStyle>
-        </Styles>
-      </Layer>
-      <Layer id="wsp" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Title>Wasserspiegel</Title>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="NN_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <LineStyle role="line">
-            <Width>2</Width>
-            <LineColor>0000ff</LineColor>
-          </LineStyle>
-           <PointStyle role="point" isVisible="false">
-          </PointStyle>
-        </Styles>
-      </Layer>
-      <Layer id="Boe_re" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Title>Böschung (rechts)</Title>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="NN_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <LineStyle role="line">
-            <Width>2</Width>
-            <LineColor>C83200</LineColor>
-          </LineStyle>
-          <PointStyle role="point">
-            <Width>6</Width>
-            <Height>6</Height>
-            <FillColor isVisible="true">
-              <Color>641900</Color>
-            </FillColor>
-            <Stroke isVisible="false"/>
-          </PointStyle>
-        </Styles>
-      </Layer>
-      <Layer id="runoff" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Title>Abfluss</Title>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="M3S_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <LineStyle role="line">
-            <Width>2</Width>
-            <LineColor>ff0000</LineColor>
-          </LineStyle>
-          <PointStyle role="point" isVisible="false">
-          </PointStyle>
-        </Styles>
-      </Layer>
-      
-      <Layer id="LengthSection_v_m" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Title>Fließgeschwindigkeit</Title>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="M1S_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <LineStyle role="line">
-            <Width>2</Width>
-            <LineColor>ff0000</LineColor>
-          </LineStyle>
-          <PointStyle role="point" isVisible="false">
-          </PointStyle>
-        </Styles>
-      </Layer>
-      
-      <Layer id="h_BV" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Title>Bordvoll Höhe</Title>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="NN_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <LineStyle role="line">
-            <Width>2</Width>
-            <LineColor>641900</LineColor>
-          </LineStyle>
-          <PointStyle role="point">
-            <Width>6</Width>
-            <Height>6</Height>
-            <FillColor isVisible="true">
-              <Color>C83200</Color>
-            </FillColor>
-            <Stroke isVisible="false"/>
-          </PointStyle>
-        </Styles>
-      </Layer>
-      <Layer id="hen" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_hen" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Title>Energielinie</Title>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="NN_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <LineStyle role="line">
-            <Width>2</Width>
-            <LineColor>207f33</LineColor>
-          </LineStyle>
-                    <PointStyle role="point" isVisible="false">
-          </PointStyle>
-        </Styles>
-      </Layer>
-      <Layer id="Culvert" visible="false">
-        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_RohrDN" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="NN_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <PointStyle role="point">
-            <Width>3</Width>
-            <Height>3</Height>
-            <Alpha>40</Alpha>
-            <FillColor isVisible="true">
-              <Color>404040</Color>
-            </FillColor>
-            <Stroke>
-              <LineColor>0080B1</LineColor>
-            </Stroke>
-            <LineStyle role="line" isVisible="false">
-            </LineStyle>
-          </PointStyle>
-        </Styles>
-      </Layer>
-      <Layer id="Weir" visible="false">
-        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_WeirOK" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="NN_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <PointStyle role="point">
-            <Width>3</Width>
-            <Height>3</Height>
-            <Alpha>40</Alpha>
-            <FillColor isVisible="true">
-              <Color>404040</Color>
-            </FillColor>
-            <Stroke>
-              <LineColor>0080B1</LineColor>
-            </Stroke>
-            <LineStyle role="line" isVisible="false">
-            </LineStyle>
-          </PointStyle>
+	<Chart id="ls">
+		<Title horizontalTextAnchor="CENTER" insetBottom="5">Längsschnitt - 170.000 </Title>
+		<Description />
+		<Layers>
+			<DerivedLayer id="soil">
+				<LayerReference url="urn:kalypso:chart:configuration:LengthSectionTemplate#template_layer"></LayerReference>
+				<Parameters>
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" name="targetComponentId" />
+					<Parameter value="Daten/lengthSection_170.000.gml" name="href" />
+					<Parameter value="" name="gxlpath" />
+					<Parameter value="LengthSectionResult" name="observationId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_soil</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_soil</StyleReference>
+				</Styles>
+        <!-- 
+				<MapperRefs>
+					<DomainAxisRef ref="Station_Axis" />
+				</MapperRefs>
+         -->
+			</DerivedLayer>
+			<DerivedLayer id="Boe_li" visible="false">
+				<LayerReference url="soil"></LayerReference>
+				<Parameters>
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li" name="targetComponentId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_Boe_li</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_Boe_li</StyleReference>
+				</Styles>
+			</DerivedLayer>
+			<DerivedLayer id="Boe_re" visible="false">
+				<LayerReference url="soil"></LayerReference>
+				<Parameters>
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re" name="targetComponentId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_Boe_re</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_Boe_re</StyleReference>
+				</Styles>
+			</DerivedLayer>
+			<DerivedLayer id="h_BV" visible="false">
+				<LayerReference url="soil"></LayerReference>
+				<Parameters>
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV" name="targetComponentId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_h_BV</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_h_BV</StyleReference>
+				</Styles>
+			</DerivedLayer>
+			<DerivedLayer id="Bridge" visible="true">
+				<LayerReference url="soil"></LayerReference>
+				<Parameters>
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_Bridge</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_Bridge</StyleReference>
+				</Styles>
+			</DerivedLayer>
+			<DerivedLayer id="Weir" visible="true">
+				<LayerReference url="soil"></LayerReference>
+				<Parameters>
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_WeirOK" name="targetComponentId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_Weir</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_Weir</StyleReference>
+				</Styles>
+			</DerivedLayer>
+			<DerivedLayer id="Culvert" visible="true">
+				<LayerReference url="soil"></LayerReference>
+				<Parameters>
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_RohrDN" name="targetComponentId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_Culvert</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_Culvert</StyleReference>
+				</Styles>
+			</DerivedLayer>
+			<DerivedLayer id="wsp" visible="true">
+				<Title>Wasserspiegel</Title>
+				<LayerReference url="soil"></LayerReference>
+				<Parameters>
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" name="targetComponentId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_wsp</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_wsp</StyleReference>
+				</Styles>
+			</DerivedLayer>
+			<DerivedLayer id="WspFixation" visible="true">
+				<Title>Wasserspiegel-Fixierung</Title>
+				<LayerReference url="urn:kalypso:chart:configuration:LengthSectionTemplate#template_layer"></LayerReference>
+				<Parameters>
+					<Parameter value="./../../../modell.gml" name="href" />
+					<Parameter value="" name="gxlpath" />
+					<Parameter value="" name="observationId" />
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" name="targetComponentId" />
+				</Parameters>
+				<Styles>
+					<!-- StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_WspFixation</StyleReference-->
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_WspFixation</StyleReference>
+				</Styles>
+			</DerivedLayer>
+			<DerivedLayer id="runoff" visible="true">
+				<Title>Abfluss</Title>
+				<LayerReference url="urn:kalypso:chart:configuration:LengthSectionTemplate#template_layer_m3s"></LayerReference>
+				<Parameters>
+					<Parameter value="Daten/lengthSection_170.000.gml" name="href" />
+					<Parameter value="" name="gxlpath" />
+					<Parameter value="LengthSectionResult" name="observationId" />
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" name="targetComponentId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_runoff</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_runoff</StyleReference>
+				</Styles>
+			</DerivedLayer>
+			<DerivedLayer id="hen" visible="true">
+				<Title>Energielinie</Title>
+				<LayerReference url="soil"></LayerReference>
+				<Parameters>
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_hen" name="targetComponentId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_hen</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_hen</StyleReference>
+				</Styles>
+			</DerivedLayer>
 
-        </Styles>
-      </Layer>
-      <Layer id="Bridge" visible="true">
-        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="NN_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <PointStyle role="point">
-            <Width>3</Width>
-            <Height>3</Height>
-            <Alpha>40</Alpha>
-            <FillColor isVisible="true">
-              <Color>404040</Color>
-            </FillColor>
-            <Stroke>
-              <LineColor>0080B1</LineColor>
-            </Stroke>
-            <LineStyle role="line" isVisible="false">
-            </LineStyle>
-          </PointStyle>
-
-        </Styles>
-      </Layer>
-        <Layer id="soil" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
-          <Parameters>
-            <Parameter value="Daten/lengthSection_170.000.gml" name="href"/>
-            <Parameter value="" name="gxlpath"/>
-            <Parameter value="LengthSectionResult" name="observationId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
-            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" name="targetComponentId"/>
-          </Parameters>
-        </Provider>
-        <Title>Sohlhöhe</Title>
-        <Description/>
-        <MapperRefs>
-          <DomainAxisRef ref="Station_Axis"/>
-          <TargetAxisRef ref="NN_Axis"/>
-        </MapperRefs>
-        <Styles>
-          <LineStyle role="line">
-            <Width>2</Width>
-            <LineColor>FFA000</LineColor>
-          </LineStyle>
-          <PointStyle role="point">
-            <Width>3</Width>
-            <Height>3</Height>
-            <FillColor isVisible="true">
-              <Color>FFA000</Color>
-            </FillColor>
-            <Stroke>
-              <LineColor>FFA000</LineColor>
-            </Stroke>
-          </PointStyle>
-        </Styles>
-      </Layer>
-    </Layers>
-    <Mappers>
-      <Axis id="NN_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear"/>
-        <Label>Höhe [NN+m]</Label>
-        <Direction>POSITIVE</Direction>
-        <Position>LEFT</Position>
-        <PreferredAdjustment before="5" range="90" after="5"/>
-        <RendererRef ref="NumberAxisRenderer"/>
-      </Axis>
-      <Axis id="M3S_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear"/>
-        <Label>Abfluss [m³/s]</Label>
-        <Direction>POSITIVE</Direction>
-        <Position>RIGHT</Position>
-        <PreferredAdjustment before="40" range="50" after="10"/>
-        <RendererRef ref="NumberAxisRenderer"/>
-      </Axis>
-      <Axis id="M1S_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear"/>
-        <Label>Geschwindigkeit [m/s]</Label>
-        <Direction>POSITIVE</Direction>
-        <Position>RIGHT</Position>
-        <PreferredAdjustment before="40" range="50" after="10"/>
-        <RendererRef ref="NumberAxisRenderer"/>
-      </Axis>
-      <Axis id="Station_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear"/>
-        <Label>Station [km]</Label>
-        <Direction>NEGATIVE</Direction>
-        <Position>BOTTOM</Position>
-        <PreferredAdjustment before="1" range="98" after="1"/>
-                <RendererRef ref="NumberAxisRenderer"/>
-      </Axis>
-    </Mappers>
-    <Renderers>
-      <AxisRenderer id="NumberAxisRenderer">
-        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
-          <Parameters>
-            <Parameter name="inset_tick" value="2"/>
-            <Parameter name="inset_label" value="2"/>
-            <Parameter name="tick_length" value="5"/>
-            <Parameter name="hide_cut" value="true"/>
-            <Parameter name="gap" value="3"/>
-          </Parameters>
-        </Provider>
-      </AxisRenderer>
-    </Renderers>
-  </Chart>
+			<DerivedLayer id="LengthSection_v_m" visible="true">
+				<Title>Fließgeschwindigkeit</Title>
+				<LayerReference url="urn:kalypso:chart:configuration:LengthSectionTemplate#template_layer_m1s"></LayerReference>
+				<Parameters>
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" name="targetComponentId" />
+					<Parameter value="Daten/lengthSection_170.000.gml" name="href" />
+					<Parameter value="" name="gxlpath" />
+					<Parameter value="LengthSectionResult" name="observationId" />
+				</Parameters>
+				<Styles>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_LengthSection_v_m</StyleReference>
+					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#point_LengthSection_v_m</StyleReference>
+				</Styles>
+			</DerivedLayer>
+		</Layers>
+		<Mappers>
+			<Axis id="Station_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Label>Station [km]</Label>
+				<Direction>NEGATIVE</Direction>
+				<Position>BOTTOM</Position>
+				<PreferredAdjustment before="1" range="98" after="1" />
+				<RendererRef ref="NumberAxisRenderer" />
+			</Axis>
+		</Mappers>
+	</Chart>
 </ChartConfiguration>

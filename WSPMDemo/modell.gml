@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<WspmProject xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns="org.kalypso.model.wspmproj" xmlns:swe="http://www.opengis.net/swe" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:sweExt="org.kalypso.swe.ext" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:commonShp="org.kalypso.gml.common" gml:id="root">
- <wspm:waterBodyMember xmlns:wspm="org.kalypso.model.wspm">
+<?xml version="1.0" encoding="UTF-8"?><WspmProject xmlns:gml="http://www.opengis.net/gml" xmlns:swe="http://www.opengis.net/swe" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:common="org.kalypso.gml.common" xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmClasses="org.kalypso.model.wspm.classifications" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:sweExt="org.kalypso.swe.ext" xmlns="org.kalypso.model.wspmproj" gml:id="root">
+ <wspm:waterBodyMember>
   <wspm:WaterBody gml:id="WaterBody12119937672611">
    <gml:description>Ein Demo-Gewässer</gml:description>
    <gml:name>Demo</gml:name>
@@ -141,12 +140,12 @@
       </gml:LineString>
      </prof:profileLocation>
      <prof:imageMember>
-      <commonShp:Image gml:id="Image121199385991921">
+      <common:Image gml:id="Image121199385991921">
        <gml:description>Beispielbild, abgelegt im WSPM-Projekt. Geben Sie eine Datei-URL (z.B. file:///C:/images/river.jpg)&#13;
 an, um ein externes Bild zu referenzieren.</gml:description>
        <gml:name>Gewässerprofil</gml:name>
-       <commonShp:uri>daten/img/river.jpg</commonShp:uri>
-      </commonShp:Image>
+       <common:uri>daten/img/river.jpg</common:uri>
+      </common:Image>
      </prof:imageMember>
     </prof:Profile>
    </wspm:profileMember>
@@ -15585,7 +15584,7 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
    </wspm:waterlevelFixationMember>
   </wspm:WaterBody>
  </wspm:waterBodyMember>
- <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+ <wspm:calculationMember>
   <tuhh:CalculationWspmTuhhSteadyState gml:id="CalculationWspmTuhhSteadyState1211995689224256">
    <gml:description>Wasserspiegellagenberechnung mit Randbedinungen: Abfluss 1 und Grenztiefe</gml:description>
    <gml:name>Rechnung 1</gml:name>
@@ -15637,7 +15636,7 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
    <tuhh:waterLevelFixationMember xlink:href="#WaterlevelFixation1310124696268658"/>
   </tuhh:CalculationWspmTuhhSteadyState>
  </wspm:calculationMember>
- <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+ <wspm:calculationMember>
   <tuhh:CalculationWspmTuhhSteadyState gml:id="CalculationWspmTuhhSteadyState1271333103407476">
    <gml:description>Wasserspiegellagenberechnung mit Randbedinungen: Abfluss 1 und Grenztiefe</gml:description>
    <gml:name>Rechnung 1 - mit Brücke</gml:name>
@@ -15689,7 +15688,7 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
    <tuhh:waterLevelFixationMember xlink:href="#WaterlevelFixation1310124696268658"/>
   </tuhh:CalculationWspmTuhhSteadyState>
  </wspm:calculationMember>
- <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+ <wspm:calculationMember>
   <tuhh:CalculationWspmTuhhSteadyState gml:id="CalculationWspmTuhhSteadyState1283765880677530">
    <gml:description>Wasserspiegellagenberechnung mit Randbedinungen: Abfluss Wehr und Grenztiefe</gml:description>
    <gml:name>Rechnung 1 - mit Wehr</gml:name>
@@ -15741,7 +15740,7 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
    <tuhh:waterLevelFixationMember xlink:href="#WaterlevelFixation1310125232948190"/>
   </tuhh:CalculationWspmTuhhSteadyState>
  </wspm:calculationMember>
- <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+ <wspm:calculationMember>
   <tuhh:CalculationWspmTuhhSteadyState gml:id="CalculationWspmTuhhSteadyState1211996775952122">
    <gml:description>Wasserspiegellagenberechnung mit Randbedinungen: Abfluss 2 und Grenztiefe</gml:description>
    <gml:name>Rechnung 2</gml:name>
@@ -15792,7 +15791,7 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
    </tuhh:runOffIntervalMember>
   </tuhh:CalculationWspmTuhhSteadyState>
  </wspm:calculationMember>
- <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+ <wspm:calculationMember>
   <tuhh:CalculationWspmTuhhSteadyState gml:id="CalculationWspmTuhhSteadyState1294319606584103">
    <gml:name>Bordvollberechnung - stationär gleichförmig</gml:name>
    <wspm:calcCreationMember>
@@ -15842,7 +15841,7 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
    </tuhh:runOffIntervalMember>
   </tuhh:CalculationWspmTuhhSteadyState>
  </wspm:calculationMember>
- <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+ <wspm:calculationMember>
   <tuhh:CalculationWspmTuhhSteadyState gml:id="CalculationWspmTuhhSteadyState1294320148799663">
    <gml:name>Bordvollberechnung  - stationär ungleichförmig</gml:name>
    <wspm:calcCreationMember>
@@ -15892,7 +15891,7 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
    </tuhh:runOffIntervalMember>
   </tuhh:CalculationWspmTuhhSteadyState>
  </wspm:calculationMember>
- <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+ <wspm:calculationMember>
   <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1294322157365683">
    <gml:name>Polynomermittlung</gml:name>
    <wspm:calcCreationMember>
@@ -15946,8 +15945,9 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
    </tuhh:calcPolynomesMember>
   </tuhh:CalculationReibConstWspmTuhhSteadyState>
  </wspm:calculationMember>
- <wspmClasses:classificationMember xmlns:wspmClasses="org.kalypso.model.wspm.classifications">
+ <wspmClasses:classificationMember>
   <wspmClasses:WspmClassification gml:id="WspmClassification1316085144541608">
+   <gml:name>Beispielklassen</gml:name>
    <wspmClasses:roughnessClasses>
     <wspmClasses:RoughnessClass gml:id="RoughnessClass135298406219929">
      <gml:description>sehr unregelmäßiges Vorland mit Verbauungen</gml:description>
@@ -16461,7 +16461,6 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
      <wspmClasses:dp>3.500</wspmClasses:dp>
     </wspmClasses:VegetationClass>
    </wspmClasses:vegetationClasses>
-   <gml:name>Beispielklassen</gml:name>
-  </wspmClasses:WspmClassification>  
+  </wspmClasses:WspmClassification>
  </wspmClasses:classificationMember>
 </WspmProject>
