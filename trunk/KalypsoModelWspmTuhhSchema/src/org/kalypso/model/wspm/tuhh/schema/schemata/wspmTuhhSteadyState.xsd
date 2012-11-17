@@ -133,8 +133,8 @@
           <element ref="tuhh:bottomSlope"></element>
           <element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType"></element>
           <element name="calcPolynomesMember" type="tuhh:CalcPolynomesPropertyType"></element>
-          <element name="preferRoughnessClasses" type="boolean" default="false" />
-          <element name="preferVegetationClasses" type="boolean" default="false" />
+          <element name="preferRoughnessClasses" type="boolean" default="false" minOccurs="0"/>
+          <element name="preferVegetationClasses" type="boolean" default="false" minOccurs="0"/>
         </sequence>
       </extension>
     </complexContent>
