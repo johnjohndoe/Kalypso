@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.net.URL;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -175,7 +176,7 @@ public class WspmTuhhPostProcessor
     }
   }
 
-  private void processWaterlevel( ) throws Exception
+  private void processWaterlevel( ) throws SimulationException, IOException
   {
     final File inputLSfile = new File( m_dathDir, "laengsschnitt.txt" ); //$NON-NLS-1$
     final LengthSectionParser lsProcessor = new LengthSectionParser( m_calculation, inputLSfile, m_resultEater, m_tmpDir, m_epsThinning, TITLE_PATTERN_WATERLEVEL, LSFILE_PATTERN_WATERLEVEL, m_ovwMapURL ); //$NON-NLS-1$
