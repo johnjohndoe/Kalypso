@@ -1,0 +1,8 @@
+<!-- removed DTD reference - otherwise jaxb tries to connect to the referenced oasis web site -->
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+  <uri name="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" uri="v0.0.0/simulation_model_base.xsd" />
+  <uri name="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase/result/meta" uri="v0.0.0/simulation_model_result.xsd" />
+  <uri name="http://www.tu-harburg.de/wb/kalypso/schemata/roughness" uri="v0.0.0/roughness_model.xsd" />
+
+</catalog>
