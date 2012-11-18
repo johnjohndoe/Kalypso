@@ -406,6 +406,12 @@ public class ResultManager implements ISimulation1D2DConstants
 
       final File resultOutputDir = new File( m_outputDir, outDirName );
       resultOutputDir.mkdirs();
+
+      // FIXME: terrain is a special case and should be handled spearately at this point or even outside the loop over the steps
+      // Instead we could read the model.2d (which must always exist) as terrain.
+      // reason 1: Terrain is not evaluated when 'full evaluation' is not checked.
+      // Reason 2: special case produces lots of bad code!
+
       final ProcessResult2DOperation processResultsJob = new ProcessResult2DOperation( file, lFileObjectSWANResult, resultOutputDir, flowModel, controlModel, discModel, m_parameters, stepDate, calcUnitResultMeta, doFullEvaluate );
       final IStatus result = processResultsJob.execute( monitor );
 

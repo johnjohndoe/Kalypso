@@ -58,9 +58,13 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author barbarins
@@ -159,6 +163,8 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
   private static String[] findStepsToDelete( final ICalcUnitResultMeta calcUnitMeta, final ProcessResultsBean processBean )
   {
+    final List<String> ids2remove = new ArrayList<>();
+
     final Map<String, Date> existingSteps = ResultMeta1d2dHelper.getAllIDs( calcUnitMeta );
 
     if( processBean.deleteAll )
@@ -173,11 +179,22 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
         allCalculatedDates.add( dateTest );
     }
 
+    /* always delete terrain model, is should be recreated each time as the mesh could have been changed */
+    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    for( final IResultMeta resultMeta : children )
+    {
+      if( resultMeta instanceof IDocumentResultMeta )
+      {
+        final IDocumentResultMeta document = (IDocumentResultMeta)resultMeta;
+        final DOCUMENTTYPE documentType = document.getDocumentType();
+        if( documentType == IDocumentResultMeta.DOCUMENTTYPE.tinTerrain )
+          ids2remove.add( document.getId() );
+      }
+    }
+
     /* Nothing to do ? */
     if( allCalculatedDates.isEmpty() )
       return new String[0];
-
-    final List<String> ids = new ArrayList<>();
 
     if( processBean.deleteFollowers )
     {
@@ -194,24 +211,24 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
           /* do not forget to delete maxi and steady */
           if( MAXI_DATE.equals( date ) && hasMaxi )
-            ids.add( id );
+            ids2remove.add( id );
 
           if( STEADY_DATE.equals( date ) && hasSteady )
-            ids.add( id );
+            ids2remove.add( id );
 
           if( date == null )
           {
-            ids.add( id );
+            ids2remove.add( id );
           }
           else if( date.after( firstCalculated ) || date.equals( firstCalculated ) )
           {
-            ids.add( id );
+            ids2remove.add( id );
           }
         }
       }
       else
       {
-        ids.addAll( existingSteps.keySet() );
+        ids2remove.addAll( existingSteps.keySet() );
       }
     }
     else
@@ -220,17 +237,18 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
       {
         final Date date = existingSteps.get( id );
         // TODO: why this check?
+        // FIXME: i.e. the steady state is always deleted here
         if( date == null || date.getTime() == 0 )
         {
-          ids.add( id );
+          ids2remove.add( id );
         }
         else if( allCalculatedDates.contains( date ) )
         {
-          ids.add( id );
+          ids2remove.add( id );
         }
       }
     }
 
-    return ids.toArray( new String[ids.size()] );
+    return ids2remove.toArray( new String[ids2remove.size()] );
   }
 }
