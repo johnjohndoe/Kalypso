@@ -158,7 +158,7 @@ public class WspmTuhhPostProcessor
     switch( calcMode )
     {
       case WATERLEVEL:
-        processWaterlevel( monitor );
+        processWaterlevel();
         return;
 
       case BF_UNIFORM:
@@ -175,7 +175,7 @@ public class WspmTuhhPostProcessor
     }
   }
 
-  private void processWaterlevel( final ISimulationMonitor monitor ) throws Exception
+  private void processWaterlevel( ) throws Exception
   {
     final File inputLSfile = new File( m_dathDir, "laengsschnitt.txt" ); //$NON-NLS-1$
     final LengthSectionParser lsProcessor = new LengthSectionParser( m_calculation, inputLSfile, m_resultEater, m_tmpDir, m_epsThinning, TITLE_PATTERN_WATERLEVEL, LSFILE_PATTERN_WATERLEVEL, m_ovwMapURL ); //$NON-NLS-1$

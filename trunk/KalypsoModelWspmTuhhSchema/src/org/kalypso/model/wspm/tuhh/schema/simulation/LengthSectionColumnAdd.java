@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.simulation;
 
-import java.math.BigDecimal;
-
-import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -51,49 +48,39 @@ import org.kalypso.observation.result.TupleResult;
  * 
  * @author Gernot Belger
  */
-public class LengthSectionColumnAdd implements ILengthSectionColumn
+public class LengthSectionColumnAdd extends AbstractLengthSectionColumn
 {
-  private final String m_componentTarget;
-
   private final String[] m_componentSources;
 
   public LengthSectionColumnAdd( final String componentTarget, final String... componentSources )
   {
-    m_componentTarget = componentTarget;
+    super( componentTarget );
+
     m_componentSources = componentSources;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.ILengthSectionColumn#addColumn(org.kalypso.observation.result.TupleResult)
-   */
   @Override
-  public void addColumn( final TupleResult result )
+  protected double calculateValue( final IRecord record )
   {
-    /* Make sure the target component exists */
-    result.addComponent( ProfileUtil.getFeatureComponent( m_componentTarget ) );
+    final TupleResult result = record.getOwner();
 
-    final int targetComponent = result.indexOfComponent( m_componentTarget );
     final int[] sourceComponents = new int[m_componentSources.length];
     for( int i = 0; i < sourceComponents.length; i++ )
       sourceComponents[i] = result.indexOfComponent( m_componentSources[i] );
 
-    for( final IRecord record : result )
-      summUpValue( record, targetComponent, sourceComponents );
+    return summUpValue( record, sourceComponents );
   }
 
-  private void summUpValue( final IRecord record, final int targetComponent, final int[] sourceComponents )
+  private double summUpValue( final IRecord record, final int[] sourceComponents )
   {
     double sum = 0.0;
     for( final int sourceComponent : sourceComponents )
     {
       final Object sourceValue = record.getValue( sourceComponent );
       if( sourceValue instanceof Number )
-        sum += ((Number) sourceValue).doubleValue();
+        sum += ((Number)sourceValue).doubleValue();
     }
 
-    if( Double.isInfinite( sum ) || Double.isNaN( sum ) )
-      record.setValue( targetComponent, null );
-    else
-      record.setValue( targetComponent, new BigDecimal( sum ) );
+    return sum;
   }
 }

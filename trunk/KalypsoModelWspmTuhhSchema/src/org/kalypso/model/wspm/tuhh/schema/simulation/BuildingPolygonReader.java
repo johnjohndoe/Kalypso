@@ -61,7 +61,7 @@ import org.kalypso.simulation.core.util.LogHelper;
 
 /**
  * Reads the contents of 'HOW_QWehr_HUW.txt' into the qIntervallResults.
- *
+ * 
  * @author Gernot Belger
  */
 public class BuildingPolygonReader
@@ -124,10 +124,10 @@ public class BuildingPolygonReader
       return;
 
     /* Determine if this is a good line: good lines are lines whose first token is a number */
-    final String firstToken = tokens[0];
+    final BigDecimal station;
     try
     {
-      new Double( firstToken );
+      station = new BigDecimal( tokens[0] );
     }
     catch( final NumberFormatException nfe )
     {
@@ -135,7 +135,6 @@ public class BuildingPolygonReader
       return;
     }
 
-    final BigDecimal station = new BigDecimal( tokens[0] );
     final BigDecimal qOW = new BigDecimal( tokens[1] );
     /* final BigDecimal qWehr = new BigDecimal( tokens[2] ); */
     final BigDecimal hOW = new BigDecimal( tokens[3] );
