@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
@@ -63,11 +65,12 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationComparator;
 import org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.LogHelper;
 
 /**
  * This class is used to process a kalypso1d.exe length-section file.
- *
+ * 
  * @author Gernot Belger
  */
 public class LengthSectionParser
@@ -102,12 +105,12 @@ public class LengthSectionParser
     m_ovwMapURL = ovwMapURL;
   }
 
-  public IStatus process( final LogHelper log ) throws Exception
+  public IStatus process( final LogHelper log ) throws SimulationException, IOException
   {
     return processIntern( log );
   }
 
-  private IStatus processIntern( final LogHelper log ) throws Exception
+  private IStatus processIntern( final LogHelper log ) throws SimulationException, IOException
   {
     if( !m_lsFile.exists() )
       return new Status( IStatus.ERROR, KalypsoModelWspmTuhhSchemaPlugin.getID(), Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.0" ) + m_lsFile.getName() ); //$NON-NLS-1$
@@ -122,7 +125,7 @@ public class LengthSectionParser
     return processLSFile( strHeader, strFooter, log );
   }
 
-  private IStatus processLSFile( final String header, final String footer, final LogHelper log ) throws Exception
+  private IStatus processLSFile( final String header, final String footer, final LogHelper log ) throws FileNotFoundException, IOException
   {
     final Collection<IStatus> result = new ArrayList<>();
     final WspmWaterBody waterBody = m_calculation.getReach().getWaterBody();
@@ -207,7 +210,7 @@ public class LengthSectionParser
     return new MultiStatus( KalypsoModelWspmTuhhSchemaPlugin.getID(), 0, children, msg, null );
   }
 
-  private IStatus closeProcessor( final ResultLengthSection lsProc, final String footer ) throws Exception
+  private IStatus closeProcessor( final ResultLengthSection lsProc, final String footer )
   {
     lsProc.addLine( footer );
     lsProc.close();
@@ -221,5 +224,4 @@ public class LengthSectionParser
   {
     return m_lengthSections.toArray( new ResultLengthSection[m_lengthSections.size()] );
   }
-
 }
