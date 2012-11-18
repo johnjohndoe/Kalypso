@@ -219,6 +219,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
       zipInputFile();
       ProgressUtilities.worked( monitor, 1 );
 
+      // FIXME: does not belong here -> frickelcode! Separate processing of 2d and swan results!
       readActSWANRes();
 
       read2D();
@@ -252,7 +253,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
 
   private void read2D( ) throws Exception
   {
-    try( InputStream contentStream = VFSUtilities.getInputStreamFromFileObject( m_inputFile ) )
+    try( final InputStream contentStream = VFSUtilities.getInputStreamFromFileObject( m_inputFile ) )
     {
       /* Read into NodeResults */
       read2DIntoGmlResults( contentStream );
@@ -265,19 +266,15 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
 
   private void zipInputFile( ) throws FileSystemException, IOException, URISyntaxException
   {
-    final InputStream contentStream = null;
-    try
+    /* Zip .2d file to outputDir */
+    if( !m_inputFile.getName().getBaseName().toLowerCase().endsWith( ".2d.zip" ) ) //$NON-NLS-1$
     {
-      /* Zip .2d file to outputDir */
-      if( !m_inputFile.getName().getBaseName().toLowerCase().endsWith( ".2d.zip" ) ) //$NON-NLS-1$
-      {
-        final File outputZip2d = new File( m_outputDir, ResultMeta1d2dHelper.ORIGINAL_2D_FILE_NAME + ".zip" ); //$NON-NLS-1$
-        ZipUtilities.zip( outputZip2d, new File[] { new File( m_inputFile.getURL().toURI() ) }, new File( m_inputFile.getParent().getURL().toURI() ) );
-      }
-    }
-    finally
-    {
-      IOUtils.closeQuietly( contentStream );
+      final File outputZip2d = new File( m_outputDir, ResultMeta1d2dHelper.ORIGINAL_2D_FILE_NAME + ".zip" ); //$NON-NLS-1$
+
+      final File basedir = new File( m_inputFile.getParent().getURL().toURI() );
+      final File[] files = new File[] { new File( m_inputFile.getURL().toURI() ) };
+
+      ZipUtilities.zip( outputZip2d, files, basedir );
     }
   }
 
@@ -330,10 +327,6 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.16" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    // FIXME: bad!
-    final Runtime runtime = Runtime.getRuntime();
-    runtime.gc();
-
     final File gmlZipResultFile = new File( m_outputDir, "results.gz" ); //$NON-NLS-1$
 
     try
@@ -345,7 +338,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
       final String componentID = IWspmDictionaryConstants.LS_COMPONENT_STATION;
       final LengthSectionHandler1d lsHandler = new LengthSectionHandler1d( componentID, lsObsUrl );
 
-      /* .2d Datei lesen und GML fÃ¼llen */
+      /* .2d Datei lesen und GML füllen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv( null );
 
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -355,7 +348,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
         for( final ResultType parameter : m_parameters )
         {
           /* GML(s) */
-          if( parameter == ResultType.TERRAIN && !ResultMeta1d2dHelper.containsTerrain( m_stepResultMeta ) )
+          if( parameter == ResultType.TERRAIN )
           {
             /* create TIN-Dir for FEM terrain model */
             // TODO: obscure, why go outside our output dir... TODO: refaktor it!
@@ -436,14 +429,14 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
           switch( parameter )
           {
             case TERRAIN:
-              if( m_stepResultMeta != null && !ResultMeta1d2dHelper.containsTerrain( m_stepResultMeta ) )
+              // FIXME: ugly special case -> we should handle this case separately
+              if( m_stepResultMeta != null )
               {
                 /* check if there exists already an entry for terrainTin */
                 final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta)m_stepResultMeta.getOwner();
 
                 ResultMeta1d2dHelper.addDocument( calcUnitResult, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.68" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.69" ), IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               }
-
               break;
 
             // FIXME: put parameter names into ResultType enum or similar
@@ -490,9 +483,6 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
     finally
     {
       IOUtils.closeQuietly( is );
-
-      // FIXME: bad!
-      runtime.gc();
     }
   }
 
