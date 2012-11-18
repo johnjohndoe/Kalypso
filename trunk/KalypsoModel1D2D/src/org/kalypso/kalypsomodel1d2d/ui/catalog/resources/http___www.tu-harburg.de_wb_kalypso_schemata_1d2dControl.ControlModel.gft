@@ -112,12 +112,12 @@
             <param name="exePattern" value="swan(.*).exe" />
           </extensioncontrol>
           <validatorlabel property="c1d2d:SWANVersion" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
                 <ogc:Literal>true</ogc:Literal>
               </ogc:PropertyIsLike>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
         </group>
@@ -162,12 +162,12 @@
               <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
             </text>
             <validatorlabel property="c1d2d:NITI" visible="true" style="SWT.NONE">
-              <enabledOperation>
+              <visibleOperation>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:_steady</ogc:PropertyName>
                   <ogc:Literal>true</ogc:Literal>
                 </ogc:PropertyIsLike>
-              </enabledOperation>
+              </visibleOperation>
               <gridData horizontalAlignment="SWT.BEGINNING" />
             </validatorlabel>
 
@@ -190,12 +190,12 @@
               <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
             </text>
             <validatorlabel property="c1d2d:_steadyBC" visible="true" style="SWT.NONE">
-              <enabledOperation>
+              <visibleOperation>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:_steady</ogc:PropertyName>
                   <ogc:Literal>true</ogc:Literal>
                 </ogc:PropertyIsLike>
-              </enabledOperation>
+              </visibleOperation>
               <gridData horizontalAlignment="SWT.BEGINNING" />
             </validatorlabel>
           </group>
@@ -228,13 +228,13 @@
               <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
             </text>
             <validatorlabel property="c1d2d:NITN" visible="true" style="SWT.NONE">
-              <enabledOperation>
+              <visibleOperation>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:_unsteady
                   </ogc:PropertyName>
                   <ogc:Literal>true</ogc:Literal>
                 </ogc:PropertyIsLike>
-              </enabledOperation>
+              </visibleOperation>
               <gridData horizontalAlignment="SWT.BEGINNING" />
             </validatorlabel>
             <label property="c1d2d:IACCYC" visible="true" style="SWT.NONE">
@@ -282,7 +282,7 @@
               <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
             </text>
             <validatorlabel property="c1d2d:IACCYC" visible="true" style="SWT.NONE">
-              <enabledOperation>
+              <visibleOperation>
                 <and>
                   <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                     <ogc:PropertyName>c1d2d:_steady
@@ -300,7 +300,7 @@
                     <ogc:Literal>true</ogc:Literal>
                   </ogc:PropertyIsLike>
                 </and>
-              </enabledOperation>
+              </visibleOperation>
               <gridData horizontalAlignment="SWT.BEGINNING" />
             </validatorlabel>
           </group>
@@ -349,13 +349,13 @@
               <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
             </text>
             <validatorlabel property="c1d2d:ELEV" visible="true" style="SWT.NONE">
-              <enabledOperation>
+              <visibleOperation>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:_restart
                   </ogc:PropertyName>
                   <ogc:Literal>false</ogc:Literal>
                 </ogc:PropertyIsLike>
-              </enabledOperation>
+              </visibleOperation>
               <gridData horizontalAlignment="SWT.BEGINNING" />
             </validatorlabel>
 
@@ -380,13 +380,13 @@
               <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
             </text>
             <validatorlabel property="c1d2d:UNOM" visible="true" style="SWT.NONE">
-              <enabledOperation>
+              <visibleOperation>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:_restart
                   </ogc:PropertyName>
                   <ogc:Literal>false</ogc:Literal>
                 </ogc:PropertyIsLike>
-              </enabledOperation>
+              </visibleOperation>
               <gridData horizontalAlignment="SWT.BEGINNING" />
             </validatorlabel>
 
@@ -411,13 +411,13 @@
               <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
             </text>
             <validatorlabel property="c1d2d:UDIR" visible="true" style="SWT.NONE">
-              <enabledOperation>
+              <visibleOperation>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:_restart
                   </ogc:PropertyName>
                   <ogc:Literal>false</ogc:Literal>
                 </ogc:PropertyIsLike>
-              </enabledOperation>
+              </visibleOperation>
               <gridData horizontalAlignment="SWT.BEGINNING" />
             </validatorlabel>
 
@@ -442,13 +442,13 @@
               <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
             </text>
             <validatorlabel property="c1d2d:HMIN" visible="true" style="SWT.NONE">
-              <enabledOperation>
+              <visibleOperation>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:_restart
                   </ogc:PropertyName>
                   <ogc:Literal>false</ogc:Literal>
                 </ogc:PropertyIsLike>
-              </enabledOperation>
+              </visibleOperation>
               <gridData horizontalAlignment="SWT.BEGINNING" />
             </validatorlabel>
           </group>
@@ -550,12 +550,12 @@
             <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
           </text>
           <validatorlabel property="c1d2d:DRFACT" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyName>c1d2d:IDRPT</ogc:PropertyName>
                 <ogc:Literal>1</ogc:Literal>
               </ogc:PropertyIsLike>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
         </group>
@@ -601,12 +601,12 @@
             <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
           </text>
           <validatorlabel property="c1d2d:CHI" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyName>c1d2d:HASWINDDRAG</ogc:PropertyName>
                 <ogc:Literal>true</ogc:Literal>
               </ogc:PropertyIsLike>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
 
@@ -677,7 +677,7 @@
             <gridData horizontalAlignment="SWT.FILL" />
           </text>
           <validatorlabel property="c1d2d:TBFACT" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <or>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
@@ -697,7 +697,7 @@
                   <ogc:Literal>16</ogc:Literal>
                 </ogc:PropertyIsLike>
               </or>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
 
@@ -733,7 +733,7 @@
             <gridData horizontalAlignment="SWT.FILL" />
           </text>
           <validatorlabel property="c1d2d:TBFACT_ESCUDIER" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <or>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
@@ -744,7 +744,7 @@
                   <ogc:Literal>15</ogc:Literal>
                 </ogc:PropertyIsLike>
               </or>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
 
@@ -799,7 +799,7 @@
             <gridData horizontalAlignment="SWT.FILL" />
           </text>
           <validatorlabel property="c1d2d:_p_bottom" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <or>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
@@ -815,7 +815,7 @@
                   </ogc:UpperBoundary>
                 </ogc:PropertyIsBetween>
               </or>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
         </group>
@@ -879,7 +879,7 @@
           </text>
 
           <validatorlabel property="c1d2d:AC1" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:And>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
@@ -890,7 +890,7 @@
                   <ogc:Literal>false</ogc:Literal>
                 </ogc:PropertyIsLike>
               </ogc:And>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
 
@@ -913,12 +913,12 @@
             <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
           </text>
           <validatorlabel property="c1d2d:AC2" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
                 <ogc:Literal>-2</ogc:Literal>
               </ogc:PropertyIsLike>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
           <label property="c1d2d:AC3" visible="true" style="SWT.NONE">
@@ -940,12 +940,12 @@
             <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
           </text>
           <validatorlabel property="c1d2d:AC3" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
                 <ogc:Literal>-2</ogc:Literal>
               </ogc:PropertyIsLike>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
 
@@ -980,7 +980,7 @@
             <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
           </text>
           <validatorlabel property="c1d2d:AC4" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:And>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
@@ -991,7 +991,7 @@
                   <ogc:Literal>true</ogc:Literal>
                 </ogc:PropertyIsLike>
               </ogc:And>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
 
@@ -1014,12 +1014,12 @@
             <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
           </text>
           <validatorlabel property="c1d2d:MARSHFRICTIONFACTOR" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:PropertyIsLessThan xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
                 <ogc:Literal>0</ogc:Literal>
               </ogc:PropertyIsLessThan>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
 
@@ -1043,15 +1043,14 @@
             <gridData horizontalAlignment="SWT.TRAIL" horizontalSpan="2" />
           </combo>
           <validatorlabel property="c1d2d:MARSHFRICTIONDISTR" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:PropertyIsLessThan xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
                 <ogc:Literal>0</ogc:Literal>
               </ogc:PropertyIsLessThan>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
-
 
           <label property="c1d2d:DSET" visible="true" style="SWT.NONE">
             <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
@@ -1114,12 +1113,12 @@
             </enabledOperation>
           </combo>
           <validatorlabel property="c1d2d:SWANINITialValues" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
                 <ogc:Literal>true</ogc:Literal>
               </ogc:PropertyIsLike>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
           <label property="c1d2d:SWANINITialValuesPar" visible="true" style="SWT.NONE">
@@ -1141,7 +1140,7 @@
             <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
           </text>
           <validatorlabel property="c1d2d:SWANINITialValuesPar" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <and>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:SWANINITialValues</ogc:PropertyName>
@@ -1152,7 +1151,7 @@
                   <ogc:Literal>true</ogc:Literal>
                 </ogc:PropertyIsLike>
               </and>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
         </group>
@@ -1175,12 +1174,12 @@
           </text>
 
           <validatorlabel property="c1d2d:SWANAdditionalResultsPar" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
                 <ogc:Literal>true</ogc:Literal>
               </ogc:PropertyIsLike>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
 
@@ -1221,12 +1220,12 @@
             <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="true" />
           </combo>
           <validatorlabel property="c1d2d:SWANBoundaryAlg" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
                 <ogc:Literal>true</ogc:Literal>
               </ogc:PropertyIsLike>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
         </group>
@@ -1270,7 +1269,7 @@
             <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
           </text>
           <validatorlabel property="c1d2d:SWANConstantWindPar" visible="true" style="SWT.NONE">
-            <enabledOperation>
+            <visibleOperation>
               <and>
                 <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
                   <ogc:PropertyName>c1d2d:SWANConstantWind</ogc:PropertyName>
@@ -1281,7 +1280,7 @@
                   <ogc:Literal>true</ogc:Literal>
                 </ogc:PropertyIsLike>
               </and>
-            </enabledOperation>
+            </visibleOperation>
             <gridData horizontalAlignment="SWT.BEGINNING" />
           </validatorlabel>
         </group>
