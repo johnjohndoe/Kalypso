@@ -76,7 +76,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Represents a result (in form of a lengthsection/table) of WSPM.<br/>
- *
+ * 
  * @author Gernot Belger
  */
 public class ResultLengthSection
@@ -235,9 +235,6 @@ public class ResultLengthSection
     /* Invert station (* -1) if the station direction is downwards */
     fixLengthSectionStation( result );
 
-    // XXX
-    // FIXME: invert station if it was inverted before...
-
     /* Add additional columns that are not returned by the calculation core */
     final ILengthSectionColumn[] columns = new ILengthSectionColumn[] { //
         new LengthSectionInvertStation( isDirectionUpstreams ),
@@ -248,6 +245,7 @@ public class ResultLengthSection
         new LengthSectionColumnDivide( IWspmConstants.LENGTH_SECTION_PROPERTY_V_RE, IWspmConstants.LENGTH_SECTION_PROPERTY_Q_RE, IWspmConstants.LENGTH_SECTION_PROPERTY_F_RE ), //
         new LengthSectionColumnFroude() //
     };
+
     for( final ILengthSectionColumn column : columns )
       column.addColumn( result );
 
@@ -271,7 +269,7 @@ public class ResultLengthSection
     final int stationComponent = result.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION );
     for( final IRecord record : result )
     {
-      final BigDecimal station = (BigDecimal) record.getValue( stationComponent );
+      final BigDecimal station = (BigDecimal)record.getValue( stationComponent );
       if( station != null )
       {
         final BigDecimal invertedStation = station.multiply( sign );

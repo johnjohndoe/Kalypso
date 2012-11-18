@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.simulation;
 
-import java.math.BigDecimal;
-
-import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -51,55 +48,45 @@ import org.kalypso.observation.result.TupleResult;
  * 
  * @author Gernot Belger
  */
-public class LengthSectionColumnDivide implements ILengthSectionColumn
+public class LengthSectionColumnDivide extends AbstractLengthSectionColumn
 {
-  private final String m_componentTarget;
-
   private final String m_componentDivident;
 
   private final String m_componentDivisor;
 
   public LengthSectionColumnDivide( final String componentTarget, final String componentDivident, final String componentDivisor )
   {
-    m_componentTarget = componentTarget;
+    super( componentTarget );
+
     m_componentDivident = componentDivident;
     m_componentDivisor = componentDivisor;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.ILengthSectionColumn#addColumn(org.kalypso.observation.result.TupleResult)
-   */
   @Override
-  public void addColumn( final TupleResult result )
+  protected double calculateValue( final IRecord record )
   {
+    final TupleResult result = record.getOwner();
+
     /* Make sure the target component exists */
-    result.addComponent( ProfileUtil.getFeatureComponent( m_componentTarget ) );
-
-    final int targetComponent = result.indexOfComponent( m_componentTarget );
-
     final int dividentComponent = result.indexOfComponent( m_componentDivident );
     final int divisorComponent = result.indexOfComponent( m_componentDivisor );
 
-    for( final IRecord record : result )
-      divideValue( record, targetComponent, dividentComponent, divisorComponent );
+    return divideValue( record, dividentComponent, divisorComponent );
   }
 
-  private void divideValue( final IRecord record, final int targetComponent, final int dividentComponent, final int divisorComponent )
+  private double divideValue( final IRecord record, final int dividentComponent, final int divisorComponent )
   {
     final Object dividentValue = record.getValue( dividentComponent );
     final Object divisorValue = record.getValue( divisorComponent );
 
     if( dividentValue instanceof Number && divisorValue instanceof Number )
     {
-      final double divident = ((Number) dividentValue).doubleValue();
-      final double divisor = ((Number) divisorValue).doubleValue();
-      final double quotient = divident / divisor;
+      final double divident = ((Number)dividentValue).doubleValue();
+      final double divisor = ((Number)divisorValue).doubleValue();
 
-      if( Double.isInfinite( quotient ) || Double.isNaN( quotient ) )
-        record.setValue( targetComponent, null );
-      else
-        record.setValue( targetComponent, new BigDecimal( quotient ) );
+      return divident / divisor;
     }
-
+    else
+      return Double.NaN;
   }
 }

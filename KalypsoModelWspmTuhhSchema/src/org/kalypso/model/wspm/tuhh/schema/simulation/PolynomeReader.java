@@ -90,10 +90,10 @@ public class PolynomeReader
           continue;
 
         /* Determine if this is a good line: good lines are lines whos first token is a number */
-        final String firstToken = tokens[0];
+        final BigDecimal station;
         try
         {
-          new Double( firstToken );
+          station = new BigDecimal( tokens[0] );
         }
         catch( final NumberFormatException nfe )
         {
@@ -103,7 +103,6 @@ public class PolynomeReader
 
         try
         {
-          final BigDecimal station = new BigDecimal( tokens[0] );
           final String description = tokens[1];
           // final String whatIsN = tokens[2];
           final char type = tokens[3].charAt( 0 );

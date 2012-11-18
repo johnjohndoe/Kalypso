@@ -119,10 +119,8 @@ public class WspmTuhhCalcJob implements ISimulation
     final File simulogFile = new File( tmpDir, "simulation.log" ); //$NON-NLS-1$
     resultEater.addResult( OUTPUT_SIMULATION_LOG, simulogFile );
 
-    OutputStream osSimuLog = null;
-    try
+    try( final OutputStream osSimuLog = new BufferedAndOtherOutputStream( new FileOutputStream( simulogFile ), m_calcOutConsumer ) )
     {
-      osSimuLog = new BufferedAndOtherOutputStream( new FileOutputStream( simulogFile ), m_calcOutConsumer );
       final LogHelper log = new LogHelper( osSimuLog, monitor );
       try
       {
@@ -140,17 +138,10 @@ public class WspmTuhhCalcJob implements ISimulation
         log.log( simulationException, null );
         throw simulationException;
       }
-      finally
-      {
-      }
     }
-    catch( final FileNotFoundException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( osSimuLog );
     }
   }
 
@@ -160,9 +151,9 @@ public class WspmTuhhCalcJob implements ISimulation
 
     try
     {
-      final URL modellGmlURL = (URL) inputProvider.getInputForID( INPUT_MODELL_GML );
-      final String calcXPath = (String) inputProvider.getInputForID( INPUT_CALC_PATH );
-      final String epsThinning = (String) inputProvider.getInputForID( INPUT_EPS_THINNING );
+      final URL modellGmlURL = (URL)inputProvider.getInputForID( INPUT_MODELL_GML );
+      final String calcXPath = (String)inputProvider.getInputForID( INPUT_CALC_PATH );
+      final String epsThinning = (String)inputProvider.getInputForID( INPUT_EPS_THINNING );
       final URL ovwMapURL = findOvwMapUrl( inputProvider );
 
       log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.7" ), calcXPath ); //$NON-NLS-1$
@@ -179,7 +170,7 @@ public class WspmTuhhCalcJob implements ISimulation
         return;
       }
 
-      final TuhhCalculation calculation = (TuhhCalculation) calcObject;
+      final TuhhCalculation calculation = (TuhhCalculation)calcObject;
 
       monitor.setProgress( 10 );
 
@@ -234,10 +225,10 @@ public class WspmTuhhCalcJob implements ISimulation
   private URL findOvwMapUrl( final ISimulationDataProvider inputProvider ) throws SimulationException
   {
     if( inputProvider.hasID( INPUT_OVW_MAP_GENERAL ) )
-      return (URL) inputProvider.getInputForID( INPUT_OVW_MAP_GENERAL );
+      return (URL)inputProvider.getInputForID( INPUT_OVW_MAP_GENERAL );
 
     if( inputProvider.hasID( INPUT_OVW_MAP_SPECIAL ) )
-      return (URL) inputProvider.getInputForID( INPUT_OVW_MAP_SPECIAL );
+      return (URL)inputProvider.getInputForID( INPUT_OVW_MAP_SPECIAL );
 
     return null;
   }
@@ -263,15 +254,12 @@ public class WspmTuhhCalcJob implements ISimulation
     }
     catch( final IOException e )
     {
-      final String errorMsg = String.format( Messages.getString("WspmTuhhCalcJob.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String errorMsg = String.format( Messages.getString( "WspmTuhhCalcJob.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
       monitor.setFinishInfo( IStatus.ERROR, errorMsg );
       return null;
     }
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
-   */
   @Override
   public URL getSpezifikation( )
   {

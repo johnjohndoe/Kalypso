@@ -54,19 +54,19 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class LengthSectionInvertStation implements ILengthSectionColumn
 {
-  public LengthSectionInvertStation( boolean isdirectionUpstreams )
+  private final boolean m_isdirectionUpstreams;
+
+  public LengthSectionInvertStation( final boolean isdirectionUpstreams )
   {
-    super();
     m_isdirectionUpstreams = isdirectionUpstreams;
   }
 
-  private final boolean m_isdirectionUpstreams;
-
   @Override
-  public void addColumn( TupleResult result )
+  public void addColumn( final TupleResult result )
   {
     if( m_isdirectionUpstreams )
       return;
+
     final BigDecimal invert = new BigDecimal( -1 );
     final int ci = result.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
     for( final IRecord record : result )
@@ -74,9 +74,8 @@ public class LengthSectionInvertStation implements ILengthSectionColumn
       final Object stationObj = record.getValue( ci );
       if( stationObj instanceof BigDecimal )
       {
-        record.setValue( ci, ((BigDecimal) stationObj).multiply( invert ) );
+        record.setValue( ci, ((BigDecimal)stationObj).multiply( invert ) );
       }
     }
-
   }
 }
