@@ -483,7 +483,7 @@
       <!-- Rechenkernparameter -->
       <composite style="SWT.NONE">
         <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
-        <gridLayout numColumns="2" />
+        <gridLayout numColumns="2" makeColumnsEqualWidth="true" />
 
         <group text="%controlModel.gft.convPars" style="SWT.NONE">
           <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.BEGINNING" />
