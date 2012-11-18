@@ -25,10 +25,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
@@ -39,6 +41,7 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.SoureAndPathThemePredicate;
+import org.kalypso.ogc.gml.command.ActivateThemeCommand;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
@@ -77,7 +80,7 @@ public class ImportProfileHelper
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( Messages.getString("ImportProfileHelper.0"), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "ImportProfileHelper.0" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -165,7 +168,7 @@ public class ImportProfileHelper
     }
 
     /* Container theme does not yet exist (needs special handling, as commands are posted in jobs). */
-    final String name = Messages.getString("ImportProfileHelper.1"); //$NON-NLS-1$
+    final String name = Messages.getString( "ImportProfileHelper.1" ); //$NON-NLS-1$
 
     final AddCascadingThemeCommand cascadingCommand = new AddCascadingThemeCommand( mapModell, name, ADD_THEME_POSITION.eFront );
 
@@ -176,7 +179,32 @@ public class ImportProfileHelper
     properties.put( CascadingThemeHelper.PROPERTY_THEME_ID, CONTAINER_THEME_ID );
     cascadingCommand.addProperties( properties );
 
-    mapView.postCommand( cascadingCommand, null );
+    final Runnable runnable = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        /* find profile theme */
+        final IKalypsoCascadingTheme newContainerTheme = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, CONTAINER_THEME_ID );
+        if( newContainerTheme == null )
+          return;
+
+        final IKalypsoTheme[] allThemes = newContainerTheme.getAllThemes();
+        if( ArrayUtils.isEmpty( allThemes ) )
+          return;
+
+        // REMARK: there should be exactly one now, as we just created it
+        final IKalypsoTheme newProfileTheme = allThemes[0];
+        if( newProfileTheme == null )
+          return;
+
+        /* activate it */
+        final ICommand activaProfileThemeCommand = new ActivateThemeCommand( mapModell, newProfileTheme );
+        mapView.postCommand( activaProfileThemeCommand, null );
+      }
+    };
+
+    mapView.postCommand( cascadingCommand, runnable );
   }
 
   private static void zoomToNetworks( final MapView mapView, final IRiverProfileNetwork[] networks )
