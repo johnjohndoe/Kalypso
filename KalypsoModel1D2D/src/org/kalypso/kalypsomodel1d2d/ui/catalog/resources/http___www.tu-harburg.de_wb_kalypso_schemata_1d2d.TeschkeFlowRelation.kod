@@ -62,6 +62,7 @@
             <Title>Polynome</Title>
             <Width>3</Width>
             <LineColor>00aaff</LineColor>
+            <LineJoin>ROUND</LineJoin>
           </LineStyle>
         </Styles>
       </Layer>
@@ -169,6 +170,7 @@
             <Title>Polynome</Title>
             <Width>3</Width>
             <LineColor>00aaff</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
         </Styles>
 
@@ -278,6 +280,7 @@
             <Title>Polynome</Title>
             <Width>3</Width>
             <LineColor>00aaff</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
         </Styles>
       </Layer>

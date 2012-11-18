@@ -21,6 +21,7 @@
             <Title></Title>
             <Width>2</Width>
             <LineColor>0000ff</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
         </Styles>
       </Layer>

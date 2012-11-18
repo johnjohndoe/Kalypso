@@ -22,6 +22,7 @@
             <Width>1</Width>
             <LineColor>dddddd</LineColor>
             <DashArray>3 3</DashArray>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
         </Styles>
       </Layer>
@@ -44,6 +45,7 @@
             <Title>wsp line title</Title>
             <Width>2</Width>
             <LineColor>0000aa</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>wsp point title</Title>
@@ -78,6 +80,7 @@
             <Title>wsp line title</Title>
             <Width>2</Width>
             <LineColor>00aa00</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>wsp point title</Title>
@@ -112,6 +115,7 @@
             <Title>discharge line title</Title>
             <Width>2</Width>
             <LineColor>00aa00</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>discharge point title</Title>
@@ -146,6 +150,7 @@
             <Title>discharge line title</Title>
             <Width>2</Width>
             <LineColor>ff8429</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>discharge point title</Title>
@@ -180,6 +185,7 @@
             <Title>discharge line title</Title>
             <Width>2</Width>
             <LineColor>ff8429</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>discharge point title</Title>
@@ -214,6 +220,7 @@
             <Title>discharge line title</Title>
             <Width>2</Width>
             <LineColor>8C007B</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>discharge point title</Title>
@@ -248,6 +255,7 @@
             <Title>discharge line title</Title>
             <Width>2</Width>
             <LineColor>616161</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>discharge point title</Title>
@@ -282,6 +290,7 @@
             <Title>discharge line title</Title>
             <Width>2</Width>
             <LineColor>ff0000</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>discharge point title</Title>

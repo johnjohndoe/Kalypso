@@ -46,6 +46,7 @@
             <Title>wsp line title</Title>
             <Width>2</Width>
             <LineColor>0000aa</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>wsp point title</Title>
@@ -81,6 +82,7 @@
             <Title>discharge line title</Title>
             <Width>2</Width>
             <LineColor>00aa00</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
 
           <PointStyle role="point">
@@ -117,6 +119,7 @@
             <Title>velocity line title</Title>
             <Width>2</Width>
             <LineColor>aa0000</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
 
           <PointStyle role="point">
@@ -153,6 +156,7 @@
             <Title>direction line title</Title>
             <Width>2</Width>
             <LineColor>616161</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>direction point title</Title>
@@ -189,6 +193,7 @@
             <Title>hsig line title</Title>
             <Width>2</Width>
             <LineColor>8C007B</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>hsig point title</Title>
@@ -224,6 +229,7 @@
             <Title>direction line title</Title>
             <Width>2</Width>
             <LineColor>616161</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>direction point title</Title>
@@ -259,6 +265,7 @@
             <Title>peak period line title</Title>
             <Width>2</Width>
             <LineColor>ff0000</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
           <PointStyle role="point">
             <Title>peak period point title</Title>

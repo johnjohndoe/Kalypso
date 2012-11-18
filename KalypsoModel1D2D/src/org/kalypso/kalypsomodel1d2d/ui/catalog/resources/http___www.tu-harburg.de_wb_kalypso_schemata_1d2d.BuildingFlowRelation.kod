@@ -25,6 +25,7 @@
             <Title>Ok line</Title>
             <Width>1</Width>
             <LineColor>00aaff</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
 
           <PointStyle role="okPoint">
@@ -44,6 +45,7 @@
             <Title>Cross line</Title>
             <Width>2</Width>
             <LineColor>ffaa00</LineColor>
+            <LineJoin>ROUND</LineJoin>            
           </LineStyle>
 
           <PointStyle role="crossPoint">
