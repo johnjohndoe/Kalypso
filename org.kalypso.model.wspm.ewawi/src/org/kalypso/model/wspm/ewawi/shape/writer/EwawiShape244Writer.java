@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
+import org.kalypso.commons.java.nio.file.PathUtilities;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.data.EwawiPro;
 import org.kalypso.model.wspm.ewawi.data.EwawiProLine;
@@ -36,6 +37,7 @@ import org.kalypso.model.wspm.ewawi.data.enums.EwawiClass;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiHorizont;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiPunktart;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiUeberlang;
+import org.kalypso.model.wspm.ewawi.shape.writer.log.XyzEwawiLogger;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
@@ -55,6 +57,7 @@ import org.kalypso.shape.tools.SHP2JTS;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * Writes EWAWI+ shape file 244.
@@ -109,21 +112,21 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
   }
 
   @Override
-  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data ) throws DBaseException, IOException, SHPException, EwawiException
+  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data, final XyzEwawiLogger logger ) throws DBaseException, IOException, SHPException, EwawiException
   {
     for( final EwawiPlus ewawiData : data )
-      writeData( shapeFile, ewawiData );
+      writeData( shapeFile, ewawiData, logger );
   }
 
-  private void writeData( final ShapeFile shapeFile, final EwawiPlus data ) throws DBaseException, IOException, SHPException, EwawiException
+  private void writeData( final ShapeFile shapeFile, final EwawiPlus data, final XyzEwawiLogger logger ) throws DBaseException, IOException, SHPException, EwawiException
   {
     final EwawiPro proIndex = data.getProIndex();
     final EwawiProfile[] profiles = proIndex.getProfiles();
     for( final EwawiProfile profile : profiles )
-      writeProfile( shapeFile, profile, data );
+      writeProfile( shapeFile, profile, data, logger );
   }
 
-  private void writeProfile( final ShapeFile shapeFile, final EwawiProfile profile, final EwawiPlus data ) throws DBaseException, IOException, SHPException, EwawiException
+  private void writeProfile( final ShapeFile shapeFile, final EwawiProfile profile, final EwawiPlus data, final XyzEwawiLogger logger ) throws DBaseException, IOException, SHPException, EwawiException
   {
     final EwawiSta staIndex = data.getStaIndex();
 
@@ -131,13 +134,13 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     for( final EwawiProfilePart part : parts )
     {
       final SHPPolyLinez shape = part.getShape( staIndex );
-      final Object[] values = getValues( part, data, shape );
+      final Object[] values = getValues( part, data, shape, logger );
 
       shapeFile.addFeature( shape, values );
     }
   }
 
-  private Object[] getValues( final EwawiProfilePart part, final EwawiPlus data, final SHPPolyLinez shape ) throws DBaseException, EwawiException
+  private Object[] getValues( final EwawiProfilePart part, final EwawiPlus data, final SHPPolyLinez shape, final XyzEwawiLogger logger ) throws DBaseException, EwawiException
   {
     final EwawiKey key = data.getKey();
     final EwawiSta staIndex = data.getStaIndex();
@@ -145,7 +148,7 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     final Geometry geometry = shp2jts.transform( shape );
     final Path relativePlotPath = getRelativePlotPath();
 
-    final int abrechnung = getAbrechnung( part, staIndex, geometry );
+    final int abrechnung = getAbrechnung( part, staIndex, geometry, logger );
     final String alias = key.getAlias();
     final String comment = part.getComment( staIndex );
     final BigDecimal station = part.getStation();
@@ -158,15 +161,15 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     final int profilArt = part.getProfilArt( staIndex ).getKey();
     final Short profilNummer = part.getProfilNummer( staIndex );
     final Long gewKennzahl = part.getGewKennzahl();
-    final String gewName = (String)getGewShape().getValue( gewKennzahl, GewShape.GN_ACHS_08, geometry );
-    final String ueberlang = String.format( "%d", getUeberlang( part, staIndex ).getKey() );
+    final String gewName = (String)getGewShape().getValue( gewKennzahl, GewShape.GN_ACHS_08, geometry, logger );
+    final String ueberlang = String.format( "%d", getUeberlang( part, staIndex, logger, geometry.getCentroid() ).getKey() );
     final Short zusatz = part.getZusatz();
 
     final String profilName = String.format( "%s_%d", alias, profilNummer );
     final String pdf = String.format( "%s_%s_%s_VP_BJG_QPPLOT_%d.pdf", key.getPe(), key.getAlias(), key.getModelId(), profilNummer );
     final String link = Paths.get( pfad, pdf ).toString();
 
-    checkPlotLink( link );
+    checkPlotLink( link, logger, geometry.getCentroid() );
 
     final List<Object> values = new ArrayList<>();
     values.add( abrechnung );
@@ -194,25 +197,43 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
 
   private Path getRelativePlotPath( )
   {
+    /* Build the path to the target directory. */
     final File targetFile = getTargetFile();
-    final String fullPath = FilenameUtils.getFullPath( targetFile.getAbsolutePath() );
-    final String plotPath = FilenameUtils.normalize( String.format( "%s../%s", fullPath, "844_Plot/" ) );
+    final String targetPath = FilenameUtils.getFullPath( targetFile.getAbsolutePath() );
+    final Path absoluteTargetPath = Paths.get( targetPath );
 
-    final Path absoluteFullPath = Paths.get( fullPath );
+    /* Build the path to the plot directory. */
+    final String plotPath = FilenameUtils.normalize( String.format( "%s../%s", targetPath, "844_Plot/" ) );
+
+    /* Find the path until the "BY" segment. */
+    final Path byPath = PathUtilities.findPathToSegment( absoluteTargetPath, "BY" );
+    if( byPath == null )
+    {
+      /* If it is not found make a relative path to the target path. */
+      final Path absolutePlotPath = Paths.get( plotPath );
+      return absoluteTargetPath.relativize( absolutePlotPath );
+    }
+
     final Path absolutePlotPath = Paths.get( plotPath );
-    final Path relativePlotPath = absoluteFullPath.relativize( absolutePlotPath );
-
-    return relativePlotPath;
+    return byPath.getParent().relativize( absolutePlotPath );
   }
 
-  private int getAbrechnung( final EwawiProfilePart part, final EwawiSta staIndex, final Geometry geometry ) throws DBaseException
+  private int getAbrechnung( final EwawiProfilePart part, final EwawiSta staIndex, final Geometry geometry, final XyzEwawiLogger logger ) throws DBaseException
   {
     /* Find the ewawi class. */
-    final String riverWidth = getRiverWidth( part, geometry );
+    final String riverWidth = getRiverWidth( part, geometry, logger );
     final EwawiClass ewawiClass = EwawiClass.findEwawiClass( riverWidth );
     if( ewawiClass == null )
     {
-      System.out.println( String.format( "Keine Kategorie gefunden für Gewässerabschnitt '%d' am Profil '%f'.", part.getGewKennzahl().longValue(), part.getStation().doubleValue() ) );
+      final String message = String.format( "Keine Kategorie gefunden für Gewässerabschnitt '%d' am Profil '%f'.", part.getGewKennzahl().longValue(), part.getStation().doubleValue() );
+      System.out.println( message );
+
+      if( logger != null )
+      {
+        final Point centroid = geometry.getCentroid();
+        logger.logXyzLine( centroid.getX(), centroid.getY(), -9999.0, message, "", -9999.0 );
+      }
+
       return 0;
     }
 
@@ -225,7 +246,14 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
       if( horizont.intValue() == EwawiHorizont._0.getKey() )
       {
         // TODO This is a profile...
-        System.out.println( String.format( "Konnte Kategorie '%s' für Gewässerabschnitt '%d' am Profil '%f' nicht verifizieren, da zu wenige BUKn.", ewawiClass.getLabel(), part.getGewKennzahl().longValue(), part.getStation().doubleValue() ) );
+        final String message = String.format( "Konnte Kategorie '%s' für Gewässerabschnitt '%d' am Profil '%f' nicht verifizieren, da zu wenige BUKn.", ewawiClass.getLabel(), part.getGewKennzahl().longValue(), part.getStation().doubleValue() );
+        System.out.println( message );
+
+        if( logger != null )
+        {
+          final Point centroid = geometry.getCentroid();
+          logger.logXyzLine( centroid.getX(), centroid.getY(), -9999.0, message, "", -9999.0 );
+        }
       }
 
       return ewawiClass.getKey();
@@ -240,7 +268,15 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     final EwawiStaLine rightFixPoint = staIndex.findFixPoint( firstBUK.getObjectArt(), EwawiPunktart._2, firstBUK.getGewKennzahl(), firstBUK.getStation() );
     if( leftFixPoint == null || rightFixPoint == null )
     {
-      System.out.println( String.format( "Konnte Kategorie '%s' für Gewässerabschnitt '%d' am Profil '%f' nicht verifizieren, einer der Festpunkte nicht gefunden wurde.", ewawiClass.getLabel(), part.getGewKennzahl().longValue(), part.getStation().doubleValue() ) );
+      final String message = String.format( "Konnte Kategorie '%s' für Gewässerabschnitt '%d' am Profil '%f' nicht verifizieren, einer der Festpunkte nicht gefunden wurde.", ewawiClass.getLabel(), part.getGewKennzahl().longValue(), part.getStation().doubleValue() );
+      System.out.println( message );
+
+      if( logger != null )
+      {
+        final Point centroid = geometry.getCentroid();
+        logger.logXyzLine( centroid.getX(), centroid.getY(), -9999.0, message, "", -9999.0 );
+      }
+
       return ewawiClass.getKey();
     }
 
@@ -253,25 +289,34 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     final BigDecimal lastWidth = lastProfilePoint.getBreite();
     final double width = lastWidth.doubleValue() - firstWidth.doubleValue();
     if( !(ewawiClass.getMin() < width && width <= ewawiClass.getMax()) )
-      System.out.println( String.format( "Kategorie '%s' für Gewässerabschnitt '%d' am Profil '%f' stimmt nicht mit der errechneten Breite überein: %f", ewawiClass.getLabel(), part.getGewKennzahl().longValue(), part.getStation().doubleValue(), width ) );
+    {
+      final String message = String.format( "Kategorie '%s' für Gewässerabschnitt '%d' am Profil '%f' stimmt nicht mit der errechneten Breite überein: %f", ewawiClass.getLabel(), part.getGewKennzahl().longValue(), part.getStation().doubleValue(), width );
+      System.out.println( message );
+
+      if( logger != null )
+      {
+        final Point centroid = geometry.getCentroid();
+        logger.logXyzLine( centroid.getX(), centroid.getY(), -9999.0, message, "", -9999.0 );
+      }
+    }
 
     return ewawiClass.getKey();
   }
 
-  private String getRiverWidth( final EwawiProfilePart part, final Geometry geometry ) throws DBaseException
+  private String getRiverWidth( final EwawiProfilePart part, final Geometry geometry, final XyzEwawiLogger logger ) throws DBaseException
   {
     final Long gewKennzahl = part.getGewKennzahl();
 
     final GewWidthShape gewWidthShape = getGewWidthShape();
-    final String riverWidth = (String)gewWidthShape.getValue( gewKennzahl, GewWidthShape.BREITE, geometry );
+    final String riverWidth = (String)gewWidthShape.getValue( gewKennzahl, GewWidthShape.BREITE, geometry, logger );
 
     return riverWidth;
   }
 
-  private EwawiUeberlang getUeberlang( final EwawiProfilePart part, final EwawiSta staIndex ) throws EwawiException
+  private EwawiUeberlang getUeberlang( final EwawiProfilePart part, final EwawiSta staIndex, final XyzEwawiLogger logger, final Point centroid ) throws EwawiException
   {
-    final boolean ueberlangLeft = checkProfile( part, staIndex, true );
-    final boolean ueberlangRight = checkProfile( part, staIndex, false );
+    final boolean ueberlangLeft = checkProfile( part, staIndex, true, logger, centroid );
+    final boolean ueberlangRight = checkProfile( part, staIndex, false, logger, centroid );
 
     if( !ueberlangLeft && !ueberlangRight )
       return EwawiUeberlang._0;
@@ -282,7 +327,7 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     return EwawiUeberlang._1;
   }
 
-  private boolean checkProfile( final EwawiProfilePart part, final EwawiSta staIndex, final boolean leftSide ) throws EwawiException
+  private boolean checkProfile( final EwawiProfilePart part, final EwawiSta staIndex, final boolean leftSide, final XyzEwawiLogger logger, final Point centroid ) throws EwawiException
   {
     /* Get all points. */
     final EwawiProLine[] allPoints = part.getProLines();
@@ -296,7 +341,12 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
       if( horizont.intValue() == EwawiHorizont._0.getKey() )
       {
         // TODO This is a profile...
-        System.out.println( String.format( "Kann Überlänge nicht bestimmen. Das Profil '%f' besitzt keine BOKn.", part.getStation().doubleValue() ) );
+        final String message = String.format( "Kann Überlänge nicht bestimmen. Das Profil '%f' besitzt keine BOKn.", part.getStation().doubleValue() );
+        System.out.println( message );
+
+        if( logger != null )
+          logger.logXyzLine( centroid.getX(), centroid.getY(), -9999.0, message, "", -9999.0 );
+
         return false;
       }
 
@@ -335,17 +385,35 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     return true;
   }
 
-  private void checkPlotLink( final String link )
+  private void checkPlotLink( final String link, final XyzEwawiLogger logger, final Point point )
   {
+    /* Build the path to the target directory. */
     final File targetFile = getTargetFile();
-    final String fullPath = FilenameUtils.getFullPath( targetFile.getAbsolutePath() );
+    final String targetPath = FilenameUtils.getFullPath( targetFile.getAbsolutePath() );
+    final Path absoluteTargetPath = Paths.get( targetPath );
 
-    final Path absoluteFullPath = Paths.get( fullPath );
+    /* Need to find the absolute plot path. */
     final Path relativePlotPath = Paths.get( link );
-    final Path absolutePlotPath = absoluteFullPath.resolve( relativePlotPath );
+    Path absolutePlotPath = null;
+
+    /* Find the path until the "BY" segment. */
+    final Path byPath = PathUtilities.findPathToSegment( absoluteTargetPath, "BY" );
+    if( byPath == null )
+    {
+      /* If it is not found resolve against the target path. */
+      absolutePlotPath = absoluteTargetPath.resolve( relativePlotPath );
+    }
+    else
+      absolutePlotPath = byPath.getParent().resolve( relativePlotPath );
 
     final File file = absolutePlotPath.toFile();
     if( !file.exists() )
-      System.out.println( String.format( "Die Datei '%s' existiert nicht...", file.getPath() ) );
+    {
+      final String message = "Die Datei '%s' existiert nicht...";
+      System.out.println( String.format( message, file.getPath() ) );
+
+      if( logger != null )
+        logger.logXyzLine( point.getX(), point.getY(), -9999.0, message, "", -9999.0 );
+    }
   }
 }

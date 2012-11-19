@@ -29,6 +29,7 @@ import org.kalypso.model.wspm.ewawi.data.EwawiProLine;
 import org.kalypso.model.wspm.ewawi.data.EwawiSta;
 import org.kalypso.model.wspm.ewawi.data.EwawiStaLine;
 import org.kalypso.model.wspm.ewawi.data.enums.EwawiPunktart;
+import org.kalypso.model.wspm.ewawi.shape.writer.log.XyzEwawiLogger;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
@@ -82,13 +83,13 @@ public class EwawiShape347Writer extends AbstractEwawiShapeWriter
   }
 
   @Override
-  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data ) throws DBaseException, IOException, SHPException, EwawiException
+  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data, final XyzEwawiLogger logger ) throws DBaseException, IOException, SHPException, EwawiException
   {
     for( final EwawiPlus ewawiData : data )
-      writeData( shapeFile, ewawiData );
+      writeData( shapeFile, ewawiData, logger );
   }
 
-  private void writeData( final ShapeFile shapeFile, final EwawiPlus data ) throws DBaseException, IOException, SHPException, EwawiException
+  private void writeData( final ShapeFile shapeFile, final EwawiPlus data, final XyzEwawiLogger logger ) throws DBaseException, IOException, SHPException, EwawiException
   {
     /* Get the pro index and the sta index. */
     final EwawiPro proIndex = data.getProIndex();
@@ -97,10 +98,10 @@ public class EwawiShape347Writer extends AbstractEwawiShapeWriter
     /* Get all pro lines (all profile points). */
     final EwawiProLine[] proLines = proIndex.getProLines();
     for( final EwawiProLine proLine : proLines )
-      writeProLine( shapeFile, staIndex, proLine );
+      writeProLine( shapeFile, staIndex, proLine, logger );
   }
 
-  private void writeProLine( final ShapeFile shapeFile, final EwawiSta staIndex, final EwawiProLine proLine ) throws EwawiException, IOException, DBaseException, SHPException
+  private void writeProLine( final ShapeFile shapeFile, final EwawiSta staIndex, final EwawiProLine proLine, final XyzEwawiLogger logger ) throws EwawiException, IOException, DBaseException, SHPException
   {
     /* Find the fix points. */
     final EwawiStaLine leftFixPoint = staIndex.findFixPoint( proLine.getObjectArt(), EwawiPunktart._1, proLine.getGewKennzahl(), proLine.getStation() );
@@ -115,13 +116,13 @@ public class EwawiShape347Writer extends AbstractEwawiShapeWriter
     final SHPPoint shape = proPoint.getShape();
 
     /* Get the values. */
-    final Object[] values = getValues( proLine, proPoint );
+    final Object[] values = getValues( proLine, proPoint, logger );
 
     /* Add the feature. */
     shapeFile.addFeature( shape, values );
   }
 
-  private Object[] getValues( final EwawiProLine proLine, final EwawiProfilePoint proPoint )
+  private Object[] getValues( final EwawiProLine proLine, final EwawiProfilePoint proPoint, final XyzEwawiLogger logger )
   {
     final String comment = proLine.getComment();
     final BigDecimal hochwert = proLine.getHochwert();

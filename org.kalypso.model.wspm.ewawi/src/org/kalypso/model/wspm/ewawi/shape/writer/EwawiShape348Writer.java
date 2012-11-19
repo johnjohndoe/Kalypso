@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.kalypso.model.wspm.ewawi.data.EwawiEpl;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
+import org.kalypso.model.wspm.ewawi.shape.writer.log.XyzEwawiLogger;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
 import org.kalypso.model.wspm.ewawi.utils.GewWidthShape;
@@ -75,29 +76,29 @@ public class EwawiShape348Writer extends AbstractEwawiShapeWriter
   }
 
   @Override
-  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data ) throws DBaseException, IOException, SHPException
+  protected void writeData( final ShapeFile shapeFile, final EwawiPlus[] data, final XyzEwawiLogger logger ) throws DBaseException, IOException, SHPException
   {
     for( final EwawiPlus ewawiData : data )
-      writeData( shapeFile, ewawiData );
+      writeData( shapeFile, ewawiData, logger );
   }
 
-  private void writeData( final ShapeFile shapeFile, final EwawiPlus data ) throws DBaseException, IOException, SHPException
+  private void writeData( final ShapeFile shapeFile, final EwawiPlus data, final XyzEwawiLogger logger ) throws DBaseException, IOException, SHPException
   {
     final EwawiEpl eplIndex = data.getEplIndex();
     final EwawiLengthStructure[] structures = eplIndex.getLengthStructures();
     for( final EwawiLengthStructure structure : structures )
-      writeStructure( shapeFile, structure );
+      writeStructure( shapeFile, structure, logger );
   }
 
-  private void writeStructure( final ShapeFile shapeFile, final EwawiLengthStructure structure ) throws DBaseException, IOException, SHPException
+  private void writeStructure( final ShapeFile shapeFile, final EwawiLengthStructure structure, final XyzEwawiLogger logger ) throws DBaseException, IOException, SHPException
   {
     final SHPPolyLinez shape = structure.getShape();
-    final Object[] values = getValues( structure, shape );
+    final Object[] values = getValues( structure, shape, logger );
 
     shapeFile.addFeature( shape, values );
   }
 
-  private Object[] getValues( final EwawiLengthStructure structure, final SHPPolyLinez shape ) throws DBaseException
+  private Object[] getValues( final EwawiLengthStructure structure, final SHPPolyLinez shape, final XyzEwawiLogger logger ) throws DBaseException
   {
     final String comment = structure.getComment();
     final int objectArt = structure.getObjektArt().getKey();
@@ -107,7 +108,7 @@ public class EwawiShape348Writer extends AbstractEwawiShapeWriter
     final Long gewKennzahl = structure.getGewKennzahl();
     final SHP2JTS shp2jts = new SHP2JTS( new GeometryFactory() );
     final Geometry geometry = shp2jts.transform( shape );
-    final String gewName = (String)getGewShape().getValue( gewKennzahl, GewShape.GN_ACHS_08, geometry );
+    final String gewName = (String)getGewShape().getValue( gewKennzahl, GewShape.GN_ACHS_08, geometry, logger );
 
     final List<Object> values = new ArrayList<>();
     values.add( comment );

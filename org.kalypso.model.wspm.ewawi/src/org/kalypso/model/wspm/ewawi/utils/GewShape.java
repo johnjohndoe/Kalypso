@@ -30,6 +30,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.io.FilenameUtils;
+import org.kalypso.model.wspm.ewawi.shape.writer.log.XyzEwawiLogger;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
@@ -38,6 +39,7 @@ import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.tools.SHP2JTS;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * This file holds the shape of the rivers, containing the river number and river name.
@@ -93,38 +95,46 @@ public class GewShape
     shapeFile.close();
   }
 
-  public ISHPGeometry getShape( final Long gkzFgn25, final Geometry geometry )
+  public ISHPGeometry getShape( final Long gkzFgn25, final Geometry geometry, final XyzEwawiLogger logger )
   {
     final List<GewShapeRow> rows = m_gkzFgn25Hash.get( gkzFgn25 );
     if( rows == null || rows.size() == 0 )
       return null;
 
-    final GewShapeRow row = GewShape.findRow( geometry, rows );
+    final GewShapeRow row = GewShape.findRow( geometry, rows, logger, "Gewaessershape" );
     if( row == null )
       return null;
 
     return row.getShape();
   }
 
-  public Object getValue( final Long gkzFgn25, final String field, final Geometry geometry ) throws DBaseException
+  public Object getValue( final Long gkzFgn25, final String field, final Geometry geometry, final XyzEwawiLogger logger ) throws DBaseException
   {
     System.out.println( String.format( "Suche Gewässerabschnitte für GKZ '%d'...", gkzFgn25.longValue() ) );
 
     final List<GewShapeRow> rows = m_gkzFgn25Hash.get( gkzFgn25 );
     if( rows == null || rows.size() == 0 )
     {
-      System.out.println( "Keine Gewässerabschnitte verfügbar." );
+      final String message = "Keine Gewässerabschnitte verfügbar.";
+      System.out.println( message );
+
+      if( logger != null )
+      {
+        final Point centroid = geometry.getCentroid();
+        logger.logXyzLine( centroid.getX(), centroid.getY(), -9999.0, message, "Gewaessershape", -9999.0 );
+      }
+
       return null;
     }
 
-    final GewShapeRow row = GewShape.findRow( geometry, rows );
+    final GewShapeRow row = GewShape.findRow( geometry, rows, logger, "Gewaessershape" );
     if( row == null )
       return null;
 
     return row.getValue( field );
   }
 
-  public static GewShapeRow findRow( final Geometry geometry, final List<GewShapeRow> rows )
+  public static GewShapeRow findRow( final Geometry geometry, final List<GewShapeRow> rows, final XyzEwawiLogger logger, final String category )
   {
     final SHP2JTS shp2jts = new SHP2JTS( geometry.getFactory() );
 
@@ -152,12 +162,31 @@ public class GewShape
 
     if( distances.size() == 0 )
     {
-      System.out.println( "Keine Gewässerabschnitte verfügbar." );
+      final String message = "Keine Gewässerabschnitte verfügbar.";
+      System.out.println( message );
+
+      if( logger != null )
+      {
+        final Point centroid = geometry.getCentroid();
+        logger.logXyzLine( centroid.getX(), centroid.getY(), -9999.0, message, category, -9999.0 );
+      }
+
       return null;
     }
 
     final Entry<Double, GewShapeRow> entry = distances.entrySet().iterator().next();
-    System.out.println( String.format( "Geometrie schneidet keinen Gewässerabschnitt, nähester wird verwendet. Distanz: %f", entry.getKey().doubleValue() ) );
-    return entry.getValue();
+    final Double key = entry.getKey();
+    final GewShapeRow value = entry.getValue();
+
+    final String message = String.format( "Geometrie schneidet keinen Gewässerabschnitt, nähester wird verwendet. Distanz: %f", key.doubleValue() );
+    System.out.println( message );
+
+    if( logger != null )
+    {
+      final Point centroid = geometry.getCentroid();
+      logger.logXyzLine( centroid.getX(), centroid.getY(), -9999.0, message, category, key.doubleValue() );
+    }
+
+    return value;
   }
 }

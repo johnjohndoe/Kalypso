@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
+import org.kalypso.model.wspm.ewawi.shape.writer.log.XyzEwawiLogger;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
@@ -34,6 +35,7 @@ import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.geometry.ISHPGeometry;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * This file holds the shape of the rivers, containing the river number and river width.
@@ -87,18 +89,26 @@ public class GewWidthShape
     shapeFile.close();
   }
 
-  public Object getValue( final Long gwz, final String field, final Geometry geometry ) throws DBaseException
+  public Object getValue( final Long gwz, final String field, final Geometry geometry, final XyzEwawiLogger logger ) throws DBaseException
   {
     System.out.println( String.format( "Suche Gewässerabschnitte für GKZ '%d'...", gwz.longValue() ) );
 
     final List<GewShapeRow> rows = m_gwzHash.get( gwz );
     if( rows == null || rows.size() == 0 )
     {
-      System.out.println( "Keine Gewässerabschnitte verfügbar." );
+      final String message = "Keine Gewässerabschnitte verfügbar.";
+      System.out.println( message );
+
+      if( logger != null )
+      {
+        final Point centroid = geometry.getCentroid();
+        logger.logXyzLine( centroid.getX(), centroid.getY(), -9999.0, message, "Gewaesserbreitenshape", -9999.0 );
+      }
+
       return null;
     }
 
-    final GewShapeRow row = GewShape.findRow( geometry, rows );
+    final GewShapeRow row = GewShape.findRow( geometry, rows, logger, "Gewaesserbreitenshape" );
     if( row == null )
       return null;
 

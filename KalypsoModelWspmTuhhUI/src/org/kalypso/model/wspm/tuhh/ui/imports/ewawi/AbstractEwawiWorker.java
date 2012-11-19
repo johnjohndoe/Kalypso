@@ -139,7 +139,7 @@ public abstract class AbstractEwawiWorker
     final SHP2JTS shp2jts = new SHP2JTS( new GeometryFactory() );
     final Geometry geometry = shp2jts.transform( shape );
 
-    final String name = (String)gewShape.getValue( gewKennzahl, data.getRiverShapeData().getRiverNameField(), geometry );
+    final String name = (String)gewShape.getValue( gewKennzahl, data.getRiverShapeData().getRiverNameField(), geometry, null );
     if( name == null )
       return Messages.getString( "AbstractEwawiWorker.10" ); //$NON-NLS-1$
 
@@ -160,7 +160,7 @@ public abstract class AbstractEwawiWorker
     final SHP2JTS shp2jts = new SHP2JTS( new GeometryFactory() );
     final Geometry geometry = shp2jts.transform( shape );
 
-    final ISHPGeometry riverShape = gewShape.getShape( gewKennzahl, geometry );
+    final ISHPGeometry riverShape = gewShape.getShape( gewKennzahl, geometry, null );
 
     final GM_Object riverline = SHP2GM_Object.transform( null, riverShape );
     if( riverline instanceof GM_Curve )
