@@ -53,7 +53,6 @@ import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -68,10 +67,10 @@ import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gml.processes.constDelaunay.TriangleExe;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen.TriangulationBuilder;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
@@ -85,17 +84,17 @@ public class TriangulateGeometryComposite extends Composite
 
   private final TriangulationBuilder m_triangulationBuilder;
 
-  private final IFEDiscretisationModel1d2d m_discretizationModel;
-
   private final DatabindingForm m_binding;
 
-  public TriangulateGeometryComposite( final FormToolkit toolkit, final DatabindingForm binding, final IWidget widget, final TriangulationBuilder triangulationBuilder, final IFEDiscretisationModel1d2d discretisationModel )
+  private CommandableWorkspace m_workspace;
+
+  public TriangulateGeometryComposite( final FormToolkit toolkit, final DatabindingForm binding, final IWidget widget, final TriangulationBuilder triangulationBuilder, final CommandableWorkspace discretisationModelWorkspace )
   {
     super( binding.getForm().getBody(), SWT.NONE );
     m_binding = binding;
     m_widget = widget;
     m_triangulationBuilder = triangulationBuilder;
-    m_discretizationModel = discretisationModel;
+    m_workspace = discretisationModelWorkspace;
     toolkit.adapt( this );
     GridLayoutFactory.swtDefaults().applyTo( this );
     createContents( toolkit, this );
@@ -175,7 +174,7 @@ public class TriangulateGeometryComposite extends Composite
     GridLayoutFactory.swtDefaults().applyTo( buttonPanel );
     buttonPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final TriangulateGeometryApplyToAction convertToModelAction = new TriangulateGeometryApplyToAction( new TriangulateGeometryOperation( m_triangulationBuilder, m_discretizationModel ) );
+    final TriangulateGeometryApplyToAction convertToModelAction = new TriangulateGeometryApplyToAction( new TriangulateGeometryOperation( m_triangulationBuilder, m_workspace ) );
     final Button buttonConvertToModel = ActionButton.createButton( toolkit, buttonPanel, convertToModelAction );
     buttonConvertToModel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
   }
