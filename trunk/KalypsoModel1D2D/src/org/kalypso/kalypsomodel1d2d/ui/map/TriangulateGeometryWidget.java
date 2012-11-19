@@ -53,16 +53,15 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.afgui.model.Util;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
@@ -76,6 +75,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -120,9 +120,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
   private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<>();
 
-  private IFEDiscretisationModel1d2d m_discModel;
-
-  private IKalypsoFeatureTheme m_theme;
+  private CommandableWorkspace m_discModelWorkspace;
 
   public TriangulateGeometryWidget( )
   {
@@ -143,12 +141,9 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     final IMapModell mapModell = mapPanel.getMapModell();
 
     m_modePolygon = true;
-
-    m_theme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-
-    m_discModel = UtilMap.findFEModelTheme( mapPanel );
-
-    m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
+    m_discModelWorkspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );
+    final IFEDiscretisationModel1d2d discModell = (IFEDiscretisationModel1d2d)m_discModelWorkspace.getRootFeature();
+    m_pointSnapper = new PointSnapper( discModell, mapPanel );
 
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_featureList = theme == null ? null : theme.getFeatureList();
@@ -413,7 +408,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     }
     else if( e.getKeyCode() == KeyEvent.VK_ENTER )
     {
-      final TriangulateGeometryOperation triangulateGeometryOperation = new TriangulateGeometryOperation( m_builder, m_discModel );
+      final TriangulateGeometryOperation triangulateGeometryOperation = new TriangulateGeometryOperation( m_builder, m_discModelWorkspace );
       triangulateGeometryOperation.convertTriangulationToModel();
     }
     else
@@ -444,7 +439,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     final DatabindingForm binding = new DatabindingForm( form, toolkit );
     final Composite body = form.getBody();
     GridLayoutFactory.swtDefaults().applyTo( body );
-    m_composite = new TriangulateGeometryComposite( toolkit, binding, this, m_builder, m_discModel );
+    m_composite = new TriangulateGeometryComposite( toolkit, binding, this, m_builder, m_discModelWorkspace );
     return m_composite;
   }
 
@@ -459,10 +454,5 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   public String getPartName( )
   {
     return Messages.getString( "TriangulateGeometryWidget.15" ); //$NON-NLS-1$
-  }
-
-  IKalypsoFeatureTheme getDiscTheme( )
-  {
-    return m_theme;
   }
 }

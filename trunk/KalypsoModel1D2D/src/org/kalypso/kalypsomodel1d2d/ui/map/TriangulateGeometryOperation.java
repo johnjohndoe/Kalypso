@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen.TriangulationBuilder;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.Add2DElementsCommand;
@@ -55,18 +54,16 @@ public class TriangulateGeometryOperation
 {
   private final TriangulationBuilder m_builder;
 
-  private final IFEDiscretisationModel1d2d m_discretizationModel;
+  private final CommandableWorkspace m_workspace;
 
-  public TriangulateGeometryOperation( final TriangulationBuilder triangulationBuilder, final IFEDiscretisationModel1d2d discretizationModel )
+  public TriangulateGeometryOperation( final TriangulationBuilder triangulationBuilder, final CommandableWorkspace discretizationModelWorkspace )
   {
     m_builder = triangulationBuilder;
-    m_discretizationModel = discretizationModel;
+    m_workspace = discretizationModelWorkspace;
   }
 
   public void convertTriangulationToModel( )
   {
-    final CommandableWorkspace workspace = new CommandableWorkspace( m_discretizationModel.getWorkspace() );
-
     try
     {
       m_builder.finish();
@@ -75,8 +72,8 @@ public class TriangulateGeometryOperation
       if( tin == null )
         return;
 
-      final Add2DElementsCommand command = new Add2DElementsCommand( workspace, tin );
-      workspace.postCommand( command );
+      final Add2DElementsCommand command = new Add2DElementsCommand( m_workspace, tin );
+      m_workspace.postCommand( command );
     }
     catch( final Exception e1 )
     {

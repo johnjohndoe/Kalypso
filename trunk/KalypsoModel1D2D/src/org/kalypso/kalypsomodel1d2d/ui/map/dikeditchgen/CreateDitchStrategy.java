@@ -21,9 +21,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.lang3.tuple.Pair;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.elevation.IElevationModel;
@@ -31,6 +30,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -41,6 +41,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import com.vividsolutions.jts.densify.Densifier;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateFilter;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.noding.SegmentString;
@@ -52,20 +53,34 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 public class CreateDitchStrategy implements CreateStructuredNetworkStrategy
 {
 
-  private final FeatureList m_network;
-
   private final double m_innerWidthFraction;
 
   final double m_minimumDepth;
 
   final IElevationModel m_elevationModel;
 
-  public CreateDitchStrategy( final FeatureList networkFeatures, final double innerWidthFraction, final double minimumDepth, final IElevationModel elevationModel )
+  // working network features
+  private FeatureList m_network;
+
+  private IPropertyType m_geomProperty;
+
+  private IPropertyType m_startWidthProperty;
+
+  private IPropertyType m_endWidthProperty;
+
+  public CreateDitchStrategy( final double innerWidthFraction, final double minimumDepth, final IElevationModel elevationModel )
   {
-    m_network = networkFeatures;
     m_innerWidthFraction = innerWidthFraction;
     m_minimumDepth = minimumDepth;
     m_elevationModel = elevationModel;
+  }
+
+  public void setFeatures( final FeatureList network, IPropertyType geomProperty, IPropertyType startWidthProperty, IPropertyType endWidthProperty )
+  {
+    m_network = network;
+    m_geomProperty = geomProperty;
+    m_startWidthProperty = startWidthProperty;
+    m_endWidthProperty = endWidthProperty;
   }
 
   @Override
@@ -86,11 +101,12 @@ public class CreateDitchStrategy implements CreateStructuredNetworkStrategy
     for( int i = 0; i < networkSize; i++ )
     {
       final Feature linearFeature = m_network.getResolved( i );
-      final LineString linestring = getLine( linearFeature, densifyFactor, networkFilter );
+      final LineString[] lines = getLines( linearFeature, densifyFactor, networkFilter );
       final Pair<Double, Double> startEnd = getWidth( linearFeature );
       final double minWidth = Math.min( startEnd.getLeft(), startEnd.getRight() );
       minimumWidth = minWidth < minimumWidth ? minWidth : minimumWidth;
-      LineStringBufferBuilder.addRawBufferLines( linestring, startEnd.getLeft() * widthFactor, startEnd.getRight() * widthFactor, startEnd.getLeft() * widthFactor, startEnd.getRight() * widthFactor, bufferSegStrList );
+      for( int j = 0; j < lines.length; j++ )
+        LineStringBufferBuilder.addRawBufferLines( lines[j], startEnd.getLeft() * widthFactor, startEnd.getRight() * widthFactor, startEnd.getLeft() * widthFactor, startEnd.getRight() * widthFactor, bufferSegStrList );
     }
     final Polygon outerDensified = (Polygon)LineStringBufferBuilder.buffer( bufferSegStrList );
     final Polygon filtered = JTSUtilities.removeCoincidentPoints( outerDensified, minimumWidth * widthFactor / 2 );
@@ -100,35 +116,37 @@ public class CreateDitchStrategy implements CreateStructuredNetworkStrategy
     return outerRing;
   }
 
-  private LineString getLine( final Feature linearFeature, final double densifyFactor, CoordinateFilter networkFilter )
+  private LineString[] getLines( final Feature linearFeature, final double densifyFactor, CoordinateFilter networkFilter )
   {
     try
     {
       // convert to jts, add Z, simplify and densify
-      final LineString linestring = (LineString)JTSAdapter.export( linearFeature.getDefaultGeometryPropertyValue() ).getGeometryN( 0 );
-      final LineString linestringZ = JTSUtilities.interpolateMissingZ( linestring );
-      if( networkFilter != null )
-        linestringZ.apply( networkFilter );
-
+      final GM_Object geometry = (GM_Object)linearFeature.getProperty( m_geomProperty );
+      final Geometry linestring = JTSAdapter.export( geometry ).getGeometryN( 0 );
       final Pair<Double, Double> startEnd = getWidth( linearFeature );
       final double maxWidth = Math.max( startEnd.getLeft(), startEnd.getRight() );
-      final LineString simplified = (LineString)DouglasPeuckerSimplifier.simplify( linestringZ, maxWidth / 1000 );
-      final LineString result = (LineString)Densifier.densify( simplified, maxWidth * densifyFactor );
-      return result;
+      final LineString[] results = new LineString[linestring.getNumGeometries()];
+      for( int i = 0; i < results.length; i++ )
+      {
+        final LineString linestringZ = JTSUtilities.interpolateMissingZ( (LineString)linestring.getGeometryN( i ) );
+        if( networkFilter != null )
+          linestringZ.apply( networkFilter );
+        final LineString simplified = (LineString)DouglasPeuckerSimplifier.simplify( linestringZ, maxWidth / 1000 );
+        results[i] = (LineString)Densifier.densify( simplified, maxWidth * densifyFactor );
+      }
+      return results;
     }
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      return null;
+      return new LineString[0];
     }
   }
 
   private Pair<Double, Double> getWidth( final Feature linearFeature )
   {
-    final QName from = new QName( linearFeature.getFeatureType().getQName().getNamespaceURI(), "Profilober" );
-    final QName to = new QName( linearFeature.getFeatureType().getQName().getNamespaceURI(), "Profilunte" );
-    final Double startWidth = (Double)linearFeature.getProperty( from );
-    final Double endWidth = (Double)linearFeature.getProperty( to );
+    final Double startWidth = (Double)linearFeature.getProperty( m_startWidthProperty );
+    final Double endWidth = (Double)linearFeature.getProperty( m_endWidthProperty );
     final Pair<Double, Double> startEnd = Pair.of( startWidth, endWidth );
     return startEnd;
   }
@@ -174,11 +192,14 @@ public class CreateDitchStrategy implements CreateStructuredNetworkStrategy
     for( int i = 0; i < networkSize; i++ )
     {
       final Feature linearFeature = m_network.getResolved( i );
-      final LineString linestring = getLine( linearFeature, densifyFactor, minimumDepthFilter );
-      final LineString linestringZ = JTSUtilities.interpolateMissingZ( linestring );
-      linestringZ.apply( minimumDepthFilter );
-      final GM_Curve edgeCurve = (GM_Curve)JTSAdapter.wrap( linestringZ, coordinateSystem );
-      tinBuilder.addBreakLine( edgeCurve, false );
+      final LineString[] lines = getLines( linearFeature, densifyFactor, minimumDepthFilter );
+      for( int j = 0; j < lines.length; j++ )
+      {
+        final LineString linestringZ = JTSUtilities.interpolateMissingZ( lines[j] );
+        linestringZ.apply( minimumDepthFilter );
+        final GM_Curve edgeCurve = (GM_Curve)JTSAdapter.wrap( linestringZ, coordinateSystem );
+        tinBuilder.addBreakLine( edgeCurve, false );
+      }
     }
     final GM_Polygon inner = getRingPolygon( m_innerWidthFraction, densifyFactor, minimumDepthFilter, null );
 
