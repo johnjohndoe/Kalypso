@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
 import org.kalypso.model.wspm.ewawi.data.EwawiPro;
+import org.kalypso.model.wspm.ewawi.shape.writer.log.XyzEwawiLogger;
 import org.kalypso.model.wspm.ewawi.utils.EwawiException;
 import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
 import org.kalypso.model.wspm.ewawi.utils.GewShape;
@@ -68,8 +70,15 @@ public abstract class AbstractEwawiShapeWriter
     final IDBFField[] fields = createFields();
     final ShapeFile shapeFile = createShapeFile( targetFile, fields );
 
+    /* Create the logger. */
+    final XyzEwawiLogger logger = new XyzEwawiLogger();
+    logger.init( new File( targetFile.getParentFile(), String.format( "%s.%s", FilenameUtils.removeExtension( targetFile.getName() ), "xyz" ) ) );
+
     /* Write the data. */
-    writeData( shapeFile, m_data );
+    writeData( shapeFile, m_data, logger );
+
+    /* Close the logger. */
+    IOUtils.closeQuietly( logger );
 
     /* Close the shape file. */
     shapeFile.close();
@@ -111,7 +120,7 @@ public abstract class AbstractEwawiShapeWriter
 
   protected abstract IDBFField[] createFields( ) throws DBaseException;
 
-  protected abstract void writeData( ShapeFile shapeFile, EwawiPlus[] data ) throws DBaseException, IOException, SHPException, EwawiException;
+  protected abstract void writeData( ShapeFile shapeFile, EwawiPlus[] data, XyzEwawiLogger logger ) throws DBaseException, IOException, SHPException, EwawiException;
 
   private ShapeFile createShapeFile( final File shapeFile, final IDBFField[] fields ) throws DBaseException, IOException
   {
