@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
@@ -72,7 +73,7 @@ public abstract class AbstractEwawiShapeWriter
 
     /* Create the logger. */
     final XyzEwawiLogger logger = new XyzEwawiLogger();
-    logger.init( new File( targetFile.getParentFile(), String.format( "%s.%s", FilenameUtils.removeExtension( targetFile.getName() ), "xyz" ) ) );
+    logger.init( new File( targetFile.getParentFile(), String.format( "%s.%s", FilenameUtils.removeExtension( targetFile.getName() ), "tab" ) ) );
 
     /* Write the data. */
     writeData( shapeFile, m_data, logger );
@@ -82,6 +83,9 @@ public abstract class AbstractEwawiShapeWriter
 
     /* Close the shape file. */
     shapeFile.close();
+
+    /* Copy the prj file of the river shape. */
+    copyPrj();
   }
 
   protected EwawiPlus[] getData( )
@@ -127,5 +131,28 @@ public abstract class AbstractEwawiShapeWriter
     final String basePath = FilenameUtils.removeExtension( shapeFile.getAbsolutePath() );
     final Charset charset = Charset.defaultCharset();
     return ShapeFile.create( basePath, m_shapeType, charset, fields );
+  }
+
+  private void copyPrj( )
+  {
+    try
+    {
+      /* Get the file handle of the prj file of the river shape. */
+      final GewShape gewShape = getGewShape();
+      final File shpFile = gewShape.getFile();
+      final File shpPrjFile = new File( shpFile.getParentFile(), String.format( "%s.%s", FilenameUtils.removeExtension( shpFile.getName() ), "prj" ) );
+
+      /* Get the file handle to the target prj file. */
+      final File targetFile = getTargetFile();
+      final File targetPrjFile = new File( targetFile.getParentFile(), String.format( "%s.%s", FilenameUtils.removeExtension( targetFile.getName() ), "prj" ) );
+
+      /* Copy the file. */
+      FileUtils.copyFile( shpPrjFile, targetPrjFile );
+    }
+    catch( final IOException ex )
+    {
+      /* We will do this quietly. */
+      ex.printStackTrace();
+    }
   }
 }

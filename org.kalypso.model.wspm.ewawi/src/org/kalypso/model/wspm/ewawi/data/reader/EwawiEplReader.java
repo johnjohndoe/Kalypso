@@ -47,7 +47,8 @@ public class EwawiEplReader extends AbstractEwawiReader
     final EwawiObjectart objectArt = asObjectArt( tabs[0] );
 
     // b Gewässerkennzahl siehe Gewässerkulisse
-    final Long gewKennzahl = asLong( tabs[1] );
+    final String gewKennzahlText = tabs[1];
+    final Long gewKennzahl = getGewKennzahl( gewKennzahlText );
 
     // c Flusskilometer siehe FKM-Tafeln
     final BigDecimal station = asDecimal( tabs[2] );

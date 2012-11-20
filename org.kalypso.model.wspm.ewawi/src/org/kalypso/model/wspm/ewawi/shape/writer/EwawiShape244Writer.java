@@ -166,7 +166,7 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     final Short zusatz = part.getZusatz();
 
     final String profilName = String.format( "%s_%d", alias, profilNummer );
-    final String pdf = String.format( "%s_%s_%s_VP_BJG_QPPLOT_%d.pdf", key.getPe(), key.getAlias(), key.getModelId(), profilNummer );
+    final String pdf = String.format( "%s_%s_%s_VP_BJG_QPPLOT_%05d.pdf", key.getPe(), key.getAlias(), key.getModelId(), profilNummer );
     final String link = Paths.get( pfad, pdf ).toString();
 
     checkPlotLink( link, logger, geometry.getCentroid() );
