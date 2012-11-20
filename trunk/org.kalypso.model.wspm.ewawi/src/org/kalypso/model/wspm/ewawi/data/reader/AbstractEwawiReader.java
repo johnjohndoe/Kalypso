@@ -178,4 +178,18 @@ abstract class AbstractEwawiReader
 
     return EwawiHorizont.valueOf( "_" + asInt ); //$NON-NLS-1$
   }
+
+  protected Long getGewKennzahl( final String gewKennzahlText )
+  {
+    final Long gewKennzahl = asLong( gewKennzahlText );
+    if( gewKennzahl == null )
+      return null;
+
+    // HACK: Because in the river shapes the id will have 15 digits in EWAWI+ only 10 are possible...
+    final String format = String.format( "%d", gewKennzahl );
+    if( format.length() == 10 )
+      return gewKennzahl * 100000;
+
+    return gewKennzahl;
+  }
 }

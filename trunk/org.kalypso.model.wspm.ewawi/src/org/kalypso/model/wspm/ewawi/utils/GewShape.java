@@ -95,6 +95,11 @@ public class GewShape
     shapeFile.close();
   }
 
+  public File getFile( )
+  {
+    return m_gewShape;
+  }
+
   public ISHPGeometry getShape( final Long gkzFgn25, final Geometry geometry, final XyzEwawiLogger logger )
   {
     final List<GewShapeRow> rows = m_gkzFgn25Hash.get( gkzFgn25 );
