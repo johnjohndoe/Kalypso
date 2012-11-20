@@ -160,6 +160,19 @@
           name="%wizard.name.0">
           <description>%wizard.description.0</description>
       </wizard>
+      
+      <!-- Update state and checkin state now are the same functionality
+      TODO: remove UpdatePdbCrossSectionsWizard and all dependencies as soon as TLUG is satisfied with that...
+       -->
+      <wizard
+          id="org.kalypso.model.wspm.pdb.ui.internal.wspm.UpdatePdbCrossSectionsWizard"
+          class="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard"
+          icon="icons/wspmLight.gif"
+          category="pdbWizardsCategory"
+          name="%UpdatePdbCrossSectionsWizard.name">
+          <description>%UpdatePdbCrossSectionsWizard.description</description>
+      </wizard>
+      <!--
       <wizard
           id="org.kalypso.model.wspm.pdb.ui.internal.wspm.UpdatePdbCrossSectionsWizard"
           class="org.kalypso.model.wspm.pdb.ui.internal.wspm.UpdatePdbCrossSectionsWizard"
@@ -168,6 +181,7 @@
           name="%UpdatePdbCrossSectionsWizard.name">
           <description>%UpdatePdbCrossSectionsWizard.description</description>
       </wizard>
+      -->
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
         <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport">
