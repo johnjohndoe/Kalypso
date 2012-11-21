@@ -145,6 +145,8 @@ class TuhhResultDataElement
 
   private static double searchValue( final IWspmResultNode resultNode, final BigDecimal station )
   {
+    // FIXME: performance hotspot -> we need to cache the real length sections somehow
+
     if( resultNode instanceof IWspmResult )
     {
       final IWspmResult result = (IWspmResult)resultNode;
