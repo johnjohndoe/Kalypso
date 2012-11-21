@@ -461,8 +461,8 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   }
 
   @Override
-  @SuppressWarnings( "unchecked" )
-  public void removeAllElements( final Collection<IFE1D2DElement> elementsToRemove )
+  @SuppressWarnings( "unchecked" )  
+  public void removeAllElements( final Collection< ? extends IFE1D2DElement> elementsToRemove )
   {
     Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" );//$NON-NLS-1$
 

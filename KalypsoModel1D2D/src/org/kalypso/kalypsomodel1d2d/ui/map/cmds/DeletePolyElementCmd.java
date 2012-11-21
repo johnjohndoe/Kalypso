@@ -45,7 +45,6 @@ import gnu.trove.THashSet;
 import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -58,7 +57,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class DeletePolyElementCmd implements IFeatureChangeCommand
 {
-  private final Set<IFE1D2DElement> m_elementsToRemove = new THashSet<>();
+  private final Set<IPolyElement> m_elementsToRemove = new THashSet<>();
 
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
@@ -88,14 +87,12 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
   @Override
   public void process( ) throws Exception
   {
-    for( final Feature lFeature : m_elementsToRemove )
+    for( final IPolyElement poly : m_elementsToRemove )
     {
-      final IPolyElement lElement = (IPolyElement)lFeature.getAdapter( IPolyElement.class );
-
       // delete link to complex elements
-      final IFE1D2DComplexElement[] parentComplexElements = lElement.getLinkedElements();
+      final IFE1D2DComplexElement[] parentComplexElements = poly.getLinkedElements();
       for( final IFE1D2DComplexElement complexElement : parentComplexElements )
-        complexElement.removeLinkedItem( lElement );
+        complexElement.removeLinkedItem( poly );
     }
 
     // delete elements from model

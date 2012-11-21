@@ -138,8 +138,7 @@ public interface IFEDiscretisationModel1d2d extends IModel
 
   void removeAllNodes( Collection<IFE1D2DNode> nodes );
 
-  void removeAllElements( Collection<IFE1D2DElement> elements );
+  void removeAllElements( Collection< ? extends IFE1D2DElement> elements );
 
   void removeAllEdges( Collection<IFE1D2DEdge> edges );
-
 }
