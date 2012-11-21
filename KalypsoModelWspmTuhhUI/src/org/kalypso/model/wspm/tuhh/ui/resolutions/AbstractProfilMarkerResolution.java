@@ -82,36 +82,24 @@ public abstract class AbstractProfilMarkerResolution implements IProfileMarkerRe
     m_image = image;
   }
 
-  /**
-   * @see org.eclipse.ui.IMarkerResolution2#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return m_description;
   }
 
-  /**
-   * @see org.eclipse.ui.IMarkerResolution2#getImage()
-   */
   @Override
   public Image getImage( )
   {
     return m_image;
   }
 
-  /**
-   * @uml.property name="label"
-   */
   @Override
   public String getLabel( )
   {
     return m_label;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#getSerializedParameter()
-   */
   @Override
   public String getSerializedParameter( )
   {
@@ -125,12 +113,12 @@ public abstract class AbstractProfilMarkerResolution implements IProfileMarkerRe
       final IResource markerResource = marker.getResource();
       if( !(markerResource instanceof IFile) )
         return null;
-      final IFile markerFile = (IFile) markerResource;
+      final IFile markerFile = (IFile)markerResource;
       final URL markerURL = ResourceUtilities.createURL( markerFile );
 
       final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
       final PoolableObjectType key = new PoolableObjectType( "gml", markerURL.toExternalForm(), markerURL ); //$NON-NLS-1$
-      return (CommandableWorkspace) pool.getObject( key );
+      return (CommandableWorkspace)pool.getObject( key );
 
     }
     catch( final CoreException e )
@@ -145,9 +133,6 @@ public abstract class AbstractProfilMarkerResolution implements IProfileMarkerRe
     return null;
   }
 
-  /**
-   * @see org.eclipse.ui.IMarkerResolution#run(org.eclipse.core.resources.IMarker)
-   */
   @Override
   public void run( final IMarker marker )
   {
@@ -161,7 +146,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfileMarkerRe
 
       if( feature != null )
       {
-        final IProfile profil = ((IProfileFeature) feature).getProfile();
+        final IProfile profil = ((IProfileFeature)feature).getProfile();
         if( profil != null )
         {
           if( resolve( profil ) )
@@ -196,36 +181,24 @@ public abstract class AbstractProfilMarkerResolution implements IProfileMarkerRe
     return params;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#setData(java.lang.String)
-   */
   @Override
   public void setData( final String parameterStream )
   {
     getParameter( parameterStream );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#getUIresult(org.eclipse.swt.widgets.Shell)
-   */
   @Override
   public String getUIresult( final Shell shell, final IProfile profil )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#hasUI()
-   */
   @Override
   public boolean hasUI( )
   {
     return false;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#hasUI()
-   */
   @Override
   public void setUIresult( final String result )
   {
