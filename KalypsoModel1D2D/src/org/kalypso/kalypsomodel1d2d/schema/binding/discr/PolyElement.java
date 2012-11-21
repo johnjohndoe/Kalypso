@@ -46,11 +46,13 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
 
     final FeatureList edgesInternal = edgesInternal();
     edgesInternal.clear();
+
     for( final IFE1D2DEdge edge : edges )
     {
       edgesInternal.addLink( edge );
       edge.addLinkedElement( this );
     }
+
     setEnvelopesUpdated();
   }
 
@@ -69,6 +71,13 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
 
     final List<IFE1D2DNode> nodes = new ArrayList<>( edges.length + 1 );
     final IFE1D2DEdge firstEdge = edges[0];
+
+    if( firstEdge == null )
+    {
+      System.out.println( "Corrupt mesh!" ); //$NON-NLS-1$
+      return new IFE1D2DNode[0];
+    }
+
     final IFE1D2DNode[] firstTwoNodes = firstEdge.getNodes();
     final IFE1D2DNode firstNode = firstTwoNodes[0];
     nodes.add( firstNode );
@@ -93,7 +102,10 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
     {
       /* protect against corrupt net */
       if( edge == null )
+      {
+        System.out.println( "Corrupt mesh!" ); //$NON-NLS-1$
         continue;
+      }
 
       final IFE1D2DNode[] nodes = edge.getNodes();
       final IFE1D2DNode firstNode = nodes[0];
