@@ -41,6 +41,9 @@
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
+import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -102,14 +105,42 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
     final int iAX = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
     final int iAY = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
     final int iDP = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
+    final int iClass = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_CLASS );
+
+    final String unknownClass = findUnknownClass( profil, iClass );
+
     for( int i = m_leftIndex; i < m_rightIndex; i++ )
     {
       final IRecord point = profil.getPoint( i );
-      point.setValue( iAX, 0.0 );
-      point.setValue( iAY, 0.0 );
-      point.setValue( iDP, 0.0 );
+      if( iAX != -1 )
+        point.setValue( iAX, 0.0 );
+
+      if( iAY != -1 )
+        point.setValue( iAY, 0.0 );
+
+      if( iDP != -1 )
+        point.setValue( iDP, 0.0 );
+
+      if( iClass != -1 )
+        point.setValue( iClass, unknownClass );
     }
     return true;
+  }
+
+  private String findUnknownClass( final IProfile profil, final int indexClassComponent )
+  {
+    if( indexClassComponent == -1 )
+      return null;
+
+    final IWspmClassification classification = WspmClassifications.getClassification( profil );
+    if( classification == null )
+      return null;
+
+    final IVegetationClass unknownClass = classification.findUnknownVegetationClass();
+    if( unknownClass == null )
+      return null;
+
+    return unknownClass.getName();
   }
 
   @Override
