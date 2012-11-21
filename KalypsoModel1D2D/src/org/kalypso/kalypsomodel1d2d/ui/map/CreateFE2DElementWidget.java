@@ -166,7 +166,7 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
   {
     final Object newNode = checkNewNode( p );
     if( newNode instanceof IFE1D2DNode )
-      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
+      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode)newNode).getPoint() );
     else
       m_currentMapPoint = p;
 
@@ -191,11 +191,11 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
       final Create2dElementCommand command;
       if( newNode instanceof GM_Point )
       {
-        command = m_builder.addNode( (GM_Point) newNode );
+        command = m_builder.addNode( (GM_Point)newNode );
       }
       else
       {
-        command = m_builder.addNode( ((IFE1D2DNode) newNode).getPoint() );
+        command = m_builder.addNode( ((IFE1D2DNode)newNode).getPoint() );
       }
 
       if( command != null )
@@ -254,11 +254,14 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
     final IFE1D2DNode snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
     final Object newNode = snapNode == null ? currentPoint : snapNode;
 
+    if( newNode == null )
+      return null;
+
     IStatus status;
     if( newNode instanceof GM_Point )
-      status = m_builder.checkNewNode( (GM_Point) newNode );
+      status = m_builder.checkNewNode( (GM_Point)newNode );
     else
-      status = m_builder.checkNewNode( ((IFE1D2DNode) newNode).getPoint() );
+      status = m_builder.checkNewNode( ((IFE1D2DNode)newNode).getPoint() );
 
     if( status.isOK() )
       m_warning = false;
