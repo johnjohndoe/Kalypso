@@ -49,7 +49,7 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 /**
  * Generator for name when uploading gaf data into db.<br/>
  * This class is responsible for taking the various name constraints into account.
- *
+ * 
  * @author Gernot Belger
  */
 public class PDBNameGenerator
@@ -66,8 +66,8 @@ public class PDBNameGenerator
 
     final String formatName = StringUtils.isBlank( protoName ) ? StringUtils.EMPTY : protoName;
 
-    /* Maxmimum of 99 section with the same station (else something is wrong) */
-    for( int i = 0; i < 999; i++ )
+    /* Maxmimum of 100.000 sections with the same station (else something is wrong) */
+    for( int i = 0; i < 99999; i++ )
     {
       final String name = String.format( "%s_%d", formatName, i ); //$NON-NLS-1$
       if( !m_names.contains( name ) )
@@ -83,7 +83,7 @@ public class PDBNameGenerator
 
   /**
    * Adds a (supposedly) unique name to these names.
-   *
+   * 
    * @return <code>false</code>, if the added name was already known and is hence not unique.
    */
   public boolean addUniqueName( final String name )
