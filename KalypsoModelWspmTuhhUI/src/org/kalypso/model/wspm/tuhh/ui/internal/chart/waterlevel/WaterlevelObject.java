@@ -56,7 +56,8 @@ public class WaterlevelObject
       case IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS:
       case IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_SEGMENT:
 
-        object.setValue( METADATA_LABEL, getLabel() );
+        // FIXME: causes performance problem by almost recursion as this triggers an profile event
+        // object.setValue( METADATA_LABEL, getLabel() );
 
         final Collection<IProfileObject> objects = getObjectList( type );
         objects.add( object );
@@ -96,7 +97,7 @@ public class WaterlevelObject
   public String getLabel( )
   {
     if( StringUtils.isBlank( m_label ) )
-      return Messages.getString("WaterlevelObject_0"); //$NON-NLS-1$
+      return Messages.getString( "WaterlevelObject_0" ); //$NON-NLS-1$
 
     return m_label;
   }
