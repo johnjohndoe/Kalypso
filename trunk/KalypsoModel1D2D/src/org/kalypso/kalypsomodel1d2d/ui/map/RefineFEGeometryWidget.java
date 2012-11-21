@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -77,6 +79,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -268,9 +271,8 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
       m_geometryBuilder.paint( g, projection, m_currentMapPoint );
     try
     {
-      if( m_objects != null )
-        if( m_objects.length > 0 )
-          drawRefinement( g, projection );
+      if( !ArrayUtils.isEmpty( m_objects ) )
+        drawRefinement( g, projection );
     }
     catch( final Exception e )
     {
@@ -278,12 +280,11 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     }
   }
 
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
   private void drawRefinement( final Graphics g, final GeoTransform projection ) throws CoreException, GM_Exception
   {
     /* Paint a rect. */
     final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
     final Color color = new Color( 255, 0, 0 );
     for( final GM_Object object : m_objects )
     {
@@ -298,7 +299,8 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
           final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( exteriorRing, crs );
 
           stroke.setWidth( 3 );
-          stroke.setLineCap( 2 ); // round
+          stroke.setLineCap( BasicStroke.CAP_ROUND );
+          stroke.setLineJoin( BasicStroke.JOIN_ROUND );
           stroke.setStroke( color );
           symb.setStroke( stroke );
 
