@@ -233,9 +233,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -312,9 +309,6 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.SnapToGeometryWidget#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
@@ -368,6 +362,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
         e.printStackTrace();
       }
 
+      // FIXME: use Add2DElementCommand instead?!
       /* create new elements */
       for( final GM_Object object : m_objects )
       {
