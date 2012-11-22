@@ -51,6 +51,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
@@ -249,7 +250,7 @@ public class ElementGeometryBuilder
       final IPolyElement elementForNewNode = discModel.find2DElement( newPoint, 0.0 );
       if( elementForNewNode != null )
       {
-        final IFE1D2DNode foundNode = discModel.findNode( newPoint, SEARCH_DISTANCE );
+        final IFE1D2DNode foundNode = discModel.findNode( newPoint, IFEDiscretisationModel1d2d.CLUSTER_TOLERANCE );
         if( foundNode == null )
         {
           final GM_Polygon surface = elementForNewNode.getGeometry();
@@ -259,7 +260,7 @@ public class ElementGeometryBuilder
       }
 
       // 1a) Node lies on 1d node
-      final IFE1D2DNode node = discModel.findNode( newPoint, SEARCH_DISTANCE );
+      final IFE1D2DNode node = discModel.findNode( newPoint, IFEDiscretisationModel1d2d.CLUSTER_TOLERANCE);
       if( node != null )
       {
         final IFE1D2DEdge[] nodeEdges = node.getLinkedEdges();

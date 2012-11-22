@@ -58,6 +58,7 @@ import org.kalypsodeegree.graphics.sld.PolygonSymbolizerUtils;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
@@ -85,7 +86,7 @@ public class TriangulationBuilder extends AbstractModelObject
 
   public static final String PROPERTY_TIN = "tin"; //$NON-NLS-1$
 
-  private Double m_maxArea = null;
+  private double m_maxArea = 0;
 
   private double m_minAngle = 22;
 
@@ -120,17 +121,17 @@ public class TriangulationBuilder extends AbstractModelObject
     m_lineSymb.setStroke( lineStroke );
   }
 
-  public Double getMaxArea( )
+  public double getMaxArea( )
   {
     return m_maxArea;
   }
 
-  public void setMaxArea( final Double maxArea )
+  public void setMaxArea( final double maxArea )
   {
     setMaxArea( maxArea, true );
   }
 
-  public void setMaxArea( final Double maxArea, final boolean buildImmediately )
+  public void setMaxArea( final double maxArea, final boolean buildImmediately )
   {
     final Double oldValue = m_maxArea;
     m_maxArea = maxArea;
@@ -224,7 +225,7 @@ public class TriangulationBuilder extends AbstractModelObject
     {
       // FIXME: encapsulate into a triangle.exe wrapper!
       final List<String> args = new ArrayList<>();
-      if( m_maxArea != null && m_maxArea > 0 )
+      if( m_maxArea > 0 )
         args.add( "-a" + m_maxArea ); //$NON-NLS-1$
 
       if( m_minAngle > 0 )
@@ -238,29 +239,16 @@ public class TriangulationBuilder extends AbstractModelObject
       final GM_Triangle[] triangles = ConstraintDelaunayHelper.createGM_Triangles( m_boundaryGeom, m_breaklines == null ? null : m_breaklines.getAllCurves(), m_boundaryGeom.getCoordinateSystem(), args.toArray( new String[args.size()] ) );
       if( triangles != null && triangles.length > 0 )
       {
-        m_tin = GeometryFactory.createGM_TriangulatedSurface( triangles, triangles[0].getCoordinateSystem() );
-
-        final Color fromColor = new Color( 0, 255, 100 );
-        final Color toColor = new Color( 200, 20, 20 );
-        final BigDecimal min = new BigDecimal( m_tin.getMinElevation() - 0.2 );
-        final BigDecimal max = new BigDecimal( m_tin.getMaxElevation() + 0.2 );
-        final PolygonColorMapEntry fromEntry = StyleFactory.createPolygonColorMapEntry( fromColor, fromColor, min, BigDecimal.ZERO );
-        fromEntry.getFill().setOpacity( 0.5 );
-        final PolygonColorMapEntry toEntry = StyleFactory.createPolygonColorMapEntry( toColor, toColor, BigDecimal.ZERO, max );
-        toEntry.getFill().setOpacity( 0.5 );
-        final PolygonColorMap_Impl colorMap = new PolygonColorMap_Impl();
-        colorMap.replaceColorMap( PolygonSymbolizerUtils.createColorMap( fromEntry, toEntry, new BigDecimal( 0.2 ), min, max, false ) );
-        m_tinSymb.setColorMap( colorMap );
+        final GM_TriangulatedSurface surface = GeometryFactory.createGM_TriangulatedSurface( triangles, triangles[0].getCoordinateSystem() );
+        setTin( surface );
       }
       else
-        m_tin = null;
+        setTin( null );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
-    // make sure that equals is not called on tin, always fires an event
-    firePropertyChange( PROPERTY_TIN, null, m_tin );
   }
 
   public void reset( )
@@ -298,5 +286,31 @@ public class TriangulationBuilder extends AbstractModelObject
     {
       e.printStackTrace();
     }
+  }
+
+  public void setTin( final GM_TriangulatedSurface triangulatedSurface )
+  {
+    try
+    {
+      final Color fromColor = new Color( 0, 255, 100 );
+      final Color toColor = new Color( 200, 20, 20 );
+      final BigDecimal min = new BigDecimal( triangulatedSurface.getMinElevation() - 0.2 );
+      final BigDecimal max = new BigDecimal( triangulatedSurface.getMaxElevation() + 0.2 );
+      final PolygonColorMapEntry fromEntry = StyleFactory.createPolygonColorMapEntry( fromColor, fromColor, min, BigDecimal.ZERO );
+      fromEntry.getFill().setOpacity( 0.5 );
+      final PolygonColorMapEntry toEntry = StyleFactory.createPolygonColorMapEntry( toColor, toColor, BigDecimal.ZERO, max );
+      toEntry.getFill().setOpacity( 0.5 );
+      final PolygonColorMap_Impl colorMap = new PolygonColorMap_Impl();
+      colorMap.replaceColorMap( PolygonSymbolizerUtils.createColorMap( fromEntry, toEntry, new BigDecimal( 0.2 ), min, max, false ) );
+      m_tinSymb.setColorMap( colorMap );
+    }
+    catch( ElevationException e )
+    {
+      e.printStackTrace();
+    }
+    
+    m_tin = triangulatedSurface;
+    // make sure that equals is not called on tin, always fires an event
+    firePropertyChange( PROPERTY_TIN, null, m_tin );
   }
 }

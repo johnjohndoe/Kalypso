@@ -61,6 +61,8 @@ import org.kalypso.afgui.model.Util;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -409,7 +411,9 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     else if( e.getKeyCode() == KeyEvent.VK_ENTER )
     {
       final TriangulateGeometryOperation triangulateGeometryOperation = new TriangulateGeometryOperation( m_builder, m_discModelWorkspace );
-      triangulateGeometryOperation.convertTriangulationToModel();
+      final IStatus result = ProgressUtilities.busyCursorWhile( triangulateGeometryOperation );
+      if( !result.isOK() )
+        StatusDialog.open( m_composite.getDisplay().getActiveShell(), result, getName() );
     }
     else
       super.keyPressed( e );

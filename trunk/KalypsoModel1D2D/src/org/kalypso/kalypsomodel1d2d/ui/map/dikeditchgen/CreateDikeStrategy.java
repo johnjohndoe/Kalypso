@@ -21,6 +21,10 @@ package org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -68,8 +72,7 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
     m_ringDistancesRight = getRingDistances( innerWidth, outerRightWidth );
   }
 
-  @Override
-  public void addBoundary( final TriangulationBuilder builder ) throws GM_Exception
+  private void addBoundary( final TriangulationBuilder builder ) throws GM_Exception
   {
     final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final CoordinateFilter interpolateElevationFilter = new InterpolateElevationFilter( coordinateSystem, m_elevationModel );
@@ -81,8 +84,7 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
     builder.setBoundary( outerRing, false );
   }
 
-  @Override
-  public void addBreaklines( final TriangulationBuilder tinBuilder ) throws GM_Exception
+  private void addBreaklines( final TriangulationBuilder tinBuilder ) throws GM_Exception
   {
     final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final CoordinateFilter setInnerElevationFilter = new CoordinateFilter()
@@ -149,5 +151,26 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
       return (Polygon)DouglasPeuckerSimplifier.simplify( buffer.getGeometryN( 0 ), Math.min( leftWidth, rightWidth ) / 6 );
     else
       throw new IllegalStateException( "Network is not simply-connected." );
+  }
+
+  @Override
+  public Control createControl( Composite body, FormToolkit toolkit, IMapModell mapModell )
+  {
+    return null;
+  }
+
+  @Override
+  public void createMesh( TriangulationBuilder tinBuilder )
+  {
+    try
+    {
+      addBoundary( tinBuilder );
+      addBreaklines( tinBuilder );
+      tinBuilder.finish();
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 }

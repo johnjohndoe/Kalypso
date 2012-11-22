@@ -84,15 +84,14 @@ public class ImportQuadMeshWorker implements ICoreRunnableWithProgress
       }
 
       /* Add rings as 2d elements to net */
-      final Add2DElementsCommand command = new Add2DElementsCommand( m_discretisationWorkspace, rings );
+      final Add2DElementsCommand command = new Add2DElementsCommand( m_discretisationWorkspace, rings, monitor );
       m_discretisationWorkspace.postCommand( command );
+      return command.getStatus();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.2" ), e ); //$NON-NLS-1$
     }
-
-    return Status.OK_STATUS;
   }
 }

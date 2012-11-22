@@ -69,7 +69,6 @@ import com.bce.gis.io.zweidm.IPolygonWithName;
 import com.bce.gis.io.zweidm.PolygonWithName;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -158,29 +157,18 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
     if( geom == null )
       return;
 
-    if( geom instanceof MultiPolygon )
+    /* split up into single polygons */
+    final int numGeometries = geom.getNumGeometries();
+    for( int j = 0; j < numGeometries; j++ )
     {
-      final MultiPolygon multiPolygon = (MultiPolygon)geom;
+      final Polygon polygon = (Polygon)geom.getGeometryN( j );
 
-      final int numGeometries = multiPolygon.getNumGeometries();
+      final String name = buildName( row, j );
 
-      /* split up into single polygons */
-      for( int j = 0; j < numGeometries; j++ )
-      {
-        final Polygon polygon = (Polygon)multiPolygon.getGeometryN( j );
+      final IPolygonWithName polyWithName = new PolygonWithName( name, polygon );
 
-        final String name = buildName( row, j );
-
-        final IPolygonWithName polyWithName = new PolygonWithName( name, polygon );
-
-        polygons.add( polyWithName );
-      }
-
-      return;
+      polygons.add( polyWithName );
     }
-
-    // We have tested for the shape type before, so this will never happen
-    throw new IllegalStateException();
   }
 
   // TODO: get name of one of the fields?

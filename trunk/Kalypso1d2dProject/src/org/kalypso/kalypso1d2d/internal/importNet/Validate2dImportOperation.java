@@ -48,7 +48,7 @@ class Validate2dImportOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString("Validate2dImportOperation_0"), m_elements.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "Validate2dImportOperation_0" ), m_elements.length ); //$NON-NLS-1$
 
     for( final IPolygonWithName element : m_elements )
     {
@@ -76,22 +76,22 @@ class Validate2dImportOperation implements ICoreRunnableWithProgress
       final TopologyValidationError error = isValidOp.getValidationError();
       final String jtsMessage = error.getMessage();
 
-      final String message = String.format( Messages.getString("Validate2dImportOperation_1"), jtsMessage ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "Validate2dImportOperation_1" ), jtsMessage ); //$NON-NLS-1$
 
       log.add( IStatus.ERROR, message );
     }
 
     /* interior rings? */
     if( polygon.getNumInteriorRing() > 0 )
-      log.add( IStatus.WARNING, Messages.getString("Validate2dImportOperation_2") ); //$NON-NLS-1$
+      log.add( IStatus.WARNING, Messages.getString( "Validate2dImportOperation_2" ) ); //$NON-NLS-1$
 
     /* number of vertices */
-    if( polygon.getNumPoints() > 4 )
-      log.add( IStatus.WARNING, Messages.getString("Validate2dImportOperation_3") ); //$NON-NLS-1$
+    if( polygon.getNumPoints() > 5 )
+      log.add( IStatus.WARNING, Messages.getString( "Validate2dImportOperation_3" ) ); //$NON-NLS-1$
 
     if( log.size() == 1 )
       return log.getAllStati()[0];
 
-    return log.asMultiStatusOrOK( Messages.getString("Validate2dImportOperation_4") ); //$NON-NLS-1$
+    return log.asMultiStatusOrOK( Messages.getString( "Validate2dImportOperation_4" ) ); //$NON-NLS-1$
   }
 }

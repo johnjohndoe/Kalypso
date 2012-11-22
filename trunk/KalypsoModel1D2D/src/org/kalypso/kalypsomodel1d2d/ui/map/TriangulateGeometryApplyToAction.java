@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
-import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -51,7 +54,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 /**
  * @author Gernot Belger
  */
-public class TriangulateGeometryApplyToAction extends Action implements IUpdateable
+public class TriangulateGeometryApplyToAction extends Action
 {
   private final TriangulateGeometryOperation m_operation;
 
@@ -67,15 +70,13 @@ public class TriangulateGeometryApplyToAction extends Action implements IUpdatea
   }
 
   @Override
-  public void update( )
-  {
-    // TODO Auto-generated method stub
-    // TODO: enabled, if tin is available
-  }
-
-  @Override
   public void runWithEvent( final Event event )
   {
-    m_operation.convertTriangulationToModel();
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+
+    final IStatus result = ProgressUtilities.busyCursorWhile( m_operation );
+    if( !result.isOK() )
+      StatusDialog.open( shell, result, getText() );
   }
+
 }

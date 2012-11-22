@@ -71,7 +71,7 @@ class ConvertToModelOperation implements ICoreRunnableWithProgress
       final List<GM_PolygonPatch> rings = createRings( m_elements, new SubProgressMonitor( monitor, 50 ) );
 
       monitor.subTask( Messages.getString( "ConvertToModelOperation.1" ) ); //$NON-NLS-1$
-      final Add2DElementsCommand command = new Add2DElementsCommand( m_discWorkspace, rings );
+      final Add2DElementsCommand command = new Add2DElementsCommand( m_discWorkspace, rings, monitor );
       m_discWorkspace.postCommand( command );
 
       monitor.done();
@@ -143,6 +143,6 @@ class ConvertToModelOperation implements ICoreRunnableWithProgress
 
     final GM_Polygon poly = (GM_Polygon)JTSAdapter.wrap( polygon, srsName );
 
-    return ConstraintDelaunayHelper.convertToTriangles( poly, srsName, true );
+    return ConstraintDelaunayHelper.convertToTriangles( poly, srsName, poly.getSurfacePatch().getExteriorRing().length > 5 );
   }
 }

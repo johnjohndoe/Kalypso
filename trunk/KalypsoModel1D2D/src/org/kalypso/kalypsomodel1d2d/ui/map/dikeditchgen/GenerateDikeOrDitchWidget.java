@@ -25,42 +25,26 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.nio.charset.Charset;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IPropertyTypeFilter;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.TriangulateGeometryComposite;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.shape.ShapeType;
@@ -69,53 +53,48 @@ import org.kalypso.shape.data.SimpleShapeData;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypso.shape.geometry.ISHPGeometry;
-import org.kalypso.ui.addlayer.ThemeAndPropertyChooserGroup;
-import org.kalypso.ui.addlayer.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author kurzbach
  */
-public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidgetWithOptions, IUpdateable, IKalypsoThemeFilter
+public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidgetWithOptions
 {
+  private static final CreateStructuredNetworkStrategy DEFAULT_STRATEGY = new CreateDitchStrategy();
+
   private CommandableWorkspace m_discModelWorkspace;
 
-  private PointSnapper m_pointSnapper;
+//  private PointSnapper m_pointSnapper;
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
-  private LineGeometryBuilder m_networkBuilder;
+//  private LineGeometryBuilder m_networkBuilder;
 
   private Point m_currentPoint;
 
   final TriangulationBuilder m_tinBuilder = new TriangulationBuilder();
 
-  private GM_TriangulatedSurface m_tin;
-
   private double m_currentZ = Double.NaN;
 
-  private ThemeAndPropertyChooserGroup m_themeChooser;
-
-  private PropertyDescriptor m_geometryPd;
-
-  private PropertyDescriptor m_startWidthPd;
-
-  private PropertyDescriptor m_endWidthPd;
+  private CreateStructuredNetworkStrategy m_strategy = DEFAULT_STRATEGY;
 
   public GenerateDikeOrDitchWidget( )
   {
     super( "org.kalypso.model.1d2d.workflow.DikeDitchGen" ); //$NON-NLS-1$
     m_tinBuilder.setMinAngle( 22.5 );
-    m_tinBuilder.setNoSteinerOnBoundary( false, false );
+    m_tinBuilder.setNoSteinerOnBoundary( true );
+
+    // parameters
+//  final double outerLeftWidth = 60;
+//  final double outerRightWidth = 12;
+//  final double innerWidth = 4;
+//  final double innerElevation = 5;
+//  m_strategy = new CreateDikeStrategy( features, outerLeftWidth, outerRightWidth, innerWidth, innerElevation, terrainElevationModelSystem );
+
   }
 
   @Override
@@ -129,11 +108,17 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
     {
+      final Section section = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
+      section.setText( "Network options" );
+      section.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+      final Composite sectionComposite = toolkit.createComposite( section, SWT.NONE );
+      GridLayoutFactory.swtDefaults().spacing( 0, 20 ).applyTo( sectionComposite );
+      section.setClient( sectionComposite );
+
       // network layer
       final IKalypsoLayerModell mapModell = mapPanel.getMapModell();
-      m_themeChooser = new ThemeAndPropertyChooserGroup( this, mapModell, this, makePropertyDescriptors() );
-      final Group themeGroup = m_themeChooser.createControl( body );
-      themeGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+      m_strategy.createControl( sectionComposite, toolkit, mapModell );
     }
 
     // triangulation parameters
@@ -143,54 +128,16 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     return body;
   }
 
-  private PropertyDescriptor[] makePropertyDescriptors( )
-  {
-    final IPropertyTypeFilter geomFilter = new IPropertyTypeFilter()
-    {
-      @Override
-      public boolean accept( final IPropertyType pt )
-      {
-        if( !(pt instanceof IValuePropertyType) )
-          return false;
-
-        final IValuePropertyType pt2 = (IValuePropertyType)pt;
-        if( !pt2.isGeometry() )
-          return false;
-
-        final QName valueQName = pt2.getValueQName();
-        return valueQName.equals( GM_Curve.CURVE_ELEMENT ) || valueQName.equals( GM_MultiCurve.MULTI_CURVE_ELEMENT );
-      }
-    };
-    m_geometryPd = new PropertyDescriptor( "&Geometry", geomFilter, true );
-    final IPropertyTypeFilter doubleFilter = new IPropertyTypeFilter()
-    {
-
-      @Override
-      public boolean accept( IPropertyType pt )
-      {
-        if( !(pt instanceof IValuePropertyType) )
-          return false;
-
-        final IValuePropertyType pt2 = (IValuePropertyType)pt;
-        return Double.class.equals( pt2.getValueClass() );
-      }
-    };
-    m_startWidthPd = new PropertyDescriptor( "Width (&Start)", doubleFilter, true );
-    m_endWidthPd = new PropertyDescriptor( "Width (&End)", doubleFilter, true );
-    final PropertyDescriptor[] pds = new PropertyDescriptor[] { m_geometryPd, m_startWidthPd, m_endWidthPd };
-    return pds;
-  }
-
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
-    final IKalypsoLayerModell mapModell = mapPanel.getMapModell();
-    final String coordinateSystem = mapModell.getCoordinatesSystem();
     m_discModelWorkspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );
-    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d)m_discModelWorkspace.getRootFeature();
-    m_pointSnapper = new PointSnapper( discModel, mapPanel );
-    m_networkBuilder = new LineGeometryBuilder( 0, coordinateSystem );
+//    final IKalypsoLayerModell mapModell = mapPanel.getMapModell();
+//    final String coordinateSystem = mapModell.getCoordinatesSystem();
+//    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d)m_discModelWorkspace.getRootFeature();
+//    m_pointSnapper = new PointSnapper( discModel, mapPanel );
+//    m_networkBuilder = new LineGeometryBuilder( 0, coordinateSystem );
     reinit();
   }
 
@@ -199,32 +146,8 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     final String mode = "Graben oder Deich zeichnen";
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_toolTipRenderer.setTooltip( mode );
-    m_networkBuilder.reset();
+//    m_networkBuilder.reset();
     m_tinBuilder.reset();
-//    try
-//    {
-//      final ShapeCollection network = ShapeSerializer.deserialize( "D:/scratch/simp_polder_diss", KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-//      final IFeatureBindingCollection<AbstractShape> shapes = network.getShapes();
-//      final Collection<LineString> linestrings = new ArrayList<>( shapes.size() );
-//      for( final AbstractShape shape : shapes )
-//      {
-//        final GM_Object geometry = shape.getGeometry();
-//        final QName from = new QName( shape.getFeatureType().getQName().getNamespaceURI(), "Profilober" );
-//        final QName to = new QName( shape.getFeatureType().getQName().getNamespaceURI(), "Profilunte" );
-//        final Double fromValue = (Double)shape.getProperty( from );
-//        final Double toValue = (Double)shape.getProperty( to );
-//        final LineString linestring = (LineString)JTSAdapter.export( geometry ).getGeometryN( 0 );
-//        linestring.setUserData( new Pair<>( fromValue, toValue ) );
-//        linestrings.add( linestring );
-//      }
-//      m_network = JTSAdapter.jtsFactory.createMultiLineString( linestrings.toArray( new LineString[linestrings.size()] ) );
-//    }
-//    catch( final Exception e )
-//    {
-//      e.printStackTrace();
-//    }
-//    m_networkIndexedLine = new LocationIndexedLine( m_network );
-//    createDikeOrDitch();
     repaintMap();
   }
 
@@ -284,9 +207,10 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
   public void mouseMoved( final MouseEvent event )
   {
     final GM_Point snapPoint = snapTo( event.getPoint() );
-    if( m_tin != null )
+    final GM_TriangulatedSurface tin = m_tinBuilder.getTin();
+    if( tin != null )
     {
-      m_currentZ = m_tin.getValue( snapPoint );
+      m_currentZ = tin.getValue( snapPoint );
     }
     repaintMap();
   }
@@ -294,58 +218,45 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
   @Override
   public void mousePressed( final MouseEvent event )
   {
-    if( event.getButton() != MouseEvent.BUTTON1 || event.getClickCount() > 1 )
-      return;
-
-    try
-    {
-      final GM_Point snapPoint = snapTo( event.getPoint() );
-      m_networkBuilder.addPoint( snapPoint );
-    }
-    catch( final Exception e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-      reinit();
-    }
+//    if( event.getButton() != MouseEvent.BUTTON1 || event.getClickCount() > 1 )
+//      return;
+//
+//    try
+//    {
+//      final GM_Point snapPoint = snapTo( event.getPoint() );
+//      m_networkBuilder.addPoint( snapPoint );
+//    }
+//    catch( final Exception e )
+//    {
+//      final IStatus status = StatusUtilities.statusFromThrowable( e );
+//      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+//      reinit();
+//    }
   }
 
   @Override
   public void mouseClicked( final MouseEvent event )
   {
-    if( event.getButton() != MouseEvent.BUTTON1 || event.getClickCount() < 2 )
-      return;
-
-    try
-    {
-      final GM_Curve curve = (GM_Curve)m_networkBuilder.finish();
-      if( curve == null )
-        return;
-
-      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)m_themeChooser.getTheme();
-      if( theme == null )
-        return;
-
-      final FeatureList featureList = theme.getFeatureList();
-//      final IRelationType parentRelation = featureList.getPropertyType();
-//      final Feature parentFeature = featureList.getOwner();
-//      final GMLWorkspace workspace = parentFeature.getWorkspace();
-//      final IFeatureType targetFeatureType = AddFeatureHandlerUtil.chooseFeatureType( Display.getDefault().getActiveShell(), "", parentRelation, workspace );
-//      final AddFeatureCommand command = new AddFeatureCommand( workspace, targetFeatureType, parentFeature, parentRelation, -1, null, null, -1 );
-//      postViewCommand( command, null );
-      createDikeOrDitch( featureList );
-    }
-    catch( final Exception e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-      reinit();
-    }
-    finally
-    {
-      m_networkBuilder.reset();
-      repaintMap();
-    }
+//    if( event.getButton() != MouseEvent.BUTTON1 || event.getClickCount() < 2 )
+//      return;
+//
+//    try
+//    {
+//      final GM_Curve curve = (GM_Curve)m_networkBuilder.finish();
+//      if( curve == null )
+//        return;
+//    }
+//    catch( final Exception e )
+//    {
+//      final IStatus status = StatusUtilities.statusFromThrowable( e );
+//      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+//      reinit();
+//    }
+//    finally
+//    {
+//      m_networkBuilder.reset();
+//      repaintMap();
+//    }
   }
 
 //  private void addCurveToNetwork( final GM_Curve curve ) throws GM_Exception
@@ -359,66 +270,39 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
 //    m_networkIndexedLine = new LocationIndexedLine( m_network );
 //  }
 
-  private void createDikeOrDitch( final FeatureList features )
-  {
-    try
-    {
-      m_tinBuilder.reset();
-
-      final int networkSize = features.size();
-      if( networkSize == 0 )
-        return;
-
-      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-      final ITerrainModel model = caseDataProvider.getModel( ITerrainModel.class.getName() );
-      final ITerrainElevationModelSystem terrainElevationModelSystem = model.getTerrainElevationModelSystem();
-
-      // parameters
-//      final double outerLeftWidth = 60;
-//      final double outerRightWidth = 12;
-//      final double innerWidth = 4;
-//      final double innerElevation = 5;
-//      final CreateDikeStrategy createStrategy = new CreateDikeStrategy( features, outerLeftWidth, outerRightWidth, innerWidth, innerElevation, terrainElevationModelSystem );
-
-      // parameters
-      final double minimumDepth = 0;
-      final double innerWidthFraction = 0.5;
-      final IPropertyType geomProperty = m_themeChooser.getProperty( m_geometryPd );
-      final IPropertyType startWidthProperty = m_themeChooser.getProperty( m_startWidthPd );
-      final IPropertyType endWidthProperty = m_themeChooser.getProperty( m_endWidthPd );
-      final CreateDitchStrategy createStrategy = new CreateDitchStrategy( innerWidthFraction, minimumDepth, terrainElevationModelSystem );
-      createStrategy.setFeatures( features, geomProperty, startWidthProperty, endWidthProperty );
-      // add outer boundary
-      createStrategy.addBoundary( m_tinBuilder );
-
-      // add network breaklines
-      createStrategy.addBreaklines( m_tinBuilder );
-
-      // finalize mesh
-      m_tinBuilder.finish();
-      m_tin = m_tinBuilder.getTin();
-
-      final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      final GM_Object2Shape gm_Object2Shape = new GM_Object2Shape( ShapeType.POLYGONZ, coordinateSystem );
-      final ISHPGeometry shapeTin = gm_Object2Shape.convert( m_tin );
-      final SimpleShapeData dataProvider = new SimpleShapeData( Charset.defaultCharset(), coordinateSystem, ShapeType.POLYGONZ, new IDBFField[0] );
-      dataProvider.addRow( shapeTin, new Object[0] );
-      final ShapeWriter shapeWriter = new ShapeWriter( dataProvider );
-      shapeWriter.write( "d:/scratch/polder_tin", null );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
   @Override
   public void keyPressed( final KeyEvent e )
   {
     if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
       reinit();
-    else if( e.getKeyCode() == KeyEvent.VK_BACK_SPACE )
-      m_networkBuilder.removeLastPoint();
+    else if( e.getKeyCode() == KeyEvent.VK_ENTER )
+    {
+      // create mesh
+      m_tinBuilder.reset();
+      m_strategy.createMesh( m_tinBuilder );
+    }
+    else if( e.getKeyCode() == KeyEvent.VK_E )
+    {
+      try
+      {
+        final GM_TriangulatedSurface tin = m_tinBuilder.getTin();
+        final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+        final GM_Object2Shape gm_Object2Shape = new GM_Object2Shape( ShapeType.POLYGONZ, coordinateSystem );
+        final ISHPGeometry shapeTin = gm_Object2Shape.convert( tin );
+        final SimpleShapeData dataProvider = new SimpleShapeData( Charset.defaultCharset(), coordinateSystem, ShapeType.POLYGONZ, new IDBFField[0] );
+        dataProvider.addRow( shapeTin, new Object[0] );
+        final ShapeWriter shapeWriter = new ShapeWriter( dataProvider );
+        shapeWriter.write( "d:/scratch/polder_tin", null );
+      }
+      catch( final Exception ex )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( ex );
+        KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+        reinit();
+      }
+    }
+//    else if( e.getKeyCode() == KeyEvent.VK_BACK_SPACE )
+//      m_networkBuilder.removeLastPoint();
     repaintMap();
   }
 
@@ -430,11 +314,11 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
 
     m_tinBuilder.paint( g, projection );
 
-    if( m_pointSnapper != null )
-      m_pointSnapper.paint( g );
+//    if( m_pointSnapper != null )
+//      m_pointSnapper.paint( g );
 
-    if( m_networkBuilder != null )
-      m_networkBuilder.paint( g, projection, m_currentPoint );
+//    if( m_networkBuilder != null )
+//      m_networkBuilder.paint( g, projection, m_currentPoint );
 
     if( m_currentPoint != null )
     {
@@ -466,30 +350,5 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
   {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  @Override
-  public boolean accept( IKalypsoTheme theme )
-  {
-    if( theme instanceof IKalypsoFeatureTheme )
-    {
-      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
-      final IFeatureType featureType = featureTheme.getFeatureType();
-      if( featureType != null )
-      {
-        final IPropertyType[] polygoneProperties = PropertyUtils.filterProperties( featureType, m_geometryPd.filter );
-        if( polygoneProperties.length > 0 )
-          return true;
-      }
-    }
-
-    return false;
-  }
-
-  @Override
-  public void update( )
-  {
-    // TODO Auto-generated method stub
-
   }
 }

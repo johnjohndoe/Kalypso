@@ -20,11 +20,23 @@ package org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -34,6 +46,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -47,92 +60,91 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.noding.SegmentString;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+
 /**
  * @author kurzbach
  */
-public class CreateDitchStrategy implements CreateStructuredNetworkStrategy
+public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy implements CreateStructuredNetworkStrategy
 {
+  private CreateDitchControl m_createDitchControl;
 
-  private final double m_innerWidthFraction;
+  private final DataBindingContext m_bindingContext = new DataBindingContext();
 
-  final double m_minimumDepth;
+  private IValueChangeListener m_tinAssigned = null;
 
-  final IElevationModel m_elevationModel;
-
-  // working network features
-  private FeatureList m_network;
-
-  private IPropertyType m_geomProperty;
-
-  private IPropertyType m_startWidthProperty;
-
-  private IPropertyType m_endWidthProperty;
-
-  public CreateDitchStrategy( final double innerWidthFraction, final double minimumDepth, final IElevationModel elevationModel )
-  {
-    m_innerWidthFraction = innerWidthFraction;
-    m_minimumDepth = minimumDepth;
-    m_elevationModel = elevationModel;
-  }
-
-  public void setFeatures( final FeatureList network, IPropertyType geomProperty, IPropertyType startWidthProperty, IPropertyType endWidthProperty )
-  {
-    m_network = network;
-    m_geomProperty = geomProperty;
-    m_startWidthProperty = startWidthProperty;
-    m_endWidthProperty = endWidthProperty;
-  }
+  private IObservableValue m_modelTin;
 
   @Override
-  public void addBoundary( final TriangulationBuilder tinBuilder ) throws GM_Exception
+  public void createMesh( final TriangulationBuilder tinBuilder )
   {
-    final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    final double densifyFactor = m_innerWidthFraction > 0.5 ? 2 / m_innerWidthFraction : m_innerWidthFraction * 4;
-    final InterpolateElevationFilter ringFilter = new InterpolateElevationFilter( coordinateSystem, m_elevationModel );
-    final GM_Polygon outerRing = getRingPolygon( 1.0, densifyFactor, null, ringFilter );
-    tinBuilder.setBoundary( outerRing, false );
-  }
-
-  private GM_Polygon getRingPolygon( final double widthFactor, double densifyFactor, final CoordinateFilter networkFilter, final CoordinateFilter ringFilter ) throws GM_Exception
-  {
-    final int networkSize = m_network.size();
-    final Collection<SegmentString> bufferSegStrList = new ArrayList<>( networkSize );
-    double minimumWidth = Double.MAX_VALUE;
-    for( int i = 0; i < networkSize; i++ )
+    try
     {
-      final Feature linearFeature = m_network.getResolved( i );
-      final LineString[] lines = getLines( linearFeature, densifyFactor, networkFilter );
-      final Pair<Double, Double> startEnd = getWidth( linearFeature );
-      final double minWidth = Math.min( startEnd.getLeft(), startEnd.getRight() );
-      minimumWidth = minWidth < minimumWidth ? minWidth : minimumWidth;
-      for( int j = 0; j < lines.length; j++ )
-        LineStringBufferBuilder.addRawBufferLines( lines[j], startEnd.getLeft() * widthFactor, startEnd.getRight() * widthFactor, startEnd.getLeft() * widthFactor, startEnd.getRight() * widthFactor, bufferSegStrList );
+      if( m_tinAssigned != null )
+        m_modelTin.removeValueChangeListener( m_tinAssigned );
+      
+      final FeatureList network = m_createDitchControl.getNetworkFeatures();
+      final int networkSize = network.size();
+      if( networkSize == 0 )
+        return;
+
+      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+      final ITerrainModel model = caseDataProvider.getModel( ITerrainModel.class.getName() );
+      final IElevationModel elevationModel = model.getTerrainElevationModelSystem();
+
+      // add outer boundary
+      addBoundary( tinBuilder, elevationModel );
+
+      // add network breaklines
+      addBreaklines( tinBuilder, elevationModel );
+
+      m_modelTin.addValueChangeListener( m_tinAssigned );
+      tinBuilder.finish();
     }
-    final Polygon outerDensified = (Polygon)LineStringBufferBuilder.buffer( bufferSegStrList );
-    final Polygon filtered = JTSUtilities.removeCoincidentPoints( outerDensified, minimumWidth * widthFactor / 2 );
-    if( ringFilter != null )
-      filtered.apply( ringFilter );
-    final GM_Polygon outerRing = (GM_Polygon)JTSAdapter.wrap( filtered, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-    return outerRing;
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
-  private LineString[] getLines( final Feature linearFeature, final double densifyFactor, CoordinateFilter networkFilter )
+  private void addBoundary( final TriangulationBuilder tinBuilder, IElevationModel elevationModel ) throws GM_Exception
+  {
+    final GM_Polygon boundaryPolygon = m_createDitchControl.getBoundaryPolygon();
+    final Polygon outerRing = (Polygon)JTSAdapter.export( boundaryPolygon ).getGeometryN( 0 );
+    final String coordinateSystem = boundaryPolygon.getCoordinateSystem();
+    final InterpolateElevationFilter ringFilter = new InterpolateElevationFilter( coordinateSystem, elevationModel );
+    outerRing.apply( ringFilter );
+    tinBuilder.setBoundary( (GM_Polygon)JTSAdapter.wrap( outerRing, coordinateSystem ), false );
+  }
+
+  private LineString[] getLines( final Feature linearFeature, final double densifyFactor, final CoordinateFilter networkFilter )
   {
     try
     {
       // convert to jts, add Z, simplify and densify
-      final GM_Object geometry = (GM_Object)linearFeature.getProperty( m_geomProperty );
+      final IPropertyType geomProperty = m_createDitchControl.getNetworkGeometryProperty();
+      final GM_Object geometry = (GM_Object)linearFeature.getProperty( geomProperty );
       final Geometry linestring = JTSAdapter.export( geometry ).getGeometryN( 0 );
+      linestring.apply( new CoordinateFilter()
+      {
+
+        @Override
+        public void filter( final Coordinate coord )
+        {
+          if( coord.z < -100 )
+            coord.z = Double.NaN;
+        }
+      } );
       final Pair<Double, Double> startEnd = getWidth( linearFeature );
-      final double maxWidth = Math.max( startEnd.getLeft(), startEnd.getRight() );
+      final double minWidth = Math.min( startEnd.getLeft(), startEnd.getRight() );
       final LineString[] results = new LineString[linestring.getNumGeometries()];
       for( int i = 0; i < results.length; i++ )
       {
-        final LineString linestringZ = JTSUtilities.interpolateMissingZ( (LineString)linestring.getGeometryN( i ) );
+        final LineString simplified = (LineString)DouglasPeuckerSimplifier.simplify( linestring.getGeometryN( i ), minWidth / 20 );
+        final LineString linestringZ = JTSUtilities.interpolateMissingZ( simplified );
         if( networkFilter != null )
           linestringZ.apply( networkFilter );
-        final LineString simplified = (LineString)DouglasPeuckerSimplifier.simplify( linestringZ, maxWidth / 1000 );
-        results[i] = (LineString)Densifier.densify( simplified, maxWidth * densifyFactor );
+        results[i] = linestringZ;// (LineString)Densifier.densify( simplified, minWidth * densifyFactor );
       }
       return results;
     }
@@ -145,27 +157,64 @@ public class CreateDitchStrategy implements CreateStructuredNetworkStrategy
 
   private Pair<Double, Double> getWidth( final Feature linearFeature )
   {
-    final Double startWidth = (Double)linearFeature.getProperty( m_startWidthProperty );
-    final Double endWidth = (Double)linearFeature.getProperty( m_endWidthProperty );
+    final IPropertyType startWidthProperty = m_createDitchControl.getNetworkStartWidthProperty();
+    final IPropertyType endWidthProperty = m_createDitchControl.getNetworkEndWidthProperty();
+    final Double startWidth = (Double)linearFeature.getProperty( startWidthProperty );
+    final Double endWidth = (Double)linearFeature.getProperty( endWidthProperty );
     final Pair<Double, Double> startEnd = Pair.of( startWidth, endWidth );
     return startEnd;
   }
 
-  @Override
-  public void addBreaklines( final TriangulationBuilder tinBuilder ) throws GM_Exception
+  private void addBreaklines( final TriangulationBuilder tinBuilder, final IElevationModel elevationModel ) throws GM_Exception
   {
-    final String coordinateSystem = getCoordinateSystem();
-    final int networkSize = m_network.size();
+    final double innerWidthFraction = m_createDitchControl.getInnerWidthFraction();
+    final double innerDensifyFactor = innerWidthFraction > 0.5 ? 4 / innerWidthFraction : innerWidthFraction * 2;
+    final double outerDensifyFactor = innerWidthFraction > 0.5 ? 2 / innerWidthFraction : innerWidthFraction * 4;
 
-    // temporary elevation model for the outside
+    final FeatureList network = m_createDitchControl.getNetworkFeatures();
+    final int networkSize = network.size();
+    if( networkSize == 0 )
+      return;
+
+    final Feature firstFeature = network.getResolved( 0 );
+    final GM_Object firstGeometry = (GM_Object)firstFeature.getProperty( m_createDitchControl.getNetworkGeometryProperty() );
+    final String networkCoordinateSystem = firstGeometry.getCoordinateSystem();
+
+    // get outermost ring for upper bankline
+    final InterpolateElevationFilter interpolateElevationFilter = new InterpolateElevationFilter( networkCoordinateSystem, elevationModel );
+    final Collection<SegmentString> outerSegStrList = new ArrayList<>( networkSize );
+    double minimumWidth = Double.MAX_VALUE;
+    for( int i = 0; i < networkSize; i++ )
+    {
+      final Feature linearFeature = network.getResolved( i );
+      final LineString[] lines = getLines( linearFeature, outerDensifyFactor, null );
+      final Pair<Double, Double> startEnd = getWidth( linearFeature );
+      final double minWidth = Math.min( startEnd.getLeft(), startEnd.getRight() );
+      minimumWidth = minWidth < minimumWidth ? minWidth : minimumWidth;
+      for( int j = 0; j < lines.length; j++ )
+        LineStringBufferBuilder.addRawBufferLines( lines[j], startEnd.getLeft() * 1.0, startEnd.getRight() * 1.0, startEnd.getLeft() * 1.0, startEnd.getRight() * 1.0, outerSegStrList );
+    }
+    final Polygon outerBuffered = (Polygon)LineStringBufferBuilder.buffer( outerSegStrList );
+    final Polygon outerFiltered = JTSUtilities.removeCoincidentPoints( outerBuffered, minimumWidth, minimumWidth / 5 );
+    final Polygon outerDensified = (Polygon)Densifier.densify( outerFiltered, minimumWidth * outerDensifyFactor );
+    outerDensified.apply( interpolateElevationFilter );
+    final GM_Polygon upperBankline = (GM_Polygon)JTSAdapter.wrap( outerDensified, networkCoordinateSystem );
+    addPolygonAsBreakline( tinBuilder, upperBankline );
+
+    // temporary elevation model for ensuring minimum depth inside ditch
     final double minAngle = tinBuilder.getMinAngle();
+    final double maxArea = tinBuilder.getMaxArea();
+    final boolean noSteinerOnBoundary = tinBuilder.getNoSteinerOnBoundary();
+    tinBuilder.setNoSteinerOnBoundary( true, false );
     tinBuilder.setMinAngle( 0, false );
-    tinBuilder.setNoSteiner( true );
+    tinBuilder.setMaxArea( 0, false );
     tinBuilder.finish();
-    final GM_TriangulatedSurface tin = tinBuilder.getTin();
+    tinBuilder.setNoSteinerOnBoundary( noSteinerOnBoundary, false );
     tinBuilder.setMinAngle( minAngle, false );
-    tinBuilder.setNoSteiner( false );
+    tinBuilder.setMaxArea( maxArea, false );
 
+    final GM_TriangulatedSurface tin = tinBuilder.getTin();
+    final double minimumDepth = m_createDitchControl.getMinimumDepth();
     final CoordinateFilter minimumDepthFilter = new CoordinateFilter()
     {
 
@@ -174,11 +223,11 @@ public class CreateDitchStrategy implements CreateStructuredNetworkStrategy
       {
         try
         {
-          final GM_Point p = GeometryFactory.createGM_Point( JTSAdapter.wrap( coord ), coordinateSystem );
+          final GM_Point p = GeometryFactory.createGM_Point( JTSAdapter.wrap( coord ), networkCoordinateSystem );
           final double outsideElevation = tin.getValue( p );
           double depth = outsideElevation - coord.z;
-          if( depth < m_minimumDepth )
-            depth = m_minimumDepth;
+          if( depth < minimumDepth )
+            depth = minimumDepth;
           coord.z = outsideElevation - depth;
         }
         catch( final Exception e )
@@ -188,37 +237,67 @@ public class CreateDitchStrategy implements CreateStructuredNetworkStrategy
       }
     };
 
-    final double densifyFactor = m_innerWidthFraction > 0.5 ? 4 / m_innerWidthFraction : m_innerWidthFraction * 2;
+    final Collection<SegmentString> innerSegStrList = new ArrayList<>( networkSize );
     for( int i = 0; i < networkSize; i++ )
     {
-      final Feature linearFeature = m_network.getResolved( i );
-      final LineString[] lines = getLines( linearFeature, densifyFactor, minimumDepthFilter );
+      final Feature linearFeature = network.getResolved( i );
+      final LineString[] lines = getLines( linearFeature, innerDensifyFactor, minimumDepthFilter );
       for( int j = 0; j < lines.length; j++ )
       {
-        final LineString linestringZ = JTSUtilities.interpolateMissingZ( lines[j] );
-        linestringZ.apply( minimumDepthFilter );
-        final GM_Curve edgeCurve = (GM_Curve)JTSAdapter.wrap( linestringZ, coordinateSystem );
+        final GM_Curve edgeCurve = (GM_Curve)JTSAdapter.wrap( lines[j], networkCoordinateSystem );
         tinBuilder.addBreakLine( edgeCurve, false );
+
+        final Pair<Double, Double> startEnd = getWidth( linearFeature );
+        LineStringBufferBuilder.addRawBufferLines( lines[j], startEnd.getLeft() * innerWidthFraction, startEnd.getRight() * innerWidthFraction, startEnd.getLeft() * innerWidthFraction, startEnd.getRight()
+            * innerWidthFraction, innerSegStrList );
       }
     }
-    final GM_Polygon inner = getRingPolygon( m_innerWidthFraction, densifyFactor, minimumDepthFilter, null );
+    final Polygon innerBuffered = (Polygon)LineStringBufferBuilder.buffer( innerSegStrList );
+    final Polygon innerZ = JTSUtilities.interpolateMissingZ( innerBuffered );
+    final Polygon innerFiltered = JTSUtilities.removeCoincidentPoints( innerZ, minimumWidth * innerWidthFraction, minimumWidth * innerWidthFraction / 5 );
+    final GM_Polygon inner = (GM_Polygon)JTSAdapter.wrap( innerFiltered, networkCoordinateSystem );
+    addPolygonAsBreakline( tinBuilder, inner );
 
-    // exterior ring
-    final GM_Curve exteriorRingAsCurve = GeometryFactory.createGM_Curve( inner.getSurfacePatch().getExteriorRing(), coordinateSystem );
-    tinBuilder.addBreakLine( exteriorRingAsCurve, false );
-
-    // interior rings
-    final GM_Position[][] interiorRings = inner.getSurfacePatch().getInteriorRings();
-    for( int i = 0; i < interiorRings.length; i++ )
+    m_tinAssigned = new IValueChangeListener()
     {
-      final GM_Position[] interiorRing = interiorRings[i];
-      final GM_Curve innerRingAsCurve = GeometryFactory.createGM_Curve( interiorRing, coordinateSystem );
-      tinBuilder.addBreakLine( innerRingAsCurve, false );
-    }
+      @Override
+      public void handleValueChange( ValueChangeEvent event )
+      {
+        try
+        {
+          final GM_TriangulatedSurface mesh = tinBuilder.getTin();
+          final String coordinateSystem = mesh.getCoordinateSystem();
+          final List<GM_Triangle> triangles = new ArrayList<>( mesh.size() );
+          for( final GM_Triangle triangle : mesh )
+          {
+            final GM_Position[] pos = triangle.getExteriorRing();
+            for( int i = 0; i < 3; i++ )
+            {
+              if( !upperBankline.contains( pos[i] ) )
+              {
+                final GM_Point p = GeometryFactory.createGM_Point( pos[i], coordinateSystem );
+                double z = elevationModel.getElevation( p );
+                pos[i] = GeometryFactory.createGM_Position( p.getX(), p.getY(), z );
+              }
+            }
+            final GM_Triangle newTriangle = GeometryFactory.createGM_Triangle( pos[0], pos[1], pos[2], coordinateSystem );
+            triangles.add( newTriangle );
+          }
+          tinBuilder.setTin( GeometryFactory.createGM_TriangulatedSurface( triangles, coordinateSystem ) );
+        }
+        catch( final ElevationException | GM_Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
+    };
+    m_modelTin = BeansObservables.observeValue( m_bindingContext.getValidationRealm(), tinBuilder, TriangulationBuilder.PROPERTY_TIN );
   }
 
-  private String getCoordinateSystem( )
+  @Override
+  public Control createControl( final Composite body, final FormToolkit toolkit, final IMapModell mapModell )
   {
-    return m_network.getResolved( 0 ).getDefaultGeometryPropertyValue().getCoordinateSystem();
+    m_createDitchControl = new CreateDitchControl( body, toolkit, mapModell );
+    return m_createDitchControl;
   }
 }
