@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -152,5 +153,11 @@ public class Element1D extends FE1D2DElement implements IElement1D
   public void setRoughnessStyle( final String value )
   {
     setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );
+  }
+
+  @Override
+  public GM_Curve getGeometry( )
+  {
+    return getEdge().getGeometry();
   }
 }

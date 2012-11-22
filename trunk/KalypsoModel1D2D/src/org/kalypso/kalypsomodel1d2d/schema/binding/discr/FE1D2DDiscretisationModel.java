@@ -42,7 +42,9 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import gnu.trove.THashSet;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -59,10 +61,21 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.IntersectionMatrix;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * A mesh with its elements, edges, nodes, complex elements (calculation units, transitions, junctions), continuity (boundary) lines
@@ -71,8 +84,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDiscretisationModel1d2d
 {
-  private static final double CLUSTER_TOLERANCE = 0.001;
-
   private final IFeatureType m_polyType;
 
   public FE1D2DDiscretisationModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
@@ -86,6 +97,8 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   {
     Assert.throwIAEOnNullParam( node0, "node0" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( node1, "node1" ); //$NON-NLS-1$
+    if( node0.equals( node1 ) )
+      throw new IllegalStateException( "Attempted to create an edge for coincident nodes." ); //$NON-NLS-1$
 
     IFE1D2DEdge edge = findEdge( node0, node1 );
     if( edge != null )
@@ -106,6 +119,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   @Override
   public IElement1D createElement1D( final IFE1D2DEdge edge )
   {
+    Assert.throwIAEOnNull( edge, "edge" );
     if( edge.getLinkedElements().length != 0 )
       throw new IllegalStateException( "The edge is already contained in one or more elements." ); //$NON-NLS-1$
 
@@ -124,6 +138,17 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   @Override
   public IPolyElement createElement2D( final IFE1D2DEdge[] edges )
   {
+    if( edges.length < 3 || edges.length > 4 )
+      throw new IllegalStateException( String.format( "Attempted to create a 2D element with %d edges.", edges.length ) ); //$NON-NLS-1$
+
+    for( final IFE1D2DEdge edge : edges )
+    {
+      if( edge == null )
+        throw new IllegalStateException( "Attempted to create a 2D element with a null edge." ); //$NON-NLS-1$
+      if( edge.getLinkedElements().length > 1 )
+        throw new IllegalStateException( "The edge is already contained in two or more elements." ); //$NON-NLS-1$
+    }
+
     final GMLWorkspace workspace = getWorkspace();
     try
     {
@@ -145,13 +170,9 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   public IFE1D2DNode createNode( final GM_Point nodeLocation )
   {
     Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" ); //$NON-NLS-1$
-
     final IFE1D2DNode existingNode = findNode( nodeLocation, CLUSTER_TOLERANCE );
     if( existingNode != null )
       return existingNode;
-
-    if( elementsIntersect( nodeLocation ) )
-      throw new IllegalStateException( "The given location is inside an existing element" ); //$NON-NLS-1$
 
     try
     {
@@ -215,6 +236,9 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   @Override
   public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
+    Assert.throwIAEOnNullParam( node0, "node0" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( node1, "node1" ); //$NON-NLS-1$
+
     final IFE1D2DEdge[] containers = node0.getLinkedEdges();
     for( final IFE1D2DEdge edge : containers )
     {
@@ -238,6 +262,8 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       if( elementClass.isInstance( current ) )
       {
         final GM_Object geometryFromNetItem = current.getDefaultGeometryPropertyValue();
+        if( geometryFromNetItem.contains( position ) )
+          return (T)current;
         final double curDist = position.distance( geometryFromNetItem );
         if( min > curDist && curDist <= grabDistance )
         {
@@ -261,7 +287,6 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     final List<IFE1D2DNode> foundNodes = nodeList.queryResolved( reqEnvelope, null );
     if( foundNodes.isEmpty() )
       return null;
-
     else
     {
       double minDistance = Double.MAX_VALUE;
@@ -276,8 +301,10 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
           minDistance = currentDistance;
         }
       }
-
-      return nearestNode;
+      if( minDistance <= grabDistance )
+        return nearestNode;
+      else
+        return null;
     }
   }
 
@@ -461,7 +488,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   }
 
   @Override
-  @SuppressWarnings( "unchecked" )  
+  @SuppressWarnings( "unchecked" )
   public void removeAllElements( final Collection< ? extends IFE1D2DElement> elementsToRemove )
   {
     Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" );//$NON-NLS-1$
@@ -496,25 +523,168 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   }
 
   @Override
-  public boolean elementsIntersect( final GM_Point point )
+  public boolean isValidNodeLocation( final GM_Point point )
   {
-    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, CLUSTER_TOLERANCE );
-    final List<IFE1D2DElement> elements = queryElements( reqEnvelope, null );
-    for( final Iterator<IFE1D2DElement> iterator = elements.iterator(); iterator.hasNext(); )
+    if( findNode( point, CLUSTER_TOLERANCE ) != null )
+      return true;
+
+    try
     {
-      final IFE1D2DElement element = iterator.next();
-      if( element instanceof IPolyElement )
+      final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, CLUSTER_TOLERANCE );
+      final List<IFE1D2DElement> elements = queryElements( reqEnvelope, null );
+      final Geometry pBuffer = JTSAdapter.export( point ).buffer( CLUSTER_TOLERANCE );
+      for( final Iterator<IFE1D2DElement> iterator = elements.iterator(); iterator.hasNext(); )
       {
-        if( !((IPolyElement)element).getGeometry().contains( point ) )
-          iterator.remove();
-      }
-      else if( element instanceof IElement1D )
-      {
-        if( !((IElement1D)element).getEdge().getGeometry().contains( point ) )
-          iterator.remove();
+        final IFE1D2DElement element = iterator.next();
+        final Geometry geom = JTSAdapter.export( element.getGeometry() );
+        if( pBuffer.intersects( geom ) )
+          return false;
       }
     }
-    return !elements.isEmpty();
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * WARNING: The array may change as a result of this method!
+   * The points may be snapped to existing nodes within the cluster tolerance!
+   */
+  @Override
+  public boolean isValidElement( final GM_Point[] points )
+  {
+    if( points.length < 2 || points.length > 4 )
+      return false;
+
+    // snap all points to existing nodes, if possible
+    for( int i = 0; i < points.length; i++ )
+    {
+      final IFE1D2DNode node = findNode( points[i], CLUSTER_TOLERANCE );
+      if( node != null )
+        points[i] = node.getPoint();
+      if( !isValidNodeLocation( points[i] ) )
+        return false;
+
+      // check that no two points are too close
+      for( int j = 0; j < i; j++ )
+        if( points[i].distance( points[j] ) <= CLUSTER_TOLERANCE )
+          return false;
+    }
+
+    // check that the points are all unique
+    final Set<GM_Point> pointSet = new HashSet<>( Arrays.asList( points ) );
+    if( pointSet.size() != points.length )
+      return false;
+
+    try
+    {
+      // check geometry against existing elements
+      if( points.length == 2 )
+      {
+        final GM_Position[] positions = new GM_Position[] { points[0].getPosition(), points[1].getPosition() };
+        final GM_Curve curve = GeometryFactory.createGM_Curve( positions, points[0].getCoordinateSystem() );
+        final Geometry newEdge = JTSAdapter.export( curve );
+        //return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.5" ) ); //$NON-NLS-1$
+        return !newElementOverlapsExisting( newEdge, curve.getEnvelope() );
+      }
+      else
+      {
+        // 2D element
+        final GM_Position[] positions = new GM_Position[points.length + 1];
+        for( int i = 0; i < points.length; i++ )
+          positions[i] = points[i].getPosition();
+        // close ring
+        positions[positions.length - 1] = positions[0];
+
+        if( GeometryUtilities.isSelfIntersecting( positions ) )
+          //return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ); //$NON-NLS-1$
+          return false;
+
+        final GM_Polygon surface = GeometryFactory.createGM_Surface( positions, null, points[0].getCoordinateSystem() );
+        final Polygon newPolygon = (Polygon)JTSAdapter.export( surface );
+        if( newPolygon.buffer( -CLUSTER_TOLERANCE, 1 ).isEmpty() )
+          // element is too narrow
+          return false;
+
+        if( !newPolygon.convexHull().equals( newPolygon ) )
+          // element is not convex
+          //return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.7" ) ); //$NON-NLS-1$
+          return false;
+
+        //return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.5" ) ); //$NON-NLS-1$
+        return !newElementOverlapsExisting( newPolygon, surface.getEnvelope() );
+      }
+    }
+    catch( final GM_Exception e )
+    {
+      throw new IllegalStateException( e );
+    }
+  }
+
+  private boolean newElementOverlapsExisting( final Geometry newGeom, GM_Envelope envelope ) throws GM_Exception
+  {
+    final List<IFE1D2DElement> foundElements = queryElements( envelope, null );
+    for( final IFE1D2DElement foundElement : foundElements )
+    {
+      if( newGeom instanceof Polygon && foundElement instanceof IElement1D )
+        // new 2D element may overlap 1D elements
+        return false;
+      if( newGeom instanceof LineString && foundElement instanceof IPolyElement )
+        // new 1D element may overlap 2D elements
+        return false;
+
+      final GM_Object foundGeometry = foundElement.getGeometry();
+      final Geometry otherGeom = JTSAdapter.export( foundGeometry );
+
+      if( otherGeom.distance( newGeom ) > CLUSTER_TOLERANCE )
+        continue;
+
+      final int dim = newGeom.getDimension();
+      final IntersectionMatrix im = otherGeom.relate( newGeom );
+
+      if( im.isDisjoint() )
+        // the elements are too close
+        return true;
+      else if( im.isOverlaps( dim, dim ) )
+        // the elements overlap
+        return true;
+      else if( im.isEquals( dim, dim ) )
+        // the elements are identical
+        return true;
+      else if( im.isTouches( dim, dim ) )
+      {
+        // the elements may touch in a line or points
+        final Geometry intersection = otherGeom.intersection( newGeom );
+        final Coordinate[] coordinates = intersection.getCoordinates();
+        if( coordinates.length > 2 )
+          // elements intersect in more than one segment
+          return true;
+
+        // intersection coordinates must be in both polygons
+        if( !Arrays.asList( otherGeom.getCoordinates() ).contains( coordinates[0] ) )
+          return true;
+        if( !Arrays.asList( newGeom.getCoordinates() ).contains( coordinates[0] ) )
+          return true;
+
+        if( coordinates.length == 2 )
+        {
+          if( !Arrays.asList( otherGeom.getCoordinates() ).contains( coordinates[1] ) )
+            return true;
+          if( !Arrays.asList( newGeom.getCoordinates() ).contains( coordinates[1] ) )
+            return true;
+        }
+
+        continue;
+      }
+
+      // either disjoint, overlaps, equals, or touches,
+      // so we should never get here
+      throw new IllegalStateException();
+    }
+    return false;
   }
 
   @Override

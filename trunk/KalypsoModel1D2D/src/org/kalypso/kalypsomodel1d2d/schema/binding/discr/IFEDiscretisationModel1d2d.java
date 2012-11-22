@@ -53,6 +53,8 @@ import de.renew.workflow.connector.cases.IModel;
 
 public interface IFEDiscretisationModel1d2d extends IModel
 {
+  public static final double CLUSTER_TOLERANCE = 0.01;
+
   QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "DiscretisationModel" ); //$NON-NLS-1$
 
   QName WB1D2D_PROP_COMPLEX_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "complexElement" ); //$NON-NLS-1$
@@ -73,6 +75,8 @@ public interface IFEDiscretisationModel1d2d extends IModel
   GM_Envelope getBoundingBox( );
 
   // nodes
+
+  boolean isValidNodeLocation( GM_Point nodeLocation );
 
   IFE1D2DNode createNode( GM_Point nodeLocation );
 
@@ -96,6 +100,8 @@ public interface IFEDiscretisationModel1d2d extends IModel
 
   // elements
 
+  boolean isValidElement( GM_Point[] points );
+
   IElement1D createElement1D( IFE1D2DEdge edge );
 
   IPolyElement createElement2D( IFE1D2DEdge[] edges );
@@ -105,8 +111,6 @@ public interface IFEDiscretisationModel1d2d extends IModel
   IPolyElement find2DElement( GM_Point position, double grabDistance );
 
   void removeElement( IFE1D2DElement element );
-
-  boolean elementsIntersect( GM_Point point );
 
   List<IFE1D2DElement> queryElements( GM_Envelope env, List<IFE1D2DElement> result );
 
@@ -141,4 +145,5 @@ public interface IFEDiscretisationModel1d2d extends IModel
   void removeAllElements( Collection< ? extends IFE1D2DElement> elements );
 
   void removeAllEdges( Collection<IFE1D2DEdge> edges );
+
 }

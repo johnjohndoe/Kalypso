@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Interface for classes that represents a feature of the type wb1d2d:Element
@@ -92,5 +93,7 @@ public interface IFE1D2DElement extends IFENetItem
   IFE1D2DEdge[] getEdges( );
 
   IFE1D2DNode[] getNodes( );
+  
+  GM_Object getGeometry();
   
 }

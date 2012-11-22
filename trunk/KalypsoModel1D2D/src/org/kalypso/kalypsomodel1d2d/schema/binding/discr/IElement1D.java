@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
  * @author Gernot Belger
@@ -70,4 +71,7 @@ public interface IElement1D extends IFE1D2DElement
    * </ul>
    */
   void setEdge( IFE1D2DEdge edge );
+  
+  @Override
+  public GM_Curve getGeometry( );
 }
