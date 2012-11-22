@@ -54,6 +54,10 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
+import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
+import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
@@ -448,6 +452,13 @@ public class CrossSectionConverter implements IProfileTransaction
 
   private void insertRecordsAs( final IProfileObject profileObject, final String asComponent )
   {
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    final IVegetationClass unknownVegetationClass = classification.findUnknownVegetationClass();
+    final IRoughnessClass unknownRoughnessClass = classification.findUnknownRoughnessClass();
+
+    final String unknownVegetation = unknownVegetationClass == null ? null : unknownVegetationClass.getName();
+    final String unknownRoughness = unknownRoughnessClass == null ? null : unknownRoughnessClass.getName();
+
     final IProfileObjectRecords records = profileObject.getRecords();
     for( int i = 0; i < records.size(); i++ )
     {
@@ -475,6 +486,13 @@ public class CrossSectionConverter implements IProfileTransaction
         setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, rechtswert );
         setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_HOCHWERT, hochwert );
         setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_CODE, code );
+
+        // HOTFIX: if a new point is inserted we need a roughness/vegetation class. Unfortunately, the class values
+        // are not stored ni the corresponding profile object...
+        // For now, we just set the 'unknown' classes here, assuming, that the buildings never have associated roughness values
+        // TODO: either remember the real clases from the profile part; or a t least, use the class of the previous point.
+        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, unknownRoughness );
+        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, unknownVegetation );
       }
     }
   }
