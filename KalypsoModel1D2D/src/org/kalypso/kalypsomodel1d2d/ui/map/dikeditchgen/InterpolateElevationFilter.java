@@ -37,14 +37,14 @@ public class InterpolateElevationFilter implements CoordinateFilter
 
   private final double m_minimumHeight;
 
-  public InterpolateElevationFilter( final String coordinateSystem, final IElevationModel elevationModel )
+  public InterpolateElevationFilter( final String pointCoordinateSystem, final IElevationModel elevationModel )
   {
-    this( coordinateSystem, Double.MIN_VALUE, elevationModel );
+    this( pointCoordinateSystem, Double.NEGATIVE_INFINITY, elevationModel );
   }
 
-  public InterpolateElevationFilter( final String coordinateSystem, final double minimumHeight, final IElevationModel elevationModel )
+  public InterpolateElevationFilter( final String pointCoordinateSystem, final double minimumHeight, final IElevationModel elevationModel )
   {
-    m_coordinateSystem = coordinateSystem;
+    m_coordinateSystem = pointCoordinateSystem;
     m_elevationModel = elevationModel;
     m_minimumHeight = minimumHeight;
   }
@@ -54,6 +54,7 @@ public class InterpolateElevationFilter implements CoordinateFilter
   {
     try
     {
+      // interpret coordinate in its own coordinate system
       final GM_Point p = GeometryFactory.createGM_Point( JTSAdapter.wrap( coord ), m_coordinateSystem );
       double currentElevation = m_elevationModel.getElevation( p );
       if( currentElevation < m_minimumHeight )

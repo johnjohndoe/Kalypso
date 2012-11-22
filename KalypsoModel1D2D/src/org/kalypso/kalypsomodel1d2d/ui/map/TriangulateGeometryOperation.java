@@ -40,7 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
-import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen.TriangulationBuilder;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.Add2DElementsCommand;
@@ -50,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 /**
  * @author Gernot Belger
  */
-public class TriangulateGeometryOperation
+public class TriangulateGeometryOperation implements ICoreRunnableWithProgress
 {
   private final TriangulationBuilder m_builder;
 
@@ -62,24 +66,23 @@ public class TriangulateGeometryOperation
     m_workspace = discretizationModelWorkspace;
   }
 
-  public void convertTriangulationToModel( )
+  @Override
+  public IStatus execute( IProgressMonitor monitor )
   {
     try
     {
       m_builder.finish();
-
       final GM_TriangulatedSurface tin = m_builder.getTin();
       if( tin == null )
-        return;
+        return Status.OK_STATUS;
 
-      final Add2DElementsCommand command = new Add2DElementsCommand( m_workspace, tin );
+      final Add2DElementsCommand command = new Add2DElementsCommand( m_workspace, tin, monitor );
       m_workspace.postCommand( command );
+      return command.getStatus();
     }
     catch( final Exception e1 )
     {
-      e1.printStackTrace();
-      SWT_AWT_Utilities.showSwtMessageBoxError( Messages.getString( "TriangulateGeometryData_0" ), e1.toString() ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e1, Messages.getString( "TriangulateGeometryData_0" ) ); //$NON-NLS-1$
     }
   }
-
 }

@@ -116,8 +116,7 @@ public class PolygonDiscretisationValidator
 
   private String validateElement1D( final IPolygonWithName item, final IElement1D element ) throws GM_Exception
   {
-    final IFE1D2DEdge edge = element.getEdge();
-    final GM_Curve geometry = edge.getGeometry();
+    final GM_Curve geometry = element.getGeometry();
     final LineString line = (LineString)JTSAdapter.export( geometry );
 
     final Polygon polygon = item.getPolygon();

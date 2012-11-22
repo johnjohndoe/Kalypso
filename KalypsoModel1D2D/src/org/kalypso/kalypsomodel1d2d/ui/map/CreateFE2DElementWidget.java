@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.command.ICommandTarget;
@@ -17,6 +18,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.element1d.Create2dElementCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.Add2DElementsCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -25,6 +27,11 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * @author Gernot Belger
@@ -199,10 +206,7 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
       }
 
       if( command != null )
-      {
-        m_nodeTheme.getWorkspace().postCommand( command );
-        reinit();
-      }
+        createElement();
     }
     catch( final Exception e )
     {
@@ -224,12 +228,25 @@ public class CreateFE2DElementWidget extends DeprecatedMouseWidget
 
     if( m_builder.getNumberOfNodes() < 3 )
       return;
+    createElement();
+  }
+
+  private void createElement( )
+  {
     try
     {
-      final Create2dElementCommand command = m_builder.finish();
-      if( command != null )
+      final List<GM_Point> nodes = m_builder.getNodes();
+      final GM_Position[] ring = ElementGeometryHelper.ringPositionsFromNodes( nodes.toArray( new GM_Point[nodes.size()] ) );
+      final GM_PolygonPatch patch = GeometryFactory.createGM_PolygonPatch( ring, null, nodes.get( 0 ).getCoordinateSystem() );
+      final Add2DElementsCommand command = new Add2DElementsCommand( m_nodeTheme.getWorkspace(), ImmutableList.of( patch ), null );
+      m_nodeTheme.getWorkspace().postCommand( command );
+      final IStatus status = command.getStatus();
+      if( status.isOK() )
+        m_warning = false;
+      else
       {
-        m_nodeTheme.getWorkspace().postCommand( command );
+        m_warning = true;
+        m_warningRenderer.setTooltip( StatusUtilities.messageFromStatus( status ) );
       }
     }
     catch( final Exception e )

@@ -88,7 +88,7 @@ public class LineStringBufferBuilder
     final int orientationFactor = orientation == CGAlgorithms.CLOCKWISE ? -1 : 1;
 
     final double totalAngle = Math.abs( startAngle - endAngle );
-    final int nSegs = (int)(totalAngle * 8 / Math.PI + 0.5);
+    final int nSegs = (int)(totalAngle * 4 / Math.PI + 0.5);
 
     if( nSegs < 1 )
       return; // no segments because angle is less than increment - nothing to do!
@@ -190,7 +190,8 @@ public class LineStringBufferBuilder
     final LineSegment seg01 = new LineSegment();
     final LineSegment leftSeg01 = new LineSegment();
     final LineSegment rightSeg01 = new LineSegment();
-    seg01.setCoordinates( first );
+    seg01.p0 = first.p0;
+    seg01.p1 = first.p1;
     for( int i = 2; i < numPoints; i++ )
     {
       final Coordinate nextCoordinate = linestring.getCoordinateN( i );
@@ -215,7 +216,8 @@ public class LineStringBufferBuilder
 
       addTurn( seg01, leftSeg01, rightSeg01, seg12, leftSeg12, rightSeg12, leftCoordinates, rightCoordinates );
 
-      seg01.setCoordinates( seg12 );
+      seg01.p0 = seg12.p0;
+      seg01.p1 = seg12.p1;
     }
 
     // make end tip or turn
@@ -318,7 +320,7 @@ public class LineStringBufferBuilder
 
     // make a 180 degree turn
     final double startAngle = Math.atan2( dy0, dx0 );
-    final int numHalfCircleFractions = 4;
+    final int numHalfCircleFractions = 8;
     final double sectionAngle = Math.PI / numHalfCircleFractions;
     for( int i = 1; i < numHalfCircleFractions; i++ )
     {

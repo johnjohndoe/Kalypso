@@ -18,14 +18,19 @@
  */
 package org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen;
 
-import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
  * @author kurzbach
  */
 public interface CreateStructuredNetworkStrategy
 {
-  void addBoundary( TriangulationBuilder tinBuilder ) throws GM_Exception;
 
-  void addBreaklines( TriangulationBuilder tinBuilder ) throws GM_Exception;
+  Control createControl( Composite body, FormToolkit toolkit, IMapModell mapModell );
+
+  void createMesh( TriangulationBuilder tinBuilder );
 }
