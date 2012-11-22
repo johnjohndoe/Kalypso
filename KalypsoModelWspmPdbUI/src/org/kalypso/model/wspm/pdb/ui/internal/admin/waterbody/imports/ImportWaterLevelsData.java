@@ -231,6 +231,8 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
     m_sections.clear();
 
     final Set<CrossSection> sections = EventUtils.loadSectionsForStateName( session, m_event );
+    if( sections == null )
+      return;
 
     for( final CrossSection section : sections )
     {
@@ -249,6 +251,11 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
   public CrossSection getCrossSection( final BigDecimal station )
   {
     return m_sections.get( station );
+  }
+
+  public boolean hasCrossSections( )
+  {
+    return !m_sections.isEmpty();
   }
 
   public double getDouglasPeuckerDistance( )
