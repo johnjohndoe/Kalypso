@@ -657,48 +657,35 @@
               allPopups="false"
               locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart">
              
+             <!-- <separator name="mapActions" visible="false"/> -->
              <separator name="widgets" visible="false"/> 
-             <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio"/>
-             <separator name="profiles" visible="true"/>
-             <command commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile" style="radio"/>
-             <command commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point" style="radio" />
-             <command commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point" style="radio" />
-             <command commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection" style="toggle" />
-
-             <separator name="mapActions" visible="true"/>
              <command commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" style="radio"/>
              <command commandId="org.kalypso.ogc.gml.map.PanToCommand" style="radio"/>
              <command commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" style="radio" />
-             <!--command commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand" style="radio"/-->
+             <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio"/>
+             
+             <separator name="profileWidgets" visible="false"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile" style="radio"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point" style="radio" />
+             <command commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point" style="radio" />
 
-             <separator name="crossSectionActions" visible="true"/>
-             <command commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" style="push"/>
+             <separator name="widgetsEnd" visible="false"/>
 
              <separator name="actions" visible="true"/>
+             <command commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.FullExtentCommand" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.ZoomOutCommand" style="push"/>
-             <!--
-             <dynamic id="org.kalypso.ogc.gml.map.move">
-                <class
-                      class="org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem">
-                   <parameter name="command1" value="org.kalypso.ogc.gml.map.MoveLeftCommand"/>
-                   <parameter name="command2" value="org.kalypso.ogc.gml.map.MoveUpCommand"/>
-                   <parameter name="command3" value="org.kalypso.ogc.gml.map.MoveDownCommand"/>
-                   <parameter name="command4" value="org.kalypso.ogc.gml.map.MoveRightCommand"/>
-                </class>
-             </dynamic>
-             -->
              <command commandId="org.kalypso.ogc.gml.map.ExtentHistoryPrevCommand" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.ExtentHistoryNextCommand" style="push"/>
 
              <separator name="mapExport" visible="true"/>
-             <command
-                   commandId="org.kalypso.ogc.gml.map.ExportClipboardCommand"
-                   style="push">
-             </command>
+             <command commandId="org.kalypso.ogc.gml.map.ExportClipboardCommand" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.Screenshot" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.ExportPdfCommand" style="push"/>
+
+             <separator name="toggle" visible="true"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection" style="toggle" />
           </menuContribution>
 
         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
