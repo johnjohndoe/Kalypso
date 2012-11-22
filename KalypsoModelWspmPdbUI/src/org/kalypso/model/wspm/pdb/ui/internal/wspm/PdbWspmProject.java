@@ -91,7 +91,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Encapsulates the data project of a pdb connection.
- *
+ * 
  * @author Gernot Belger
  */
 public class PdbWspmProject implements IPdbWspmProject
@@ -162,7 +162,7 @@ public class PdbWspmProject implements IPdbWspmProject
     if( workspace == null )
       return null;
 
-    return (TuhhWspmProject) workspace.getRootFeature();
+    return (TuhhWspmProject)workspace.getRootFeature();
   }
 
   @Override
@@ -289,7 +289,7 @@ public class PdbWspmProject implements IPdbWspmProject
 
   protected void handleModelChange( final ModellEvent modellEvent )
   {
-    if( modellEvent instanceof FeatureStructureChangeModellEvent )
+    if( modellEvent == null || modellEvent instanceof FeatureStructureChangeModellEvent )
       updateMap();
   }
 
@@ -316,7 +316,7 @@ public class PdbWspmProject implements IPdbWspmProject
   /**
    * Checks if the data should be save, and asks the user what to do.<br/>
    * Show a 'Yes', 'No', 'Cancel' dialog.
-   *
+   * 
    * @param If
    *          set to <code>true</code>, the data will be reloaded if the user chooses 'NO'.
    * @return <code>false</code>, if the user cancels the operation.
@@ -361,7 +361,7 @@ public class PdbWspmProject implements IPdbWspmProject
   /**
    * Checks if the data should be save, and asks the user what to do.<br/>
    * Shows a 'OK', 'Cancel' dialog.
-   *
+   * 
    * @return <code>false</code>, if the user cancels the operation.
    */
   public boolean confirmProjectSave( )
@@ -394,7 +394,7 @@ public class PdbWspmProject implements IPdbWspmProject
 
   private boolean busyCursorWhile( final ICoreRunnableWithProgress operation, final String title, final String errorMessage )
   {
-    final IProgressService progressService = (IProgressService) m_window.getService( IProgressService.class );
+    final IProgressService progressService = (IProgressService)m_window.getService( IProgressService.class );
     final IStatus status = ProgressUtilities.busyCursorWhile( progressService, operation, errorMessage );
     if( status.isOK() )
       return true;

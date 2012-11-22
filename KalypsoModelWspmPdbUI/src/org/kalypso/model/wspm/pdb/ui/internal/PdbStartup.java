@@ -138,11 +138,11 @@ public class PdbStartup implements IStartup
     final PdbWspmProject wspmProject = new PdbWspmProject( window );
 
     final InitPdbDataOperation operation = new InitPdbDataOperation( wspmProject );
-    final IProgressService progressService = (IProgressService) window.getService( IProgressService.class );
+    final IProgressService progressService = (IProgressService)window.getService( IProgressService.class );
     final IStatus status = ProgressUtilities.busyCursorWhile( progressService, operation, null );
 
     if( !status.isOK() )
-      new StatusDialog( window.getShell(), status, Messages.getString( "PdbStartup.0" ) ).open(); //$NON-NLS-1$
+      StatusDialog.open( window.getShell(), status, Messages.getString( "PdbStartup.0" ) ); //$NON-NLS-1$
 
     if( status.matches( IStatus.ERROR ) )
     {
