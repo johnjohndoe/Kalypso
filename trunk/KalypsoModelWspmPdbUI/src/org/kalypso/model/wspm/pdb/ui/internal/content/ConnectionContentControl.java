@@ -79,6 +79,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -87,7 +88,7 @@ public class ConnectionContentControl extends Composite
 {
   private static final String TOOLBAR_URI = "toolbar:org.kalypso.model.wspm.pdb.ui.content"; //$NON-NLS-1$
 
-  private static final IStatus STATUS_UPDATE = new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, "Updating data..." ); //$NON-NLS-1$
+  private static final IStatus STATUS_UPDATE = new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("ConnectionContentControl_0") ); //$NON-NLS-1$
 
   private final IJobChangeListener m_refreshJobListener = new JobChangeAdapter()
   {
