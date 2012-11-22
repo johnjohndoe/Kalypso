@@ -56,6 +56,7 @@ public interface IPolyElement extends IFE1D2DElement
 
   QName QNAME_PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 
+  @Override
   GM_Polygon getGeometry( );
 
   @Override
