@@ -157,7 +157,7 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     final String klasse = String.format( "%d", abrechnung );
     final int objectArt = part.getObjectArt().getKey();
     final String pak = "";
-    final String pfad = relativePlotPath.toString();
+    final String pfad = PathUtilities.toString( relativePlotPath );
     final int profilArt = part.getProfilArt( staIndex ).getKey();
     final Short profilNummer = part.getProfilNummer( staIndex );
     final Long gewKennzahl = part.getGewKennzahl();

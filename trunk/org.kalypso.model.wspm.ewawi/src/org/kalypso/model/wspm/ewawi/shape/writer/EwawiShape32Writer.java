@@ -125,7 +125,7 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
     final Date datum = fotoListData.getDatum();
     final String link = Paths.get( relativeFotoPath.toString(), fotoListData.getFilename() ).toString();
     final String pak = "";
-    final String pfad = relativeFotoPath.toString();
+    final String pfad = PathUtilities.toString( relativeFotoPath );
     final String bearb = "BJG";
     final String uhrzeit = "";
     final BigDecimal x = fotoListData.getRechtswert();

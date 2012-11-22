@@ -79,6 +79,11 @@ public class EwawiProfilePoint
     return m_left.getHoehe().add( m_proLine.getHoehe() );
   }
 
+  /**
+   * This function returns the point as shape.
+   * 
+   * @return The point as shape.
+   */
   public SHPPoint getShape( )
   {
     /* g Rechtswert (Projektion auf Abszisse) von links nach rechts aufsteigend */
@@ -96,6 +101,8 @@ public class EwawiProfilePoint
     final double xLeft = m_left.getRechtswert().doubleValue();
     final double yLeft = m_left.getHochwert().doubleValue();
     final Vector2D startPoint = new Vector2D( xLeft, yLeft );
+
+    /* Create the projection point. */
     final Vector2D projectionPoint = startPoint.add( projectionVector );
 
     /* Create the orthogonal vector from the normalized profile axis (has then also length 1). */
@@ -105,6 +112,34 @@ public class EwawiProfilePoint
     final Vector2D targetPoint = projectionPoint.add( hochwert, orthVector );
 
     return new SHPPoint( targetPoint.getX(), targetPoint.getY() );
+  }
+
+  /**
+   * This function returns the point as shape.
+   * It ignores the hochwert, so that the point will be the projected point on the idealized line (left fixpoint to right fixpoint).
+   * 
+   * @return The point as shape.
+   */
+  public SHPPoint getShapeIdealized( )
+  {
+    /* g Rechtswert (Projektion auf Abszisse) von links nach rechts aufsteigend */
+    final double rechtswert = m_proLine.getRechtswert().doubleValue();
+
+    /* Get the normalized vector of the fix points (length 1). */
+    final Vector2D normalizedProfileAxis = getNormalizedProfileAxis();
+
+    /* Get the projection vector. */
+    final Vector2D projectionVector = normalizedProfileAxis.scalarMultiply( rechtswert );
+
+    /* Create the start point. */
+    final double xLeft = m_left.getRechtswert().doubleValue();
+    final double yLeft = m_left.getHochwert().doubleValue();
+    final Vector2D startPoint = new Vector2D( xLeft, yLeft );
+
+    /* Create the projection point. */
+    final Vector2D projectionPoint = startPoint.add( projectionVector );
+
+    return new SHPPoint( projectionPoint.getX(), projectionPoint.getY() );
   }
 
   private Vector2D getNormalizedProfileAxis( )

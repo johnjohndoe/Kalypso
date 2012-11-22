@@ -81,7 +81,7 @@ public class EwawiProfilePart
     for( final EwawiProLine proLine : m_proLines.values() )
     {
       final EwawiProfilePoint proPoint = new EwawiProfilePoint( leftFixPoint, rightFixPoint, proLine );
-      final SHPPoint shape = proPoint.getShape();
+      final SHPPoint shape = proPoint.getShapeIdealized();
 
       /* We use the rechtswert of the point to determine m. */
       final double x = shape.getX();
