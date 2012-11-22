@@ -152,7 +152,7 @@ public class WaterlevelsForStation implements Comparable<WaterlevelsForStation>
     m_section = section;
     m_waterlevels2DObjecs = null;
 
-    if( section == null )
+    if( section.getSection() == null )
       return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "WaterlevelsForStation_1" ) ); //$NON-NLS-1$
 
     final IStatusCollector log = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
