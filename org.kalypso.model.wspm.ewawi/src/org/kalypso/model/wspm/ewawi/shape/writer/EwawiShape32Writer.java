@@ -52,13 +52,13 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
 {
   public EwawiShape32Writer( final EwawiPlus[] data, final GewShape gewShape, final GewWidthShape gewWidthShape )
   {
-    super( data, gewShape, gewWidthShape, "404_GIS", ShapeType.POINT );
+    super( data, gewShape, gewWidthShape, "824_Fotos", ShapeType.POINT );
   }
 
   @Override
   protected String getTargetFilename( final EwawiKey key )
   {
-    return String.format( "%s_VG_BJG_VMFOST_PKT_Freitext.shp", key.getAlias() );
+    return String.format( "%s_VF_BJG_VMFOST_PKT_Freitext.shp", key.getAlias() );
   }
 
   @Override
