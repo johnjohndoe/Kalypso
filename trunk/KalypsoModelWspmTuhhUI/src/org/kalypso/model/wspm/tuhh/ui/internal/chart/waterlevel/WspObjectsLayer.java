@@ -53,6 +53,8 @@ public abstract class WspObjectsLayer extends AbstractProfilLayer
 
   private HoverIndex m_hoverIndex;
 
+  private final WspObjectsInfoBuilder m_infoBuilder;
+
   public WspObjectsLayer( final String id, final IProfile profile, final IWspLayerData wspData, final String type )
   {
     super( id, profile );
@@ -62,9 +64,9 @@ public abstract class WspObjectsLayer extends AbstractProfilLayer
 
     final PartTypeAccessor partInfo = new PartTypeAccessor( profile, type );
 
-    final WspObjectsInfoBuilder infoBuilder = new WspObjectsInfoBuilder( this, partInfo );
+    m_infoBuilder = new WspObjectsInfoBuilder( this, partInfo );
 
-    m_painter = new ProfileObjectPainter( partInfo, infoBuilder );
+    m_painter = new ProfileObjectPainter( partInfo, m_infoBuilder );
 
     final String title = partInfo.getTypeLabel();
     setTitle( title );
@@ -117,6 +119,10 @@ public abstract class WspObjectsLayer extends AbstractProfilLayer
     {
       final TuhhResultDataElement element = (TuhhResultDataElement)activeElement;
       final IProfileObject[] objects = element.getProfileObjects( m_type );
+
+      final String label = element.getLabel();
+      m_infoBuilder.setLabel( label );
+
       for( final IProfileObject object : objects )
         m_painter.paint( gc, object );
     }
