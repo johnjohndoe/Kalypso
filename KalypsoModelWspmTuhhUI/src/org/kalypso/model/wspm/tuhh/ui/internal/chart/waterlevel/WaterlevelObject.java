@@ -33,9 +33,6 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
  */
 public class WaterlevelObject
 {
-  /** specialized metadata on waterlevel object to transport label to layer */
-  static final String METADATA_LABEL = "waterlevelLabel"; //$NON-NLS-1$
-
   private final Map<String, Collection<IProfileObject>> m_objects = new HashMap<>();
 
   private final String m_label;
@@ -55,9 +52,6 @@ public class WaterlevelObject
     {
       case IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS:
       case IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_SEGMENT:
-
-        // FIXME: causes performance problem by almost recursion as this triggers an profile event
-        // object.setValue( METADATA_LABEL, getLabel() );
 
         final Collection<IProfileObject> objects = getObjectList( type );
         objects.add( object );

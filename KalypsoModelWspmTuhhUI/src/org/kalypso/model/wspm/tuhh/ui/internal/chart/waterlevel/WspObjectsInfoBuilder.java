@@ -33,9 +33,16 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
  */
 public class WspObjectsInfoBuilder extends ProfileObjectsInfoBuilder
 {
+  private String m_label;
+
   public WspObjectsInfoBuilder( final IProfilChartLayer layer, final PartTypeAccessor partInfo )
   {
     super( layer, partInfo );
+  }
+
+  void setLabel( final String label )
+  {
+    m_label = label;
   }
 
   @Override
@@ -52,7 +59,7 @@ public class WspObjectsInfoBuilder extends ProfileObjectsInfoBuilder
     final String typeLabel = getPartInfo().getTypeLabel();
     labels.add( typeLabel );
 
-    final String label = object.getValue( WaterlevelObject.METADATA_LABEL, null );
+    final String label = m_label;
     if( !StringUtils.isBlank( label ) )
       labels.add( label );
 
