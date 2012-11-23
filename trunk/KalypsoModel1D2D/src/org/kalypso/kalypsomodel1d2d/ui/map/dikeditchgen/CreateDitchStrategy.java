@@ -80,25 +80,56 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
   {
     try
     {
-      if( m_tinAssigned != null )
-        m_modelTin.removeValueChangeListener( m_tinAssigned );
-      
-      final FeatureList network = m_createDitchControl.getNetworkFeatures();
-      final int networkSize = network.size();
-      if( networkSize == 0 )
-        return;
+      if( m_modelTin != null )
+        m_modelTin.dispose();
+
+      m_modelTin = BeansObservables.observeValue( m_bindingContext.getValidationRealm(), tinBuilder, TriangulationBuilder.PROPERTY_TIN );
 
       final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       final ITerrainModel model = caseDataProvider.getModel( ITerrainModel.class.getName() );
       final IElevationModel elevationModel = model.getTerrainElevationModelSystem();
 
+      m_tinAssigned = new IValueChangeListener()
+      {
+        @Override
+        public void handleValueChange( ValueChangeEvent event )
+        {
+          try
+          {
+            final GM_TriangulatedSurface mesh = tinBuilder.getTin();
+            final String coordinateSystem = mesh.getCoordinateSystem();
+            final List<GM_Triangle> triangles = new ArrayList<>( mesh.size() );
+            for( final GM_Triangle triangle : mesh )
+            {
+              final GM_Position[] pos = triangle.getExteriorRing();
+              for( int i = 0; i < 3; i++ )
+              {
+                final GM_Point p = GeometryFactory.createGM_Point( pos[i], coordinateSystem );
+                double z = elevationModel.getElevation( p );
+                pos[i] = GeometryFactory.createGM_Position( p.getX(), p.getY(), z );
+              }
+              final GM_Triangle newTriangle = GeometryFactory.createGM_Triangle( pos[0], pos[1], pos[2], coordinateSystem );
+              triangles.add( newTriangle );
+            }
+            tinBuilder.setTin( GeometryFactory.createGM_TriangulatedSurface( triangles, coordinateSystem ) );
+          }
+          catch( final ElevationException | GM_Exception e )
+          {
+            e.printStackTrace();
+          }
+        }
+      };
+      m_modelTin.addValueChangeListener( m_tinAssigned );
+
       // add outer boundary
-      addBoundary( tinBuilder, elevationModel );
+      if( tinBuilder.getBoundary() == null )
+        addBoundary( tinBuilder );
 
       // add network breaklines
-      addBreaklines( tinBuilder, elevationModel );
+      final FeatureList network = m_createDitchControl.getNetworkFeatures();
+      if( network != null )
+        addBreaklines( tinBuilder, elevationModel );
 
-      m_modelTin.addValueChangeListener( m_tinAssigned );
       tinBuilder.finish();
     }
     catch( final Exception e )
@@ -107,13 +138,11 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
     }
   }
 
-  private void addBoundary( final TriangulationBuilder tinBuilder, IElevationModel elevationModel ) throws GM_Exception
+  private void addBoundary( final TriangulationBuilder tinBuilder ) throws GM_Exception
   {
     final GM_Polygon boundaryPolygon = m_createDitchControl.getBoundaryPolygon();
     final Polygon outerRing = (Polygon)JTSAdapter.export( boundaryPolygon ).getGeometryN( 0 );
     final String coordinateSystem = boundaryPolygon.getCoordinateSystem();
-    final InterpolateElevationFilter ringFilter = new InterpolateElevationFilter( coordinateSystem, elevationModel );
-    outerRing.apply( ringFilter );
     tinBuilder.setBoundary( (GM_Polygon)JTSAdapter.wrap( outerRing, coordinateSystem ), false );
   }
 
@@ -144,6 +173,7 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
         final LineString linestringZ = JTSUtilities.interpolateMissingZ( simplified );
         if( networkFilter != null )
           linestringZ.apply( networkFilter );
+        // TODO: densify from-with, apply factor!
         results[i] = linestringZ;// (LineString)Densifier.densify( simplified, minWidth * densifyFactor );
       }
       return results;
@@ -258,6 +288,7 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
     final GM_Polygon inner = (GM_Polygon)JTSAdapter.wrap( innerFiltered, networkCoordinateSystem );
     addPolygonAsBreakline( tinBuilder, inner );
 
+    m_modelTin.removeValueChangeListener( m_tinAssigned );
     m_tinAssigned = new IValueChangeListener()
     {
       @Override
@@ -291,7 +322,7 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
         }
       }
     };
-    m_modelTin = BeansObservables.observeValue( m_bindingContext.getValidationRealm(), tinBuilder, TriangulationBuilder.PROPERTY_TIN );
+    m_modelTin.addValueChangeListener( m_tinAssigned );
   }
 
   @Override

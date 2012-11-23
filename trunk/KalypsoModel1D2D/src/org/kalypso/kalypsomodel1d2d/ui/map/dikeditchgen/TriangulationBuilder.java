@@ -46,9 +46,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
@@ -84,6 +87,8 @@ public class TriangulationBuilder extends AbstractModelObject
 
   public static final String PROPERTY_NO_STEINER_ON_BOUNDARY = "noSteinerOnBoundary"; //$NON-NLS-1$
 
+  public static final String PROPERTY_BOUNDARY = "boundary"; //$NON-NLS-1$
+
   public static final String PROPERTY_TIN = "tin"; //$NON-NLS-1$
 
   private double m_maxArea = 0;
@@ -106,8 +111,12 @@ public class TriangulationBuilder extends AbstractModelObject
 
   private final LineSymbolizer m_lineSymb = new LineSymbolizer_Impl();
 
-  public TriangulationBuilder( )
+  private IMapPanel m_mapPanel;
+
+  public TriangulationBuilder( final IMapPanel mapPanel )
   {
+    m_mapPanel = mapPanel;
+
     final Fill fill = StyleFactory.createFill( new Color( 255, 255, 255 ) );
     fill.setOpacity( 0.0 );
     final Stroke polyStroke = StyleFactory.createStroke( new Color( 255, 20, 20 ) );
@@ -181,6 +190,8 @@ public class TriangulationBuilder extends AbstractModelObject
     m_noSteinerOnBoundary = noSteiner;
     if( buildImmediately )
       finish();
+    else
+      m_mapPanel.invalidateMap();
     firePropertyChange( PROPERTY_NO_STEINER_ON_BOUNDARY, oldValue, noSteiner );
   }
 
@@ -191,6 +202,8 @@ public class TriangulationBuilder extends AbstractModelObject
     m_breaklines.add( breakline );
     if( buildImmediately )
       finish();
+    else
+      m_mapPanel.invalidateMap();
   }
 
   public GM_MultiCurve getBreaklines( )
@@ -208,6 +221,9 @@ public class TriangulationBuilder extends AbstractModelObject
     m_boundaryGeom = boundaryGeom;
     if( buildImmediately )
       finish();
+    else
+      m_mapPanel.invalidateMap();
+    firePropertyChange( PROPERTY_BOUNDARY, null, m_boundaryGeom );
   }
 
   public GM_TriangulatedSurface getTin( )
@@ -256,30 +272,33 @@ public class TriangulationBuilder extends AbstractModelObject
     m_breaklines = null;
     m_boundaryGeom = null;
     m_tin = null;
+    m_mapPanel.invalidateMap();
   }
 
-  public void paint( final Graphics g, final GeoTransform projection )
+  public void paint( final Graphics g, final GeoTransform projection, IProgressMonitor pm )
   {
+    final SubMonitor monitor = SubMonitor.convert( pm );
+    monitor.beginTask( StringUtils.EMPTY, IProgressMonitor.UNKNOWN );
     try
     {
       if( m_tin != null && !m_tin.isEmpty() )
       {
         final DisplayElement de = DisplayElementFactory.buildSurfacePolygonDisplayElement( null, m_tin, m_tinSymb );
-        de.paint( g, projection, new NullProgressMonitor() );
+        de.paint( g, projection, monitor );
         final DisplayElement de2 = DisplayElementFactory.buildPolygonDisplayElement( null, m_tin, m_polySymb );
-        de2.paint( g, projection, new NullProgressMonitor() );
+        de2.paint( g, projection, monitor );
       }
 
       if( m_boundaryGeom != null )
       {
         final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( null, m_boundaryGeom, m_polySymb );
-        de.paint( g, projection, new NullProgressMonitor() );
+        de.paint( g, projection, monitor );
       }
 
       if( m_breaklines != null && !m_breaklines.isEmpty() )
       {
         final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, m_breaklines, m_lineSymb );
-        de.paint( g, projection, new NullProgressMonitor() );
+        de.paint( g, projection, monitor );
       }
     }
     catch( final Exception e )
@@ -308,8 +327,9 @@ public class TriangulationBuilder extends AbstractModelObject
     {
       e.printStackTrace();
     }
-    
+
     m_tin = triangulatedSurface;
+    m_mapPanel.invalidateMap();
     // make sure that equals is not called on tin, always fires an event
     firePropertyChange( PROPERTY_TIN, null, m_tin );
   }

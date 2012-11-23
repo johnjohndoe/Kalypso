@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
@@ -100,7 +101,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class TriangulateGeometryWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private TriangulationBuilder m_builder = new TriangulationBuilder();
+  private TriangulationBuilder m_builder;
 
   private boolean m_modePolygon = true;
 
@@ -133,7 +134,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
-
+    m_builder = new TriangulationBuilder( mapPanel );
     reinit();
   }
 
@@ -248,7 +249,6 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       m_builder.finish();
       m_boundaryGeometryBuilder.reset();
       m_breaklineGeometryBuilder.reset();
-      repaintMap();
     }
     catch( final Exception e )
     {
@@ -372,8 +372,12 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       if( m_breaklineGeometryBuilder != null )
         m_breaklineGeometryBuilder.paint( g, projection, m_currentMapPoint );
     }
+  }
 
-    m_builder.paint( g, projection );
+  @Override
+  public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
+  {
+    m_builder.paint( g, projection, monitor );
   }
 
   @Override
@@ -443,7 +447,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     final DatabindingForm binding = new DatabindingForm( form, toolkit );
     final Composite body = form.getBody();
     GridLayoutFactory.swtDefaults().applyTo( body );
-    m_composite = new TriangulateGeometryComposite( toolkit, binding, this, m_builder, m_discModelWorkspace );
+    m_composite = new TriangulateGeometryComposite( toolkit, binding, m_builder, m_discModelWorkspace );
     return m_composite;
   }
 
