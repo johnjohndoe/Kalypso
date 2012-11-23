@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -131,9 +130,9 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     validColumn.setLabelProvider( new WaterLevelImportStatusLabelProvider() );
 
     createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.STATION, WaterlevelsForStation.PROPERTY_STATION, "%s", SWT.RIGHT ); //$NON-NLS-1$
-    createWaterlevelColumn( m_viewer, Messages.getString("ImportWaterlevelsPreviewPage.3"), WaterlevelsForStation.PROPERTY_WATERLEVEL_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$ //$NON-NLS-2$
-    createWaterlevelColumn( m_viewer, Messages.getString("ImportWaterlevelsPreviewPage.4"), WaterlevelsForStation.PROPERTY_WATERLEVEL_SIMPLIFIED_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$ //$NON-NLS-2$
-    createWaterlevelColumn( m_viewer, Messages.getString("ImportWaterlevelsPreviewPage.5"), WaterlevelsForStation.PROPERTY_WATERLEVEL_SEGMENT_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$ //$NON-NLS-2$
+    createWaterlevelColumn( m_viewer, Messages.getString( "ImportWaterlevelsPreviewPage.3" ), WaterlevelsForStation.PROPERTY_WATERLEVEL_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$ //$NON-NLS-2$
+    createWaterlevelColumn( m_viewer, Messages.getString( "ImportWaterlevelsPreviewPage.4" ), WaterlevelsForStation.PROPERTY_WATERLEVEL_SIMPLIFIED_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$ //$NON-NLS-2$
+    createWaterlevelColumn( m_viewer, Messages.getString( "ImportWaterlevelsPreviewPage.5" ), WaterlevelsForStation.PROPERTY_WATERLEVEL_SEGMENT_COUNT, "%,d", SWT.RIGHT ); //$NON-NLS-1$ //$NON-NLS-2$
     // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.WATERLEVEL, WaterlevelsForStation.PROPERTY_WATERLEVEL, "%s" ); //$NON-NLS-1$
     // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.DISCHARGE, WaterlevelsForStation.PROPERTY_DISCHARGE, "%s" ); //$NON-NLS-1$
     // createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.MEASUREMENT, WaterlevelsForStation.PROPERTY_MEASURMENT_DATE, "%s" ); //$NON-NLS-1$
@@ -146,7 +145,7 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
       {
         final boolean checked = event.getChecked();
         final WaterlevelsForStation waterlevel = (WaterlevelsForStation)event.getElement();
-        if( checked )
+        if( checked && waterlevel.isValid() )
           checkedWaterlevels.add( waterlevel );
         else
           checkedWaterlevels.remove( waterlevel );
@@ -198,8 +197,15 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
       @Override
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
-        checkedWaterlevels.addAll( Arrays.asList( getWaterLevels() ) );
-        getViewer().update( getWaterLevels(), null );
+        checkedWaterlevels.clear();
+
+        final WaterlevelsForStation[] waterLevels = getWaterLevels();
+        for( final WaterlevelsForStation waterlevel : waterLevels )
+        {
+          if( waterlevel.isValid() )
+            checkedWaterlevels.add( waterlevel );
+        }
+        getViewer().update( waterLevels, null );
       }
     } );
 
