@@ -14,7 +14,7 @@
     </TaskGroup>
     <TaskGroup URI="org.kalypso.model.1d2d.workflow.NetCstr" context="FenetMap">
       <TaskGroup URI="org.kalypso.model.1d2d.workflow.Net1DRivGroup" context="FenetMap">
-        <Task context="FenetMapWithProfileView" URI="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" />
+          <Task context="FenetMapWithProfileView" URI="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" />
         <Task type="SYNCHRONOUS" context="Context1dElementTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNet" />
         <Task type="SYNCHRONOUS" context="FlowRelationshipTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" />
       </TaskGroup>
@@ -22,6 +22,7 @@
         <Task type="SYNCHRONOUS" context="Context2dElementTheme" URI="org.kalypso.model.1d2d.workflow.EditNet2D" />
         <Task type="SYNCHRONOUS" context="FlowRelationshipTheme2D" URI="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" />
         <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.Chan2DGen" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.DikeDitchGen" />
         <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.BandGen" />
         <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.AssignElevs" />
         <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.ShowWindData" />
