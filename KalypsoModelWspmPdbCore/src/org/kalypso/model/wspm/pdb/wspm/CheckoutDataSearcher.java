@@ -87,21 +87,21 @@ public class CheckoutDataSearcher
   {
     if( element instanceof CrossSection )
     {
-      final CrossSection cs = (CrossSection) element;
+      final CrossSection cs = (CrossSection)element;
       m_crossSections.add( cs );
       m_waterBodies.add( cs.getWaterBody() );
       m_states.add( cs.getState() );
     }
     else if( element instanceof State )
     {
-      final State state = (State) element;
+      final State state = (State)element;
       addElements( state.getCrossSections() );
       m_states.add( state );
       m_events.addAll( state.getEvents() );
     }
     else if( element instanceof WaterBody )
     {
-      final WaterBody waterBody = (WaterBody) element;
+      final WaterBody waterBody = (WaterBody)element;
       addElements( waterBody.getCrossSections() );
       m_waterBodies.add( waterBody );
     }
@@ -111,14 +111,18 @@ public class CheckoutDataSearcher
   {
     if( element instanceof Event )
     {
-      final Event event = (Event) element;
+      final Event event = (Event)element;
       m_events.add( event );
-      m_states.add( event.getState() );
+
+      final State state = event.getState();
+      m_states.add( state );
+      addElements( state.getCrossSections() );
+
       m_waterBodies.add( event.getWaterBody() );
     }
     else if( element instanceof WaterBody )
     {
-      final WaterBody waterBody = (WaterBody) element;
+      final WaterBody waterBody = (WaterBody)element;
       addElements( waterBody.getEvents() );
       m_waterBodies.add( waterBody );
     }
