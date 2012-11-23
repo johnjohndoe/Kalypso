@@ -60,12 +60,15 @@ public class EventFixationsCheckstateProvider implements ICheckStateProvider
   @Override
   public boolean isChecked( final Object element )
   {
-    return m_waterlevels.contains( element );
+    final WaterlevelsForStation waterlevel = (WaterlevelsForStation)element;
+
+    return m_waterlevels.contains( waterlevel ) || !waterlevel.isValid();
   }
 
   @Override
   public boolean isGrayed( final Object element )
   {
-    return false;
+    final WaterlevelsForStation waterlevel = (WaterlevelsForStation)element;
+    return !waterlevel.isValid();
   }
 }

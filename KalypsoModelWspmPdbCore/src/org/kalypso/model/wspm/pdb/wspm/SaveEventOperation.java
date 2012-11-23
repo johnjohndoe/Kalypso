@@ -91,7 +91,7 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
   @Override
   public String getLabel( )
   {
-    return Messages.getString("SaveEventOperation_0"); //$NON-NLS-1$
+    return Messages.getString( "SaveEventOperation_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -113,7 +113,7 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
 
     /* update wl_type */
     final SubProgressMonitor subMonitor = new SubProgressMonitor( monitor, 20 );
-    subMonitor.beginTask( Messages.getString("SaveEventOperation_1"), 100 ); //$NON-NLS-1$
+    subMonitor.beginTask( Messages.getString( "SaveEventOperation_1" ), 100 ); //$NON-NLS-1$
 
     addFixations();
 
@@ -133,26 +133,9 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
 
   private void addFixations( )
   {
-    /* count all waterlevels */
-    int numberOfWaterlevels = 0;
-
-    for( final WaterlevelsForStation waterlevels : m_waterlevels2d )
-    {
-      final int waterlevelCount = waterlevels.getWaterlevelCount();
-      numberOfWaterlevels += waterlevelCount;
-    }
-
-    /* calculate ratio */
-    final int ratio = m_waterlevels2d.length == 0 ? 10 : numberOfWaterlevels / m_waterlevels2d.length;
-
-    // REMARK: heuristic: if we have too many waterlevels, its a 2d waterlevel and we do not add fixations
-    if( ratio > 3 )
-    {
-      m_event.setWlType( WL_TYPE.WL_2D );
+    /* no fixations for 2d waterlevels */
+    if( m_event.getWlType() == WL_TYPE.WL_2D )
       return;
-    }
-
-    m_event.setWlType( WL_TYPE.WL_1D );
 
     /* we already have some fixations, do not change */
     final Set<WaterlevelFixation> waterlevelFixations = m_event.getWaterlevelFixations();
@@ -188,12 +171,17 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
   {
     try
     {
+      if( m_waterlevels2d == null || m_waterlevels2d.length == 0 )
+        return;
+
       final CrossSectionPartTypes partTypes = new CrossSectionPartTypes( session );
 
       for( final WaterlevelsForStation waterlevel2d : m_waterlevels2d )
       {
         final IProfileObject[] waterlevels = waterlevel2d.getWaterlevelObjects();
         final ISectionProvider sectionProvider = waterlevel2d.getSection();
+        if( sectionProvider == null )
+          continue;
 
         final CrossSection section = sectionProvider.getSection();
         final int profileSRID = section.getLine().getSRID();
@@ -225,7 +213,7 @@ public class SaveEventOperation extends AbstractPdbOperationWithMonitor
     if( event.getState() != null )
       return true;
 
-    final String message = Messages.getString("SaveEventOperation_2"); //$NON-NLS-1$
+    final String message = Messages.getString( "SaveEventOperation_2" ); //$NON-NLS-1$
     return MessageDialog.openConfirm( shell, dialogTitle, message );
   }
 }

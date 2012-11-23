@@ -169,12 +169,8 @@ public abstract class AbstractSelectAttributesPage extends WizardPage implements
   @Override
   public final void update( )
   {
-    ShapeFile shapeFile = null;
-    try
+    try( ShapeFile shapeFile = openShape() )
     {
-      /* Load shape */
-      shapeFile = openShape();
-
       /* Check geometry */
       final IStatus geometryStatus = checkGeometry( shapeFile );
       m_geometryStatusComposite.setStatus( geometryStatus );
@@ -207,16 +203,6 @@ public abstract class AbstractSelectAttributesPage extends WizardPage implements
       setMessage( e.getLocalizedMessage(), ERROR );
     }
     catch( final DBaseException e )
-    {
-      e.printStackTrace();
-      setMessage( e.getLocalizedMessage(), ERROR );
-    }
-
-    try
-    {
-      shapeFile.close();
-    }
-    catch( final IOException e )
     {
       e.printStackTrace();
       setMessage( e.getLocalizedMessage(), ERROR );

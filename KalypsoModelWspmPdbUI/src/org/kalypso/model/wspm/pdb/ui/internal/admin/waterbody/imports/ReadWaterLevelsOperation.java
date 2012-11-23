@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbExecutorOperation;
+import org.kalypso.model.wspm.pdb.db.constants.EventConstants.WL_TYPE;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
@@ -122,9 +123,38 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
     readShapeFile( progress.newChild( 75, SubMonitor.SUPPRESS_NONE ) );
 
-    build2dWaterlevels( progress.newChild( 20, SubMonitor.SUPPRESS_NONE ) );
+    final WL_TYPE waterlevelType = determineWaterlevelType();
+
+    final Event event = m_data.getEvent();
+    event.setWlType( waterlevelType );
+
+    if( waterlevelType == WL_TYPE.WL_2D )
+      build2dWaterlevels( progress.newChild( 20, SubMonitor.SUPPRESS_NONE ) );
+    else
+      progress.done();
 
     return Status.OK_STATUS;
+  }
+
+  private WL_TYPE determineWaterlevelType( )
+  {
+    /* count all waterlevels */
+    int numberOfWaterlevels = 0;
+
+    for( final WaterlevelsForStation waterlevels : m_waterlevels.values() )
+    {
+      final int waterlevelCount = waterlevels.getWaterlevelCount();
+      numberOfWaterlevels += waterlevelCount;
+    }
+
+    /* calculate ratio */
+    final int ratio = m_waterlevels.size() == 0 ? 10 : numberOfWaterlevels / m_waterlevels.size();
+
+    // REMARK: heuristic: if we have too many waterlevels, its a 2d waterlevel and we do not add fixations
+    if( ratio > 3 )
+      return WL_TYPE.WL_2D;
+    else
+      return WL_TYPE.WL_1D;
   }
 
   private void reloadSections( final ImportWaterLevelsData data, final IProgressMonitor monitor )
@@ -404,10 +434,18 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     throw new IllegalArgumentException();
   }
 
-  private void build2dWaterlevels( final IProgressMonitor monitor )
+  private void build2dWaterlevels( final IProgressMonitor monitor ) throws CoreException
   {
     final Event event = m_data.getEvent();
     final String eventName = event.getName();
+
+    if( !m_data.hasCrossSections() )
+    {
+      // falls 2d -> 2d wsp erzeugen
+      // falls 2d und kein zustand: fehler
+      final IStatus status = new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("ReadWaterLevelsOperation.11") ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
 
     monitor.beginTask( Messages.getString( "ReadWaterLevelsOperation.10" ), m_waterlevels.size() ); //$NON-NLS-1$
 
