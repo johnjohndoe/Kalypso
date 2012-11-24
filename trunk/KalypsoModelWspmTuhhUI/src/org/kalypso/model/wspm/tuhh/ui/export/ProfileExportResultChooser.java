@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -60,7 +61,7 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
 
 /**
  * Shows the currently available WSPM results in a tree view and let the user check them.
- *
+ * 
  * @author Gernot Belger
  */
 public class ProfileExportResultChooser
@@ -73,14 +74,17 @@ public class ProfileExportResultChooser
 
   private final boolean m_singleSelection;
 
+  private final ViewerFilter m_filter;
+
   /**
    * @param singleSelection
    *          If <code>true</code>, only one element can be selected.
    */
-  public ProfileExportResultChooser( final IWspmResultNode rootNode, final boolean singleSelection )
+  public ProfileExportResultChooser( final IWspmResultNode rootNode, final boolean singleSelection, final ViewerFilter filter )
   {
     m_rootNode = rootNode;
     m_singleSelection = singleSelection;
+    m_filter = filter;
   }
 
   public Control createControl( final Composite parent )
@@ -91,6 +95,9 @@ public class ProfileExportResultChooser
 
     treeViewer.setContentProvider( new WspmResultContentProvider() );
     treeViewer.setLabelProvider( new WspmResultLabelProvider( treeViewer ) );
+    if( m_filter != null )
+      treeViewer.addFilter( m_filter );
+
     treeViewer.setCheckStateProvider( new ICheckStateProvider()
     {
       @Override
@@ -103,7 +110,7 @@ public class ProfileExportResultChooser
       public boolean isChecked( final Object element )
       {
         if( element instanceof IWspmResult )
-          return hasResult( (IWspmResult) element );
+          return hasResult( (IWspmResult)element );
         else
           return true;
       }
@@ -120,9 +127,9 @@ public class ProfileExportResultChooser
         if( element instanceof IWspmResultNode )
         {
           if( event.getChecked() )
-            addResultNode( (IWspmResultNode) element );
+            addResultNode( (IWspmResultNode)element );
           else
-            removeResultNode( (IWspmResultNode) element );
+            removeResultNode( (IWspmResultNode)element );
         }
         else
           treeViewer.setChecked( element, true );
