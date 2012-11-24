@@ -30,5 +30,7 @@ public class WspPointsLayer extends WspObjectsLayer
   public WspPointsLayer( final String id, final IProfile profil, final IWspLayerData wspData )
   {
     super( id + "_points", profil, wspData, IWspmTuhhConstants.OBJECT_TYPE_WATERLEVEL_POINTS ); //$NON-NLS-1$
+
+    setVisible( false );
   }
 }
