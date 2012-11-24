@@ -301,7 +301,7 @@
             name="%wizard.name.6">
          <description> %wizard.description.6</description>
       </wizard>
-      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" name="%wizard.name.3" icon="icons/event.gif">
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" name="%wizard.name.3" icon="icons/eventMeasured.gif">
         <description>%wizard.description.3</description>
       </wizard>
       <wizard

@@ -63,7 +63,8 @@ public class WspmPdbUiImages
     PDB_DISCONNECTED( "icons/led24/disconnect.png" ), //$NON-NLS-1$
 
     STATE( "icons/state.gif" ), //$NON-NLS-1$
-    EVENT( "icons/event.gif" ), //$NON-NLS-1$
+    EVENT_MEASURED( "icons/eventMeasured.gif" ), //$NON-NLS-1$
+    EVENT_SIMULATION( "icons/eventSimulated.gif" ), //$NON-NLS-1$
     WATER_BODY( "icons/waterBody.png" ), //$NON-NLS-1$
     CROSS_SECTION( "icons/crossSection.gif" ), //$NON-NLS-1$
 
