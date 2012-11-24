@@ -64,6 +64,7 @@ import com.google.common.cache.LoadingCache;
 
 public final class ProfileResultPattern extends AbstractPatternInput<IProfilePatternData> implements IValueWithFormat<Object>
 {
+  // FIXME: does not work well with fixations....
   private final LoadingCache<Pair<IProfileFeature, String>, WspmResultLengthSection> m_lengthSectionCache = CacheBuilder.newBuilder().expireAfterAccess( 5, TimeUnit.SECONDS ).build( new ResultFinder() );
 
   public ProfileResultPattern( )
