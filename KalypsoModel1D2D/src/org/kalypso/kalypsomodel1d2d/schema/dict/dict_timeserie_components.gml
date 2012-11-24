@@ -18,7 +18,7 @@
 	<!--  TODO: is this really, really, necessary? I don't think so... -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="OrdinalNumber">
-			<gml:name>lfd. Nr.</gml:name>
+			<gml:name>%OrdinalNumber.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonOrdinalNumber" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -33,8 +33,8 @@
 	
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Time">
-			<gml:description>Zeit</gml:description>
-			<gml:name>Zeit</gml:name>
+			<gml:description>%Time.item.description</gml:description>
+			<gml:name>%Time.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonTime" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -47,27 +47,9 @@
 	<!-- =================================================================
 		Under Relaxation Factor
 		================================================================== -->
-	<!--
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="UnderRelaxationFactor">
-			<gml:name>Relaxationsfaktor [-]</gml:name>
-			<swe:property xlink:href="#phenomenonUnderRelaxationFactor" />
-			<swe:representation>
-				<swe:SimpleType>
-					<st:restriction base="decimal">
-						<st:minInclusive value="0.1" />
-						<st:maxInclusive value="1.0" />
-					</st:restriction>
-					<gml:unitOfMeasure uom=" " />
-				</swe:SimpleType>
-			</swe:representation>
-		</swe:ItemDefinition>
-	</gml:dictionaryEntry>
-	-->
-	
-	<gml:dictionaryEntry>
-		<swe:ItemDefinition gml:id="UnderRelaxationFactor">
-			<gml:name>Relaxationsfaktor</gml:name>
+			<gml:name>%UnderRelaxationFactor.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonUnderRelaxationFactor" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -80,7 +62,7 @@
 
   <gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="StepInfoText">
-			<gml:name>Calculation Information</gml:name>
+			<gml:name>%StepInfoText.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonStepInfoText" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -93,8 +75,8 @@
 	
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Waterlevel">
-			<gml:description>Wasserstand [NN+m]</gml:description>
-			<gml:name>Wasserstand</gml:name>
+			<gml:description>%Waterlevel.item.description</gml:description>
+			<gml:name>%Waterlevel.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -109,8 +91,8 @@
 	
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaveHsig">
-			<gml:description>Signifikante Wellenhöhe [m]</gml:description>
-			<gml:name>Signifikante Wellenhöhe</gml:name>
+			<gml:description>%WaveHsig.item.description</gml:description>
+			<gml:name>%WaveHsig.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonWaveHsig" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -125,8 +107,8 @@
 	
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WavePeakPeriod">
-			<gml:description>Wellenperiode des Energiespektrums</gml:description>
-			<gml:name>Wellenperiode</gml:name>
+			<gml:description>%WavePeakPeriod.item.description</gml:description>
+			<gml:name>%WavePeakPeriod.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonWavePer" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -141,8 +123,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaveDirection">
-			<gml:description>Wellenrichtung [deg]</gml:description>
-			<gml:name>Wellenrichtung</gml:name>
+			<gml:description>%WaveDirection.item.description</gml:description>
+			<gml:name>%WaveDirection.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonWaveDirection" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -157,8 +139,8 @@
 	
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaveDirectionalSpreading">
-			<gml:description>Coefficient of directional spreading</gml:description>
-			<gml:name>Coefficient of directional spreading</gml:name>
+			<gml:description>%WaveDirectionalSpreading.item.description</gml:description>
+			<gml:name>%WaveDirectionalSpreading.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonWaveDD" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -173,8 +155,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaterlevelUpstream">
-			<gml:description>Oberwasser [NN+m]</gml:description>
-			<gml:name>h-O</gml:name>
+			<gml:description>%WaterlevelUpstream.item.description</gml:description>
+			<gml:name>%WaterlevelUpstream.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -189,8 +171,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaterlevelDownstream">
-			<gml:description>Unterwasser [NN+m]</gml:description>
-			<gml:name>h-U</gml:name>
+			<gml:description>%WaterlevelDownstream.item.description</gml:description>
+			<gml:name>%WaterlevelDownstream.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -205,8 +187,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Discharge">
-			<gml:description>Abfluss [m³/s]</gml:description>
-			<gml:name>Abfluss</gml:name>
+			<gml:description>%Discharge.item.description</gml:description>
+			<gml:name>%Discharge.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonDischarge" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -221,8 +203,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Velocity">
-			<gml:description>Geschwindigkeit [m/s]</gml:description>
-			<gml:name>Geschwindigkeit</gml:name>
+			<gml:description>%Velocity.item.description</gml:description>
+			<gml:name>%Velocity.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -237,8 +219,8 @@
 	
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="VelocityDirection">
-			<gml:description>Geschwindigkeitsrichtung [deg]</gml:description>
-			<gml:name>Geschwindigkeitsrichtung</gml:name>
+			<gml:description>%VelocityDirection.item.description</gml:description>
+			<gml:name>%VelocityDirection.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonVelocityDirection" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -253,8 +235,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Depth">
-			<gml:description>Fließtiefe [m]</gml:description>
-			<gml:name>Fließtiefe</gml:name>
+			<gml:description>%Depth.item.description</gml:description>
+			<gml:name>%Depth.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -269,8 +251,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge1D">
-			<gml:description>spezifischer Abfluss [m³/s/m²]</gml:description>
-			<gml:name>Abfluss</gml:name>
+			<gml:description>%SpecificDischarge1D.item.description</gml:description>
+			<gml:name>%SpecificDischarge1D.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge1D" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -285,8 +267,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge2D">
-			<gml:description>spezifischer Abfluss [m³/s/m]</gml:description>
-			<gml:name>Abfluss</gml:name>
+			<gml:description>%SpecificDischarge2D.item.description</gml:description>
+			<gml:name>%SpecificDischarge2D.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge2D" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -302,8 +284,8 @@
 	<!--  Components for the iteration observations: describing, how the iteration proceeded during the 1d2d-simulation -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxVelocityX">
-			<gml:description>Maximale Geschwindigkeitsdifferenz in X-Richtung [m/s]</gml:description>
-			<gml:name>Max v-x</gml:name>
+			<gml:description>%MaxVelocityX.item.description</gml:description>
+			<gml:name>%MaxVelocityX.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -318,8 +300,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxVelocityY">
-			<gml:description>Maximale Geschwindigkeitsdifferenz in X-Richtung [m/s]</gml:description>
-			<gml:name>Max v-y</gml:name>
+			<gml:description>%MaxVelocityY.item.description</gml:description>
+			<gml:name>%MaxVelocityY.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -335,8 +317,8 @@
 	<!-- TODO: do we really want to use node numbers?  maybe better use the geo-position instead? -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxVelocityNode">
-			<gml:description>Knoten der maximalen Geschwindigkeitsdifferenz [-]</gml:description>
-			<gml:name>Max v-Node</gml:name>
+			<gml:description>%MaxVelocityNode.item.description</gml:description>
+			<gml:name>%MaxVelocityNode.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonOrdinalNumber" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -349,8 +331,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxDepth">
-			<gml:description>Maximale Fließtiefendifferenz [m]</gml:description>
-			<gml:name>Max Depth</gml:name>
+			<gml:description>%MaxDepth.item.description</gml:description>
+			<gml:name>%MaxDepth.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -366,8 +348,8 @@
 	<!-- TODO: do we really want to use node numbers?  maybe better use the geo-position instead? -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxDepthNode">
-			<gml:description>Knoten der maximalen Fließtiefendifferenz [-]</gml:description>
-			<gml:name>Max Depth - Node</gml:name>
+			<gml:description>%MaxDepthNode.item.description</gml:description>
+			<gml:name>%MaxDepthNode.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonOrdinalNumber" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -380,8 +362,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="AverageVelocityX">
-			<gml:description>Mittlere Geschwindigkeitsdifferenz in X-Richtung [m/s]</gml:description>
-			<gml:name>Average v-x</gml:name>
+			<gml:description>%AverageVelocityX.item.description</gml:description>
+			<gml:name>%AverageVelocityX.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -396,8 +378,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="AverageVelocityY">
-			<gml:description>Mittlere Geschwindigkeitsdifferenz in X-Richtung [m/s]</gml:description>
-			<gml:name>Average v-y</gml:name>
+			<gml:description>%AverageVelocityY.item.description</gml:description>
+			<gml:name>%AverageVelocityY.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -412,8 +394,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="AverageDepth">
-			<gml:description>Mittlere Fließtiefendifferenz [m]</gml:description>
-			<gml:name>Average Depth</gml:name>
+			<gml:description>%AverageDepth.item.description</gml:description>
+			<gml:name>%AverageDepth.item.name</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -425,7 +407,6 @@
 			</swe:representation>
 		</swe:ItemDefinition>
 	</gml:dictionaryEntry>
-
 
 
 	<!--  Phenomenons -->
@@ -526,6 +507,5 @@
 			<gml:name>Directional spreading </gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
-
 
 </gml:Dictionary>
