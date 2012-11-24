@@ -118,7 +118,10 @@ public class DhmIndex extends AbstractModelObject implements Serializable, DhmIn
   public DhmIndex( final long id, final String name, final com.vividsolutions.jts.geom.Polygon location, final String filename, final String mimetype, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String editor, final String measurementAccuracy, final String description, final String copyright )
   {
     m_id = id;
-    m_name = name;
+
+    /* protect against empty name here; maybe fixes bug with oracle DhmIndex upload */
+    m_name = name == null ? StringUtils.EMPTY : name;
+
     m_location = location;
     m_filename = filename;
     m_mimeType = mimetype;
