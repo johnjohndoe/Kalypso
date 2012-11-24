@@ -64,14 +64,11 @@ public class ChooseResultsWizard extends Wizard
     setNeedsProgressMonitor( false );
     setForcePreviousAndNextButtons( false );
 
-    final IWspmResultNode results = WspmResultFactory.createResultNode( null, profileSelection.getContainer() );
+    final IWspmResultNode results = WspmResultFactory.createResultNodeFromContainer( profileSelection.getContainer() );
     m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
     addPage( m_resultPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
