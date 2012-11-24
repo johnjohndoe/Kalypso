@@ -76,7 +76,7 @@ import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
 
 /**
  * Exports one {@link org.kalypso.model.wspm.core.profil.IProfil} as {@link org.kalypso.wspwin.core.prf.DataBlockWriter}
- *
+ * 
  * @author Gernot Belger
  */
 public class PrfWriter implements IPrfConstants
@@ -92,11 +92,6 @@ public class PrfWriter implements IPrfConstants
   private final PrfRoughnessWriter m_roughnessWriter;
 
   private final PrfVegetationWriter m_vegetationWriter;
-
-//  public PrfWriter( final IProfile profil, final IWaterlevel[] waterlevels, final boolean preferRoughnessClasses, final boolean preferVegetationClasses )
-//  {
-//    this( profil, waterlevels, "", preferRoughnessClasses, preferVegetationClasses ); //$NON-NLS-1$
-//  }
 
   public PrfWriter( final IProfile profil, final IWaterlevel[] waterlevels, final String defaultRoughnessType, final boolean preferRoughnessClasses, final boolean preferVegetationClasses )
   {
@@ -205,7 +200,6 @@ public class PrfWriter implements IPrfConstants
 
     /* write profile objects as special datablocks */
     new ProfileObjectsPrfWriter( m_profil, m_dbWriter ).write();
-
 
     if( m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT ) != null )
       writeHochRechts();
