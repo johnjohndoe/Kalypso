@@ -66,6 +66,8 @@ public class AddResultColumnsAction extends Action
 
   private final ProfilesSelection m_profileSelection;
 
+  private final IWspmResultNode m_results;
+
   public AddResultColumnsAction( final ExportColumnsComposite columnsComposite, final ProfilesSelection profileSelection )
   {
     m_columnsComposite = columnsComposite;
@@ -76,18 +78,19 @@ public class AddResultColumnsAction extends Action
 
     final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.ADD_CSV_EXPORT_COLUMN );
     setImageDescriptor( image );
+
+    m_results = WspmResultFactory.createResultNode( null, m_profileSelection.getContainer() );
+    // FIXME: we cannot show waterlevel fixations here, as this will not work wih the pattern replacement...
+    // m_results = WspmResultFactory.createResultNodeFromContainer( m_profileSelection.getContainer() );
+    setEnabled( m_results.getChildResults().length > 0 );
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-   */
   @Override
   public void runWithEvent( final Event event )
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final IWspmResultNode results = WspmResultFactory.createResultNode( null, m_profileSelection.getContainer() );
-    final ProfileResultExportPage resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
+    final ProfileResultExportPage resultPage = new ProfileResultExportPage( "profileResults", m_results ); //$NON-NLS-1$
     final SinglePageDialog dialog = new SinglePageDialog( shell, resultPage );
 
     final Rectangle bounds = shell.getBounds();
@@ -100,5 +103,4 @@ public class AddResultColumnsAction extends Action
     final WspmResultLengthSectionColumn[] selectedColumns = resultPage.getSelectedColumns();
     m_columnsComposite.addResultColumns( selectedColumns );
   }
-
 }
