@@ -48,5 +48,4 @@ package org.kalypso.wspwin.core.prf.datablock;
 public interface IDataBlockNames
 {
   String WSP_HOEHE = "WSP-HOEHE NN+m"; //$NON-NLS-1$
-
 }
