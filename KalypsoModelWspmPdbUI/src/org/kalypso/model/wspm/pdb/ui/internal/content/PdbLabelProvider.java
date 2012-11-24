@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.core.status.StatusComposite;
+import org.kalypso.model.wspm.pdb.db.constants.EventConstants.TYPE;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -68,16 +69,16 @@ public class PdbLabelProvider extends ColumnLabelProvider
   public String getText( final Object element )
   {
     if( element instanceof WaterBody )
-      return ((WaterBody) element).getLabel();
+      return ((WaterBody)element).getLabel();
 
     if( element instanceof State )
-      return ((State) element).getName();
+      return ((State)element).getName();
 
     if( element instanceof Event )
-      return ((Event) element).getName();
+      return ((Event)element).getName();
 
     if( element instanceof CrossSection )
-      return ObjectUtils.toString( ((CrossSection) element).getStation() );
+      return ObjectUtils.toString( ((CrossSection)element).getStation() );
 
     if( element instanceof IStatus )
       return ((IStatus)element).getMessage();
@@ -95,7 +96,18 @@ public class PdbLabelProvider extends ColumnLabelProvider
       return WspmPdbUiImages.getImage( IMAGE.STATE );
 
     if( element instanceof Event )
-      return WspmPdbUiImages.getImage( IMAGE.EVENT );
+    {
+      final TYPE type = ((Event)element).getType();
+      switch( type )
+      {
+        case Simulation:
+          return WspmPdbUiImages.getImage( IMAGE.EVENT_SIMULATION );
+
+        case Measurement:
+        default:
+          return WspmPdbUiImages.getImage( IMAGE.EVENT_MEASURED );
+      }
+    }
 
     if( element instanceof CrossSection )
       return WspmPdbUiImages.getImage( IMAGE.CROSS_SECTION );

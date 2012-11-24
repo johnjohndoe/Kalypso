@@ -70,7 +70,7 @@ public enum KalypsoModelWspmTuhhUIImages implements ImageKey
   LAYER_CODE( "icons/obj16/chart_layer_code.png" ), //$NON-NLS-1$
 
   WATERLEVEL_FIXATION( "icons/obj16/waterlevelFixation.gif" ), //$NON-NLS-1$
-  WATERLEVEL_SIMULATION( "icons/obj16/startCalulation.gif" ); //$NON-NLS-1$
+  WATERLEVEL_SIMULATION( "icons/obj16/waterlevelSimulation.gif" ); //$NON-NLS-1$
 
   private final String m_imagePath;
 
