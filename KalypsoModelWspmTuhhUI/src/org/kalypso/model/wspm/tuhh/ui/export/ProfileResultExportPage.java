@@ -47,6 +47,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
@@ -93,7 +94,9 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     setTitle( STR_AVAILABLE_RESULTS );
     setDescription( Messages.getString( "ProfileResultExportPage_1" ) ); //$NON-NLS-1$
 
-    m_resultChooser = new ProfileExportResultChooser( results, singleSelection );
+    final ViewerFilter filter = new EmptyWaterlevelFilter();
+
+    m_resultChooser = new ProfileExportResultChooser( results, singleSelection, filter );
     m_resultChooser.addCheckStateListener( new ICheckStateListener()
     {
       @Override
@@ -204,7 +207,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     {
       if( result instanceof IWspmResult )
       {
-        lengthSections.add( (IWspmResult) result );
+        lengthSections.add( (IWspmResult)result );
       }
     }
 
