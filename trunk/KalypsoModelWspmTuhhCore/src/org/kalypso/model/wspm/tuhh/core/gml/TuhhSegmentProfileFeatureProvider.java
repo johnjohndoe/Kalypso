@@ -59,7 +59,7 @@ import com.google.common.cache.LoadingCache;
  */
 public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvider
 {
-  // TODO: fixes a slight performance problem vfor now: results where reloaded for every profile, when selected.
+  // TODO: fixes a slight performance problem for now: results where reloaded for every profile, when selected.
   // Problem is, that the cache does not know when to clear its state (wspm results are changed, fixations are change and so on).
   // We use a small cache expiration time for now, so user will not have problems with that.
   private final LoadingCache<Feature, IWspmResultNode> m_cache = CacheBuilder.newBuilder().expireAfterWrite( 30, TimeUnit.SECONDS ).maximumSize( 100 ).build( new CacheLoader<Feature, IWspmResultNode>()
