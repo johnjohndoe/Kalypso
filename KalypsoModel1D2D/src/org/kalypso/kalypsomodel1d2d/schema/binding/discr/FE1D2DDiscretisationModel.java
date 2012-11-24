@@ -45,7 +45,6 @@ import gnu.trove.THashSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -138,7 +137,8 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   @Override
   public IPolyElement createElement2D( final IFE1D2DEdge[] edges )
   {
-    if( edges.length < 3 || edges.length > 4 )
+    // HOTFIX: actually there are elements with more than 4 edges -> 2d weirs! -> please discuss this with Nico
+    if( edges.length < 3 /* || edges.length > 4 */)
       throw new IllegalStateException( String.format( "Attempted to create a 2D element with %d edges.", edges.length ) ); //$NON-NLS-1$
 
     for( final IFE1D2DEdge edge : edges )
@@ -533,9 +533,8 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, CLUSTER_TOLERANCE );
       final List<IFE1D2DElement> elements = queryElements( reqEnvelope, null );
       final Geometry pBuffer = JTSAdapter.export( point ).buffer( CLUSTER_TOLERANCE );
-      for( final Iterator<IFE1D2DElement> iterator = elements.iterator(); iterator.hasNext(); )
+      for( IFE1D2DElement element : elements )
       {
-        final IFE1D2DElement element = iterator.next();
         final Geometry geom = JTSAdapter.export( element.getGeometry() );
         if( pBuffer.intersects( geom ) )
           return false;
@@ -624,7 +623,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     }
   }
 
-  private boolean newElementOverlapsExisting( final Geometry newGeom, GM_Envelope envelope ) throws GM_Exception
+  private boolean newElementOverlapsExisting( final Geometry newGeom, final GM_Envelope envelope ) throws GM_Exception
   {
     final List<IFE1D2DElement> foundElements = queryElements( envelope, null );
     for( final IFE1D2DElement foundElement : foundElements )
