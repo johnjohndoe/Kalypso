@@ -217,6 +217,8 @@ public class PdbExportConnectionChooserData extends ConnectionChooserData
     /* If not, create a new one. */
     final DhmIndex dhmIndex = new DhmIndex();
     dhmIndex.setFilename( file.getName() );
+    // FIXME: check: oracle seems to treat empty string as null
+    // dhmIndex.setName( file.getName() );
     dhmIndex.setCreationDate( new Date() );
     dhmIndex.setMeasurementDate( new Date() );
 
