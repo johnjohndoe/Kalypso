@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
+package org.kalypso.model.wspm.tuhh.core.results;
 
 import org.kalypso.model.wspm.tuhh.core.results.AbstractWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;

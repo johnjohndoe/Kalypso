@@ -279,7 +279,6 @@ public class ExportColumnsComposite
       menuManager.add( patternAction );
     }
 
-
     new MenuButton( button, menuManager );
   }
 

@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.tuhh.core.results;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -111,7 +113,7 @@ public final class WspmResultFactory
    * This function creates wspm result nodes, containing WSPM projects in the workspace.<br/>
    * <br/>
    * IMPORTANT: see {@link #createResultNode(IWspmResultNode, Feature)}
-   *
+   * 
    * @return The root nodes.
    */
   public static IWspmResultNode[] createRootNodes( final IProgressMonitor monitor )
@@ -170,5 +172,38 @@ public final class WspmResultFactory
       e.printStackTrace();
       return null;
     }
+  }
+
+  /**
+   * Specialized: build normal node from water body.<br/>
+   * For reaches: add results for reach, but also add global fixations.
+   */
+  public static IWspmResultNode createResultNodeFromContainer( final Feature container )
+  {
+    if( container instanceof TuhhReach )
+    {
+      final Collection<IWspmResultNode> results = new ArrayList<>();
+
+      final TuhhReach reach = (TuhhReach)container;
+
+      /* Results for the reach */
+      final IWspmResultNode reachNode = WspmResultFactory.createResultNode( null, reach );
+      results.addAll( Arrays.asList( reachNode.getChildResults() ) );
+
+      /* and all fixations from the parent water body */
+
+      final IWspmResultNode waterNode = WspmResultFactory.createResultNode( null, reach.getWaterBody() );
+      final IWspmResultNode[] childResults = waterNode.getChildResults();
+      for( final IWspmResultNode childNode : childResults )
+      {
+        if( childNode instanceof WspmResultFixationNode )
+          results.add( childNode );
+      }
+
+      final IWspmResultNode[] nodes = results.toArray( new IWspmResultNode[results.size()] );
+      return new WspmResultDummyNode( "root", null, nodes ); //$NON-NLS-1$
+    }
+
+    return WspmResultFactory.createResultNode( null, container );
   }
 }

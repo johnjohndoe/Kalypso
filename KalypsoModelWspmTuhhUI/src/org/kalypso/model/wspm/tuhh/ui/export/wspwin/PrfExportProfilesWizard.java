@@ -58,6 +58,8 @@ import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kimwerner
@@ -85,7 +87,10 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
     m_profileFileChooserPage.setFileGroupText( Messages.getString( "PrfExportProfilesWizard_2" ) ); //$NON-NLS-1$
     addPage( m_profileFileChooserPage );
 
-    final IWspmResultNode results = WspmResultFactory.createResultNode( null, getProfileSelection().getContainer() );
+    final ProfilesSelection profileSelection = getProfileSelection();
+    final Feature container = profileSelection.getContainer();
+    final IWspmResultNode results = WspmResultFactory.createResultNodeFromContainer( container );
+
     m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
     m_resultPage.setShowComponentChooser( false );
     addPage( m_resultPage );

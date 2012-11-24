@@ -41,9 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -58,10 +55,8 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultFixationNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
@@ -99,41 +94,14 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
     addPage( m_profileFileChooserPage );
 
     final Feature container = getProfileSelection().getContainer();
-    final IWspmResultNode results = createResultNode( container );
+
+    final IWspmResultNode results = WspmResultFactory.createResultNodeFromContainer( container );
+
     m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
     m_resultPage.setShowComponentChooser( false );
     addPage( m_resultPage );
 
     checkPlotterExe();
-  }
-
-  private IWspmResultNode createResultNode( final Feature container )
-  {
-    if( container instanceof TuhhReach )
-    {
-      final Collection<IWspmResultNode> results = new ArrayList<>();
-
-      final TuhhReach reach = (TuhhReach) container;
-
-      /* Results for the reach */
-      final IWspmResultNode reachNode = WspmResultFactory.createResultNode( null, reach );
-      results.addAll( Arrays.asList( reachNode.getChildResults() ) );
-
-      /* and all fixations from the parent water body */
-
-      final IWspmResultNode waterNode = WspmResultFactory.createResultNode( null, reach.getWaterBody() );
-      final IWspmResultNode[] childResults = waterNode.getChildResults();
-      for( final IWspmResultNode childNode : childResults )
-      {
-        if( childNode instanceof WspmResultFixationNode )
-          results.add( childNode );
-      }
-
-      final IWspmResultNode[] nodes = results.toArray( new IWspmResultNode[results.size()] );
-      return new WspmResultDummyNode( "root", null, nodes ); //$NON-NLS-1$
-    }
-
-    return WspmResultFactory.createResultNode( null, container );
   }
 
   private void checkPlotterExe( )
