@@ -125,6 +125,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator
 
   private void addExtras( final IProfile profile )
   {
+    // FIXME: no, use new waterlevel objects instead!
     final Waterlevel2DCreator waterlevelExtra = new Waterlevel2DCreator();
     final IWProfPoint[] soilPoints = getSoilPoints();
     waterlevelExtra.findWaterlevel( soilPoints );
