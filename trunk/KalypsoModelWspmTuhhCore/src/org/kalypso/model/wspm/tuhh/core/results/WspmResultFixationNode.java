@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.tuhh.core.results;
 
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Gernot Belger
@@ -49,6 +51,8 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 public class WspmResultFixationNode extends AbstractWspmResultNode implements IWspmResult
 {
   private final WspmFixation m_fixation;
+
+  private WspmResultLengthSection m_lengthSection;
 
   public WspmResultFixationNode( final IWspmResultNode parent, final WspmFixation fixation )
   {
@@ -79,7 +83,16 @@ public class WspmResultFixationNode extends AbstractWspmResultNode implements IW
   @Override
   public WspmResultLengthSection getLengthSection( )
   {
-    return WspmResultLengthSection.create( m_fixation );
+    synchronized( m_fixation )
+    {
+      if( m_lengthSection == null )
+      {
+        final IObservation<TupleResult> observation = m_fixation.toObservation();
+        m_lengthSection = new WspmResultLengthSection( observation );
+      }
+    }
+
+    return m_lengthSection;
   }
 
   @Override
