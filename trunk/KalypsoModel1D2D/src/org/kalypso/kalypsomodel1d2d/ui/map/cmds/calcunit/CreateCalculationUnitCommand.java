@@ -94,6 +94,8 @@ final class CreateCalculationUnitCommand extends AddFeatureCommand
         result.addComponent( component );
 
       result.setSortComponents( new IComponent[] { components[1] } );
+
+      // FIXME: nonsense!
       result.setOrdinalNumberComponent( components[0] );
 
       ObservationFeatureFactory.toFeature( obs, obsFeature );
