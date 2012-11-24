@@ -2,21 +2,13 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.eclipse.core.runtime.CoreException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
@@ -25,90 +17,72 @@ import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-
-import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
-import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
-import de.openali.odysseus.chart.framework.model.figure.IPaintable;
-import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
+import de.openali.odysseus.chart.framework.util.resource.IPair;
 
 public class BuildingParameterLayer extends AbstractChartLayer implements IEditableChartLayer
 {
-  private final static GeometryFactory GF = new GeometryFactory();
+  private final ModellEventListener m_modelListener = new ModellEventListener()
+  {
+    @Override
+    public void onModellChange( final ModellEvent modellEvent )
+    {
+      handleFeatureChanged( modellEvent );
+    }
+  };
 
-  private Coordinate[] m_paintOkPoints = null;
+  private final String m_domainComponentID;
 
-  private Coordinate[] m_paintCrossPoints = null;
+  private final String m_valueComponentID;
 
-  private final List<Coordinate[]> m_paintOkLines = new ArrayList<>();
-
-  private final List<Coordinate[]> m_paintCrossLines = new ArrayList<>();
-
-  private final int m_domainComponent;
-
-  private final int m_valueComponent;
-
-  private final int m_classComponent;
-
-  private HoverIndex m_hoverIndex;
+  private final String m_classComponentId;
 
   private final Feature m_obsFeature;
 
-  private final TupleResult m_result;
-
   private final IStyleSet m_styleSet;
 
-  private final PolylineFigure m_okLineFigure;
-
-  private final PointFigure m_okPointFigure;
-
-  private final PolylineFigure m_crossLineFigure;
-
-  private final PointFigure m_crossPointFigure;
+  private BuildingParameterPaintData m_paintData;
 
   public BuildingParameterLayer( final Feature obsFeature, final String domainComponentId, final String valueComponentId, final String classComponentId, final IStyleSet styleSet )
   {
     super( null, new StyleSet() );
 
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
-    final TupleResult result = obs.getResult();
-
-    m_domainComponent = result.indexOfComponent( domainComponentId );
-    m_valueComponent = result.indexOfComponent( valueComponentId );
-    m_classComponent = result.indexOfComponent( classComponentId );
-
     // REMARK: at the moment, we do not react to changes in the result; if we do later, this must be done every time the
     // result is changed
     m_obsFeature = obsFeature;
-    m_result = result;
+    m_domainComponentID = domainComponentId;
+    m_valueComponentID = valueComponentId;
+    m_classComponentId = classComponentId;
 
     m_styleSet = styleSet;
-    m_okLineFigure = new PolylineFigure();
-    m_okLineFigure.setStyle( m_styleSet.getStyle( "okLine", ILineStyle.class ) ); //$NON-NLS-1$
-    m_okPointFigure = new PointFigure();
-    m_okPointFigure.setStyle( m_styleSet.getStyle( "okPoint", IPointStyle.class ) ); //$NON-NLS-1$
-    m_crossLineFigure = new PolylineFigure();
-    m_crossLineFigure.setStyle( m_styleSet.getStyle( "crossLine", ILineStyle.class ) ); //$NON-NLS-1$
-    m_crossPointFigure = new PointFigure();
-    m_crossPointFigure.setStyle( m_styleSet.getStyle( "crossPoint", IPointStyle.class ) ); //$NON-NLS-1$
+
+    m_obsFeature.getWorkspace().addModellListener( m_modelListener );
+
+    updatePaintData();
+  }
+
+  @Override
+  public final void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
+  {
+    super.setCoordinateMapper( coordinateMapper );
 
     updatePaintData();
   }
@@ -116,144 +90,36 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-    for( final Coordinate[] okLine : m_paintOkLines )
-    {
-      m_okLineFigure.setPoints( toPointArray( okLine ) );
-      m_okLineFigure.paint( gc );
-    }
+    if( m_paintData == null )
+      return;
 
-    for( final Coordinate[] crossLine : m_paintCrossLines )
-    {
-      m_crossLineFigure.setPoints( toPointArray( crossLine ) );
-      m_crossLineFigure.paint( gc );
-    }
-
-    final Point[] okPoints = toPointArray( m_paintOkPoints );
-    m_okPointFigure.setPoints( okPoints );
-    m_okPointFigure.paint( gc );
-
-    m_crossPointFigure.setPoints( toPointArray( m_paintCrossPoints ) );
-    m_crossPointFigure.paint( gc );
-
-    m_hoverIndex = updateEditInfos();
-  }
-
-  @SuppressWarnings( { "rawtypes", "unchecked" } )
-  private HoverIndex updateEditInfos( )
-  {
-    final HoverIndex index = new HoverIndex();
-
-    final String classLabel = m_result.getComponent( m_classComponent ).getName();
-
-    // Create current edit infos from ok points
-    final IAxis xAxis = getDomainAxis();
-    final IAxis yAxis = getTargetAxis();
-    for( final IRecord record : m_result )
-    {
-      final BigDecimal classValue = (BigDecimal)record.getValue( m_classComponent );
-      final BigDecimal domainValue = (BigDecimal)record.getValue( m_domainComponent );
-      final BigDecimal targetValue = (BigDecimal)record.getValue( m_valueComponent );
-
-      if( domainValue == null || targetValue == null )
-        continue;
-
-      // convert to screen-point
-
-      // FIXME: this does not work correct
-
-      final int x = xAxis.logicalToScreen( domainValue );
-      final int y = yAxis.logicalToScreen( targetValue );
-      final Point pos = new Point( x, y );
-
-      // Edit info
-      final String msg = String.format( "%10.4f\t%s%n%10.4f\t%s%n%10.4f\t%s", domainValue, xAxis.getLabel(), targetValue, yAxis.getLabel(), classValue, classLabel ); //$NON-NLS-1$
-      final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
-      final EditInfo info = new EditInfo( this, createHoverPaintable( shape ), null, record, msg, pos );
-      index.addElement( shape, info );
-    }
-
-    for( final Coordinate crd : m_paintCrossPoints )
-    {
-      // convert to screen-point
-      final int x = xAxis.logicalToScreen( new BigDecimal( crd.x ) );
-      final int y = yAxis.logicalToScreen( new BigDecimal( crd.y ) );
-      final Point pos = new Point( x, y );
-
-      // Edit info
-      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.5" ); //$NON-NLS-1$
-      final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
-      final EditInfo info = new EditInfo( this, createHoverPaintable( shape ), null, null, msg, pos );
-      index.addElement( shape, info );
-    }
-
-    return index;
-  }
-
-  private IPaintable createHoverPaintable( final Rectangle shape )
-  {
-    final ILineStyle dls = StyleUtils.getDefaultLineStyle();
-    final EmptyRectangleFigure r = new EmptyRectangleFigure();
-    r.setStyle( dls );
-    r.setRectangle( shape );
-    return r;
-  }
-
-  @SuppressWarnings( { "rawtypes", "unchecked" } )
-  private Point[] toPointArray( final Coordinate[] crds )
-  {
-    final IAxis xAxis = getDomainAxis();
-    final IAxis yAxis = getTargetAxis();
-
-    final Point[] points = new Point[crds.length];
-    for( int i = 0; i < crds.length; i++ )
-    {
-      final Coordinate crd = crds[i];
-      final int x = xAxis.logicalToScreen( new BigDecimal( crd.x ) );
-      final int y = yAxis.logicalToScreen( new BigDecimal( crd.y ) );
-      final Point pos = new Point( x, y );
-      points[i] = pos;
-    }
-    return points;
+    m_paintData.paint( gc );
   }
 
   @Override
   public IDataRange<Double> getDomainRange( )
   {
-    return rangeForComponent( m_domainComponent );
+    if( m_paintData == null )
+      return null;
+
+    return m_paintData.getDomainRange();
   }
 
   @Override
   public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    return rangeForComponent( m_valueComponent );
-  }
+    if( m_paintData == null )
+      return null;
 
-  @SuppressWarnings( { "rawtypes", "unchecked" } )
-  private IDataRange<Double> rangeForComponent( final int component )
-  {
-    Double min = Double.MAX_VALUE;
-    Double max = -Double.MAX_VALUE;
-
-    for( final IRecord record : m_result )
-    {
-      final Double value = (Double)record.getValue( component );
-
-      if( value == null )
-        continue;
-
-      max = Math.max( max, value );
-      min = Math.min( min, value );
-    }
-
-    return new DataRange( min, max );
+    return m_paintData.getTargetRange();
   }
 
   public EditInfo getEditInfo( final Point p )
   {
-    if( m_hoverIndex == null )
+    if( m_paintData == null )
       return null;
 
-    return m_hoverIndex.findElement( p );
+    return m_paintData.getInfo( p );
   }
 
   public void delete( final EditInfo info )
@@ -261,171 +127,146 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     if( info == null )
       return;
 
-    final IRecord record = (IRecord)info.getData();
-    m_result.remove( record );
+    if( m_paintData == null )
+      return;
 
-    updatePaintData();
-    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
+    final IObservation<TupleResult> obs = m_paintData.getObservation();
+
+    final IRecord record = (IRecord)info.getData();
+    obs.getResult().remove( record );
+
+    saveData();
   }
 
   private void updatePaintData( )
   {
-    m_paintCrossLines.clear();
-    m_paintOkLines.clear();
-    m_paintCrossPoints = null;
-    m_paintOkPoints = null;
-
-    // sort into coordinate arrays!
-    BigDecimal lastClass = null;
-    final List<Coordinate> crds = new ArrayList<>();
-
-    final List<Coordinate> okPoints = new ArrayList<>( m_result.size() );
-    for( final IRecord record : m_result )
+    final ICoordinateMapper mapper = getCoordinateMapper();
+    if( mapper != null )
     {
-      final BigDecimal classValue = (BigDecimal)record.getValue( m_classComponent );
-      final BigDecimal domainValue = (BigDecimal)record.getValue( m_domainComponent );
-      final BigDecimal targetValue = (BigDecimal)record.getValue( m_valueComponent );
+      final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( m_obsFeature );
 
-      if( domainValue == null || targetValue == null )
-        continue;
-
-      if( !ObjectUtils.equals( classValue, lastClass ) )
-      {
-        m_paintOkLines.add( crds.toArray( new Coordinate[crds.size()] ) );
-        crds.clear();
-      }
-
-      // add value to path
-      final Coordinate currentCrd = new Coordinate( domainValue.doubleValue(), targetValue.doubleValue() );
-
-      okPoints.add( currentCrd );
-      crds.add( currentCrd );
-
-      lastClass = classValue;
+      m_paintData = new BuildingParameterPaintData( this, m_styleSet, obs, m_domainComponentID, m_valueComponentID, m_classComponentId, mapper );
     }
 
-    // additionally add last line
-    m_paintOkLines.add( crds.toArray( new Coordinate[crds.size()] ) );
-    crds.clear();
-
-    m_paintOkPoints = okPoints.toArray( new Coordinate[okPoints.size()] );
-
-    // Determine intersections and intersecting lines
-    // REMARK: brute force at the moment, we normally do not have too many lines. If performance problems occur, use
-    // spatial-index for the lines
-    final Set<Coordinate[]> crossLines = new HashSet<>();
-    final Set<Coordinate> crossPoints = new HashSet<>();
-    for( final Coordinate[] line1 : m_paintOkLines )
-    {
-      for( final Coordinate[] line2 : m_paintOkLines )
-      {
-        if( line1 == line2 || line1.length < 2 || line2.length < 2 )
-          continue;
-
-        final LineString ls1 = GF.createLineString( line1 );
-        final LineString ls2 = GF.createLineString( line2 );
-        if( ls1.intersects( ls2 ) )
-        {
-          crossLines.add( line1 );
-          crossLines.add( line2 );
-
-          final Geometry intersection = ls1.intersection( ls2 );
-          crossPoints.addAll( Arrays.asList( intersection.getCoordinates() ) );
-        }
-      }
-    }
-
-    m_paintOkLines.removeAll( crossLines );
-    m_paintCrossLines.addAll( crossLines );
-    m_paintCrossPoints = crossPoints.toArray( new Coordinate[crossPoints.size()] );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   /**
    * Writes the cloned result back into the real result.
    */
-  public void saveData( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
+  private void saveData( )
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.6" ), 3 ); //$NON-NLS-1$
+    if( m_paintData == null )
+      return;
 
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( m_obsFeature );
-    final TupleResult result = obs.getResult();
-    result.clear();
+    final IObservation<TupleResult> observation = m_paintData.getObservation();
 
-    ProgressUtilities.worked( monitor, 1 );
-
-    final int compCount = result.getComponents().length;
-    for( final IRecord record : m_result )
-    {
-      final IRecord newRecord = result.createRecord();
-
-      for( int i = 0; i < compCount; i++ )
-        newRecord.setValue( i, record.getValue( i ) );
-
-      result.add( newRecord );
-    }
-
-    ProgressUtilities.worked( monitor, 1 );
-
-    final FeatureChange[] changes = ObservationFeatureFactory.toFeatureAsChanges( obs, m_obsFeature );
+    final FeatureChange[] changes = ObservationFeatureFactory.toFeatureAsChanges( observation, m_obsFeature );
     final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_obsFeature.getWorkspace(), changes );
 
-    // HACK: we post the command directly to the flow-model.... it would be of course much better to get the commandable
-    // workspace from outside...
-
-    KalypsoAFGUIFrameworkPlugin.getDataProvider().postCommand( IFlowRelationshipModel.class.getName(), command );
-
-    ProgressUtilities.worked( monitor, 1 );
-
-    ProgressUtilities.done( monitor );
-  }
-
-  public boolean alwaysAllowsEditing( )
-  {
-    return true;
-  }
-
-  public EditInfo edit( final Point point, final EditInfo info )
-  {
-    // find real point from point
-    final IAxis xAxis = getDomainAxis();
-    final IAxis yAxis = getTargetAxis();
-
-    final BigDecimal xValue = new BigDecimal( (xAxis.screenToNumeric( point.x )).doubleValue() );
-    final BigDecimal yValue = new BigDecimal( (yAxis.screenToNumeric( point.y )).doubleValue() );
-
-    final IRecord record = (IRecord)info.getData();
-
-    record.setValue( m_domainComponent, xValue );
-    record.setValue( m_valueComponent, yValue );
-
-    updatePaintData();
-
-    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
-
-    return info;
+    try
+    {
+      // HACK: we post the command directly to the flow-model.... it would be of course much better to get the commandable
+      // workspace from outside...
+      KalypsoAFGUIFrameworkPlugin.getDataProvider().postCommand( IFlowRelationshipModel.class.getName(), command );
+    }
+    catch( final InvocationTargetException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public void dispose( )
   {
-    // nothing to do
+    m_obsFeature.getWorkspace().removeModellListener( m_modelListener );
   }
 
   @Override
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
+    final IPair<Object, Object> logical = getCoordinateMapper().screenToLogical( point );
+
+    final IRecord record = (IRecord)dragStartData.getData();
+    if( record == null )
+      return null;
+
+    final TupleResult result = record.getOwner();
+    final int domainComponent = result.indexOfComponent( m_domainComponentID );
+    final int valueComponent = result.indexOfComponent( m_valueComponentID );
+
+    final Number domain = (Number)logical.getDomain();
+    final Number target = (Number)logical.getTarget();
+
+    record.setValue( domainComponent, new BigDecimal( domain.toString() ) );
+    record.setValue( valueComponent, new BigDecimal( target.toString() ) );
+
+    saveData();
+
     return null;
   }
 
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
-    return null;
+    final Object data = dragStartData.getData();
+
+    /* Only allow a drag, if something is selected. */
+    if( !(data instanceof IRecord) )
+    {
+      final String msg = "Cannot drag crossing, move data point instead.";
+      return new EditInfo( this, dragStartData.getHoverFigure(), null, null, msg, newPos );
+    }
+
+    final IRecord record = (IRecord)data;
+
+    /* calculate screen pos of start element */
+    final TupleResult result = record.getOwner();
+    final int domainComponent = result.indexOfComponent( m_domainComponentID );
+    final int valueComponent = result.indexOfComponent( m_valueComponentID );
+    final BigDecimal domainValue = (BigDecimal)record.getValue( domainComponent );
+    final BigDecimal targetValue = (BigDecimal)record.getValue( valueComponent );
+
+    /* Get the target axis. */
+    final Point startPos = getCoordinateMapper().logicalToScreen( domainValue, targetValue );
+
+    /* Create a polyline figure. */
+    final ILineStyle dragStyle = new LineStyle( 2, new RGB( 0, 0, 0 ), 255, 0f, new float[] { 10f, 10f }, LINEJOIN.ROUND, LINECAP.ROUND, 0, true );
+
+    final PolylineFigure pf = new PolylineFigure( dragStyle );
+    pf.setPoints( new Point[] { startPos, newPos } );
+
+    final PointFigure hoverFigure = (PointFigure)dragStartData.getHoverFigure();
+    final PointFigure draggedFigure = new PointFigure( hoverFigure.getStyle() );
+    draggedFigure.setCenterPoint( newPos );
+
+    /* clear tooltip when dragging */
+    final String text = null;
+
+    return new EditInfo( this, draggedFigure, pf, dragStartData.getData(), text, newPos );
   }
 
   @Override
   public EditInfo getHover( final Point pos )
   {
     return getEditInfo( pos );
+  }
+
+  private void handleObservationChanged( )
+  {
+    updatePaintData();
+
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
+  }
+
+  protected void handleFeatureChanged( final ModellEvent modellEvent )
+  {
+    if( modellEvent instanceof FeaturesChangedModellEvent )
+    {
+      final FeaturesChangedModellEvent featuresChangedEvent = (FeaturesChangedModellEvent)modellEvent;
+      final Feature[] changedFeatures = featuresChangedEvent.getFeatures();
+      if( ArrayUtils.contains( changedFeatures, m_obsFeature ) )
+        updatePaintData();
+    }
   }
 }

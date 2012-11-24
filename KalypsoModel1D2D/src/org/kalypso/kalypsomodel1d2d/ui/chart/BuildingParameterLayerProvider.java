@@ -59,10 +59,9 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
  * <li>showPoints [default=true]: If true, points are drawn even if no point style is given.</li>
  * <li>showLines [default=true]: Same as showPoints for lines.</li>
  * <li>featureKey: String. Key, where to get the feature from the ChartDataProvider.</li>
- * <li>propertyName: QName. If non null, the observation feature is found at that property of the given feature. Else
- * the given feature must be an observation itself.</li>
+ * <li>propertyName: QName. If non null, the observation feature is found at that property of the given feature. Else the given feature must be an observation itself.</li>
  * </ul>
- *
+ * 
  * @author Gernot Belger
  */
 public class BuildingParameterLayerProvider extends AbstractLayerProvider
@@ -76,7 +75,7 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
     final String propertyNameStr = pc.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
 
-    final Feature baseFeature = (Feature) getModel().getData( featureKey );
+    final Feature baseFeature = (Feature)getModel().getData( featureKey );
     final Feature feature;
     if( propertyName == null )
       feature = baseFeature;
@@ -85,8 +84,6 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
 
     if( feature == null )
       return null;
-
-    // FIXME: should use TupleResultDomainValueData
 
     final String domainComponentId = pc.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String valueComponentId = pc.getParameterValue( "targetComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$

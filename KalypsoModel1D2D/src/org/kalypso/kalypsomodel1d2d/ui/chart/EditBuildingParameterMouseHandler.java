@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
+import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.visitors.ZoomInVisitor;
@@ -82,17 +83,6 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   @Override
   public void mouseDoubleClick( final MouseEvent e )
   {
-    final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
-    final Point plotPoint = new Point( e.x, e.y );
-    final EditInfo info = layer.getEditInfo( plotPoint );
-
-    if( info != null && info.getData() != null )
-    {
-      setToolInfo( null );
-      getChart().setEditInfo( null );
-
-      layer.delete( info );
-    }
   }
 
   @Override
@@ -102,7 +92,10 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
     final Point plotPoint = new Point( e.x, e.y );
     final EditInfo editInfo = layer.getEditInfo( plotPoint );
     if( editInfo != null && editInfo.getData() != null )
+    {
       m_info = editInfo;
+      getChart().setEditInfo( m_info );
+    }
   }
 
   @Override
@@ -110,19 +103,36 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   {
     final Point point = new Point( e.x, e.y );
 
-    // Show tooltip
-    final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
-    final EditInfo info = layer.getEditInfo( point );
+    /* button up */
+    if( (e.stateMask & SWT.BUTTON_MASK) == 0 )
+    {
+      // Show tooltip
+      final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
+      m_info = layer.getEditInfo( point );
 
-    getChart().setEditInfo( info );
-    setToolInfo( info );
+      getChart().setEditInfo( m_info );
+      setToolInfo( m_info );
+    }
+    /* dragging */
+    else if( (e.stateMask & SWT.BUTTON_MASK) == SWT.BUTTON1 )
+    {
+      if( m_info == null )
+        return;
+
+      final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
+      m_info = layer.drag( point, m_info );
+
+      getChart().setEditInfo( m_info );
+      /* update tooltip */
+      setToolInfo( m_info );
+    }
 
     // HACK/TODO: this is ugly and should not be necessary: there should be another mechanism, so that mouse handler can
     // draw tooltips (or other things) on the map.
-    if( info == null )
+    if( m_info == null )
       setCursor( SWT.CURSOR_ARROW );
     else
-      setCursor( SWT.CURSOR_ARROW );
+      setCursor( SWT.CURSOR_HAND );
   }
 
   @Override
@@ -130,35 +140,43 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   {
     final EditInfo info = m_info;
 
+    // prepare for exception
+    m_info = null;
+    getChart().setEditInfo( m_info );
+
     final Point plotPoint = new Point( e.x, e.y );
 
-    if( info == null )
+    if( ((e.stateMask & SWT.BUTTON_MASK) == SWT.BUTTON3) )
     {
       // Klick on cross-point?
       final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
       final EditInfo editInfo = layer.getEditInfo( plotPoint );
-      if( editInfo != null && editInfo.getData() == null )
+      if( editInfo != null )
       {
-        final Control ctrl = (Control)e.getSource();
-        final Rectangle bounds = ctrl.getBounds();
-        final int zoomFactor = 3;
-        final Point point = editInfo.getPosition();
-        final Point zoomMin = new Point( point.x - bounds.width / zoomFactor, point.y - bounds.height / zoomFactor );
-        final Point zoomMax = new Point( point.x + bounds.width / zoomFactor, point.y + bounds.height / zoomFactor );
+        final Object data = editInfo.getData();
+        if( data == null )
+        {
+          final Control ctrl = (Control)e.getSource();
+          final Rectangle bounds = ctrl.getBounds();
+          final int zoomFactor = 3;
+          final Point point = editInfo.getPosition();
+          final Point zoomMin = new Point( point.x - bounds.width / zoomFactor, point.y - bounds.height / zoomFactor );
+          final Point zoomMax = new Point( point.x + bounds.width / zoomFactor, point.y + bounds.height / zoomFactor );
 
-        final ZoomInVisitor visitor = new ZoomInVisitor( zoomMin, zoomMax );
+          final ZoomInVisitor visitor = new ZoomInVisitor( zoomMin, zoomMax );
 
-        final IChartModel model = getChart().getChartModel();
-        model.getMapperRegistry().accept( visitor );
+          final IChartModel model = getChart().getChartModel();
+          model.getMapperRegistry().accept( visitor );
+        }
+        else if( data instanceof IRecord )
+          layer.delete( info );
       }
 
       return;
     }
 
-    // prepare for exception
-    m_info = null;
-
     final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
-    layer.edit( plotPoint, info );
+    m_info = layer.commitDrag( plotPoint, info );
+    getChart().setEditInfo( m_info );
   }
 }

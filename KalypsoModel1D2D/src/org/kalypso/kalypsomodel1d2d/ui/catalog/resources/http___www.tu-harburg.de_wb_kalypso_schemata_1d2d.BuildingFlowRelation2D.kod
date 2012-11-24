@@ -41,6 +41,18 @@
             </FillColor>
           </PointStyle>
 
+          <PointStyle role="okPointHover">
+            <Width>11</Width>
+            <Height>11</Height>
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor>
+              <Color>00ff00</Color>
+            </FillColor>
+          </PointStyle>
+
           <LineStyle role="crossLine">
             <Title>Cross line</Title>
             <Width>2</Width>
@@ -61,6 +73,18 @@
               <Color>ffffff</Color>
             </FillColor>
           </PointStyle>
+
+          <PointStyle role="crossPointHover">
+            <Width>13</Width>
+            <Height>13</Height>
+            <Stroke>
+              <Width>4</Width>
+              <LineColor>FF0000</LineColor>
+            </Stroke>
+            <FillColor>
+              <Color>ffffff</Color>
+            </FillColor>
+          </PointStyle>
         </Styles>
 
       </Layer>
@@ -68,7 +92,7 @@
     <Mappers>
       <Axis id="h_uw_Axis">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Unterwasser [m]</Label>
+        <Label>Unterwasser [mNN]</Label>
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>
         <NumberRange>
@@ -80,13 +104,14 @@
       </Axis>
       <Axis id="h_ow_Axis">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Oberwasser [m]</Label>
+        <Label>Oberwasser [mNN]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
         <NumberRange>
           <MinValue>0</MinValue>
           <MaxValue>0</MaxValue>
         </NumberRange>
+        <PreferredAdjustment range="96" before="2" after="2"/>
         <RendererRef ref="NumberAxisRenderer" />
       </Axis>
     </Mappers>

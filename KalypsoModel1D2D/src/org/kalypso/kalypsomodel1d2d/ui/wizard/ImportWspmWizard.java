@@ -290,6 +290,7 @@ public class ImportWspmWizard extends Wizard
           }
           catch( final Exception e )
           {
+            e.printStackTrace();
             return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.9" ) ); //$NON-NLS-1$
           }
         }
