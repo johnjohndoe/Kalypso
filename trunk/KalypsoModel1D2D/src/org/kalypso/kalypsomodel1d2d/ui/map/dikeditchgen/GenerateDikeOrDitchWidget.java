@@ -110,7 +110,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     final ScrolledForm form = toolkit.createScrolledForm( parent );
     final DatabindingForm binding = new DatabindingForm( form, toolkit );
     final Composite body = form.getBody();
-    GridLayoutFactory.swtDefaults().applyTo( body );
+    GridLayoutFactory.fillDefaults().applyTo( body );
 
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
@@ -120,7 +120,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
       section.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
       final Composite sectionComposite = toolkit.createComposite( section, SWT.NONE );
-      GridLayoutFactory.swtDefaults().spacing( 0, 20 ).applyTo( sectionComposite );
+      GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( sectionComposite );
       section.setClient( sectionComposite );
 
       // network layer

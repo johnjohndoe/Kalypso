@@ -80,7 +80,7 @@ public class TriangulateGeometryComposite extends Composite
 
   private final DatabindingForm m_binding;
 
-  private CommandableWorkspace m_workspace;
+  private final CommandableWorkspace m_workspace;
 
   public TriangulateGeometryComposite( final FormToolkit toolkit, final DatabindingForm binding, final TriangulationBuilder triangulationBuilder, final CommandableWorkspace discretisationModelWorkspace )
   {
@@ -89,7 +89,7 @@ public class TriangulateGeometryComposite extends Composite
     m_triangulationBuilder = triangulationBuilder;
     m_workspace = discretisationModelWorkspace;
     toolkit.adapt( this );
-    GridLayoutFactory.swtDefaults().applyTo( this );
+    GridLayoutFactory.fillDefaults().applyTo( this );
     createContents( toolkit, this );
   }
 
