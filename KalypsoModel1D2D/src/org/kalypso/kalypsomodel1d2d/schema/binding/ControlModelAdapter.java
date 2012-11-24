@@ -29,7 +29,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Adapter from original 1d2d control model without ordinal number column and wrong sorting to version 1.0.
- *
  */
 public class ControlModelAdapter implements IModelAdaptor
 {
@@ -66,8 +65,8 @@ public class ControlModelAdapter implements IModelAdaptor
 
     final QName qnameProp1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" ); //$NON-NLS-1$
     final QName qnameProp2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" ); //$NON-NLS-1$
-    final IRelationType controlModelCollectionPropertyType = (IRelationType) controlModelGroup.getFeatureType().getProperty( qnameProp1 );
-    final Feature controlModelCollection = (Feature) controlModelGroup.getProperty( controlModelCollectionPropertyType );
+    final IRelationType controlModelCollectionPropertyType = (IRelationType)controlModelGroup.getFeatureType().getProperty( qnameProp1 );
+    final Feature controlModelCollection = (Feature)controlModelGroup.getProperty( controlModelCollectionPropertyType );
     if( controlModelCollection == null )
       return Status.OK_STATUS;
 
@@ -75,8 +74,8 @@ public class ControlModelAdapter implements IModelAdaptor
     final IPropertyType versionProperty = controlModelGroup.getFeatureType().getProperty( VersionedModel.SIM_BASE_PROP_VERSION );
     controlModelGroup.setProperty( versionProperty, VERSION_1_0 );
 
-    final IRelationType controlModelPropertyType = (IRelationType) controlModelCollection.getFeatureType().getProperty( qnameProp2 );
-    final FeatureList controlModels = (FeatureList) controlModelCollection.getProperty( controlModelPropertyType );
+    final IRelationType controlModelPropertyType = (IRelationType)controlModelCollection.getFeatureType().getProperty( qnameProp2 );
+    final FeatureList controlModels = (FeatureList)controlModelCollection.getProperty( controlModelPropertyType );
 
     try
     {
@@ -87,9 +86,11 @@ public class ControlModelAdapter implements IModelAdaptor
       for( final Object modelObject : controlModels )
       {
         final Feature feature = FeatureHelper.getFeature( workspace, modelObject );
-        final Feature obsFeature = (Feature) feature.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+        final Feature obsFeature = (Feature)feature.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
         final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
         final TupleResult result = obs.getResult();
+
+        // FIXME: nonsene, we do not need the ordinal number withing the observation, this is just for opticts!
         if( result.getOrdinalNumberComponent() == null )
         {
           final IComponent componentTime = ObservationFeatureFactory.createDictionaryComponent( obsFeature, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
