@@ -40,25 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.util;
 
-import java.net.URL;
-
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.commons.tokenreplace.IStringResolver;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
- * Provides functions for preparing a rainfall generation operation.
+ * Strategy for handling ombrometer rainfall generations.<br/>
+ * Implementations must correspond to the values of OmbrometerCollection/generatorStrategy
  * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public interface IRainfallConfigurator
+public interface IOmbrometerGeneratorStrategy
 {
-  /**
-   * This function updates the rcm gml.
-   * 
-   * @param rcmUrl
-   *          The url of the rcm gml.
-   * @param variables
-   *          The variables.
-   */
-  void updateRcmGml( URL rcmUrl, IStringResolver variables ) throws CoreException;
+  void processFirstTime( Feature[] ombrometerFeatures, IObservation[] ombrometerObservations, IProgressMonitor monitor ) throws CoreException, GM_Exception;
 }
