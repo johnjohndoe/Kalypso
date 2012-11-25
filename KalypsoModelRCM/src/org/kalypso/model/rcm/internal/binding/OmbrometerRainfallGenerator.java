@@ -41,13 +41,9 @@
 package org.kalypso.model.rcm.internal.binding;
 
 import java.net.MalformedURLException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -59,11 +55,12 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
-import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.model.rcm.binding.IOmbrometerCollection;
+import org.kalypso.model.rcm.binding.IOmbrometerCollection.GenerationStrategy;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
-import org.kalypso.model.rcm.util.OmbrometerUtils;
+import org.kalypso.model.rcm.util.IOmbrometerGeneratorStrategy;
+import org.kalypso.model.rcm.util.RainfallExtensionUtilities;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -79,7 +76,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -170,12 +166,12 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
       final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerFeatures, linkXPath, filters, range );
 
-      /* Apply thiessen, if not yet done. */
+      /* Apply generator strategy, if not yet done. */
       if( !ombrometerCollection.hasBeenProcessed() )
       {
-        // FIXME: use different strategy for idw+thiessen or only thiessen
-
-        analyseOmbrometerAndProcessThiessen( ombrometerFeatures, ombrometerObservations, new NullProgressMonitor() );
+        final GenerationStrategy strategy = ombrometerCollection.getGenerationStrategy();
+        final IOmbrometerGeneratorStrategy generatorStrategy = RainfallExtensionUtilities.createOmbrometerGeneratorStrategy( strategy.name() );
+        generatorStrategy.processFirstTime( ombrometerFeatures, ombrometerObservations, new NullProgressMonitor() );
       }
 
       /* Monitor. */
@@ -272,48 +268,6 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
       /* Update the log. */
       LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde beendet.", null ) );
-    }
-  }
-
-  private void analyseOmbrometerAndProcessThiessen( final Feature[] ombrometerFeatures, final IObservation[] ombrometerObservations, final IProgressMonitor monitor ) throws CoreException, GM_Exception
-  {
-    Assert.isTrue( ombrometerFeatures.length == ombrometerObservations.length );
-
-    /* Set used flag of each ombrometer */
-    for( int i = 0; i < ombrometerObservations.length; i++ )
-    {
-
-      final IObservation obs = ombrometerObservations[i];
-      final Boolean use = analyseObservation( obs );
-
-      final IOmbrometer ombro = (IOmbrometer) ombrometerFeatures[i];
-      ombro.setUsed( use );
-    }
-
-    // REMARK: huge buffer ratio. Does not really change the result (as long as all catchments are covered), but we do
-    // not need to worry where to get the buffer as we don't save the result here. Mainly needed for the visualisation.
-    final double bufferRatio = 10;
-
-    /* Recalculate Thiessen */
-    final Map<IOmbrometer, GM_Surface<GM_SurfacePatch>> areas = OmbrometerUtils.thiessenPolygons( Arrays.asList( ombrometerFeatures ), bufferRatio, monitor );
-    for( final Entry<IOmbrometer, GM_Surface<GM_SurfacePatch>> entry : areas.entrySet() )
-    {
-      final IOmbrometer ombrometer = entry.getKey();
-      ombrometer.setAffectedArea( entry.getValue() );
-    }
-  }
-
-  private Boolean analyseObservation( final IObservation obs )
-  {
-    try
-    {
-      final String description = OmbrometerUtils.analyseOmbrometer( obs );
-      return OmbrometerUtils.getUsedFromDescription( description );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      return Boolean.FALSE;
     }
   }
 }

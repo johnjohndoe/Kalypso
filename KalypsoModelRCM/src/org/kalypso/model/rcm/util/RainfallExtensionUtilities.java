@@ -55,21 +55,20 @@ import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
  * 
  * @author Holger Albert
  */
-public class RainfallExtensionUtilities
+public final class RainfallExtensionUtilities
 {
   private static final String RAINFALL_CONFIGURATOR_EXTENSION_POINT = "org.kalypso.model.rcm.rainfallConfigurator";
 
   private static final String RAINFALL_CONFIGURATOR_CONFIGURATOR_ELEMENT = "configurator";
 
-  private static final String RAINFALL_CONFIGURATOR_CONFIGURATOR_ID = "id";
+  private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 
-  private static final String RAINFALL_CONFIGURATOR_CONFIGURATOR_CLASS = "class";
+  private static final String ATTRIBUTE_CLASS = "class"; //$NON-NLS-1$
 
   public static final String RAINFALL_CONFIGURATOR_ID = "org.kalypso.hwv.ui.utils.RdbRainfallConfigurator";
 
-  /**
-   * The constructor.
-   */
+  private static final String OMBROMETER_GENERATOR_STRATEGY_CONFIGURATOR_ELEMENT = "ombrometerGeneratorStrategy"; //$NON-NLS-1$
+
   private RainfallExtensionUtilities( )
   {
   }
@@ -81,32 +80,68 @@ public class RainfallExtensionUtilities
    *          The id of the rainfall configurator.
    * @return The rainfall configurator.
    */
-  public static IRainfallConfigurator createRainfallConfigurator( String id ) throws CoreException
+  public static IRainfallConfigurator createRainfallConfigurator( final String id ) throws CoreException
   {
     /* Assert. */
     Assert.isNotNull( id );
 
     /* Get the extension registry. */
-    IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     /* Get the extension point. */
-    IExtensionPoint extensionPoint = registry.getExtensionPoint( RAINFALL_CONFIGURATOR_EXTENSION_POINT );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( RAINFALL_CONFIGURATOR_EXTENSION_POINT );
 
     /* Get all configuration elements. */
-    IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-    for( IConfigurationElement element : configurationElements )
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    for( final IConfigurationElement element : configurationElements )
     {
       /* If the configuration element is not the configurator element, continue. */
       if( !RAINFALL_CONFIGURATOR_CONFIGURATOR_ELEMENT.equals( element.getName() ) )
         continue;
 
       /* Get the attributes. */
-      String configuratorId = element.getAttribute( RAINFALL_CONFIGURATOR_CONFIGURATOR_ID );
+      final String configuratorId = element.getAttribute( ATTRIBUTE_ID );
       if( id.equals( configuratorId ) )
-        return (IRainfallConfigurator) element.createExecutableExtension( RAINFALL_CONFIGURATOR_CONFIGURATOR_CLASS );
+        return (IRainfallConfigurator) element.createExecutableExtension( ATTRIBUTE_CLASS );
     }
 
-    String message = String.format( "Keinen Rainfall-Configurator mit ID '%s' gefunden.", id );
-    throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, message, null ) );
+    final String message = String.format( "Keinen Rainfall-Configurator mit ID '%s' gefunden.", id );
+    throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, message ) );
+  }
+
+  /**
+   * This function creates and returns the ombrometer generator strategy with the given id, if one is registered.
+   * 
+   * @param id
+   *          The id of the ombrometer generator strategy.
+   * @return The ombrometer generator strategy.
+   */
+  public static IOmbrometerGeneratorStrategy createOmbrometerGeneratorStrategy( final String id ) throws CoreException
+  {
+    /* Assert. */
+    Assert.isNotNull( id );
+
+    /* Get the extension registry. */
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    /* Get the extension point. */
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( RAINFALL_CONFIGURATOR_EXTENSION_POINT );
+
+    /* Get all configuration elements. */
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    for( final IConfigurationElement element : configurationElements )
+    {
+      /* If the configuration element is not the configurator element, continue. */
+      if( OMBROMETER_GENERATOR_STRATEGY_CONFIGURATOR_ELEMENT.equals( element.getName() ) )
+      {
+        /* Get the attributes. */
+        final String configuratorId = element.getAttribute( ATTRIBUTE_ID );
+        if( id.equals( configuratorId ) )
+          return (IOmbrometerGeneratorStrategy) element.createExecutableExtension( ATTRIBUTE_CLASS );
+      }
+    }
+
+    final String message = String.format( "Keinen Generator mit ID '%s' gefunden.", id );
+    throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, message ) );
   }
 }
