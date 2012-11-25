@@ -172,7 +172,11 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
       /* Apply thiessen, if not yet done. */
       if( !ombrometerCollection.hasBeenProcessed() )
+      {
+        // FIXME: use different strategy for idw+thiessen or only thiessen
+
         analyseOmbrometerAndProcessThiessen( ombrometerFeatures, ombrometerObservations, new NullProgressMonitor() );
+      }
 
       /* Monitor. */
       monitor.worked( 100 );

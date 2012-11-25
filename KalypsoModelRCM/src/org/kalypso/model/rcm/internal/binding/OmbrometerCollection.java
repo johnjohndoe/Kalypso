@@ -43,6 +43,7 @@ package org.kalypso.model.rcm.internal.binding;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IOmbrometer;
@@ -98,5 +99,17 @@ public class OmbrometerCollection extends Feature_Impl implements IOmbrometerCol
   public List<IOmbrometer> getOmbrometers( )
   {
     return getProperty( MEMBER_OMBROMETER, List.class );
+  }
+
+  @Override
+  public GenerationStrategy getGenerationStrategy( )
+  {
+    final String strategy = getProperty( PROPERTY_GENERATION_STRATEG, String.class );
+
+    /* defaults to 'thiessen' */
+    if( StringUtils.isBlank( strategy ) )
+      return GenerationStrategy.thiessen;
+
+    return GenerationStrategy.valueOf( strategy );
   }
 }
