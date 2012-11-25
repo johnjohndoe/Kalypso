@@ -46,7 +46,6 @@ import java.net.URL;
 import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -70,69 +69,48 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
     super( parent, parentRelation, featureType, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#getAffectedArea()
-   */
   @SuppressWarnings("unchecked")
   @Override
   public GM_Surface<GM_SurfacePatch> getAffectedArea( )
   {
-    return getProperty( QNAME_PROP_AFFECTEDAREA, GM_Surface.class );
+    return getProperty( PROPERTY_AFFECTEDAREA, GM_Surface.class );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#getAffectedArea(org.kalypsodeegree.model.geometry.GM_Surface)
-   */
   @Override
   public void setAffectedArea( final GM_Surface< ? > area )
   {
-    setProperty( QNAME_PROP_AFFECTEDAREA, area );
+    setProperty( PROPERTY_AFFECTEDAREA, area );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#getExternalId()
-   */
   @Override
   public String getExternalId( )
   {
-    return getProperty( QNAME_PROP_EXTERNALID, String.class );
+    return getProperty( PROPERTY_EXTERNALID, String.class );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#getShortName()
-   */
   @Override
   public String getShortName( )
   {
-    return getProperty( QNAME_PROP_SHORTNAME, String.class );
+    return getProperty( PROPERTY_SHORTNAME, String.class );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#getStationLocation()
-   */
   @Override
   public GM_Point getStationLocation( )
   {
-    return getProperty( QNAME_PROP_STATIONLOCATION, GM_Point.class );
+    return getProperty( PROPERTY_STATIONLOCATION, GM_Point.class );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#isUsed()
-   */
   @Override
   public boolean isUsed( )
   {
-    final Boolean isUsed = getProperty( QNAME_PROP_ISUSED, Boolean.class );
+    final Boolean isUsed = getProperty( PROPERTY_ISUSED, Boolean.class );
     return isUsed == null ? true : isUsed.booleanValue();
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#isUsed(boolean)
-   */
   @Override
   public void setUsed( final boolean used )
   {
-    setProperty( QNAME_PROP_ISUSED, used );
+    setProperty( PROPERTY_ISUSED, used );
   }
 
   @Override
@@ -143,49 +121,35 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
     if( geom == null )
       return null;
 
-    final IPropertyType isUsedPt = getFeatureType().getProperty( QNAME_PROP_ISUSED );
-
-    final Boolean oldIsUsed = getProperty( QNAME_PROP_ISUSED, Boolean.class );
+    final Boolean oldIsUsed = getProperty( PROPERTY_ISUSED, Boolean.class );
     if( ObjectUtils.equals( oldIsUsed, isUsed ) )
       return null;
 
-    return new FeatureChange( this, isUsedPt, isUsed );
+    return new FeatureChange( this, PROPERTY_ISUSED, isUsed );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#setExternalId(java.lang.String)
-   */
   @Override
   public void setExternalId( final String externalId )
   {
-    setProperty( QNAME_PROP_EXTERNALID, externalId );
+    setProperty( PROPERTY_EXTERNALID, externalId );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#setShortName(java.lang.String)
-   */
   @Override
   public void setShortName( final String shortName )
   {
-    setProperty( QNAME_PROP_SHORTNAME, shortName );
+    setProperty( PROPERTY_SHORTNAME, shortName );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#setStationLocation(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public void setStationLocation( final GM_Point location )
   {
-    setProperty( QNAME_PROP_STATIONLOCATION, location );
+    setProperty( PROPERTY_STATIONLOCATION, location );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometer#getTimeserie(java.lang.String)
-   */
   @Override
   public IObservation getTimeserie( ) throws MalformedURLException, SensorException
   {
-    final TimeseriesLinkType link = getProperty( IOmbrometer.QNAME_PROP_PRECIPITATION1, TimeseriesLinkType.class );
+    final TimeseriesLinkType link = getProperty( IOmbrometer.PROPERTY_PRECIPITATION1, TimeseriesLinkType.class );
     final URL context = getWorkspace().getContext();
     final String href = link.getHref();
     final URL linkUrl = UrlResolverSingleton.resolveUrl( context, href );
@@ -196,6 +160,6 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
   @Override
   public ZmlLink getTimeserieLink( )
   {
-    return new ZmlLink( this, IOmbrometer.QNAME_PROP_PRECIPITATION1 );
+    return new ZmlLink( this, IOmbrometer.PROPERTY_PRECIPITATION1 );
   }
 }

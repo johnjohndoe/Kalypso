@@ -40,9 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.model.rcm.binding.IOmbrometerCollection;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -56,26 +61,42 @@ public class OmbrometerCollection extends Feature_Impl implements IOmbrometerCol
     super( parent, parentRelation, featureType, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometerCollection#hasBeenProcessed()
-   */
   @Override
   public boolean hasBeenProcessed( )
   {
-    final Boolean property = getProperty( QNAME_PROP_HASBEENPROCESSED, Boolean.class );
+    final Boolean property = getProperty( PROPERTY_HASBEENPROCESSED, Boolean.class );
     if( property == null )
       return false;
 
     return property.booleanValue();
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IOmbrometerCollection#setHasBeenProcessed()
-   */
   @Override
   public void setHasBeenProcessed(final boolean hasBeenProcessed )
   {
-    setProperty( QNAME_PROP_HASBEENPROCESSED, hasBeenProcessed );
+    setProperty( PROPERTY_HASBEENPROCESSED, hasBeenProcessed );
   }
 
+  @Override
+  public FeatureChange[] changeIsUsed( final Boolean isUsed )
+  {
+    final List<IOmbrometer> ombrometers = getOmbrometers();
+
+    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+    for( final IOmbrometer ombrometer : ombrometers )
+    {
+      final FeatureChange change = ombrometer.changeIsUsed( isUsed );
+      if( change != null )
+        changes.add( change );
+    }
+
+    return changes.toArray( new FeatureChange[changes.size()] );
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<IOmbrometer> getOmbrometers( )
+  {
+    return getProperty( MEMBER_OMBROMETER, List.class );
+  }
 }

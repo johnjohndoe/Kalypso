@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.binding;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -54,13 +57,17 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IOmbrometerCollection extends Feature
 {
-  final static QName QNAME_FEATURE_OMBROMETERCollection = new QName( UrlCatalogRcm.NS_OMBROMETER, "OmbrometerCollection" );
+  final static QName FEATURE_OMBROMETERCollection = new QName( UrlCatalogRcm.NS_OMBROMETER, "OmbrometerCollection" );
 
-  final static QName QNAME_PROP_HASBEENPROCESSED = new QName( UrlCatalogRcm.NS_OMBROMETER, "hasBeenProcessed" );
+  final static QName PROPERTY_HASBEENPROCESSED = new QName( UrlCatalogRcm.NS_OMBROMETER, "hasBeenProcessed" );
 
-  final static QName QNAME_PROP_OMBROMETERMEMBER = new QName( UrlCatalogRcm.NS_OMBROMETER, "ombrometerMember" );
+  final static QName MEMBER_OMBROMETER = new QName( UrlCatalogRcm.NS_OMBROMETER, "ombrometerMember" );
 
   boolean hasBeenProcessed( );
 
   void setHasBeenProcessed( final boolean hasBeenProcessed );
+
+  FeatureChange[] changeIsUsed( final Boolean isUsed );
+
+  List<IOmbrometer> getOmbrometers( );
 }
