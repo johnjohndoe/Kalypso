@@ -15,6 +15,7 @@
         <extension base="gml:AbstractFeatureType">
           <sequence>
             <element name="hasBeenProcessed" type="boolean" default="true" />
+            <element name="generationStrategy" type="ombr:GenerationStrategyType" default="thiessen" minOccurs="0" />
             <element name="ombrometerMember" minOccurs="0" maxOccurs="unbounded">
               <complexType>
                 <sequence minOccurs="0" maxOccurs="1">
@@ -58,4 +59,11 @@
       </complexContent>
     </complexType>
   </element>
+  
+  <simpleType name="GenerationStrategyType">
+    <restriction base="string">
+        <enumeration value="thiessen"/>
+        <enumeration value="thiessen_idw"/>
+    </restriction>
+  </simpleType>
 </schema>

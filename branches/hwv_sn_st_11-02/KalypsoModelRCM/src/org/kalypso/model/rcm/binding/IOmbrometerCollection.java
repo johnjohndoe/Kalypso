@@ -57,11 +57,19 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IOmbrometerCollection extends Feature
 {
-  final static QName FEATURE_OMBROMETERCollection = new QName( UrlCatalogRcm.NS_OMBROMETER, "OmbrometerCollection" );
+  enum GenerationStrategy
+  {
+    thiessen,
+    thiessen_idw
+  }
 
-  final static QName PROPERTY_HASBEENPROCESSED = new QName( UrlCatalogRcm.NS_OMBROMETER, "hasBeenProcessed" );
+  QName FEATURE_OMBROMETERCollection = new QName( UrlCatalogRcm.NS_OMBROMETER, "OmbrometerCollection" ); //$NON-NLS-1$
 
-  final static QName MEMBER_OMBROMETER = new QName( UrlCatalogRcm.NS_OMBROMETER, "ombrometerMember" );
+  QName PROPERTY_HASBEENPROCESSED = new QName( UrlCatalogRcm.NS_OMBROMETER, "hasBeenProcessed" ); //$NON-NLS-1$
+
+  QName PROPERTY_GENERATION_STRATEG = new QName( UrlCatalogRcm.NS_OMBROMETER, "generationStrategy" ); //$NON-NLS-1$
+
+  QName MEMBER_OMBROMETER = new QName( UrlCatalogRcm.NS_OMBROMETER, "ombrometerMember" );
 
   boolean hasBeenProcessed( );
 
@@ -70,4 +78,6 @@ public interface IOmbrometerCollection extends Feature
   FeatureChange[] changeIsUsed( final Boolean isUsed );
 
   List<IOmbrometer> getOmbrometers( );
+
+  GenerationStrategy getGenerationStrategy( );
 }
