@@ -59,6 +59,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypsodeegree.model.feature.Feature;
@@ -273,5 +274,14 @@ public class OmbrometerUtils
         ratio = goods.doubleValue() / count.doubleValue();
     }
     return ratio;
+  }
+
+  public static boolean isDailyStation( final IObservation observation ) throws SensorException
+  {
+    final MetadataList metadataList = observation.getMetadataList();
+
+    // <metadata value="Tag" name="Archivtyp"/>
+    // TODO Auto-generated method stub
+    return false;
   }
 }

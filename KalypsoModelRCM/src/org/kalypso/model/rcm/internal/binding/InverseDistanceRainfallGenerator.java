@@ -162,7 +162,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
         if( feature != null )
         {
           // TODO Should be in the generator gml (rcm) ...
-          final Boolean active = (Boolean) feature.getProperty( IOmbrometer.QNAME_PROP_ISUSED );
+          final Boolean active = (Boolean) feature.getProperty( IOmbrometer.PROPERTY_ISUSED );
           if( active != null && active.booleanValue() == true )
             featureList.add( feature );
         }

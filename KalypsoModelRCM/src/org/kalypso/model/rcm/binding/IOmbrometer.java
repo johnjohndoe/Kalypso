@@ -61,19 +61,19 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  */
 public interface IOmbrometer extends Feature
 {
-  final static QName QNAME_FEATURE_OMBROMETER = new QName( UrlCatalogRcm.NS_OMBROMETER, "Ombrometer" );
+  QName FEATURE_OMBROMETER = new QName( UrlCatalogRcm.NS_OMBROMETER, "Ombrometer" );
 
-  final static QName QNAME_PROP_SHORTNAME = new QName( UrlCatalogRcm.NS_OMBROMETER, "shortName" );
+  QName PROPERTY_SHORTNAME = new QName( UrlCatalogRcm.NS_OMBROMETER, "shortName" );
 
-  final static QName QNAME_PROP_EXTERNALID = new QName( UrlCatalogRcm.NS_OMBROMETER, "externalId" );
+  QName PROPERTY_EXTERNALID = new QName( UrlCatalogRcm.NS_OMBROMETER, "externalId" );
 
-  final static QName QNAME_PROP_ISUSED = new QName( UrlCatalogRcm.NS_OMBROMETER, "isUsed" );
+  QName PROPERTY_ISUSED = new QName( UrlCatalogRcm.NS_OMBROMETER, "isUsed" );
 
-  final static QName QNAME_PROP_STATIONLOCATION = new QName( UrlCatalogRcm.NS_OMBROMETER, "stationLocation" );
+  QName PROPERTY_STATIONLOCATION = new QName( UrlCatalogRcm.NS_OMBROMETER, "stationLocation" );
 
-  final static QName QNAME_PROP_AFFECTEDAREA = new QName( UrlCatalogRcm.NS_OMBROMETER, "affectedArea" );
+  QName PROPERTY_AFFECTEDAREA = new QName( UrlCatalogRcm.NS_OMBROMETER, "affectedArea" );
 
-  static final QName QNAME_PROP_PRECIPITATION1 = new QName( UrlCatalogRcm.NS_OMBROMETER, "precipitationLink1" );
+  QName PROPERTY_PRECIPITATION1 = new QName( UrlCatalogRcm.NS_OMBROMETER, "precipitationLink1" );
 
   String getShortName( );
 
