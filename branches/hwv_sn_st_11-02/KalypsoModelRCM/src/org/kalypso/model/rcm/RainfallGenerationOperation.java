@@ -157,7 +157,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
 
       /* Find target links right now, to avoid long waiting time if anything fails here */
       final TimeseriesLinkType[] targetLinks = findCatchmentLinks( targetDefinition, catchments );
-      writeObservations( targetDefinition, observations, targetLinks, catchments );
+      writeObservations( targetDefinition, observations, targetLinks, catchments, metadata );
 
       return status;
     }
@@ -240,7 +240,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private void writeObservations( final ITarget target, final IObservation[] observations, final TimeseriesLinkType[] links, final Feature[] catchmentFeatures ) throws CoreException
+  private void writeObservations( final ITarget target, final IObservation[] observations, final TimeseriesLinkType[] links, final Feature[] catchmentFeatures, final IMetadata[] meta ) throws CoreException
   {
     try
     {
@@ -256,10 +256,17 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
           continue;
 
         /* Get the observation. */
-        /* If it is null, use the request defined in the filter to create a default one. */
         IObservation obs = observations[i];
         if( obs == null )
+        {
+          /* If it is null, use the request defined in the filter to create a default one. */
           obs = RequestFactory.createDefaultObservation( targetFilter );
+
+          /* Add the mandatory metadata. */
+          /* In observations created by the RainfallGenerationOp, this will be already done. */
+          if( obs != null )
+            addMandadoryMetadata( meta, obs.getMetadataList() );
+        }
 
         /* If it is still null, continue. */
         if( obs == null )
@@ -295,6 +302,21 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
     {
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Fehler beim Schreiben der Zeitreihen", e );
       throw new CoreException( status );
+    }
+  }
+
+  private void addMandadoryMetadata( final IMetadata[] metadata, final MetadataList metadataList )
+  {
+    for( final IMetadata data : metadata )
+    {
+      final String metadataName = data.getName();
+      final String metadataValue = data.getValue();
+      if( metadataValue == null )
+        continue;
+
+      final String resolvedValue = m_variables.resolve( metadataValue.toString() );
+      if( resolvedValue != null )
+        metadataList.setProperty( metadataName, resolvedValue );
     }
   }
 
