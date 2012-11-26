@@ -16,6 +16,7 @@
           <sequence>
             <element name="hasBeenProcessed" type="boolean" default="true" />
             <element name="generationStrategy" type="ombr:GenerationStrategyType" default="thiessen" minOccurs="0" />
+            <element name="thiessenIdwMaxStations" type="unsignedShort" minOccurs="0" />
             <element name="ombrometerMember" minOccurs="0" maxOccurs="unbounded">
               <complexType>
                 <sequence minOccurs="0" maxOccurs="1">

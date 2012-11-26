@@ -67,7 +67,9 @@ public interface IOmbrometerCollection extends Feature
 
   QName PROPERTY_HASBEENPROCESSED = new QName( UrlCatalogRcm.NS_OMBROMETER, "hasBeenProcessed" ); //$NON-NLS-1$
 
-  QName PROPERTY_GENERATION_STRATEG = new QName( UrlCatalogRcm.NS_OMBROMETER, "generationStrategy" ); //$NON-NLS-1$
+  QName PROPERTY_GENERATION_STRATEGY = new QName( UrlCatalogRcm.NS_OMBROMETER, "generationStrategy" ); //$NON-NLS-1$
+
+  QName PROPERTY_THIESSEN_IDW_MAX_STATIONS = new QName( UrlCatalogRcm.NS_OMBROMETER, "thiessenIdwMaxStations" ); //$NON-NLS-1$
 
   QName MEMBER_OMBROMETER = new QName( UrlCatalogRcm.NS_OMBROMETER, "ombrometerMember" );
 
@@ -80,4 +82,7 @@ public interface IOmbrometerCollection extends Feature
   List<IOmbrometer> getOmbrometers( );
 
   GenerationStrategy getGenerationStrategy( );
+
+  /** maxmial number of station to be used for the thiessen_idw strategy */
+  Integer getThiessenIDWmaxStations( );
 }
