@@ -61,13 +61,11 @@ public final class RainfallExtensionUtilities
 
   private static final String RAINFALL_CONFIGURATOR_CONFIGURATOR_ELEMENT = "configurator";
 
+  private static final String OMBROMETER_GENERATOR_STRATEGY_CONFIGURATOR_ELEMENT = "ombrometerGeneratorStrategy"; //$NON-NLS-1$
+
   private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 
   private static final String ATTRIBUTE_CLASS = "class"; //$NON-NLS-1$
-
-  public static final String RAINFALL_CONFIGURATOR_ID = "org.kalypso.hwv.ui.utils.RdbRainfallConfigurator";
-
-  private static final String OMBROMETER_GENERATOR_STRATEGY_CONFIGURATOR_ELEMENT = "ombrometerGeneratorStrategy"; //$NON-NLS-1$
 
   private RainfallExtensionUtilities( )
   {
@@ -141,7 +139,7 @@ public final class RainfallExtensionUtilities
       }
     }
 
-    final String message = String.format( "Keinen Generator mit ID '%s' gefunden.", id );
+    final String message = String.format( "Keine Strategie mit ID '%s' gefunden.", id );
     throw new CoreException( new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, message ) );
   }
 }
