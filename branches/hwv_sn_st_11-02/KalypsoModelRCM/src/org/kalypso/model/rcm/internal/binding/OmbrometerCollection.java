@@ -104,12 +104,18 @@ public class OmbrometerCollection extends Feature_Impl implements IOmbrometerCol
   @Override
   public GenerationStrategy getGenerationStrategy( )
   {
-    final String strategy = getProperty( PROPERTY_GENERATION_STRATEG, String.class );
+    final String strategy = getProperty( PROPERTY_GENERATION_STRATEGY, String.class );
 
     /* defaults to 'thiessen' */
     if( StringUtils.isBlank( strategy ) )
       return GenerationStrategy.thiessen;
 
     return GenerationStrategy.valueOf( strategy );
+  }
+
+  @Override
+  public Integer getThiessenIDWmaxStations( )
+  {
+    return getProperty( PROPERTY_THIESSEN_IDW_MAX_STATIONS, Integer.class );
   }
 }

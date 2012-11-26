@@ -239,11 +239,20 @@ public class OmbrometerUtils
     for( int i = 0; i < values.size(); i++ )
     {
       final int status = ((Number) values.get( i, statusAxis )).intValue();
-      if( !KalypsoStatusUtils.checkMask( status, KalypsoStati.BIT_CHECK ) || KalypsoStatusUtils.checkMask( status, KalypsoStati.BIT_USER_MODIFIED ) )
+      if( isValidOmbrometerValue( status ) )
         count++;
     }
 
     return count;
+  }
+
+  /**
+   * Die Prüfung (z.B. verwendet von der Thiessen Methode), ob es sich um einen gültigen Wert handelt.<br/>
+   * Prüft lediglich den Wert der Status-Achse.
+   */
+  public static boolean isValidOmbrometerValue( final int status )
+  {
+    return !KalypsoStatusUtils.checkMask( status, KalypsoStati.BIT_CHECK ) || KalypsoStatusUtils.checkMask( status, KalypsoStati.BIT_USER_MODIFIED );
   }
 
   public static Boolean checkIfOmbrometershouldBeUsed( final IOmbrometer ombro )
