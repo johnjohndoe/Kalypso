@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
@@ -165,14 +166,17 @@ public class SearchDhmIndexPage extends WizardPage
     m_searchViewer = new TreeViewer( main, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL );
     final GridData treeData = new GridData( SWT.FILL, SWT.FILL, true, true );
     treeData.heightHint = 200;
-    m_searchViewer.getTree().setLayoutData( treeData );
-    m_searchViewer.getTree().setLinesVisible( true );
-    m_searchViewer.getTree().setHeaderVisible( true );
+
+    final Tree tree = m_searchViewer.getTree();
+    tree.setLayoutData( treeData );
+    tree.setLinesVisible( true );
+    tree.setHeaderVisible( true );
+
     configureTreeViewer( m_searchViewer );
     m_searchViewer.setContentProvider( new SearchDhmIndexContentProvider() );
 
     /* Add the column resize control listener. */
-    m_searchViewer.getTree().addControlListener( new ColumnsResizeControlListener() );
+    tree.addControlListener( new ColumnsResizeControlListener() );
 
     /* Create a scrolled form. */
     final ScrolledForm scrolledForm = new ScrolledForm( main );
@@ -219,7 +223,7 @@ public class SearchDhmIndexPage extends WizardPage
     final IObservableValue modelIndex = BeansObservables.observeValue( m_settingsData, PdbImportConnectionChooserData.PROPERTY_DHM_INDEX );
 
     final DataBinder dhmIndexBinder = new DataBinder( targetIndex, modelIndex );
-    dhmIndexBinder.addTargetBeforeSetValidator( new NotNullValidator<>( DhmIndex.class, IStatus.ERROR, Messages.getString("SearchDhmIndexPage.0") ) ); //$NON-NLS-1$
+    dhmIndexBinder.addTargetBeforeSetValidator( new NotNullValidator<>( DhmIndex.class, IStatus.ERROR, Messages.getString( "SearchDhmIndexPage.0" ) ) ); //$NON-NLS-1$
     // dhmIndexBinder.addModelAfterGetValidator( new NotNullValidator<>( DhmIndex.class, IStatus.ERROR, "Please select an entry." ) );
     dataBinding.bindValue( dhmIndexBinder );
 
@@ -243,6 +247,8 @@ public class SearchDhmIndexPage extends WizardPage
         /* Add the dhm index composite. */
         m_dhmIndexComposite = new DhmIndexComposite( body, SWT.NONE, dhmIndex, false, dataBinding );
         m_dhmIndexComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+        ColumnsResizeControlListener.refreshColumnsWidth( tree );
 
         /* Reflow. */
         scrolledForm.reflow( true );
