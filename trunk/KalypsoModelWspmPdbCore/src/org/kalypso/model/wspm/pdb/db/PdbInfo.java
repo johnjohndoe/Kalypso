@@ -233,4 +233,18 @@ public class PdbInfo
 
     return entries.toArray( (Entry<String, String>[])Array.newInstance( Entry.class, entries.size() ) );
   }
+
+  public double getSrsMinZ( )
+  {
+    try
+    {
+      final String value = m_properties.getProperty( PROPERTY_SRS_MIN_Z );
+      return Double.parseDouble( value );
+    }
+    catch( NumberFormatException | NullPointerException e )
+    {
+      e.printStackTrace();
+      return Double.NaN;
+    }
+  }
 }
