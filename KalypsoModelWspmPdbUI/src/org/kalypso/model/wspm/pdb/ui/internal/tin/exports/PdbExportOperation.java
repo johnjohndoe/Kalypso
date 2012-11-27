@@ -52,7 +52,13 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.DhmIndex;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
+import com.vividsolutions.jts.geom.CoordinateSequence;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
+
 /**
+ * FIXME: bad class name
+ * 
  * @author Holger Albert
  */
 public class PdbExportOperation implements IPdbOperation
@@ -76,6 +82,21 @@ public class PdbExportOperation implements IPdbOperation
     try
     {
       final DhmIndex dhmIndex = m_settingsData.getDhmIndex();
+
+      // BUGFIX: ugly hack: oracle does not accept the empty string ('') as non-null. We alswas set the filename
+      // to the unsused 'name'
+      dhmIndex.setName( dhmIndex.getFilename() );
+
+      /* force geometries to be 3D, else Oracle whines. */
+      // REMARK: we must make sure that the z value is in the range of valid z values....
+      final double minZ = m_settingsData.getConnection().getInfo().getSrsMinZ();
+      final Polygon location = dhmIndex.getLocation();
+      final LineString exteriorRing = location.getExteriorRing();
+      final CoordinateSequence coordinateSequence = exteriorRing.getCoordinateSequence();
+      final int size = coordinateSequence.size();
+      for( int i = 0; i < size; i++ )
+        coordinateSequence.setOrdinate( i, 2, minZ );
+
       final IPath demServerPath = m_settingsData.getDemServerPath();
 
       final File[] sourceFiles = m_settingsData.getRealSourceFiles();
