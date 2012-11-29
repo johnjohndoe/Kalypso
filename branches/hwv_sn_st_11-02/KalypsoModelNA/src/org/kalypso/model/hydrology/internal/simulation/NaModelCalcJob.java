@@ -103,7 +103,7 @@ public class NaModelCalcJob implements ISimulation
     }
     finally
     {
-      StatusLogUtilities.writeStatusLogQuietly( log, new File( runnable.getResultDir(), "Protokoll.log" ) );
+      StatusLogUtilities.writeStatusLogQuietly( log, new File( runnable.getResultDir(), "Protokoll.gml" ) );
 
       if( data != null )
         data.dispose();
