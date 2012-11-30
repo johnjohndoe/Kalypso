@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14.07.2011 11:52:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="CrossSectionPart" table="CROSS_SECTION_PART">
+		<id name="id" type="big_decimal">
+			<column name="ID" precision="20" scale="0" />
+			<generator class="assigned" />
+		</id>
+		<many-to-one name="crossSection" class="CrossSection" fetch="select">
+			<column name="CROSS_SECTION" precision="20" scale="0" not-null="true" />
+		</many-to-one>
+		<property name="name" type="string">
+			<column name="NAME" length="50" not-null="true" />
+		</property>
+		<property name="line" type="serializable">
+			<column name="LINE" />
+		</property>
+		<property name="category" type="string">
+			<column name="CATEGORY" length="50" not-null="true" />
+		</property>
+		<property name="description" type="string">
+			<column name="DESCRIPTION" />
+		</property>
+		<set name="points" table="POINT" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CROSS_SECTION_PART" precision="20" scale="0" not-null="true" />
+			</key>
+			<one-to-many class="Point" />
+		</set>
+	</class>
+</hibernate-mapping>

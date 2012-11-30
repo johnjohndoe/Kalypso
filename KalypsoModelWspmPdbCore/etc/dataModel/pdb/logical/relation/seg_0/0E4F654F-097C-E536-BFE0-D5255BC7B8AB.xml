@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Point_Kind__Vegetation" id="0E4F654F-097C-E536-BFE0-D5255BC7B8AB" directorySegmentName="seg_0">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-18 07:28:43 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2012-07-27 08:18:44 UTC</changedTime>
+   <ownerDesignName>pdb</ownerDesignName>
+   <identifying>true</identifying>
+   <optionalSource>false</optionalSource>
+   <optionalTarget>false</optionalTarget>
+   <sourceCardinality>1</sourceCardinality>
+   <sourceEntity>12C0F141-2177-302D-AFF8-98BABD8B8515</sourceEntity>
+   <targetCardinalityString>*</targetCardinalityString>
+   <targetEntity>9E6FBC38-EF9C-69E8-7421-463154D76AFA</targetEntity>
+   <transferable>true</transferable>
+</Relation>
