@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+  <layer featurePath="snowMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href=".models/parameter.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+    <column alignment="SWT.LEFT" editable="false" format="" name="name" width="73" />
+    <column alignment="SWT.RIGHT" editable="false" format="" name="xwwo" width="100" />
+    <column alignment="SWT.RIGHT" editable="false" format="" name="xwwmax" width="106" />
+    <column alignment="SWT.RIGHT" editable="false" format="" name="xsnotem" width="137" />
+    <column alignment="SWT.RIGHT" editable="false" format="" name="xsnorad" width="142" />
+    <column alignment="SWT.RIGHT" editable="false" format="" name="xh0" width="112" />
+  </layer>
+</gistableview>
