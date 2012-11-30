@@ -52,7 +52,7 @@ public class QueryDocumentsOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString("QueryDocumentsOperation_0"); //$NON-NLS-1$
+    return Messages.getString( "QueryDocumentsOperation_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -68,7 +68,7 @@ public class QueryDocumentsOperation implements IPdbOperation
     }
     catch( final HibernateException e )
     {
-      throw new PdbConnectException( Messages.getString("QueryDocumentsOperation_2"), e ); //$NON-NLS-1$
+      throw new PdbConnectException( Messages.getString( "QueryDocumentsOperation_2" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -83,6 +83,7 @@ public class QueryDocumentsOperation implements IPdbOperation
         continue;
 
       final BigDecimal station = crossSection.getStation();
+
       if( !dbHash.containsKey( station ) )
         dbHash.put( station, new ArrayList<Document>() );
 

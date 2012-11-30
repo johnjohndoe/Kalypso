@@ -34,6 +34,8 @@ public class CrossSection implements java.io.Serializable, IDocumentContainer
 
   public static final String PROPERTY_WATER_BODY = "waterBody"; //$NON-NLS-1$
 
+  //public static final String PROPERTY_STATION = "station"; //$NON-NLS-1$
+
   private BigDecimal m_id;
 
   private WaterBody m_waterBody;
@@ -157,7 +159,11 @@ public class CrossSection implements java.io.Serializable, IDocumentContainer
   @Column( name = "station", nullable = false, precision = 8, scale = 1 )
   public BigDecimal getStation( )
   {
-    return m_station;
+    if( m_station == null )
+      return null;
+
+    // REMARK: necessary, as hibernate does it not (at least with oracle), we rely on it.
+    return m_station.setScale( 1, BigDecimal.ROUND_HALF_UP );
   }
 
   public void setStation( final BigDecimal station )
