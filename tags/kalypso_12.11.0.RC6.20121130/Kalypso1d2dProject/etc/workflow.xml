@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Workflow URI="org.kalypso.model.1d2d.workflow.WF_Kalypso1D2D" xmlns="http://www.renew.de/workflow/base" xmlns:con="http://www.renew.de/workflow/contexts" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" defaultTask="org.kalypso.model.1d2d.workflow.NetCstr">
+  <Help>NONE</Help>
+  <Name>Kalypso1D2D-Workflow</Name>
+  <TaskGroup URI="org.kalypso.model.1d2d.workflow.Preprocessing" context="FenetMap">
+    <TaskGroup URI="org.kalypso.model.1d2d.workflow.DataLoad" context="FenetMap">
+      <Task context="FenetMap" URI="org.kalypso.model.1d2d.workflow.ElevLoad" />
+      <Task context="FenetMap" URI="org.kalypso.model.1d2d.workflow.WindDataLoad" />
+      <Task context="ImportRoughness" URI="org.kalypso.model.1d2d.workflow.RoughLoad" />
+      <Task context="ImportObservations" URI="org.kalypso.model.1d2d.workflow.TimeSerLoad" />
+      <Task context="FenetMap" URI="org.kalypso.model.1d2d.workflow.ProfileImport" />
+      <Task context="Context1dElementTheme" URI="org.kalypso.model.1d2d.workflow.Net1DImportWspm" />
+      <Task context="FenetMap" URI="org.kalypso.model.1d2d.workflow.Net2DImport" />
+    </TaskGroup>
+    <TaskGroup URI="org.kalypso.model.1d2d.workflow.NetCstr" context="FenetMap">
+      <TaskGroup URI="org.kalypso.model.1d2d.workflow.Net1DRivGroup" context="FenetMap">
+          <Task context="FenetMapWithProfileView" URI="org.kalypso.model.1d2d.workflow.AddProfileNetworkToMap" />
+        <Task type="SYNCHRONOUS" context="Context1dElementTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNet" />
+        <Task type="SYNCHRONOUS" context="FlowRelationshipTheme" URI="org.kalypso.model.1d2d.workflow.Edit1DNetParameters" />
+      </TaskGroup>
+      <TaskGroup URI="org.kalypso.model.1d2d.workflow.Net2DGroup" context="FenetMap">
+        <Task type="SYNCHRONOUS" context="Context2dElementTheme" URI="org.kalypso.model.1d2d.workflow.EditNet2D" />
+        <Task type="SYNCHRONOUS" context="FlowRelationshipTheme2D" URI="org.kalypso.model.1d2d.workflow.EditFlowRelations2D" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.Chan2DGen" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.DikeDitchGen" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.BandGen" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.AssignElevs" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.ShowWindData" />
+      </TaskGroup>
+      <TaskGroup URI="org.kalypso.model.1d2d.workflow.TransGroup" context="FenetMap">
+        <Task type="SYNCHRONOUS" context="ContLineTheme" URI="org.kalypso.model.1d2d.workflow.ContilineGen" />
+        <Task type="SYNCHRONOUS" context="BoundaryConditionTheme" URI="org.kalypso.model.1d2d.workflow.BCDef" />
+        <Task type="SYNCHRONOUS" context="JunctionElementContextTheme" URI="org.kalypso.model.1d2d.workflow.SetEltLineJunction" />
+        <Task type="SYNCHRONOUS" context="TransitionElementContextTheme" URI="org.kalypso.model.1d2d.workflow.SetEltLineTrans" />
+        <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.CalculationUnit" />
+      </TaskGroup>
+    </TaskGroup>
+    <TaskGroup URI="org.kalypso.model.1d2d.workflow.RoughMod" context="FenetMap">
+      <Task context="RoughnessDatabase" URI="org.kalypso.model.1d2d.workflow.ClassDefGroup" />
+      <Task context="RoughnessTheme" URI="org.kalypso.model.1d2d.workflow.RCDef" />
+    </TaskGroup>
+    <TaskGroup URI="org.kalypso.model.1d2d.workflow.DataExport" context="FenetMap">
+      <Task context="Export2DNet" URI="org.kalypso.model.1d2d.workflow.NetExport" />
+    </TaskGroup>
+  </TaskGroup>
+  <TaskGroup URI="org.kalypso.model.1d2d.workflow.Processing" context="FenetMap">
+    <Task type="SYNCHRONOUS" context="CalcParams" URI="org.kalypso.model.1d2d.workflow.CalcSet" />
+    <Task type="SYNCHRONOUS" context="FenetMap" URI="org.kalypso.model.1d2d.workflow.StartCalculationWithProblemsView" />
+  </TaskGroup>
+
+  <TaskGroup URI="org.kalypso.model.1d2d.workflow.Postprocessing" context="ResultMap">
+    <Task context="ResultMap" URI="org.kalypso.model.1d2d.workflow.ResultDataManager" />
+    <TaskGroup URI="org.kalypso.model.1d2d.workflow.ResultMapGroup" context="ResultMap">
+      <Task context="ResultMap" URI="org.kalypso.model.1d2d.workflow.ConfigureResultMap" />
+      <Task context="ResultMap" URI="org.kalypso.model.1d2d.workflow.ShowResultMap" />
+      <Task type="SYNCHRONOUS" context="ResultMap" URI="org.kalypso.model.1d2d.workflow.ManageResultHydrograph" />
+    </TaskGroup>
+
+    <TaskGroup URI="org.kalypso.model.1d2d.workflow.ResultLengthSectionViewGroup">
+      <Task context="ResultMap" URI="org.kalypso.model.1d2d.workflow.ConfigureResultLengthSectionView" />
+      <Task URI="org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView" />
+    </TaskGroup>
+    <Task context="ResultMap" URI="org.kalypso.model.1d2d.workflow.GenerateDifferenceResultView" />
+  </TaskGroup>
+
+  <Perspectives>
+    <con:PerspectiveContext id="Context1d2dModelling" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+      <con:ViewContext id="FeatureView" partId="org.kalypso.ui.views.featuretemplateview" parent="Context1d2dModelling">
+        <con:ExtensionContext id="RoughnessDatabase" parent="FeatureView" handlerFactoryId="kalypsoContextHandlerFactory">
+          <con:Parameter name="type" value="featureViewInputContext" />
+          <con:Parameter name="gml" value="project:/.metadata/roughness.gml" />
+          <con:Parameter name="viewTitle" value="Rauheitsdatenbank" />
+        </con:ExtensionContext>
+        <con:ExtensionContext id="CalcParams" parent="FeatureView" handlerFactoryId="kalypsoContextHandlerFactory">
+          <con:Parameter name="type" value="featureViewInputContext" />
+          <con:Parameter name="gml" value="models/control.gml" />
+          <con:Parameter name="viewTitle" value="Berechnungseinstellungen" />
+        </con:ExtensionContext>
+      </con:ViewContext>
+
+      <con:WorkbenchSiteContext id="MapAndProfileViewContext" parent="Context1d2dModelling">
+        <con:ViewContext id="MapAndProfileViewContextMapOutlineView" partId="org.kalypso.ui.views.outline" parent="MapAndProfileViewContext" />
+        <con:ViewContext id="ProfileViewWithMapView" partId="org.kalypso.model.wspm.ui.view.chart.ChartView" parent="MapAndProfileViewContext" />
+        <con:ViewContext id="MapViewWithProfileView" partId="org.kalypso.ui.views.mapView" parent="MapAndProfileViewContext">
+          <con:ExtensionContext id="FenetMapWithProfileView" parent="MapViewWithProfileView" handlerFactoryId="kalypsoContextHandlerFactory">
+            <con:Parameter name="type" value="mapViewInputContext" />
+            <con:Parameter name="input" value="maps/fenet.gmt" />
+          </con:ExtensionContext>
+        </con:ViewContext>
+      </con:WorkbenchSiteContext>
+      <con:WorkbenchSiteContext id="TimeSeriesContext" parent="Context1d2dModelling">
+        <con:WizardContext id="ImportObservations" wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" wizardType="NEW_WIZARD" parent="TimeSeriesContext" />
+        <con:ViewContext id="TimeSeriesRepositoryView" partId="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView" parent="TimeSeriesContext" />
+        <con:ViewContext id="TimeSeriesDiagramView" partId="org.kalypso.zml.ui.chart.view.DiagramViewPart" parent="TimeSeriesContext" />
+        <con:ViewContext id="TimeSeriesTableView" partId="org.kalypso.zml.ui.table.view.TableViewPart" parent="TimeSeriesContext" />
+      </con:WorkbenchSiteContext>
+      <con:WorkbenchSiteContext id="MapContext" parent="Context1d2dModelling">
+        <con:ViewContext id="MapOutlineView" partId="org.kalypso.ui.views.outline" parent="MapContext" />
+        <con:ViewContext id="MapView" partId="org.kalypso.ui.views.mapView" parent="MapContext">
+          <con:ExtensionContext id="RoughnessMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+            <con:ExtensionContext id="RoughnessPolygonTheme" parent="RoughnessMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:WizardContext id="ImportRoughness" wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="RoughnessPolygonTheme" />
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon" />
+            </con:ExtensionContext>
+            <con:Parameter name="type" value="mapViewInputContext" />
+            <!-- <con:Parameter name="input" value="maps/roughness.gmt" /> -->
+            <con:Parameter name="input" value="maps/fenet.gmt" />
+          </con:ExtensionContext>
+          <con:ExtensionContext id="FenetMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+            <con:ExtensionContext id="Context1dElementTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" />
+            </con:ExtensionContext>
+            <con:ExtensionContext id="FlowRelationshipTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation1D" />
+            </con:ExtensionContext>
+            <con:ExtensionContext id="Context2dElementTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:WizardContext id="Export2DNet" wizardId="org.kalypso.wizards.export2d.ExportWizard" wizardType="NEW_WIZARD" parent="Context2dElementTheme" />
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
+            </con:ExtensionContext>
+            <con:ExtensionContext id="FlowRelationshipTheme2D" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation2D" />
+            </con:ExtensionContext>
+            <con:ExtensionContext id="TransitionElementContextTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement" />
+            </con:ExtensionContext>
+
+            <con:ExtensionContext id="JunctionElementContextTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionElement" />
+            </con:ExtensionContext>
+
+            <con:ExtensionContext id="ContLineTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Line" />
+            </con:ExtensionContext>
+            <con:ExtensionContext id="RoughnessTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon" />
+            </con:ExtensionContext>
+            <con:ExtensionContext id="BoundaryConditionTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" />
+            </con:ExtensionContext>
+            <con:Parameter name="type" value="mapViewInputContext" />
+            <con:Parameter name="input" value="maps/fenet.gmt" />
+          </con:ExtensionContext>
+          <con:ExtensionContext id="ResultMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+            <con:ExtensionContext id="ResultMapHydrograph" parent="ResultMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph" />
+            </con:ExtensionContext>
+            <con:Parameter name="type" value="mapViewInputContext" />
+            <con:Parameter name="input" value="results/result.gmt" />
+          </con:ExtensionContext>
+
+
+
+        </con:ViewContext>
+      </con:WorkbenchSiteContext>
+      <con:ViewContext id="FeatureSelectionView" partId="org.kalypso.featureview.views.FeatureView" parent="Context1d2dModelling" />
+    </con:PerspectiveContext>
+  </Perspectives>
+</Workflow>
