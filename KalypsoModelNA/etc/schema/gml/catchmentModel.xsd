@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel" xmlns:cmrrm="http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:rcm="org.kalypso.model.rcm.v2" elementFormDefault="qualified">
+
+  <!-- Imports. -->
+  <import namespace="http://www.w3.org/1999/xlink" />
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="obslink.zml.kalypso.org" />
+  <import namespace="org.kalypso.model.rcm.v2" />
+
+  <!-- Root Element & Type -->
+  <element name="CatchmentModel" type="cmrrm:CatchmentModelType" substitutionGroup="gml:_Feature" />
+  <complexType name="CatchmentModelType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="generatorMember" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence>
+                <element ref="rcm:RainfallGenerator" />
+              </sequence>
+            </complexType>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <!-- CatchmentGenerator Element & Type -->
+  <element name="LinearSumGenerator" type="cmrrm:LinearSumGeneratorType" substitutionGroup="rcm:RainfallGenerator" />
+  <complexType name="LinearSumGeneratorType">
+    <complexContent>
+      <extension base="rcm:RainfallGeneratorType">
+        <sequence>
+          <element name="comment" type="string" minOccurs="1" maxOccurs="1" />
+          <element name="timestep" type="int" minOccurs="0" maxOccurs="1" />
+          <!-- Experimental: timestamp for daily values (string of form hh:mm) -->
+          <element name="timestamp" type="string" minOccurs="0" maxOccurs="1" />
+          <element name="areaNameProperty" type="string" minOccurs="1" maxOccurs="1" />
+          <element name="areaDescriptionProperty" type="string" minOccurs="0" maxOccurs="1" />
+          <element name="areaProperty" type="string" minOccurs="1" maxOccurs="1" />
+          <element name="catchmentMember" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence>
+                <element ref="cmrrm:Catchment" />
+              </sequence>
+            </complexType>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <!-- Catchment Element & Type -->
+  <element name="Catchment" type="cmrrm:CatchmentType" />
+  <complexType name="CatchmentType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="areaLink" minOccurs="1" maxOccurs="1">
+            <complexType>
+              <sequence minOccurs="0" maxOccurs="0">
+                <element ref="gml:_Feature" />
+              </sequence>
+              <attributeGroup ref="gml:AssociationAttributeGroup" />
+            </complexType>
+          </element>
+          <element name="factorizedTimeseriesMember" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence>
+                <element ref="cmrrm:FactorizedTimeseries" />
+              </sequence>
+            </complexType>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <!-- FactorizedTimeseries Element & Type -->
+  <element name="FactorizedTimeseries" type="cmrrm:FactorizedTimeseriesType" />
+  <complexType name="FactorizedTimeseriesType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="factor" type="decimal" minOccurs="1" maxOccurs="1" />
+          <element name="timeseriesLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="1" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <!-- MultiGenerator Element & Type -->
+  <element name="MultiGenerator" substitutionGroup="rcm:RainfallGenerator">
+    <complexType>
+      <complexContent>
+        <extension base="rcm:RainfallGeneratorType">
+          <sequence>
+            <element name="subGeneratorMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element ref="rcm:RainfallGenerator" minOccurs="0" maxOccurs="0" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+</schema>
