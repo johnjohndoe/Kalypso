@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoWspWinCore Plug-in
+Bundle-SymbolicName: org.kalypso.wspwin.core
+Bundle-Version: 12.11.0.qualifier
+Bundle-Activator: org.kalypso.wspwin.core.KalypsoWspWinCorePlugin
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
+Require-Bundle: org.kalypso.commons
+Bundle-ActivationPolicy: lazy
+Export-Package: org.kalypso.wspwin.core,
+ org.kalypso.wspwin.core.prf,
+ org.kalypso.wspwin.core.prf.datablock
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
