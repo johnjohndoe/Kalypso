@@ -1,0 +1,12 @@
+<!-- removed DTD reference - otherwise jaxb tries to connect to the referenced oasis web site -->
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+  <uri name="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" uri="v0.0/sim_1d2d_model.xsd" />
+  <uri name="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" uri="v0.0/sim_1d2d_control.xsd" />
+  <uri name="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" uri="v0.0/sim_1d2d_operational.xsd" />
+  <uri name="http://www.tu-harburg.de/wb/kalypso/schemata/observation" uri="v0.0/sim_1d2d_observation.xsd" />
+  <uri name="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta" uri="v0.0/sim_1d2d_result.xsd" />
+  <uri name="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults" uri="v0.0/sim_1d2d_results.xsd" />
+  <uri name="http://www.tu-harburg.de/wb/kalypso/schemata/simulationmetadatamodel" uri="v0.0/sim_1d2d_model_metadata.xsd" />
+
+</catalog>

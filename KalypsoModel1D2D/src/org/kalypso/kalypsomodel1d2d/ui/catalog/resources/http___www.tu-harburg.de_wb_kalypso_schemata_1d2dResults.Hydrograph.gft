@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview typename="res1d2d:Hydrograph" style="SWT.NONE" xmlns:res1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults" xmlns:swe="http://www.opengis.net/swe" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ogc="http://www.opengis.net/ogc">
+  <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+  <gridLayout numColumns="4" />
+  <label property="gml:name" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="gml:name" style="SWT.BORDER">
+    <gridData horizontalSpan="3" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+  </text>
+  <label property="gml:description" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalSpan="3" horizontalAlignment="SWT.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
+  </text>
+
+  <tabFolder style="SWT.NONE">
+    <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalSpan="4" />
+    <tabItem>
+      <tabLabel>Diagramm</tabLabel>
+      <extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+        <visibleOperation>
+          <ogc:Not>
+            <ogc:PropertyIsNull>
+              <ogc:PropertyName>om:resultDefinition</ogc:PropertyName>
+            </ogc:PropertyIsNull>
+          </ogc:Not>
+        </visibleOperation>
+        <gridData horizontalSpan="4" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true">
+          <excludeOperation>
+            <ogc:PropertyIsNull>
+              <ogc:PropertyName>om:resultDefinition</ogc:PropertyName>
+            </ogc:PropertyIsNull>
+          </excludeOperation>
+        </gridData>
+        <param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Hydrograph:default" />
+        <param name="featureKeyName" value="hydrographFeatureKey" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+        <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+      </extensioncontrol>
+    </tabItem>
+    <tabItem>
+      <tabLabel>Tabelle</tabLabel>
+      <tupleResult property="om:result" tooltip="Ganglinie" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION">
+        <visibleOperation>
+          <ogc:Not>
+            <ogc:PropertyIsNull>
+              <ogc:PropertyName>om:resultDefinition</ogc:PropertyName>
+            </ogc:PropertyIsNull>
+          </ogc:Not>
+        </visibleOperation>
+        <gridData verticalAlignment="SWT.FILL" horizontalSpan="4" horizontalAlignment="SWT.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true">
+          <excludeOperation>
+            <ogc:PropertyIsNull>
+              <ogc:PropertyName>om:resultDefinition</ogc:PropertyName>
+            </ogc:PropertyIsNull>
+          </excludeOperation>
+        </gridData>
+        <toolbar>
+          <menuContribution uri="org.kalypso.ui.tupleResult.menus.standardReadOnly" />
+        </toolbar>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" editable="false" alignment="SWT.LEFT | SWT.READ_ONLY" displayFormat="%1$td.%1$tm.%1$tY %1$tH:%1$tM:%1$tS.%1$tL" parseFormat="dd.MM.yyyy HH:mm:ss:SSS" />
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" />
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.3f" nullFormat="&lt;nicht gesetzt&gt;" />
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Velocity" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.3f" nullFormat="&lt;nicht gesetzt&gt;" />
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#VelocityDirection" optional="true" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.3f" nullFormat="&lt;nicht gesetzt&gt;" />
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveHsig" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.3f" optional="true" nullFormat="&lt;nicht gesetzt&gt;" />
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirection" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.3f" optional="true" nullFormat="&lt;nicht gesetzt&gt;" />
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WavePeakPeriod" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.3f" optional="true" nullFormat="&lt;nicht gesetzt&gt;" />
+      </tupleResult>
+    </tabItem>
+  </tabFolder>
+</featureview>
