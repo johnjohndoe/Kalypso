@@ -1,0 +1,1 @@
+Modifyable variables are stored in the modify.nsh.
