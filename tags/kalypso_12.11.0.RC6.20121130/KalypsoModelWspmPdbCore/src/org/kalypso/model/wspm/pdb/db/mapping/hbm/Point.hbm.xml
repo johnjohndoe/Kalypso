@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14.07.2011 11:52:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Point" table="POINT">
+        <id name="id" type="big_decimal">
+            <column name="ID" precision="20" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="crossSectionPart" class="CrossSectionPart" fetch="select">
+            <column name="CROSS_SECTION_PART" precision="20" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="roughness" class="Roughness" fetch="select">
+            <column name="ROUGHNESS_POINT_KIND" length="50" />
+            <column name="ROUGHNESS" length="50" />
+        </many-to-one>
+        <many-to-one name="vegetation" class="Vegetation" fetch="select">
+            <column name="VEGETATION_POINT_KIND" length="50" />
+            <column name="VEGETATION" length="50" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" length="50" not-null="true" />
+        </property>
+        <property name="location" type="serializable">
+            <column name="LOCATION" />
+        </property>
+        <property name="consecutiveNum" type="long">
+            <column name="CONSECUTIVE_NUM" precision="11" scale="0" not-null="true" />
+        </property>
+        <property name="code" type="string">
+            <column name="CODE" length="50">
+                <comment>(GAF-) Kennzeichnung</comment>
+            </column>
+        </property>
+        <property name="hyk" type="string">
+            <column name="HYK" length="50" />
+        </property>
+        <property name="width" type="big_decimal">
+            <column name="WIDTH" precision="8" scale="4">
+                <comment>[m]</comment>
+            </column>
+        </property>
+        <property name="height" type="big_decimal">
+            <column name="HEIGHT" precision="8" scale="4">
+                <comment>[m NN]</comment>
+            </column>
+        </property>
+        <property name="roughnessKValue" type="big_decimal">
+            <column name="ROUGHNESS_K_VALUE" precision="8" scale="1">
+                <comment>[mm]</comment>
+            </column>
+        </property>
+        <property name="roughnessKstValue" type="big_decimal">
+            <column name="ROUGHNESS_KST_VALUE" precision="8" scale="1">
+                <comment>[m^.33/s]</comment>
+            </column>
+        </property>
+        <property name="vegetationDp" type="big_decimal">
+            <column name="VEGETATION_DP" precision="8" scale="3">
+                <comment>[m]</comment>
+            </column>
+        </property>
+        <property name="vegetationAx" type="big_decimal">
+            <column name="VEGETATION_AX" precision="8" scale="3">
+                <comment>[m]</comment>
+            </column>
+        </property>
+        <property name="vegetationAy" type="big_decimal">
+            <column name="VEGETATION_AY" precision="8" scale="3">
+                <comment>[m]</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" />
+        </property>
+    </class>
+</hibernate-mapping>

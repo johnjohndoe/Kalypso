@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<DistinctType class="oracle.dbtools.crest.model.design.datatypes.DistinctType" name="Color" id="836798AC-5A06-51A2-94D7-E5EDF6CFF68B" directorySegmentName="seg_0">
+   <createdBy>thuel</createdBy>
+   <createdTime>2011-08-31 12:10:38 UTC</createdTime>
+   <changedTime>2012-10-29 15:05:13 UTC</changedTime>
+   <commentInRDBMS>color definition (hex)</commentInRDBMS>
+   <ownerDesignName>pdb_V0.0.5a</ownerDesignName>
+   <predefined>false</predefined>
+   <logicalDataType>LOGDT024</logicalDataType>
+   <precision>0</precision>
+   <scale>0</scale>
+   <size>10</size>
+</DistinctType>

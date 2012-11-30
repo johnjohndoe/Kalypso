@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" id="E7C54159-FC76-24D1-5999-4BD286A524CF" directorySegmentName="seg_0" name="Roughness__Point">
+   <createdBy>thuel</createdBy>
+   <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+   <generatorID>3207525A-2929-5519-E668-13612FB51C2F</generatorID>
+   <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+   <containerWithKeyObject>4A9C5DE5-84C3-A96B-1CE9-5F700CB66250</containerWithKeyObject>
+   <deleteRule>SET NULL</deleteRule>
+   <localFKIndex>02C08154-F5B3-D04B-E5EC-D2AE81231549</localFKIndex>
+   <keyObject>4E5414C6-D526-BC4C-3DDA-EF8ABF91BAB4</keyObject>
+   <mandatory>false</mandatory>
+   <transferable>true</transferable>
+</FKIndexAssociation>

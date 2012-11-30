@@ -1,0 +1,25 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<oracle.dbtools.crest.model.design.datatypes.DataTypesDesign>
+   <object objectType="DistinctType" objectID="6AD2B18E-4BCC-6F8D-2A30-C55A955FF78D" name="CS_Part_Param" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="836798AC-5A06-51A2-94D7-E5EDF6CFF68B" name="Color" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="B3BBFFC0-261E-2785-8C3A-A260662720FD" name="Description" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="06BBC0AF-44E8-E1D3-844F-E68A8A8BE333" name="Discharge" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="5C17ED4F-09D6-10E4-79AC-987B6168561A" name="FileName" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="42097DC7-758D-D280-EB37-5F6D23BE7A65" name="Height" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="48C0BA71-78E5-7A37-66AA-13F3758A0222" name="HyK" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="7565B3CB-D8D2-FFBA-EB71-D7A4D4490C87" name="KZ" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="BF2E0260-2A64-9538-0B5F-9BDD527B4E28" name="Label" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="232885D0-DA0B-DA98-7B45-84565601B46D" name="Name_Long" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="BEE5B220-1F69-A797-77BD-83EC8F92761B" name="Name_Short" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="1DD8D1FE-B3A1-45B7-DB08-CE16350D2874" name="Roughness_K" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="D1C0019C-9F55-E84B-1E76-A36FC6052F6D" name="Roughness_Kst" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="EE87A435-0062-5BF5-5AC5-C396D2130704" name="Roughness_Validity" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="72F78EA1-BFF2-06C3-B23C-A9FCA41237A5" name="Station" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="0D7C9634-C20D-364B-07D7-07357D44C670" name="Style_Param" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="35D7D61C-E71A-566D-F228-AA52140297FC" name="User" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="CF13DBDC-1F88-61F3-B990-482F4F73709E" name="Vegetation_Ax" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="1D89C035-AA71-250C-03D3-7C6ADEF6708F" name="Vegetation_Ay" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="17355645-4E39-1E86-D8AE-F7BFD192BBD6" name="Vegetation_Dp" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="AEFEDAF5-E7EA-7380-BB59-646A04A3C033" name="Waterlevel" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="A6FC4C95-FF5D-C4AE-A9F6-0A38EA731A95" name="Width" seqName="seg_0"/>
+</oracle.dbtools.crest.model.design.datatypes.DataTypesDesign>

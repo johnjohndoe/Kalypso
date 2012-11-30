@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Note class="oracle.dbtools.crest.model.design.Note" name="Note_1" id="9E3FBDBF-A27F-C410-74D1-A122D0D7797C" directorySegmentName="seg_0">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-18 06:26:02 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-08-31 12:06:56 UTC</changedTime>
+   <comment>Rechte / Rollen:&amp;lt;br/&amp;gt;pdb = Besitzer&amp;lt;br/&amp;gt;Fachadmin&amp;lt;br/&amp;gt;(lesender) Anwender</comment>
+   <ownerDesignName>pdb_V0.0.4</ownerDesignName>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+</Note>

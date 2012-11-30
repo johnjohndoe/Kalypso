@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<DistinctType class="oracle.dbtools.crest.model.design.datatypes.DistinctType" name="Roughness_K" id="1DD8D1FE-B3A1-45B7-DB08-CE16350D2874" directorySegmentName="seg_0">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-20 12:43:45 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-06-07 09:20:12 UTC</changedTime>
+   <comment>[mm]</comment>
+   <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+   <predefined>false</predefined>
+   <logicalDataType>LOGDT019</logicalDataType>
+   <precision>8</precision>
+   <scale>1</scale>
+   <size>0</size>
+</DistinctType>
