@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="KalypsoRiskPostprocessing">
+  <title>Postprocessing - Ergebnisauswertung</title>
+
+  <indexterm>
+    <primary>Preprocessing Kalypso Risk</primary>
+  </indexterm>
+
+  <para>Wenn alle Berechnungen durchgeführt worden sind, werden die Ergebnisse
+  nun tabellarisch dargestellt und die Rasterdateien können exportiert werden.
+  Zum Postprocessing gehören folgende Arbeitsschritte:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para>Statistische Auswertung,</para>
+    </listitem>
+
+    <listitem>
+      <para>Export der Rasterdaten der einzelnen Schadenspotentiale und</para>
+    </listitem>
+
+    <listitem>
+      <para>Export der Rasterdaten der Risikozonen.</para>
+    </listitem>
+  </itemizedlist>
+
+  <section id="KalypsoRiskStatistische_Auswertung">
+    <title>Statistische Auswertung</title>
+
+    <indexterm>
+      <primary>Statistische Ergebnisauswertung von Kalypso Risk</primary>
+    </indexterm>
+
+    <para>In der Ansicht "Aktivitäten" wird der Baum
+    <guimenuitem>Postprocessing</guimenuitem> geöffnet und
+    <guimenuitem>Statistische Auswertung</guimenuitem> mit einem Doppelklick
+    aktiviert, um die dazugehörige Feature View zu öffnen. In einer Tabelle
+    werden nun die wichtigsten Daten dargestellt. Dazu gehören:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>sowohl der minimale, als auch der maximale Schaden einer
+        Landnutzungsklasse, der bei einem Hochwasserereignis auftritt,</para>
+      </listitem>
+
+      <listitem>
+        <para>der jährliche Schadenserwartungswert, berechnet aus allen
+        Hochwasserereignissen und</para>
+      </listitem>
+
+      <listitem>
+        <para>der Gesamtschaden.</para>
+      </listitem>
+    </itemizedlist>
+
+    <figure>
+      <title>Tabellarische Ansicht der Statistischen Auswertung</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Statistische_Auswertung.png"
+                     width="17cm" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section id="KalypsoRiskExport_Schadenspotential">
+    <title>Exportieren des Schadenspotentials (je HQi)</title>
+
+    <indexterm>
+      <primary>Exportieren des Schadenspotentials aus Kalypso Risk</primary>
+    </indexterm>
+
+    <para>Wenn in der Ansicht "Aktivitäten" der Baum
+    <guimenuitem>Postprocessing</guimenuitem> geöffnet und
+    <guimenuitem>Exportieren des Schadenspotentials (je HQi) </guimenuitem>mit
+    einem Doppelklick aktiviert wird, öffnet sich die dazugehörige Karten
+    Werkzeugansicht mit den verschiedenen Funktionen, um die einzelnen
+    Rasterdateien zu exportieren. Die Funktionen sind in der nachfolgenden
+    Tabelle erläutert.</para>
+
+    <figure>
+      <title>Karten Werkzeugansicht zum Export eines
+      Schadenspotentials</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Export_Schadensp_Ansicht.png"
+                     width="17cm" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <table>
+      <title>Funktionen der Karten Werkzeugansicht</title>
+
+      <tgroup cols="3">
+        <colspec colwidth="1*" />
+
+        <colspec colwidth="2*" />
+
+        <colspec colwidth="5*" />
+
+        <tbody>
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata fileref="img/Risk/Export_Schadensp_Icon_Export.png" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Schadenspotential
+            exportieren</entry>
+
+            <entry align="left" valign="middle">zunächst mit dem Pull Down
+            Menü ein Hochwasserereignis auswählen und anschließend die
+            dazugehörige <filename>*.asc</filename> Datei markieren. Dieser
+            Knopf wird gedrückt, um die markierte Rasterdatei zu exportieren.
+            Es öffnet sich der unten dargestellte Assistent, in dem der Pfad
+            eingegeben werden muss, wo die <filename>*.asc</filename> Datei
+            gespeichert werden soll. Anschließend auf
+            <guibutton>Finish</guibutton> klicken um den Export
+            abzuschließen.</entry>
+          </row>
+
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata fileref="img/Risk/Export_Schadensp_Icon_Pfeilhoch.png" />
+                </imageobject>
+              </mediaobject><mediaobject>
+                <imageobject>
+                  <imagedata fileref="img/Risk/Export_Schadensp_Icon_Pfeilrunter.png" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Ereignis in nach oben/ unten
+            verschieben</entry>
+
+            <entry align="left" valign="middle">Ein in der Tabelle markiertes
+            Ereignis kann mit den Pfeiltasten entweder nach unten oder nach
+            oben verschoben werden.</entry>
+          </row>
+
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata fileref="img/Risk/Export_Schadensp_Icon_zuKachel.png" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Kartenausschnitt auf
+            ausgewählte Kachel verschieben</entry>
+
+            <entry align="left" valign="middle">In der Tabelle eine Kachel
+            markieren. Wenn nun auf den Knopf gedrückt wird, wird der
+            Kartenausschnitt genau auf die vorher ausgewählte Kachel
+            verschoben und hereingezoomt.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <figure>
+      <title>Assistent zum Export des Rasters eines Schadenspotentials</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Export_Schadensp_Ass.png" width="12cm" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section id="KalypsoRiskExport_Risikozonen">
+    <title>Exportieren der Risikozonen</title>
+
+    <indexterm>
+      <primary>Exportieren der Risikozonen aus Kalypso Risk</primary>
+    </indexterm>
+
+    <para>Wenn in der Ansicht "Aktivitäten" der Baum
+    <guimenuitem>Postprocessing</guimenuitem> geöffnet und
+    <guimenuitem>Exportieren der Risikozonen</guimenuitem> mit einem
+    Doppelklick aktiviert wird, öffnet sich die dazugehörige Karten
+    Werkzeugansicht mit den verschiedenen Funktionen, um die Rasterdateien zu
+    exportieren. Die Funktionen sind in der nachfolgenden Tabelle
+    erläutert.</para>
+
+    <figure>
+      <title>Karten Werkzeugansicht zum Export von Risikozonen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Export_Risikozonen_Ansicht.png"
+                     width="17cm" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <table>
+      <title>Funktionen der Karten Werkzeugansicht</title>
+
+      <tgroup cols="3">
+        <colspec colwidth="1*" />
+
+        <colspec colwidth="2*" />
+
+        <colspec colwidth="5*" />
+
+        <tbody>
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata fileref="img/Risk/Export_Risikozonen_Icon_Export.png" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Risikozonen
+            exportieren</entry>
+
+            <entry align="left" valign="middle">Zunächst in der Tabelle die
+            Rasterdatei markieren. Anschließend diesen Knopf drücken, um die
+            Risikozonen zu exportieren. Es öffnet sich der unten dargestellte
+            Assistent, in dem der Pfad eingegeben werden muss, wo die
+            <filename>*.asc</filename> Datei gespeichert werden soll.
+            Anschließend auf <guibutton>Finish</guibutton> klickenum den
+            Export abzuschließen.</entry>
+          </row>
+
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata fileref="img/Risk/Export_Risikozonen_Icon_Pfeilhoch.png" />
+                </imageobject>
+              </mediaobject><mediaobject>
+                <imageobject>
+                  <imagedata fileref="img/Risk/Export_Risikozonen_Icon_Pfeilrunter.png" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Ereignis in nach oben/ unten
+            verschieben</entry>
+
+            <entry align="left" valign="middle">Ein in der Tabelle markiertes
+            Ereignis kann mit den Pfeiltasten entweder nach unten oder nach
+            oben verschoben werden.</entry>
+          </row>
+
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata fileref="img/Risk/Export_Risikozonen_Icon_zuKachel.png" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Kartenausschnitt auf
+            ausgewählte Kachel verschieben</entry>
+
+            <entry align="left" valign="middle">Wenn in der Tabelle eine
+            Kachel markiert und anschließend auf den Knopf gedrückt wird, wird
+            der Kartenausschnitt genau auf die vorher ausgewählte Kachel
+            verschoben und hereingezoomt.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <figure>
+      <title>Assistent zum Export des Rasters der Risikozonen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Export_Risikozonen_Ass.png"
+                     width="12cm" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+</chapter>
