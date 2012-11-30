@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension
+          point="org.eclipse.ui.activities">
+       <category
+             description="Disables a lot of not wanted things."
+             id="org.kalypso.activities.categories.KalypsoModelProduct"
+             name="Kalypso Model Product Category">
+       </category>
+       <activity
+             description="Disables a lot of not wanted things."
+             id="org.kalypso.activities.activities.KalypsoModelProduct"
+             name="Kalypso Model Product Activity">
+          <enabledWhen>
+             <systemTest
+                   property="org.kalypso.activities.enabled"
+                   value="true">
+             </systemTest>
+          </enabledWhen>
+       </activity>
+       <categoryActivityBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             categoryId="org.kalypso.activities.categories.KalypsoModelProduct">
+       </categoryActivityBinding>
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.ant\.ui/.*">
+       </activityPatternBinding>
+       
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.debug\.ui/.*">
+       </activityPatternBinding>
+       
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.ui\.externaltools/.*">
+       </activityPatternBinding>
+
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.jdt\.debug/debugModel">
+      </activityPatternBinding>
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.jdt/.*">
+       </activityPatternBinding>
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.jdt\..*/.*">
+       </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.jdt\.core/javanature">
+      </activityPatternBinding>
+       
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.pde/.*">
+       </activityPatternBinding>
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.pde\..*/.*">
+       </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.pde/PluginNature">
+      </activityPatternBinding>
+       
+      <!-- Team-UI: we want CaompareWith Each Other (2 files), but nothing else from team -->
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*Preferences">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*ConfigureProject">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*ProjectSet.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*Patch.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*GenericHistory.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*Sync.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.ui/.*ProjectSet.*">
+      </activityPatternBinding>
+       
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.team\.cvs\.ui/.*">
+       </activityPatternBinding>
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.team\.cvs\.core/.*">
+       </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            pattern="org\.eclipse\.team\.cvs\.core/.*cvsnature">
+      </activityPatternBinding>
+       
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.compare/compareWithPatch">
+       </activityPatternBinding>
+
+ 	   <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            isEqualityPattern="true"
+            pattern="org.eclipse.platform/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            isEqualityPattern="true"
+            pattern="org.eclipse.ui.window.showKeyAssist">
+      </activityPatternBinding>       
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+             isEqualityPattern="true"
+             pattern="org.eclipse.ui.ide.application/org.eclipse.update.ui.updateMenu">
+       </activityPatternBinding>
+    </extension>
+    
+</plugin>
