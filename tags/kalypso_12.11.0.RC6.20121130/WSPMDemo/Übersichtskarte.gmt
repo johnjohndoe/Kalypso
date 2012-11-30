@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapv:gismapview xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:ns8="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns9="obstableview.template.kalypso.org">
+  <mapv:layers active="ID_2">
+    <mapv:layer visible="false" name="Landnutzung" featurePath="featureMember" id="ID_3" linktype="shape" xlink:actuate="onRequest" xlink:href="daten/shape/rauheiten/landuse#EPSG:31467" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">true</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Trennflächen" featurePath="featureMember" id="ID_0" linktype="shape" xlink:actuate="onRequest" xlink:href="project:/daten/shape/trennflächen/Trennflächen#EPSG:31467" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">true</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Gewässerstrang - stationär (TU-HH) - Demo Strang" featurePath="#fid#ReachWspmTuhhSteadyState1211993884481105/reachSegmentMember[ProfileReachSegmentWspmTuhhSteadyState]" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="modell.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">true</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Geländemodell" featurePath="coverageMember" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="daten/dgm/dgm.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:style linktype="sld" xlink:actuate="onRequest" xlink:href="daten/dgm/dgm.sld" xlink:type="simple"/>
+      <templ:property name="deleteable">true</templ:property>
+    </mapv:layer>
+  </mapv:layers>
+</mapv:gismapview>
