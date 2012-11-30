@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" xmlns:ns4="obstableview.template.kalypso.org" xmlns:ns3="obsdiagview.template.kalypso.org" xmlns:ns5="types.template.kalypso.org" xmlns:ns6="gismapview.template.kalypso.org">
+  <layer featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="../../.models/modell.gml" ns1:type="simple">
+    <column format="" alignment="16384" width="60" editable="false" name="name" />
+    <column format="" alignment="131072" width="100" editable="true" name="startkm" />
+    <column format="" alignment="131072" width="100" editable="true" name="endkm" />
+    <column alignment="16384" width="164" editable="true" name="downStreamNodeMember" />
+    <column alignment="16384" width="100" editable="true" name="faktorRkf" />
+    <column alignment="16384" width="100" editable="true" name="faktorRnf" />
+    <column alignment="16384" width="200" editable="true" name="description" />
+    <sort inverse="false" propertyName="name" />
+  </layer>
+</gistableview>
