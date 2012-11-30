@@ -1,0 +1,1172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension point="org.eclipse.ui.handlers">
+          <handler class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportHandler" commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
+             <enabledWhen>
+                <with variable="activeChart">
+                    <test property="wspmTuhhChart.isLengthSection"/>
+                </with>
+             </enabledWhen>
+          </handler>
+	</extension>
+
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <wizard
+            class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportProjectWizard"
+            icon="icons/obj16/wspwin.gif"
+            id="org.kalypso.model.wspm.exportwizard.wspwin"
+            name="%org.kalypso.model.wspm.exportwizard.wspwin">
+            <description>
+            %org.kalypso.model.wspm.exportwizard.wspwin.description
+         </description>
+      </wizard>
+   </extension>
+
+   <extension
+         point="org.kalypso.model.wspm.core.validatorrule">
+      <rule
+            class="org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule"
+            description="%pasche.ruecksprung"
+            id="pasche.ruecksprung"
+            type="org.kalypso.model.wspm.tuhh.profiletype"/>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule"
+              description="%pasche.trenner"
+              id="pasche.trenner"
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule"
+              description="%pasche.bruecke"
+              id="pasche.bruecke"
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.WehrRule"
+              description="%pasche.wehr"
+              id="pasche.wehr"
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.DoppelterPunktRule"
+              description="%pasche.doppelterpunkt"
+              id="pasche.doppelterpunkt"
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule"
+              description="%pasche.bewuchs"
+              id="pasche.bewuchs"
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule"
+              description="%pasche.rauheit"
+              id="pasche.rauheit"
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule"
+              description="%pasche.durchlass"
+              id="pasche.durchlass"
+              type="org.kalypso.model.wspm.tuhh.profiletype">
+        </rule>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.DuplicateComponentRule"
+              description="%rule.description"
+              id="general.duplicateComponent"
+              type="org.kalypso.model.wspm.tuhh.profiletype">
+        </rule>
+   </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.model.wspm.tuhh.ui.catalog.WspmTuhhFeatureTypeCatalogContribution"
+            name="Wspm Tuhh Style Catalog"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wspm.ui"
+            class="org.kalypso.model.wspm.tuhh.ui.wizards.NewWspmProjectWizard"
+            descriptionImage="icons/wizban/kalypso32.gif"
+            finalPerspective="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"
+            hasPages="true"
+            icon="icons/obj16/kalypso16.gif"
+            id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"
+            name="%org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"
+            project="true">
+
+         <description>
+            %org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.description
+         </description>
+      </wizard>
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wspm.ui"
+            class="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"
+            descriptionImage="icons/wizban/kalypso32.gif"
+            finalPerspective="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"
+            hasPages="true"
+            icon="icons/obj16/wspwin16.gif"
+            id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"
+            name="%org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"
+            project="true">
+         <description>
+            %org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard.description
+         </description>
+      </wizard>
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wspm.ui"
+            class="org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard"
+            descriptionImage="icons/wizban/kalypso32.gif"
+            finalPerspective="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"
+            hasPages="true"
+            icon="icons/obj16/kalypso16.gif"
+            id="org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard"
+            name="%org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard"
+            project="true">
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.kalypso.model.wspm.tuhh.ui.light.WspmLightPerspective"
+            icon="icons/obj16/wspmLight.gif"
+            id="WspmLightPerspective"
+            name="%perspective.name">
+      </perspective>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory">
+         <newWizardShortcut id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"/>
+         <newWizardShortcut id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"/>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.core.profileFeatureProvider">
+      <profileFeatureProvider
+            class="org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentProfileFeatureProvider"
+            id="org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentProfileFeatureProvider"/>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.ui.profilChartLayerProvider">
+      <profilLayerProvider
+            id="org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider"
+            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
+            provider="org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh"/>
+   </extension>
+      <extension
+         point="org.kalypso.ui.featureViewExtensionControl">
+      <extensionControl
+            class="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"
+            id="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"/>
+   </extension>
+      <extension
+            point="org.kalypso.core.gmlSourceProvider">
+         <provider
+               class="org.kalypso.model.wspm.tuhh.ui.wizards.WspTinProvider"
+               description="%org.kalypso.ui.wizards.results.gmlsource.WspTinProvider.description"
+               id="org.kalypso.ui.wizards.results.gmlsource.WspTinProvider"
+               label="%org.kalypso.ui.wizards.results.gmlsource.WspTinProvider">
+            <category
+                  id="org.kalypso.core.tin.waterlevel">
+            </category>
+         </provider>
+      </extension>
+      <extension
+            point="org.kalypso.model.wspm.core.reparatorrule">
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution"
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution.name">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution"
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution.name">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution"
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution.name">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution"
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution.name">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution"
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.name">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution"
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution.name">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution"
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution.name">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.AddRoughnessResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.AddRoughnessResolution"
+               name="%reparator.name">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution"
+               description="%reparator.description"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution"
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution.name">
+         </reparator>
+      </extension>
+       <extension
+         point="org.kalypso.module.kalypsoModule">
+         <module
+               class="org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule">
+         </module>
+      </extension>
+
+	<extension point="org.eclipse.core.expressions.definitions">
+    <definition
+          id="org.kalypso.model.wspm.tuhh.ui.definition.resourceInModule">
+       <with
+             variable="selection">
+          <and>
+             <count
+                   value="1">
+             </count>
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <test
+                      property="org.kalypso.model.wspm.tuhh.ui.resourceInModule">
+                </test>
+             </iterate>
+          </and>
+       </with>
+    </definition>
+		<definition id="org.kalypso.model.wspm.tuhh.ui.definition.oneProfileThemeSelected">
+			<with variable="selection">
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false" operator="and">
+					    <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+						  <test property="org.kalypso.ui.test.theme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+					    </adapt>
+					</iterate>
+				</and>
+			</with>
+		</definition>
+		<definition id="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive">
+			<with variable="activeMapPanel">
+				<or>
+					<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+					<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState" />
+				</or>
+			</with>
+		</definition>
+		<definition id="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+			<with variable="activeMapPanel">
+				<or>
+					<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+					<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState" />
+				</or>
+			</with>
+		</definition>
+	</extension>
+
+<!-- Profile From DEM  -->
+
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?before=widgetAdditions">
+     <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" style="radio">
+       	<visibleWhen checkEnabled="false">
+			<and>
+				<with variable="activeEditorId">
+					<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+				</with>
+				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
+			</and>
+		</visibleWhen>
+     </command>
+     <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio">
+        <visibleWhen checkEnabled="false">
+          <with variable="activeEditorId">
+             <equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor"/>
+          </with>
+        </visibleWhen>
+     </command>
+     <separator name="profiles" visible="true"/>
+     <command commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile" style="radio">
+        <visibleWhen checkEnabled="false">
+           <and>
+              <with variable="activeEditorId">
+                 <equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor"/>
+              </with>
+              <reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
+           </and>
+        </visibleWhen>
+     </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
+           style="radio">
+           <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point"
+           style="radio">
+        <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
+           style="toggle">
+        <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
+    </menuContribution>
+    <menuContribution locationURI="menu:org.kalypso.ui.menus.mapMenu?before=widgetAdditions">
+     <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" style="radio">
+       	<visibleWhen checkEnabled="false">
+			<and>
+				<with variable="activeEditorId">
+					<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+				</with>
+				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
+			</and>
+		</visibleWhen>
+     </command>
+     <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio"/>
+     <separator name="profiles" visible="true"/>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile"
+           style="radio">
+        <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
+           style="push">
+           <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point"
+           style="radio">
+        <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
+           style="toggle">
+        <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
+    </menuContribution>
+    
+    <menuContribution locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
+       <command commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" style="push">
+          <visibleWhen checkEnabled="false">
+            <and>
+                <reference
+                      definitionId="org.kalypso.chart.ui.chartEditorActive">
+                </reference>
+                <with variable="activeChart">
+                    <test property="wspmTuhhChart.isLengthSection"/>
+                </with>
+            </and>
+          </visibleWhen>
+       </command>
+    </menuContribution>
+
+    <menuContribution locationURI="toolbar:org.kalypso.chart.ui.view.ChartView?after=additions">
+       <command commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" style="push">
+          <visibleWhen checkEnabled="true"/>
+       </command>
+    </menuContribution>
+  </extension>
+  <extension
+        point="de.openali.odysseus.chart.factory.LayerProvider">
+     <provider
+           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.LengthSectionLayerProvider"
+           id="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+     </provider>
+     <provider
+           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.VerticalLineLayerProvider"
+           id="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
+     </provider>
+  </extension>
+
+  <extension point="org.eclipse.ui.commands">
+    <command
+          categoryId="org.kalypso.ogc.gml.map.category"
+          id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
+          name="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.name"
+          description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
+    </command>
+    <category id="org.kalypso.mode.wspm.ui.profile.commands" name="%category.name.1"/>
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
+	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
+	       name="%command.name.7">
+	</command>
+    <command
+          description="%org.kalypso.model.wspm.calcTuhhAction.description"
+          id="org.kalypso.model.wspm.command.calcTuhh"
+          name="%org.kalypso.model.wspm.calcTuhhAction.name">
+    </command>
+  </extension>
+
+  <extension point="org.eclipse.ui.commandImages">
+     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
+     <image commandId="org.kalypso.model.wspm.command.calcTuhh" icon="icons/obj16/startCalulation.gif"/>
+     <image commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" icon="icons/obj16/WspWinPlotter.gif"/>
+  </extension>
+
+  <extension point="org.eclipse.ui.handlers">
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM">
+          <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.model.wspm.tuhh.ui.actions.dtm.CreateProfileFromDEMWidget" />
+      	  </class>
+  	  	<enabledWhen>
+			<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
+		</enabledWhen>
+   </handler>
+   <handler class="org.kalypso.model.wspm.ui.action.ShowProfileHandler" commandId="org.kalypso.model.wspm.ui.commands.ShowProfile">
+      <enabledWhen>
+         <and>
+             <not>
+                 <with variable="activeWorkbenchWindow.activePerspective">
+                    <equals value="WspmLightPerspective"/>
+                 </with>
+             </not>
+             <with variable="selection">
+                <iterate ifEmpty="false" operator="and">
+                   <or>
+                     <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspmprofile}Profile"/>
+                     <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+                   </or>
+                </iterate>
+             </with>
+         </and>
+      </enabledWhen>
+   </handler>
+   <handler class="org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapHandler" commandId="org.kalypso.model.wspm.ui.commands.CreateMapFromProfiles">
+      <enabledWhen>
+         <and>
+             <with variable="activeWorkbenchWindow">
+                <test property="org.kalypso.ui.window.isEditorAreaVisible"/>
+             </with>
+             <with variable="selection">
+                <and>
+                    <count value="1"/>
+                    <iterate ifEmpty="false" operator="and">
+                       <or>
+                         <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspmprofile}Profile"/>
+                         <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+                         <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState"/>
+                       </or>
+                    </iterate>
+                </and>
+             </with>
+         </and>
+      </enabledWhen>
+   </handler>
+   <handler commandId="org.kalypso.model.wspm.command.calcTuhh" class="org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler">
+      <enabledWhen>
+         <with variable="selection">
+            <and>
+                <!--
+                <count value="1"/>
+                -->
+                <iterate ifEmpty="false" operator="and">
+                   <or>
+                     <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}CalculationWspmTuhhSteadyState"/>
+                     <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}CalculationReibConstWspmTuhhSteadyState"/>
+                   </or>
+                </iterate>
+            </and>
+         </with>
+      </enabledWhen>
+   </handler>
+  </extension>
+
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+     <initializer
+           class="org.kalypso.model.wspm.tuhh.ui.internal.preferences.PreferenceInitializer">
+     </initializer>
+  </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           locationURI="menu:org.kalypso.model.wspm.ui.view.chart.ChartView?after=additions">
+        <command
+              commandId="org.kalypso.model.wspm.ui.commands.toggleKeepChannelRoughnessPreference"
+              style="toggle">
+        </command>
+        <command
+              commandId="org.kalypso.model.wspm.ui.commands.toggleWaterlevelRestrictionMarker"
+              style="toggle">
+        </command>
+     </menuContribution>
+  </extension>
+  <extension
+        point="org.eclipse.ui.commands">
+     <command
+           categoryId="org.kalypso.chart.ui.commands.category"
+           description="%command.description.5"
+           id="org.kalypso.model.wspm.ui.commands.toggleKeepChannelRoughnessPreference"
+           name="%command.name.8">
+     </command>
+     <command
+           categoryId="org.kalypso.chart.ui.commands.category"
+           description="%org.kalypso.model.wspm.ui.commands.toggleWaterlevelRestrictionMarker.description"
+           id="org.kalypso.model.wspm.ui.commands.toggleWaterlevelRestrictionMarker"
+           name="%org.kalypso.model.wspm.ui.commands.toggleWaterlevelRestrictionMarker.name">
+     </command>
+  </extension>
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="org.kalypso.model.wspm.tuhh.ui.actions.ToggleKeepChannelRoughnessHandler"
+           commandId="org.kalypso.model.wspm.ui.commands.toggleKeepChannelRoughnessPreference">
+     </handler>
+     <handler
+           class="org.kalypso.model.wspm.tuhh.ui.actions.ToggleRestrictWaterlevelToMarkerHandler"
+           commandId="org.kalypso.model.wspm.ui.commands.toggleWaterlevelRestrictionMarker">
+     </handler>
+  </extension>
+  <extension point="org.eclipse.ui.views">
+      <category
+            id="org.kalypso.model.wspm.tuhh.ui.light.viewCategory"
+            name="%category.name"
+            parentCategory="org.kalypso.ui.kalypso">
+      </category>
+      <view
+            allowMultiple="false"
+            category="org.kalypso.model.wspm.tuhh.ui.light.viewCategory"
+            class="org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart"
+            icon="icons/obj16/wspwin16.gif"
+            id="org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart"
+            name="%view.name"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="org.kalypso.model.wspm.tuhh.ui.light.viewCategory"
+            class="org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"
+            icon="icons/obj16/kalypso_gmt.gif"
+            id="org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"
+            name="%view.name.0"
+            restorable="true">
+      </view>
+  </extension>
+
+ <extension
+         point="org.eclipse.ui.menus">
+        <menuContribution
+              allPopups="false"
+              locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart">
+             
+             <!-- <separator name="mapActions" visible="false"/> -->
+             <separator name="widgets" visible="false"/> 
+             <command commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" style="radio"/>
+             <command commandId="org.kalypso.ogc.gml.map.PanToCommand" style="radio"/>
+             <command commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" style="radio" />
+             <command commandId="org.kalypso.ogc.gml.map.GetFeatureInfoCommand" style="radio"/>
+             
+             <separator name="profileWidgets" visible="false"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile" style="radio"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point" style="radio" />
+             <command commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point" style="radio" />
+
+             <separator name="widgetsEnd" visible="false"/>
+
+             <separator name="actions" visible="true"/>
+             <command commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" style="push"/>
+             <command commandId="org.kalypso.ogc.gml.map.FullExtentCommand" style="push"/>
+             <command commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand" style="push"/>
+             <command commandId="org.kalypso.ogc.gml.map.ZoomOutCommand" style="push"/>
+             <command commandId="org.kalypso.ogc.gml.map.ExtentHistoryPrevCommand" style="push"/>
+             <command commandId="org.kalypso.ogc.gml.map.ExtentHistoryNextCommand" style="push"/>
+
+             <separator name="mapExport" visible="true"/>
+             <command commandId="org.kalypso.ogc.gml.map.ExportClipboardCommand" style="push"/>
+             <command commandId="org.kalypso.ogc.gml.map.Screenshot" style="push"/>
+             <command commandId="org.kalypso.ogc.gml.map.ExportPdfCommand" style="push"/>
+
+             <separator name="toggle" visible="true"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection" style="toggle" />
+          </menuContribution>
+
+        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
+            <separator name="outline" visible="false"/>
+            <command commandId="org.kalypso.ui.map.outline.command.ExpandOutline" style="push"/>
+            <command commandId="org.kalypso.ui.map.outline.command.CollapseOutline" style="push"/>
+
+            <separator name="theme" visible="true"/>
+            <command commandId="org.kalypso.ui.map.outline.command.AddTheme" style="push">
+               <parameter name="wizardSelectioinId" value="wizardselectionWspmLight"/>
+            </command>
+            <command commandId="org.kalypso.ui.map.outline.command.RemoveTheme" style="push"/>
+            <command commandId="org.kalypso.ui.map.outline.command.MoveThemeDown" style="push"/>
+            <command commandId="org.kalypso.ui.map.outline.command.MoveThemeUp" style="push"/>
+
+            <separator name="navigation" visible="true"/>
+            <command commandId="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" style="push"/>
+
+            <separator name="style" visible="true"/>
+            <command commandId="org.kalypso.ui.map.outline.command.OpenStyleDialog" style="push"/>
+
+            <separator name="additions" visible="true"/>
+        </menuContribution>
+
+        <menuContribution allPopups="false" locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
+            <command commandId="org.kalypso.ui.command.import" style="push"/>
+            <command commandId="org.kalypso.ui.command.export" style="push"/>
+            <command commandId="org.kalypso.gml.ui.toolWizards" style="push"/>
+            <separator name="theme"/>
+            <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push"/>
+            <separator name="additions" visible="false"/>
+        </menuContribution>
+        
+    </extension>
+
+     <extension point="org.eclipse.ui.menus">
+        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart">
+           <command
+                 commandId="org.kalypso.gml.ui.toolWizards"
+                 style="push">
+           </command>
+           <command commandId="org.kalypso.ui.command.export" style="push"/>
+           <separator name="data" visible="true"/>
+           <command commandId="org.kalypso.ui.gmvtree.command.reloadData" style="push"/>
+           <command commandId="org.kalypso.ui.gmvtree.command.saveData" style="push"/>
+           <separator
+                 name="additions">
+           </separator>
+        </menuContribution>
+     </extension>
+     <extension
+           point="org.kalypso.ui.exportWizards">
+        <category id="profileExportWizards" name="%category.name.2" parentCategory="exportWizards"/>
+        <wizard
+              category="exportWizards/shapeExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard"
+              icon="icons/elcl16/exportProfilLine.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard"
+              name="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.name">
+           <description>%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.description</description>
+        </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesWizard"
+              icon="icons/elcl16/export_csv.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesWizard"
+              name="%command.name.0">
+           <description>%command.description</description>
+        </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard"
+              icon="icons/elcl16/export_csv.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard"
+              name="%org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard.name">
+           <description>%org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard.description</description>
+        </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufProfileExportWizard"
+              icon="icons/elcl16/export_csv.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard"
+              name="%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.name">
+           <description>%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.description</description>
+        </wizard>
+        <wizard
+              category="exportWizards/shapeExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard"
+              name="%org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard.name">
+           <description>%org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard.description</description>
+        </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
+              icon="icons/elcl16/export_plotter.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
+              name="%command.name.2">
+           <description>%command.description.1</description>
+        </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard"
+              icon="icons/elcl16/export_plotter.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard"
+              name="%command.name.6">
+           <description>%wizard.description</description>
+        </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesWizard"
+              icon="icons/elcl16/export_prf.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesWizard"
+              name="%command.name.3">
+           <description>%command.description.2</description>
+        </wizard>
+
+        <wizard
+              category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesWizard"
+              icon="icons/elcl16/export_sobek.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesWizard"
+              name="%command.name.1">
+           <description>%command.description.0</description>
+        </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard"
+              icon="icons/elcl16/export_prf.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard"
+              name="%org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard.name">
+              <description>%org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard.description</description>
+        </wizard>
+     </extension>
+     <extension point="org.kalypso.ui.importWizards">
+       <wizard
+             category="importWizards"
+             class="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
+             icon="icons/obj16/landuse.import.png"
+             id="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
+             name="%org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard.name">
+          <description>
+             %org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard.description
+          </description>
+       </wizard>
+     
+        <wizard
+              class="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard"
+              icon="icons/elcl16/import_wprof.gif"
+              name="%command.name.4">
+              <description>%command.description.3</description>
+        </wizard>
+        
+        <wizard
+              class="org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard"
+              icon="icons/elcl16/import_ewawi.gif"
+              name="%org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard.name">
+              <description>%org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard.description</description>
+        </wizard>
+
+       <wizard
+             category="importWizards"
+             class="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard"
+             id="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard"
+             icon="icons/elcl16/export_sobek.gif"
+             name="%org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard.name">
+          <description>%org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard.description</description>
+       </wizard>
+     </extension>
+
+     <extension point="org.kalypso.gml.ui.toolWizards">
+        <wizard
+              class="org.kalypso.model.wspm.tuhh.ui.actions.interpolation.InterpolationWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.actions.interpolation.InterpolationWizard"
+              icon="icons/elcl16/interpolateProfile.gif"
+              name="%command.name.9">
+              <description>%command.description.6</description>
+        </wizard>
+        <wizard class="org.kalypso.model.wspm.tuhh.ui.wizards.CreateLengthSectionWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.wizards.CreateLengthSectionWizard"
+              icon="icons/elcl16/profile_create_lengthSection.gif"
+              name="%command.name.5">
+              <description>%command.description.4</description>
+        </wizard>
+        <wizard
+              class="org.kalypso.model.wspm.tuhh.ui.actions.simplify.SimplifyProfileWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.actions.simplify.SimplifyProfileWizard"
+              name="%command.name">
+              <description>%command.description.7</description>
+        </wizard>
+        <wizard
+             class="org.kalypso.model.wspm.tuhh.ui.wizards.center.line.DeriveCenterlineWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard"
+             name="%org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard.name"
+             icon="icons/obj16/river.png">
+             <description>%org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard.description</description>
+        </wizard>
+     </extension>
+     <extension
+           point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard">
+           <enablement>
+              <reference
+                    definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+              </reference></enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+       <wizardEnablement
+             wizardID="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard">
+          <enablement>
+             <or>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.reachThemeSelected">
+                </reference>
+                <reference
+                      definitionId="org.kalypso.model.wspm.tuhh.ui.definition.resourceInModule">
+                </reference>
+             </or>
+          </enablement>
+       </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard">
+           <enablement>
+                <with variable="selection">
+                       <iterate ifEmpty="false" operator="and">
+                          <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody"/>
+                       </iterate>
+                </with>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard">
+           <enablement>
+                <with variable="selection">
+                       <iterate ifEmpty="false" operator="and">
+                          <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody"/>
+                       </iterate>
+                </with>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.wizards.CreateLengthSectionWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.actions.interpolation.InterpolationWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.actions.simplify.SimplifyProfileWizard">
+           <enablement>
+                 <reference definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles"/>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement
+              wizardID="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard">
+           <enablement>
+              <with variable="selection">
+                 <iterate ifEmpty="false" operator="or">
+                    <or>
+                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm}WaterBody">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}AbstractReach">
+                       </test>
+                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       </test>
+                    </or>
+                 </iterate>
+              </with>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard">
+           <enablement>
+              <with variable="selection">
+                 <iterate ifEmpty="false" operator="or">
+                    <or>
+                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm}WaterBody">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}AbstractReach">
+                       </test>
+                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       </test>
+                    </or>
+                 </iterate>
+              </with>
+           </enablement>
+        </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard">
+          <enablement>
+            <reference definitionId="isProfileContainerSelection"/>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard">
+          <enablement>
+             <with variable="selection">
+                <iterate operator="and" ifEmpty="false">
+                   <or>
+                      <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm}WaterBody" />
+                      <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody"/>
+                   </or>
+                </iterate>
+             </with>
+          </enablement>
+       </wizardEnablement>
+     </extension>
+     <extension point="org.eclipse.ui.menus">
+         <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?before=gmlToolsEnd">
+            <command commandId="org.kalypso.model.wspm.command.calcTuhh" style="push">
+                  <visibleWhen checkEnabled="true"/>
+            </command>
+            <command commandId="org.kalypso.model.wspm.ui.commands.CreateMapFromProfiles" style="push">
+               <visibleWhen checkEnabled="true"/>
+            </command>
+         </menuContribution>
+
+         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.featureview.views.FeatureView">
+            <command commandId="org.kalypso.model.wspm.command.calcTuhh" style="push">
+                  <visibleWhen checkEnabled="true"/>
+            </command>
+            <command commandId="org.kalypso.model.wspm.ui.commands.CreateMapFromProfiles" style="push">
+               <visibleWhen checkEnabled="true"/>
+            </command>
+         </menuContribution>
+
+        <menuContribution locationURI="toolbar:org.kalypso.gml.toolbar?before=gmlToolsEnd">
+            <command commandId="org.kalypso.model.wspm.command.calcTuhh" style="push">
+                  <visibleWhen checkEnabled="true"/>
+            </command>
+            <command commandId="org.kalypso.model.wspm.ui.commands.CreateMapFromProfiles" style="push">
+               <visibleWhen checkEnabled="true"/>
+            </command>
+        </menuContribution>
+     </extension>
+
+     <extension point="org.eclipse.core.expressions.propertyTesters">
+       <propertyTester
+              class="org.kalypso.model.wspm.tuhh.ui.utils.ResourceInModulePropertyTester"
+              id="org.kalypso.model.wspm.tuhh.ui.utils.ResourceInModulePropertyTester"
+              namespace="org.kalypso.model.wspm.tuhh.ui"
+              properties="resourceInModule"
+              type="org.eclipse.core.resources.IResource">
+        </propertyTester>
+     
+        <propertyTester class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportTester"
+              id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportTester"
+              namespace="wspmTuhhChart"
+              properties="isLengthSection"
+              type="de.openali.odysseus.chart.framework.view.IChartComposite">
+        </propertyTester>
+     </extension>
+<!--              category="org.kalypso.ui.preferences.KalypsoPreferencePage/org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage" -->
+     <extension
+           point="org.eclipse.ui.preferencePages">
+        <page
+              category="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
+              class="org.kalypso.model.wspm.tuhh.ui.internal.preferences.WspmChartPreferencePage"
+              id="KalypsoModelWspmTuhhUIPreferencePage"
+              name="%KalypsoModelWspmTuhhUIPreferencePage.name">
+        </page>
+     </extension>
+
+   <extension point="org.kalypso.ui.addLayerWizard">
+      <wizardSelection description="Add layer wizard selection for the tuhh light map." id="wizardselectionWspmLight">
+         <wizardRef wizardId="org.kalypso.ui.wizard.wms"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.wfs"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.LegendThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.CascadingThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.ScaleThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.ImageThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.TextThemeWizard"/>
+         <!-- removed until tlug pays for it -->
+         <!--
+         <wizardRef wizardId="shapeImportWorkflow"/>
+         <wizardRef wizardId="imageImportWorkflow"/>
+         -->
+      </wizardSelection>
+   </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            class="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmBuildingDecorator"
+            id="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmBuildingDecorator"
+            label="%decorator.label"
+            lightweight="true"
+            state="true">
+         <enablement>
+            <or>
+              <objectClass name="org.kalypso.model.wspm.core.gml.IProfileFeature"/>
+              <objectClass name="org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment"/>
+            </or>
+         </enablement>
+         <description>%decorator.description</description>
+      </decorator>
+      <decorator
+            class="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmMarkerDecorator"
+            id="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmMarkerDecorator"
+            label="%decorator.label.0"
+            lightweight="true"
+            location="BOTTOM_RIGHT"
+            state="true">
+         <enablement>
+            <or>
+              <objectClass name="org.kalypso.model.wspm.core.gml.IProfileFeature"/>
+              <objectClass name="org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment"/>
+            </or>
+         </enablement>
+         <description>%decorator.description.0</description>
+      </decorator>
+      <decorator
+            class="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmReachNamesDecorator"
+            id="org.kalypso.model.wspm.tuhh.ui.internal.gml.WspmReachNamesDecorator"
+            label="%decorator.label.1"
+            lightweight="true"
+            state="false">
+         <enablement>
+            <objectClass name="org.kalypso.model.wspm.core.gml.IProfileFeature"/>
+         </enablement>
+         <description>%decorator.description.1</description>
+      </decorator>
+   </extension>
+
+
+</plugin>
