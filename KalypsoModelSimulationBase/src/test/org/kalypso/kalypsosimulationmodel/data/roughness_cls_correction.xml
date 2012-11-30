@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="WINDOWS-1252"?>
+<wbr:RoughnessClsCorrection 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
+	gml:id="htpp://wwww.tuhh.de/wb/roughness_db/grass">
+	<gml:name>grass</gml:name>
+	<wbr:ksCor>0.1</wbr:ksCor>
+	<wbr:axayCor>0.2</wbr:axayCor>
+	<wbr:dpCor>0.3</wbr:dpCor>
+	<wbr:eddyCor>0.4</wbr:eddyCor>
+	<wbr:marshCor>0.5</wbr:marshCor>
+</wbr:RoughnessClsCorrection>
