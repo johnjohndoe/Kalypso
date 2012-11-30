@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="globalDateHack.binding.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="ratingtable.binding.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.0">
+	
+	<!--
+	  Include this file in the binding procedure in order to use Calendar instead of XMLGregorianCalendar
+	-->
+	
+	<xs:annotation>
+        <xs:appinfo>
+            <jxb:globalBindings>
+                <jxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
+                parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+                printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+                <jxb:javaType name="java.util.Calendar" xmlType="xs:date"
+                parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
+                printMethod="javax.xml.bind.DatatypeConverter.printDate" />
+            </jxb:globalBindings>
+        </xs:appinfo>
+    </xs:annotation>
+
+</xs:schema>
