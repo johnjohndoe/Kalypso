@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns1="obstableview.template.kalypso.org" name="%fenet.mapv.gismapview.FE-Netz">
+  <mapv:translator id="commons.msgGetString">
+    <class>org.kalypso.kalypso1d2d.pjt:org.kalypso.kalypso1d2d.pjt.i18n.Messages</class>
+  </mapv:translator>
+  <mapv:extent srs="EPSG:31467" bottom="773732.875" top="775465.875" right="3930835.704564588" left="3928213.046435412"/>
+  <mapv:layers>
+    <mapv:layer visible="false" name="%fenet.mapv.layer.Knoten" featurePath="#fid#root/node[Node]" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
+      <templ:legendicon>urn:kalypso:map:theme:swtimage:style:FE1D2DNode:rule:Node</templ:legendicon>
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="%fenet.mapv.layer.1D-Netzparameter" featurePath="#fid#root/flowRelationshipMember[_FlowRelation1D]" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/flowrelations.gml" xlink:type="simple">
+      <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:polynome</templ:legendicon>
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="%fenet.mapv.layer.2D-Netzparameter" featurePath="#fid#root/flowRelationshipMember[_FlowRelation2D]" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/flowrelations.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="%fenet.mapv.layer.Randbedingungen" featurePath="#fid#root/flowRelationshipMember[BoundaryCondition]" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/flowrelations.gml" xlink:type="simple">
+      <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:no_direction</templ:legendicon>
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="%fenet.mapv.layer.Rander_Ubergange" featurePath="#fid#root/continuityLine" id="ID_5" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="%fenet.mapv.layer.Kanten" featurePath="#fid#root/edge[Edge]" id="ID_6" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
+      <templ:legendicon>urn:kalypso:map:theme:swtimage:style:FE1D2DEdge:rule:borderEdge</templ:legendicon>
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="%fenet.mapv.layer.1D-Elemente" featurePath="#fid#root/element[Element1D]" id="ID_7" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="%fenet.mapv.layer.1D-Einmundung" featurePath="#fid#root/complexElement[JunctionElement]" id="ID_8" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="%fenet.mapv.layer.1D-2D_Kopplung" featurePath="#fid#root/complexElement[TransitionElement]" id="ID_9" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="%fenet.mapv.layer.Rauheiten" featurePath="#fid#root/element[PolyElement]" id="ID_10" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
+      <templ:legendicon>urn:kalypso:map:theme:swtimage:roughnessTheme:default</templ:legendicon>
+      <templ:showChildren>true</templ:showChildren>
+      <templ:style style="Roughness style" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.metadata/roughness.sld" xlink:type="simple"/>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="false" name="%fenet.mapv.layer.2D-Elemente" featurePath="#fid#root/element[PolyElement]" id="ID_11" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="false" name="%fenet.mapv.layer.Hohenmodelle" featurePath="#fid#Scenario_Terrain_Elevation_ModelSystem/terrainElevationModel[NativeTerrainElevationModelWrapper]" id="ID_12" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/terrain.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="false" name="%fenet.mapv.layer.Windmodelle" featurePath="#fid#root/windDataModelSystem" id="ID_13" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/wind.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="false" name="Rauheitszonen" id="ID_14" linktype="gmt" xlink:actuate="onRequest" xlink:href="roughness.gmt" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Grundlagen" id="ID_15" linktype="gmt" xlink:actuate="onRequest" xlink:href="base.gmt" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Legende" featurePath="" id="ID_16" linktype="legend" xlink:href="">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+      <templ:property name="horizontal_position">4</templ:property>
+      <templ:property name="theme_ids">ID_1;ID_2;ID_3;ID_4;ID_5;ID_6;ID_7;ID_8;ID_9;ID_10;ID_11</templ:property>
+      <templ:property name="insets">6</templ:property>
+      <templ:property name="background_color">255;255;255</templ:property>
+      <templ:property name="vertical_position">1</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Maßstab" id="ID_17" linktype="scale">
+      <templ:showChildren>true</templ:showChildren>
+    </mapv:layer>
+  </mapv:layers>
+</mapv:gismapview>
