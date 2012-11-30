@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview xmlns:rrm="org.kalypso.na.control_v2" typename="rrm:NAControl" style="SWT.NONE" tooltip="" xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" xmlns:tmrrm="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping">
+  <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
+  <gridLayout numColumns="3" makeColumnsEqualWidth="true" marginHeight="0" marginWidth="0" horizontalSpacing="5" />
+
+  <!-- Allgemeines: -->
+  <composite style="SWT.NONE">
+    <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+    <gridLayout numColumns="1" horizontalSpacing="0" verticalSpacing="0" marginHeight="0" marginWidth="0" />
+
+    <group text="%control.gft.general" style="0">
+      <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+      <gridLayout numColumns="3" horizontalSpacing="10" />
+
+      <label property="gml:description" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="gml:description" style="SWT.BORDER" enabled="false">
+        <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+      </text>
+      <extensioncontrol style="SWT.NONE" property="gml:description" extension-id="simulationDescriptionFeatureControl">
+        <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.CENTER" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="false" />
+      </extensioncontrol>
+
+      <label property="rrm:comment" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:comment" style="SWT.BORDER">
+        <gridData horizontalSpan="2" heightHint="50" horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+      </text>
+
+      <label property="rrm:editor" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:editor" style="SWT.BORDER">
+        <gridData horizontalSpan="2" horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+      </text>
+
+      <label property="rrm:creationTime" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:creationTime" style="SWT.BORDER">
+        <gridData horizontalSpan="2" horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+      </text>
+
+      <label property="rrm:returnPeriod" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:returnPeriod" style="SWT.BORDER">
+        <gridData horizontalSpan="2" horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+      </text>
+    </group>
+
+    <group text="%control.gft.synthN" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+      <gridLayout numColumns="3" horizontalSpacing="10" />
+
+      <checkbox enabled="true" property="pns" style="SWT.NONE">
+        <gridData horizontalSpan="3" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </checkbox>
+      <label property="xjah" style="SWT.NONE">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="xjah" style="SWT.BORDER">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" />
+      </text>
+      <validatorlabel style="SWT.NONE" property="xjah">
+        <visibleOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </visibleOperation>
+      </validatorlabel>
+
+      <label property="xwahl2" style="SWT.NONE">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="xwahl2" style="SWT.BORDER">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" />
+      </text>
+      <validatorlabel style="SWT.NONE" property="xwahl2">
+        <visibleOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </visibleOperation>
+      </validatorlabel>
+
+      <label property="ipver" style="SWT.NONE">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <combo property="ipver" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+        <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </combo>
+      <validatorlabel style="SWT.NONE" property="ipver">
+        <visibleOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </visibleOperation>
+      </validatorlabel>
+    </group>
+  </composite>
+
+  <composite style="SWT.NONE">
+    <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+    <gridLayout numColumns="1" horizontalSpacing="0" verticalSpacing="0" marginHeight="0" marginWidth="0" />
+
+    <group text="%control.gft.simulation" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+      <gridLayout numColumns="3" />
+
+      <label property="rrm:startsimulation" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:startsimulation" style="SWT.BORDER">
+        <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </text>
+      <validatorlabel property="rrm:startsimulation" visible="true" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </validatorlabel>
+
+      <label property="rrm:endsimulation" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:endsimulation" style="SWT.BORDER">
+        <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </text>
+      <validatorlabel property="rrm:endsimulation" visible="true" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </validatorlabel>
+
+      <label property="rrm:minutesTimestep" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:minutesTimestep" style="SWT.BORDER">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </text>
+      <validatorlabel property="rrm:minutesTimestep" visible="true" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </validatorlabel>
+
+      <label property="rrm:versionKalypsoNA" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text style="SWT.BORDER | SWT.RIGHT" property="rrm:versionKalypsoNA" enabled="false">
+        <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </text>
+      <extensioncontrol style="SWT.NONE" property="rrm:versionKalypsoNA" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+        <param name="label" value="NA·Kalypso" />
+        <param name="exePattern" value="Kalypso-NA_(.*).exe" />
+      </extensioncontrol>
+
+      <label property="rrm:initialValueSource" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <text property="rrm:initialValueSource" style="SWT.BORDER" enabled="false">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </text>
+      <extensioncontrol style="SWT.NONE" property="rrm:initialValueSource" extension-id="initialValueFeatureControl">
+        <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.CENTER" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="false" />
+      </extensioncontrol>
+    </group>
+
+    <group text="%control.gft.timeseriesMapping" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+      <gridLayout numColumns="3" />
+
+      <label property="rrm:generatorN" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <combo property="rrm:generatorN" style="SWT.READ_ONLY | SWT.DROP_DOWN">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+        <filter id="org.kalypso.ui.featureview.filters.featureFilter">
+          <expression>
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+              <ogc:PropertyIsEqualTo>
+                <ogc:Literal>N</ogc:Literal>
+                <ogc:PropertyName>rcm:parameterType</ogc:PropertyName>
+              </ogc:PropertyIsEqualTo>
+            </ogc:Filter>
+          </expression>
+        </filter>
+      </combo>
+      <validatorlabel property="rrm:generatorN" visible="true" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </validatorlabel>
+
+      <label property="rrm:generatorT" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <combo property="rrm:generatorT" style="SWT.READ_ONLY | SWT.DROP_DOWN">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+        <filter id="org.kalypso.ui.featureview.filters.featureFilter">
+          <expression>
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+              <ogc:PropertyIsEqualTo>
+                <ogc:Literal>MEAN_TEMPERATURE</ogc:Literal>
+                <ogc:PropertyName>rcm:parameterType</ogc:PropertyName>
+              </ogc:PropertyIsEqualTo>
+            </ogc:Filter>
+          </expression>
+        </filter>
+      </combo>
+      <validatorlabel property="rrm:generatorT" visible="true" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </validatorlabel>
+
+      <label property="rrm:generatorE" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <combo property="rrm:generatorE" style="SWT.READ_ONLY | SWT.DROP_DOWN">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+        <filter id="org.kalypso.ui.featureview.filters.featureFilter">
+          <expression>
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+              <ogc:PropertyIsEqualTo>
+                <ogc:Literal>E_LAND</ogc:Literal>
+                <ogc:PropertyName>rcm:parameterType</ogc:PropertyName>
+              </ogc:PropertyIsEqualTo>
+            </ogc:Filter>
+          </expression>
+        </filter>
+      </combo>
+      <validatorlabel property="rrm:generatorE" visible="true" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </validatorlabel>
+
+      <label property="rrm:mappingGaugeMeasurement" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <combo property="rrm:mappingGaugeMeasurement" style="SWT.READ_ONLY | SWT.DROP_DOWN">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+        <filter>
+          <expression>
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>tmrrm:type</ogc:PropertyName>
+                <ogc:Literal>gaugeMeasurement</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+            </ogc:Filter>
+          </expression>
+        </filter>
+      </combo>
+      <validatorlabel property="rrm:mappingGaugeMeasurement" visible="true" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </validatorlabel>
+
+      <label property="rrm:mappingNodeInflow" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <combo property="rrm:mappingNodeInflow" style="SWT.READ_ONLY | SWT.DROP_DOWN">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+        <filter>
+          <expression>
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>tmrrm:type</ogc:PropertyName>
+                <ogc:Literal>nodeInflow</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+            </ogc:Filter>
+          </expression>
+        </filter>
+      </combo>
+      <validatorlabel property="rrm:mappingNodeInflow" visible="true" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </validatorlabel>
+
+      <label property="rrm:mappingStorageEvaporation" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </label>
+      <combo property="rrm:mappingStorageEvaporation" style="SWT.READ_ONLY | SWT.DROP_DOWN">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+        <filter>
+          <expression>
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+              <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>tmrrm:type</ogc:PropertyName>
+                <ogc:Literal>storageEvaporation</ogc:Literal>
+              </ogc:PropertyIsEqualTo>
+            </ogc:Filter>
+          </expression>
+        </filter>
+      </combo>
+      <validatorlabel property="rrm:mappingStorageEvaporation" visible="true" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </validatorlabel>
+    </group>
+  </composite>
+
+  <extensioncontrol style="SWT.NONE" property="rrm:versionKalypsoNA" extension-id="simulationCalculationFeatureControl">
+    <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+  </extensioncontrol>
+
+  <translator id="commons.msgGetString">
+    <class>org.kalypso.model.rrm.ui:org.kalypso.ui.rrm.catalog.TemplateMessages</class>
+  </translator>
+</featureview>
