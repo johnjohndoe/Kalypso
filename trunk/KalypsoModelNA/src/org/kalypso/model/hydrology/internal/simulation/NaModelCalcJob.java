@@ -63,11 +63,6 @@ public class NaModelCalcJob implements ISimulation
 {
   public static final String NACALCJOB_SPEC_XML_LOCATION = "nacalcjob_spec.xml"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
-   *      org.kalypso.services.calculation.job.ICalcMonitor)
-   */
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
@@ -144,9 +139,6 @@ public class NaModelCalcJob implements ISimulation
     return optimize.doOptimize();
   }
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
-   */
   @Override
   public URL getSpezifikation( )
   {

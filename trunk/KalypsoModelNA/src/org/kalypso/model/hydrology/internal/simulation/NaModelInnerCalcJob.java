@@ -98,6 +98,8 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
     }
     catch( final OperationCanceledException e )
     {
+      // FIXME: in future return status, the client should be responsible to save it to a file
+
       final String msg = Messages.getString( "NaModelInnerCalcJob.0" ); //$NON-NLS-1$
       logger.log( Level.INFO, msg );
       monitor.setFinishInfo( IStatus.CANCEL, msg );
