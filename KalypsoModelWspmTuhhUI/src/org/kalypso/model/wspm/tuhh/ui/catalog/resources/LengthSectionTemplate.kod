@@ -1,0 +1,267 @@
+<?xml version="1.0" standalone="yes"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <Chart id="lengthSectionStyles">
+    <Title></Title>
+    <Description></Description>
+    <Styles>
+      <LineStyle role="line_soil">
+        <Width>2</Width>
+        <LineColor>FF8F03</LineColor>
+      </LineStyle>
+      <PointStyle role="point_soil">
+        <Width>6</Width>
+        <Height>6</Height>
+        <FillColor isVisible="true">
+          <Color>FF8F03</Color>
+        </FillColor>
+        <Stroke isVisible="false"></Stroke>
+      </PointStyle>
+      <LineStyle role="line_h_BV">
+        <Width>2</Width>
+        <LineColor>7F4701</LineColor>
+      </LineStyle>
+      <PointStyle role="point_h_BV" isVisible="false">
+        <Width>6</Width>
+        <Height>6</Height>
+        <FillColor isVisible="true">
+          <Color>7F4701</Color>
+        </FillColor>
+        <Stroke isVisible="false"></Stroke>
+      </PointStyle>
+      <LineStyle role="line_wsp">
+        <Width>2</Width>
+        <LineColor>0077B2</LineColor>
+      </LineStyle>
+      <PointStyle role="point_wsp" isVisible="false">
+        <Width>6</Width>
+        <Height>6</Height>
+        <FillColor isVisible="true">
+          <Color>0077B2</Color>
+        </FillColor>
+        <Stroke isVisible="false"></Stroke>
+      </PointStyle>
+      <LineStyle role="line_WspFixation">
+        <Width>2</Width>
+        <LineColor>0077B2</LineColor>
+      </LineStyle>
+      <PointStyle role="point_WspFixation">
+        <Width>8</Width>
+        <Height>8</Height>
+        <Stroke isVisible="true">
+          <Width>2</Width>
+          <LineColor>0077B2</LineColor>
+        </Stroke>
+        <FillColor isVisible="false">
+          <Color>0077B2</Color>
+        </FillColor>
+      </PointStyle>
+      <LineStyle role="line_runoff">
+        <Width>2</Width>
+        <LineColor>FFC60A</LineColor>
+      </LineStyle>
+      <PointStyle role="point_runoff" isVisible="false">
+        <Width>6</Width>
+        <Height>6</Height>
+        <FillColor isVisible="true">
+          <Color>FFC60A</Color>
+        </FillColor>
+        <Stroke isVisible="false"></Stroke>
+      </PointStyle>
+      <LineStyle role="line_hen">
+        <Width>2</Width>
+        <LineColor>488539</LineColor>
+      </LineStyle>
+      <PointStyle role="point_hen" isVisible="false">
+        <Width>6</Width>
+        <Height>6</Height>
+        <FillColor isVisible="true">
+          <Color>488539</Color>
+        </FillColor>
+        <Stroke isVisible="false"></Stroke>
+      </PointStyle>
+      <LineStyle role="line_LengthSection_v_m">
+        <Width>2</Width>
+        <LineColor>D22C10</LineColor>
+      </LineStyle>
+      <PointStyle role="point_LengthSection_v_m" isVisible="false">
+        <Width>6</Width>
+        <Height>6</Height>
+        <FillColor isVisible="true">
+          <Color>D22C10</Color>
+        </FillColor>
+        <Stroke isVisible="false"></Stroke>
+      </PointStyle>
+      <LineStyle role="line_Boe_li">
+        <Width>2</Width>
+        <LineColor>402401</LineColor>
+      </LineStyle>
+      <PointStyle role="point_Boe_li" isVisible="false">
+        <Width>6</Width>
+        <Height>6</Height>
+        <FillColor isVisible="true">
+          <Color>402401</Color>
+        </FillColor>
+        <Stroke isVisible="false"></Stroke>
+      </PointStyle>
+      <LineStyle role="line_Boe_re">
+        <Width>2</Width>
+        <LineColor>402401</LineColor>
+      </LineStyle>
+      <PointStyle role="point_Boe_re" isVisible="false">
+        <Width>6</Width>
+        <Height>6</Height>
+        <FillColor isVisible="true">
+          <Color>402401</Color>
+        </FillColor>
+        <Stroke isVisible="false"></Stroke>
+      </PointStyle>
+      <LineStyle role="line_Bridge">
+        <Width>2</Width>
+        <LineColor>4E0BB2</LineColor>
+      </LineStyle>
+      <PointStyle role="point_Bridge">
+        <Width>3</Width>
+        <Height>3</Height>
+        <Alpha>40</Alpha>
+        <FillColor isVisible="true">
+          <Color>4E0BB2</Color>
+        </FillColor>
+        <Stroke>
+          <LineColor>4E0BB2</LineColor>
+        </Stroke>
+        <LineStyle role="line">
+        </LineStyle>
+      </PointStyle>
+      <PointStyle role="point_Weir">
+        <Width>3</Width>
+        <Height>3</Height>
+        <Alpha>40</Alpha>
+        <FillColor isVisible="true">
+          <Color>818181</Color>
+        </FillColor>
+        <Stroke>
+          <LineColor>818181</LineColor>
+        </Stroke>
+        <LineStyle role="line">
+        </LineStyle>
+      </PointStyle>
+      <LineStyle role="line_Weir">
+        <Width>2</Width>
+        <LineColor>818181</LineColor>
+      </LineStyle>
+      <PointStyle role="point_Culvert">
+        <Width>3</Width>
+        <Height>3</Height>
+        <Alpha>40</Alpha>
+        <FillColor isVisible="true">
+          <Color>333333</Color>
+        </FillColor>
+        <Stroke>
+          <LineColor>333333</LineColor>
+        </Stroke>
+        <LineStyle role="line" isVisible="false">
+        </LineStyle>
+      </PointStyle>
+      <LineStyle role="line_Culvert">
+        <Width>2</Width>
+        <LineColor>333333</LineColor>
+      </LineStyle>
+    </Styles>
+  </Chart>
+  <Chart id="lengthSectionLayer">
+    <Title></Title>
+    <Description></Description>
+    <Styles></Styles>
+    <Mappers>
+      <Axis id="Station_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
+        </Provider>
+        <Label>Station [km]</Label>
+        <Direction>NEGATIVE</Direction>
+        <Position>BOTTOM</Position>
+        <PreferredAdjustment before="3" range="94" after="3" />
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+      <Axis id="NN_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
+        </Provider>
+        <Label>Höhe [NN+m]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <PreferredAdjustment before="3" range="94" after="3" />
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+      <Axis id="M3S_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Abfluss [m³/s]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>RIGHT</Position>
+        <PreferredAdjustment before="40" range="50" after="10" />
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+      <Axis id="M1S_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Geschwindigkeit [m/s]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>RIGHT</Position>
+        <PreferredAdjustment before="40" range="50" after="10" />
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+    </Mappers>
+    <Renderers>
+      <AxisRenderer id="NumberAxisRenderer">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          <Parameters>
+            <Parameter name="inset_tick" value="2" />
+            <Parameter name="inset_label" value="2" />
+            <Parameter name="tick_length" value="5" />
+            <Parameter name="hide_cut" value="false" />
+            <Parameter name="gap" value="0" />
+          </Parameters>
+        </Provider>
+      </AxisRenderer>
+    </Renderers>
+    <Layers>
+      <Layer id="template_layer">
+        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+          <Parameters>
+            <Parameter value="" name="gxlpath" />
+            <Parameter value="root" name="observationId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+          </Parameters>
+        </Provider>
+        <MapperRefs>
+          <DomainAxisRef ref="Station_Axis" />
+          <TargetAxisRef ref="NN_Axis" />
+        </MapperRefs>
+      </Layer>
+      <Layer id="template_layer_m1s">
+        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+          <Parameters>
+            <Parameter value="" name="gxlpath" />
+            <Parameter value="root" name="observationId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+          </Parameters>
+        </Provider>
+        <MapperRefs>
+          <DomainAxisRef ref="Station_Axis" />
+          <TargetAxisRef ref="M1S_Axis" />
+        </MapperRefs>
+      </Layer>
+      <Layer id="template_layer_m3s">
+        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+          <Parameters>
+            <Parameter value="" name="gxlpath" />
+            <Parameter value="root" name="observationId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+          </Parameters>
+        </Provider>
+        <MapperRefs>
+          <DomainAxisRef ref="Station_Axis" />
+          <TargetAxisRef ref="M3S_Axis" />
+        </MapperRefs>
+      </Layer>
+    </Layers>
+  </Chart>
+</ChartConfiguration>
