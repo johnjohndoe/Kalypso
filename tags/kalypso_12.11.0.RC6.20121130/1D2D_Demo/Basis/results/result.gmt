@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns1="obstableview.template.kalypso.org" name="Ergebnisse">
+  <mapv:translator id="commons.msgGetString">
+    <class xmlns="">org.kalypso.kalypso1d2d.pjt:org.kalypso.kalypso1d2d.pjt.i18n.Messages</class>
+  </mapv:translator>
+  <mapv:extent srs="EPSG:31467" bottom="773106.5310006625" top="779107.5183922119" right="3932001.310043943" left="3928459.159528979"/>
+  <mapv:layers>
+    <mapv:layer visible="true" name="Ganglinienpunkte (Demo 1D2D)" featurePath="hydrographMember" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../results/CalculationUnit1D2D12144639393734308/hydrograph/hydrograph.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:style style="hydrographUserStyle" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/hydrograph/hydrograph.sld" xlink:type="simple"/>
+      <templ:property name="deleteable">true</templ:property>
+      <templ:property name="themeInfoId">org.kalypso.ogc.gml.map.themeinfo.HydrographThemeInfo?format=Ganglinienpunkt (Demo 1D2D) %.2f</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Modellknoten,Velo, Zeitschritt (07.01.11 02:00:00 MEZ), unsteady, Demo 1D2D" featurePath="nodeResultMember" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../results/CalculationUnit1D2D12144639393734308/timestep-07.01.2011_02_00_00_000_MEZ/results.gz" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:style style="Node Results Style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/Node/defaultNodeVeloStyle.sld" xlink:type="simple"/>
+      <templ:property name="deleteable">true</templ:property>
+      <templ:property name="themeInfoId">org.kalypso.kalypso1d2d.pjt.map.NodeThemeInfo?geometry={http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}NodeResult&amp;format=${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#parameter;-}: %.2f ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#unit;-}</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Fließtiefen,  (Isolinien), Zeitschritt (07.01.11 02:00:00 MEZ), Demo 1D2D" featurePath="" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../results/CalculationUnit1D2D12144639393734308/timestep-07.01.2011_02_00_00_000_MEZ/Tin/tin_DEPTH.gz" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:style style="tinLineStyle" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/Line/defaultLinetinDepthStyle.sld" xlink:type="simple"/>
+      <templ:property name="deleteable">true</templ:property>
+      <templ:property name="themeInfoId">org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?geometry={http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}triangulatedSurfaceMember&amp;format=${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#parameter;-}: %.2f ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#unit;-}</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Wasserspiegellagen,  (Isolinien), Zeitschritt (07.01.11 02:00:00 MEZ), Demo 1D2D" featurePath="" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../results/CalculationUnit1D2D12144639393734308/timestep-07.01.2011_02_00_00_000_MEZ/Tin/tin_WATERLEVEL.gz" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:style style="tinLineStyle" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/Line/defaultLinetinVeloStyle.sld" xlink:type="simple"/>
+      <templ:property name="deleteable">true</templ:property>
+      <templ:property name="themeInfoId">org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?geometry={http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}triangulatedSurfaceMember&amp;format=${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#parameter;-}: %.2f ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#unit;-}</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Wasserspiegellagen,  (Isoflächen), Zeitschritt (07.01.11 02:00:00 MEZ), Demo 1D2D" featurePath="" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="../results/CalculationUnit1D2D12144639393734308/timestep-07.01.2011_02_00_00_000_MEZ/Tin/tin_WATERLEVEL.gz" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:style style="tinPolygonStyle" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/Polygon/defaultPolygontinWspStyle.sld" xlink:type="simple"/>
+      <templ:property name="deleteable">true</templ:property>
+      <templ:property name="themeInfoId">org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?geometry={http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}triangulatedSurfaceMember&amp;format=${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#parameter;-}: %.2f ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#unit;-}</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="true" name="%fenet.mapv.gismapview.FE-Netz" id="ID_5" linktype="gmt" xlink:actuate="onRequest" xlink:href="../maps/fenet.gmt" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+    </mapv:layer>
+  </mapv:layers>
+</mapv:gismapview>
