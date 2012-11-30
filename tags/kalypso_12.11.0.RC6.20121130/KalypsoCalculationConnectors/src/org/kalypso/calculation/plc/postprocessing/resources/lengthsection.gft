@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featuretemplate xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <gft:layer featurePath="#fid#LengthSectionResultCollection13216097004211" id="layer_1" linktype="gml" xlink:href="../result.gml" />
+    
+    <gft:view typename="results:ResultMember" style="SWT.NONE" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:gml="http://www.opengis.net/gml"
+		xmlns:results="org.kalypso.calculation.plc.postprocessing" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ogc="http://www.opengis.net/ogc">
+		<gft:gridData 
+			verticalAlignment="GridData.FILL" 
+			horizontalAlignment="GridData.FILL" 
+			grabExcessVerticalSpace="true" 
+			grabExcessHorizontalSpace="true" />
+		<gft:gridLayout numColumns="1" />
+		<gft:extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+			<gft:gridData 
+				horizontalSpan="1" 
+				horizontalAlignment="GridData.FILL" 
+				grabExcessHorizontalSpace="true" 
+				verticalAlignment="GridData.FILL" 
+				grabExcessVerticalSpace="true">
+			</gft:gridData>
+			<gft:param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_PLCResults:Lengthsection:default" />
+			<gft:param name="featureKeyName" value="lengthsectionFeatureKey" />
+			<gft:param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize;org.kalypso.chart.ui.commands.openOutline" />
+			<gft:param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH;SWT.PUSH" />
+		</gft:extensioncontrol>
+	</gft:view>
+	
+    <gft:view typename="results:LengthSectionResultCollection" style="SWT.NONE" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:gml="http://www.opengis.net/gml"
+        xmlns:results="org.kalypso.calculation.plc.postprocessing" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ogc="http://www.opengis.net/ogc">
+        <gft:gridData 
+            verticalAlignment="GridData.FILL" 
+            horizontalAlignment="GridData.FILL" 
+            grabExcessVerticalSpace="true" 
+            grabExcessHorizontalSpace="true" />
+        <gft:gridLayout numColumns="1" />
+        <gft:dynamicTabFolder property="results:lengthSectionResultMember" style="SWT.NONE">
+            <gft:gridData
+                verticalAlignment="SWT.FILL" 
+                horizontalAlignment="SWT.FILL" 
+                grabExcessVerticalSpace="true" 
+                grabExcessHorizontalSpace="true" />
+        </gft:dynamicTabFolder>
+    </gft:view>
+</gft:featuretemplate>
