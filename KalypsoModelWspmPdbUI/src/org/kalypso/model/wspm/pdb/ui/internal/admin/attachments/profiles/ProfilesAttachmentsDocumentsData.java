@@ -133,7 +133,7 @@ public class ProfilesAttachmentsDocumentsData extends AbstractAttachmentsDocumen
     final Set<CrossSection> crossSections = m_state.getCrossSections();
     for( final CrossSection crossSection : crossSections )
     {
-      final BigDecimal station = crossSection.getStation().setScale( 1, BigDecimal.ROUND_HALF_UP );
+      final BigDecimal station = crossSection.getStation();
       csHash.put( station, crossSection );
     }
 

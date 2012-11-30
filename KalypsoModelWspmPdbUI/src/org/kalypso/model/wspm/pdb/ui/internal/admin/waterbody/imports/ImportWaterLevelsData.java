@@ -244,7 +244,9 @@ public class ImportWaterLevelsData extends AbstractModelObject implements IEditE
         points.size();
       }
 
-      m_sections.put( section.getStation(), section );
+      final BigDecimal station = section.getStation();
+
+      m_sections.put( station, section );
     }
   }
 
