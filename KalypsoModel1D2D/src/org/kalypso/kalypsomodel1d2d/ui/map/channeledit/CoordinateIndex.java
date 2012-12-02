@@ -21,6 +21,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.jts.JTSUtilities;
+
 import com.infomatiq.jsi.Point;
 import com.infomatiq.jsi.Rectangle;
 import com.infomatiq.jsi.SpatialIndex;
@@ -47,10 +49,7 @@ class CoordinateIndex
   {
     m_coordinates.add( point );
 
-    final float x = (float)point.x;
-    final float y = (float)point.y;
-
-    final Rectangle bounds = new Rectangle( x, y, x, y );
+    final Rectangle bounds = JTSUtilities.toRectangle( point.x, point.y );
 
     m_index.add( bounds, m_coordinates.size() );
   }

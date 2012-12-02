@@ -46,6 +46,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 
 import com.infomatiq.jsi.Rectangle;
@@ -89,7 +90,7 @@ public class StatisticCollector
 
     final SpecificDamageVisitor visitor = new SpecificDamageVisitor( returnPeriod, position, cellArea, m_areas );
 
-    final Rectangle searchRect = new Rectangle( (float)position.x, (float)position.y, (float)position.x, (float)position.y );
+    final Rectangle searchRect = JTSUtilities.toRectangle( position.x, position.y );
     m_index.intersects( searchRect, visitor );
 
     final double damageValue = position.z;
@@ -115,7 +116,7 @@ public class StatisticCollector
 
         final Envelope envelope = area.getArea().getEnvelopeInternal();
 
-        final Rectangle rect = new Rectangle( (float)envelope.getMinX(), (float)envelope.getMinY(), (float)envelope.getMaxX(), (float)envelope.getMaxY() );
+        final Rectangle rect = JTSUtilities.toRectangle( envelope );
 
         areaList.add( area );
         index.add( rect, id );
