@@ -219,7 +219,6 @@ public class ExecutePreRMAKalypso
     inputs.put( IRMAPreprocessing.INPUT_MESH, "models/discretisation.gml" ); //$NON-NLS-1$
     inputs.put( IRMAPreprocessing.INPUT_FLOW_RELATIONSHIPS, "models/flowrelations.gml" ); //$NON-NLS-1$
     inputs.put( IRMAPreprocessing.INPUT_WIND_RELATIONSHIPS, "models/wind.gml" ); //$NON-NLS-1$
-    inputs.put( IRMAPreprocessing.INPUT_ROUGHNESS, "../.metadata/roughness.gml" ); //$NON-NLS-1$
 
     if( restartInfos != null )
     {
