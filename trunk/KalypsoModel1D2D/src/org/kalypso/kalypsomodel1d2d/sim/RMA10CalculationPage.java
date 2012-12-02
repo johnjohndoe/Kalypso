@@ -113,6 +113,7 @@ public class RMA10CalculationPage extends WizardPage
   protected RMA10CalculationPage( final String pageName, final IGeoLog geoLog, final IControlModel1D2D controlModel )
   {
     super( pageName );
+
     m_geoLog = geoLog;
     m_controlModel = controlModel;
     m_boolWithSWAN = m_controlModel.calculateSWAN();
@@ -328,6 +329,7 @@ public class RMA10CalculationPage extends WizardPage
       {
         m_calculationRMARunner = new RMAKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
       }
+
       if( m_boolWithSWAN )
       {
         m_calculationSWANRunner = new SWANKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );

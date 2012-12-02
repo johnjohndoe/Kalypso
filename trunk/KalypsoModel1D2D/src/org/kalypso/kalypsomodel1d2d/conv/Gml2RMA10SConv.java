@@ -1267,7 +1267,10 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
     final GM_Object geometry = getErrorGeometry( element );
 
-    m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, msg, geometry, null );
+    // REMARK: error will stop after preprocessingcalculation later on
+    // This is intended, as simulation does not work correctly with missing roughness class,
+    // but we also want to see all missing elements at once in the log.
+    m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, geometry, null );
 
     return 0;
   }
