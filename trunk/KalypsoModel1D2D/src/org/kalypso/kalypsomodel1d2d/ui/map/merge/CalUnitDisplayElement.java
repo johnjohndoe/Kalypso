@@ -49,21 +49,22 @@ import java.awt.geom.Area;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFENetItem;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement;
 
@@ -117,74 +118,57 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 
     final GM_Envelope sourceRect = projection.getSourceRect();
     final List<IFENetItem> visibleElements = m_calculationUnit.query( sourceRect, null );
+
+    // FIXME: use SLDPainter2 instead to paint elements....
+
     for( final Feature element : visibleElements )
     {
-      if( element instanceof IPolyElement )
+      try
       {
-        try
+        if( element instanceof IPolyElement )
         {
           final GM_Polygon surface = ((IPolyElement)element).getGeometry();
           paintSurface( surface, ELEMENT_FILL_COLOR, (Graphics2D)g, projection, ELEMENT_BORDER_WIDTH );
         }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
-      else if( element instanceof IElement1D )
-      {
-        try
+        else if( element instanceof IElement1D )
         {
           final GM_Curve curve = ((IElement1D)element).getEdge().getGeometry();
           paintLineString( curve, ELEMENT_BORDER_COLOR, (Graphics2D)g, projection, CONTINUITY_LINE_WIDTH );
         }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-          throw new RuntimeException( e );
-        }
-      }
-      else if( element instanceof IFELine )
-      {
-        try
+        else if( element instanceof IFELine )
         {
           final GM_Curve curve = ((IFELine)element).getGeometry();
           paintLineString( curve, CONTINUITY_LINE_COLOR, (Graphics2D)g, projection, CONTINUITY_LINE_WIDTH );
         }
-        catch( final Exception e )
+        else
         {
-          e.printStackTrace();
-          throw new RuntimeException( e );
+          System.out.println( "Unexpected type of element:" + element ); //$NON-NLS-1$
         }
       }
-      else
+      catch( final GM_Exception e )
       {
-        throw new RuntimeException( "Unexpected type of element:" + element ); //$NON-NLS-1$
+        e.printStackTrace();
       }
+
+      if( monitor.isCanceled() )
+        throw new OperationCanceledException();
     }
   }
 
-  public static final void paintSurface( final GM_Polygon surface, final Color color, final Graphics2D g2d, final GeoTransform projection, final float lineWidth )
+  private static final void paintSurface( final GM_Polygon surface, final Color color, final Graphics2D g2d, final GeoTransform projection, final float lineWidth )
   {
-    try
-    {
-      final Area area = calcTargetCoordinates( projection, surface );
-      g2d.setColor( color );
-      g2d.fill( area );
+    final Area area = calcTargetCoordinates( projection, surface );
+    g2d.setColor( color );
+    g2d.fill( area );
 
-      // shape drawing
-      g2d.setColor( ELEMENT_BORDER_COLOR );
-      final java.awt.Stroke bs2 = new BasicStroke( lineWidth );
-      g2d.setStroke( bs2 );
-      g2d.draw( area );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+    // shape drawing
+    g2d.setColor( ELEMENT_BORDER_COLOR );
+    final java.awt.Stroke bs2 = new BasicStroke( lineWidth );
+    g2d.setStroke( bs2 );
+    g2d.draw( area );
   }
 
-  public static final void paintLineString( final GM_Curve curve, final Color color, final Graphics2D g2d, final GeoTransform projection, final float lineWidth ) throws Exception
+  private static final void paintLineString( final GM_Curve curve, final Color color, final Graphics2D g2d, final GeoTransform projection, final float lineWidth ) throws GM_Exception
   {
     final int[][] linePointCoords = calcTargetCoordinates( projection, curve );
 
@@ -197,37 +181,20 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * calculates the Area (image or screen coordinates) where to draw the surface.
    */
-  public static final Area calcTargetCoordinates( final GeoTransform projection, final GM_Polygon surface ) throws Exception
+  private static final Area calcTargetCoordinates( final GeoTransform projection, final GM_Polygon surface )
   {
     final float width = 1;
-    try
-    {
-      final GM_AbstractSurfacePatch patch = surface.get( 0 );
-      final GM_Position[] ex = patch.getExteriorRing();
+    final GM_PolygonPatch patch = surface.getSurfacePatch();
+    final GM_Position[] ex = patch.getExteriorRing();
 
-      final Area areaouter = new Area( SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, ex ) );
-
-      return areaouter;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  public static final CalUnitDisplayElement createDisplayElement( final ICalculationUnit calUnit )
-  {
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" ); //$NON-NLS-1$
-    final CalUnitDisplayElement calUnitDisplayElement = new CalUnitDisplayElement( calUnit );
-
-    return calUnitDisplayElement;
+    return new Area( SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, ex ) );
   }
 
   /**
    * Copied and modified from {@link org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement} calculates the coordintes (image or screen coordinates) where to draw the curve.
    */
-  public static final int[][] calcTargetCoordinates( final GeoTransform projection, final GM_Curve curve ) throws Exception
+  // FIXME: copy/paste from surface display element -> bah!
+  private static final int[][] calcTargetCoordinates( final GeoTransform projection, final GM_Curve curve ) throws GM_Exception
   {
     final GM_LineString lineString = curve.getAsLineString();
     final float width = 1;
@@ -267,9 +234,8 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   /**
    * Copied from {@link org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement}
    */
-  public static final double distance( final double x1, final double y1, final double x2, final double y2 )
+  private static final double distance( final double x1, final double y1, final double x2, final double y2 )
   {
     return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }
-
 }
