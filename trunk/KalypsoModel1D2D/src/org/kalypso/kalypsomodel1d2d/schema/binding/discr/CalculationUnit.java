@@ -78,8 +78,13 @@ public abstract class CalculationUnit extends Feature_Impl implements ICalculati
   public void addLinkedItem( final IFENetItem element )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
-    if( !elementsInternal().containsOrLinksTo( element ) )
-      elementsInternal().addLink( element );
+
+    final FeatureList elementsInternal = elementsInternal();
+
+    // FIXME: major performance hot spot in 'containsOrLinksTo' -> use geo index instead?
+    if( !elementsInternal.containsOrLinksTo( element ) )
+      elementsInternal.addLink( element );
+
     element.addLinkedComplexElement( this );
   }
 
@@ -87,8 +92,15 @@ public abstract class CalculationUnit extends Feature_Impl implements ICalculati
   public void removeLinkedItem( final IFENetItem element )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
-    if( elementsInternal().containsOrLinksTo( element ) )
-      elementsInternal().removeLink( element );
+
+    final FeatureList elementsInternal = elementsInternal();
+
+    // REMARK: no need for this check here, actually removeLink internally uses the same check
+    // if( elementsInternal.containsOrLinksTo( element ) )
+
+    // FIXME: major performance hot spot in 'containsOrLinksTo' -> use geo index instead?
+    elementsInternal.removeLink( element );
+
     element.removeLinkedComplexElement( this );
   }
 
