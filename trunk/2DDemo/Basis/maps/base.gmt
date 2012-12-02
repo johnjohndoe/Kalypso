@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns1="obstableview.template.kalypso.org" name="Grundlagen">
-  <mapv:extent srs="EPSG:31467" bottom="771245.491803716" top="778344.0151682027" right="3933379.6988848383" left="3925935.522957473"/>
+<mapv:gismapview xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns1="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns2="obstableview.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" name="Grundlagen">
+  <mapv:extent left="3928159.0557123083" right="3931256.2593072033" top="775542.3516435829" bottom="773683.2176377348" srs="EPSG:31467"/>
   <mapv:layers/>
 </mapv:gismapview>

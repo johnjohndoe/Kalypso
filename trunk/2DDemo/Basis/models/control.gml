@@ -1,70 +1,75 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<c1d2d:ControlModelGroup xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:swe="http://www.opengis.net/swe" xmlns:sweExt="org.kalypso.swe.ext" gml:id="root">
- <simBase:version xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase">1.0</simBase:version>
- <c1d2d:controlModelCollection>
-  <c1d2d:ControlModelCollection gml:id="ControlModelCollection12129954658851">
-   <c1d2d:activeModelID xlink:href="#ControlModel12129980697592"/>
-   <c1d2d:controlModelMember>
-    <c1d2d:ControlModel gml:id="ControlModel12129980697592">
-     <wb1d2d:calculationUnit xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xlink:href="discretisation.gml#CalculationUnit2D121299806933713174"/>
-     <c1d2d:Version>1.2.0_rc1_win_x64_20100416</c1d2d:Version>
-     <c1d2d:SWANCalculation/>
-     <c1d2d:SWANVersion/>
-     <c1d2d:SWANConstantBoundary/>
-     <c1d2d:SWANBoundaryAlg/>
-     <c1d2d:SWANINITialValues/>
-     <c1d2d:SWANINITialValuesPar/>
-     <c1d2d:SWANConstantWind/>
-     <c1d2d:SWANCoordCart/>
-     <c1d2d:SWANGEN3/>
-     <c1d2d:SWANConstantWindPar/>
-     <c1d2d:SWANAdditionalResultsPar/>
-     <c1d2d:SWANInputCoordFile/>
-     <c1d2d:SWANInputAdditionalCmds/>
-     <c1d2d:VEGETA>true</c1d2d:VEGETA>
-     <c1d2d:BEIENT>true</c1d2d:BEIENT>
-     <c1d2d:ICPU>4</c1d2d:ICPU>
-     <c1d2d:BUFFSIZ>10000000</c1d2d:BUFFSIZ>
-     <c1d2d:MFW>2000</c1d2d:MFW>
-     <c1d2d:PERCENT_CHECK/>
-     <c1d2d:IDNOPT>-1</c1d2d:IDNOPT>
-     <c1d2d:startsim/>
-     <c1d2d:IEDSW>13</c1d2d:IEDSW>
-     <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
-     <c1d2d:TBFACT_ESCUDIER/>
-     <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
-     <c1d2d:_p_bottom/>
-     <c1d2d:OMEGA/>
-     <c1d2d:ELEV>367.0</c1d2d:ELEV>
-     <c1d2d:UNOM>0.5</c1d2d:UNOM>
-     <c1d2d:UDIR/>
-     <c1d2d:HMIN/>
-     <c1d2d:DSET>0.03</c1d2d:DSET>
-     <c1d2d:DSETD>0.15</c1d2d:DSETD>
-     <c1d2d:_steady>true</c1d2d:_steady>
-     <c1d2d:_unsteady>true</c1d2d:_unsteady>
-     <c1d2d:NITI>40</c1d2d:NITI>
-     <c1d2d:NITN>40</c1d2d:NITN>
-     <c1d2d:CONV_1>0.05</c1d2d:CONV_1>
-     <c1d2d:CONV_2>0.05</c1d2d:CONV_2>
-     <c1d2d:CONV_3>0.01</c1d2d:CONV_3>
-     <c1d2d:IDRPT>0</c1d2d:IDRPT>
-     <c1d2d:DRFACT>0.05</c1d2d:DRFACT>
-     <c1d2d:AC1>1.5</c1d2d:AC1>
-     <c1d2d:AC2>0.67</c1d2d:AC2>
-     <c1d2d:AC3>0.04</c1d2d:AC3>
-     <c1d2d:_restart>false</c1d2d:_restart>
-     <c1d2d:IACCYC>1</c1d2d:IACCYC>
-     <c1d2d:FNAM3/>
-     <c1d2d:_steadyBC>0.3</c1d2d:_steadyBC>
-     <c1d2d:timestepsMember>
-      <c1d2d:TimestepsObservation gml:id="TimestepsObservation12129980698840">
+<?xml version="1.0" encoding="UTF-8"?><ControlModelGroup xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sweExt="org.kalypso.swe.ext" xmlns="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" gml:id="root">
+ <simBase:version>1.0</simBase:version>
+ <controlModelCollection>
+  <ControlModelCollection gml:id="ControlModelCollection12129954658851">
+   <activeModelID xlink:href="#ControlModel12129980697592"/>
+   <controlModelMember>
+    <ControlModel gml:id="ControlModel12129980697592">
+     <wb1d2d:calculationUnit xlink:href="discretisation.gml#CalculationUnit2D121299806933713174"/>
+     <Version>1.2.0_rc1_win_x64_20100416</Version>
+     <SWANCalculation/>
+     <SWANVersion/>
+     <SWANConstantBoundary/>
+     <SWANBoundaryAlg/>
+     <SWANINITialValues/>
+     <SWANINITialValuesPar/>
+     <SWANConstantWind/>
+     <SWANCoordCart/>
+     <SWANGEN3/>
+     <SWANConstantWindPar/>
+     <SWANAdditionalResultsPar/>
+     <SWANInputCoordFile/>
+     <SWANInputAdditionalCmds/>
+     <VEGETA>true</VEGETA>
+     <BEIENT>true</BEIENT>
+     <HASWINDDRAG/>
+     <CHI/>
+     <ICPU>4</ICPU>
+     <BUFFSIZ>10000000</BUFFSIZ>
+     <MFW>2000</MFW>
+     <PERCENT_CHECK/>
+     <IDNOPT>-1</IDNOPT>
+     <startsim/>
+     <IEDSW>13</IEDSW>
+     <TBFACT>0.2</TBFACT>
+     <TBFACT_ESCUDIER/>
+     <TBMIN>2.0</TBMIN>
+     <_p_bottom/>
+     <OMEGA/>
+     <ELEV>367.0</ELEV>
+     <UNOM>0.5</UNOM>
+     <UDIR/>
+     <HMIN/>
+     <DSET>0.03</DSET>
+     <DSETD>0.15</DSETD>
+     <_steady>true</_steady>
+     <_unsteady>true</_unsteady>
+     <NITI>40</NITI>
+     <NITN>40</NITN>
+     <CONV_1>0.05</CONV_1>
+     <CONV_2>0.05</CONV_2>
+     <CONV_3>0.01</CONV_3>
+     <IDRPT>0</IDRPT>
+     <DRFACT>0.05</DRFACT>
+     <FIXEDMARSHBOTTOM/>
+     <AC1>1.5</AC1>
+     <AC2>0.67</AC2>
+     <AC3>0.04</AC3>
+     <AC4/>
+     <MARSHFRICTIONFACTOR/>
+     <MARSHFRICTIONDISTR/>
+     <_restart>false</_restart>
+     <IACCYC>1</IACCYC>
+     <FNAM3/>
+     <_steadyBC>0.3</_steadyBC>
+     <timestepsMember>
+      <TimestepsObservation gml:id="TimestepsObservation12129980698840">
        <gml:name>Zeitschrittdefinition</gml:name>
-       <om:time xmlns:om="http://www.opengis.net/om"/>
-       <om:procedure xmlns:om="http://www.opengis.net/om"/>
-       <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
-       <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
-       <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+       <om:time/>
+       <om:procedure/>
+       <om:observedProperty/>
+       <om:featureOfInterest/>
+       <om:resultDefinition>
         <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition12962238212971">
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
@@ -73,7 +78,7 @@
          <sweExt:ordinalNumberComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
         </sweExt:SortedRecordDefinition>
        </om:resultDefinition>
-       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[1 2009-12-31T23%3A00%3A00.000Z 0%2C5
+       <om:result><![CDATA[1 2009-12-31T23%3A00%3A00.000Z 0%2C5
 2 2010-01-01T00%3A00%3A00.000Z 0%2C5
 3 2010-01-01T01%3A00%3A00.000Z 0%2C5
 4 2010-01-01T02%3A00%3A00.000Z 0%2C5
@@ -99,10 +104,10 @@
 24 2010-01-01T22%3A00%3A00.000Z 0%2C5
 25 2010-01-01T23%3A00%3A00.000Z 0%2C5
 ]]></om:result>
-      </c1d2d:TimestepsObservation>
-     </c1d2d:timestepsMember>
-    </c1d2d:ControlModel>
-   </c1d2d:controlModelMember>
-  </c1d2d:ControlModelCollection>
- </c1d2d:controlModelCollection>
-</c1d2d:ControlModelGroup>
+      </TimestepsObservation>
+     </timestepsMember>
+    </ControlModel>
+   </controlModelMember>
+  </ControlModelCollection>
+ </controlModelCollection>
+</ControlModelGroup>
