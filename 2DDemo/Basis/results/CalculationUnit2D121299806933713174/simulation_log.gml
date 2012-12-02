@@ -1,103 +1,182 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<commonShp:StatusCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:commonShp="org.kalypso.gml.common" gml:id="root">
- <commonShp:statusMember>
-  <commonShp:Status gml:id="Status12962297331500">
+<?xml version="1.0" encoding="UTF-8"?><StatusCollection xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="org.kalypso.gml.common" gml:id="root">
+ <statusMember>
+  <Status gml:id="Status13544644340851">
    <gml:description>Start der Simulation</gml:description>
-   <commonShp:time>2011-01-28T15:48:53.150Z</commonShp:time>
-   <commonShp:severity>info</commonShp:severity>
-   <commonShp:code>0</commonShp:code>
-   <commonShp:plugin>org.kalypso.model1d2d</commonShp:plugin>
-   <commonShp:exception>rO0ABXA=</commonShp:exception>
-  </commonShp:Status>
- </commonShp:statusMember>
- <commonShp:statusMember>
-  <commonShp:Status gml:id="Status12962298481810">
+   <time>2012-12-02T16:07:14.085Z</time>
+   <severity>info</severity>
+   <code>0</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645166082">
    <gml:description>Simulation erfolgreich beendet</gml:description>
-   <commonShp:time>2011-01-28T15:50:48.180Z</commonShp:time>
-   <commonShp:severity>ok</commonShp:severity>
-   <commonShp:code>0</commonShp:code>
-   <commonShp:plugin>org.kalypso.model1d2d</commonShp:plugin>
-   <commonShp:exception>rO0ABXA=</commonShp:exception>
-  </commonShp:Status>
- </commonShp:statusMember>
- <commonShp:statusMember>
-  <commonShp:Status gml:id="Status12962298853000">
+   <time>2012-12-02T16:08:36.608Z</time>
+   <severity>info</severity>
+   <code>0</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645166081">
+   <gml:description>Schreibe RMA·Kalypso-ASCII Dateien für Simulation</gml:description>
+   <time>2012-12-02T16:08:36.608Z</time>
+   <severity>info</severity>
+   <code>1</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645166080">
+   <gml:description>Restart-Daten werden gelesen...</gml:description>
+   <time>2012-12-02T16:08:36.608Z</time>
+   <severity>info</severity>
+   <code>1</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645166083">
+   <gml:description>Schreibe Finite Elemente Netz</gml:description>
+   <time>2012-12-02T16:08:36.608Z</time>
+   <severity>info</severity>
+   <code>1</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645166086">
+   <gml:description>Schreibe Randbedingungen und Berechnungssteuerung</gml:description>
+   <time>2012-12-02T16:08:36.608Z</time>
+   <severity>info</severity>
+   <code>1</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645166131">
+   <gml:description>Schreibe Bauwerke</gml:description>
+   <time>2012-12-02T16:08:36.608Z</time>
+   <severity>info</severity>
+   <code>1</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645166135">
+   <gml:description>Schreibe Windfeld</gml:description>
+   <time>2012-12-02T16:08:36.608Z</time>
+   <severity>info</severity>
+   <code>1</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645166133">
+   <gml:description>Schreibe W/Q-Randbedingungen</gml:description>
+   <time>2012-12-02T16:08:36.608Z</time>
+   <severity>info</severity>
+   <code>1</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645166136">
+   <gml:description>OK</gml:description>
+   <time>2012-12-02T16:08:36.608Z</time>
+   <severity>ok</severity>
+   <code>0</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645379998">
    <gml:description>Start der Ergebnisauswertung</gml:description>
-   <commonShp:time>2011-01-28T15:51:25.300Z</commonShp:time>
-   <commonShp:severity>info</commonShp:severity>
-   <commonShp:code>0</commonShp:code>
-   <commonShp:plugin>org.kalypso.model1d2d</commonShp:plugin>
-   <commonShp:exception>rO0ABXA=</commonShp:exception>
-  </commonShp:Status>
- </commonShp:statusMember>
- <commonShp:statusMember>
-  <commonShp:Status gml:id="Status12962298853033">
+   <time>2012-12-02T16:08:57.999Z</time>
+   <severity>info</severity>
+   <code>0</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645380047">
    <gml:description>Ergebnisauswertung - A0024</gml:description>
-   <commonShp:time>2011-01-28T15:51:25.303Z</commonShp:time>
-   <commonShp:severity>info</commonShp:severity>
-   <commonShp:code>1</commonShp:code>
-   <commonShp:plugin>org.kalypso.model1d2d</commonShp:plugin>
-   <commonShp:exception>rO0ABXA=</commonShp:exception>
-  </commonShp:Status>
- </commonShp:statusMember>
- <commonShp:statusMember>
-  <commonShp:Status gml:id="Status12962298901044">
+   <time>2012-12-02T16:08:58.004Z</time>
+   <severity>info</severity>
+   <code>1</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645430604">
    <gml:description>Alle Ergebnisse wurden erfolgreich ausgewertet.</gml:description>
-   <commonShp:time>2011-01-28T15:51:30.102Z</commonShp:time>
-   <commonShp:severity>ok</commonShp:severity>
-   <commonShp:code>3000</commonShp:code>
-   <commonShp:plugin>org.kalypso.model1d2d</commonShp:plugin>
-   <commonShp:exception>rO0ABXA=</commonShp:exception>
-  </commonShp:Status>
- </commonShp:statusMember>
- <commonShp:statusMember>
-  <commonShp:Status gml:id="Status12962298901041">
+   <time>2012-12-02T16:09:03.060Z</time>
+   <severity>ok</severity>
+   <code>3000</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status135446454306010">
    <gml:description>Ergebnisauswertung erfolgreich beendet</gml:description>
-   <commonShp:time>2011-01-28T15:51:30.104Z</commonShp:time>
-   <commonShp:severity>ok</commonShp:severity>
-   <commonShp:code>0</commonShp:code>
-   <commonShp:plugin>org.kalypso.model1d2d</commonShp:plugin>
-   <commonShp:exception>rO0ABXA=</commonShp:exception>
-  </commonShp:Status>
- </commonShp:statusMember>
- <commonShp:statusMember>
-  <commonShp:Status gml:id="Status12962298901210">
+   <time>2012-12-02T16:09:03.060Z</time>
+   <severity>ok</severity>
+   <code>0</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645430715">
    <gml:description>Start der Ergebnisauswertung</gml:description>
-   <commonShp:time>2011-01-28T15:51:30.121Z</commonShp:time>
-   <commonShp:severity>info</commonShp:severity>
-   <commonShp:code>0</commonShp:code>
-   <commonShp:plugin>org.kalypso.model1d2d</commonShp:plugin>
-   <commonShp:exception>rO0ABXA=</commonShp:exception>
-  </commonShp:Status>
- </commonShp:statusMember>
- <commonShp:statusMember>
-  <commonShp:Status gml:id="Status12962298901223">
+   <time>2012-12-02T16:09:03.071Z</time>
+   <severity>info</severity>
+   <code>0</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status135446454307110">
    <gml:description>Bestehende Ergebnisse werden gelöscht.</gml:description>
-   <commonShp:time>2011-01-28T15:51:30.122Z</commonShp:time>
-   <commonShp:severity>info</commonShp:severity>
-   <commonShp:code>1</commonShp:code>
-   <commonShp:plugin>org.kalypso.model1d2d</commonShp:plugin>
-   <commonShp:exception>rO0ABXA=</commonShp:exception>
-  </commonShp:Status>
- </commonShp:statusMember>
- <commonShp:statusMember>
-  <commonShp:Status gml:id="Status12962298901268">
+   <time>2012-12-02T16:09:03.071Z</time>
+   <severity>info</severity>
+   <code>1</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status135446454332610">
    <gml:description>Ergebnisse werden in Arbeitsbereich verschoben und Ergebnisdatenbank aktualisiert.</gml:description>
-   <commonShp:time>2011-01-28T15:51:30.126Z</commonShp:time>
-   <commonShp:severity>info</commonShp:severity>
-   <commonShp:code>1</commonShp:code>
-   <commonShp:plugin>org.kalypso.model1d2d</commonShp:plugin>
-   <commonShp:exception>rO0ABXA=</commonShp:exception>
-  </commonShp:Status>
- </commonShp:statusMember>
- <commonShp:statusMember>
-  <commonShp:Status gml:id="Status12962298901512">
+   <time>2012-12-02T16:09:03.326Z</time>
+   <severity>info</severity>
+   <code>1</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+ <statusMember>
+  <Status gml:id="Status13544645433491">
    <gml:description>Ergebnisauswertung erfolgreich beendet</gml:description>
-   <commonShp:time>2011-01-28T15:51:30.151Z</commonShp:time>
-   <commonShp:severity>ok</commonShp:severity>
-   <commonShp:code>0</commonShp:code>
-   <commonShp:plugin>org.kalypso.model1d2d</commonShp:plugin>
-   <commonShp:exception>rO0ABXA=</commonShp:exception>
-  </commonShp:Status>
- </commonShp:statusMember>
-</commonShp:StatusCollection>
+   <time>2012-12-02T16:09:03.349Z</time>
+   <severity>ok</severity>
+   <code>0</code>
+   <plugin>org.kalypso.model1d2d</plugin>
+   <exception>rO0ABXA=</exception>
+  </Status>
+ </statusMember>
+</StatusCollection>

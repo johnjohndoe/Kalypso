@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns1="obstableview.template.kalypso.org" name="Ergebnisse">
-  <mapv:extent srs="EPSG:31467" bottom="771245.491803716" top="778344.0151682027" right="3933379.6988848383" left="3925935.522957473"/>
+<mapv:gismapview xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns1="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns2="obstableview.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" name="Ergebnisse">
+  <mapv:extent left="3928159.0557123083" right="3931256.2593072033" top="775542.3516435829" bottom="773683.2176377348" srs="EPSG:31467"/>
   <mapv:layers>
-    <mapv:layer visible="true" name="Modellknoten,Velo, Zeitschritt (02.01.10 00:00:00 MEZ), unsteady, Demo2D" featurePath="nodeResultMember" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../results/CalculationUnit2D121299806933713174/timestep-02.01.2010_00_00_00_000_MEZ/results.gz" xlink:type="simple">
+    <mapv:layer name="Modellknoten,Velo, Zeitschritt (02.01.10 00:00:00 MEZ), unsteady, Demo2D" visible="true" id="ID_0" featurePath="nodeResultMember" linktype="gml" xlink:type="simple" xlink:href="../results/CalculationUnit2D121299806933713174/timestep-02.01.2010_00_00_00_000_MEZ/results.gz" xlink:actuate="onRequest">
       <templ:showChildren>true</templ:showChildren>
-      <templ:style style="Node Results Style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/Node/defaultNodeVeloStyle.sld" xlink:type="simple"/>
+      <templ:style linktype="sld" style="Node Results Style" xlink:type="simple" xlink:href="../styles/Node/defaultNodeVeloStyle.sld" xlink:actuate="onRequest"/>
       <templ:property name="deleteable">true</templ:property>
       <templ:property name="themeInfoId">org.kalypso.kalypso1d2d.pjt.map.NodeThemeInfo?geometry={http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}NodeResult&amp;format=${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#parameter;-}: %.2f ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#unit;-}</templ:property>
     </mapv:layer>
-    <mapv:layer visible="true" name="Fließtiefen,  (Isolinien), Zeitschritt (02.01.10 00:00:00 MEZ), Demo2D" featurePath="" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../results/CalculationUnit2D121299806933713174/timestep-02.01.2010_00_00_00_000_MEZ/Tin/tin_DEPTH.gz" xlink:type="simple">
+    <mapv:layer name="Fließtiefen,  (Isolinien), Zeitschritt (02.01.10 00:00:00 MEZ), Demo2D" visible="true" id="ID_1" featurePath="" linktype="gml" xlink:type="simple" xlink:href="../results/CalculationUnit2D121299806933713174/timestep-02.01.2010_00_00_00_000_MEZ/Tin/tin_DEPTH.gz" xlink:actuate="onRequest">
       <templ:showChildren>true</templ:showChildren>
-      <templ:style style="tinLineStyle" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/Line/defaultLinetinDepthStyle.sld" xlink:type="simple"/>
+      <templ:style linktype="sld" style="tinLineStyle" xlink:type="simple" xlink:href="../styles/Line/defaultLinetinDepthStyle.sld" xlink:actuate="onRequest"/>
       <templ:property name="deleteable">true</templ:property>
       <templ:property name="themeInfoId">org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?geometry={http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}triangulatedSurfaceMember&amp;format=${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#parameter;-}: %.2f ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#unit;-}</templ:property>
     </mapv:layer>
-    <mapv:layer visible="true" name="Wasserspiegellagen,  (Isolinien), Zeitschritt (02.01.10 00:00:00 MEZ), Demo2D" featurePath="" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../results/CalculationUnit2D121299806933713174/timestep-02.01.2010_00_00_00_000_MEZ/Tin/tin_WATERLEVEL.gz" xlink:type="simple">
+    <mapv:layer name="Wasserspiegellagen,  (Isolinien), Zeitschritt (02.01.10 00:00:00 MEZ), Demo2D" visible="true" id="ID_2" featurePath="" linktype="gml" xlink:type="simple" xlink:href="../results/CalculationUnit2D121299806933713174/timestep-02.01.2010_00_00_00_000_MEZ/Tin/tin_WATERLEVEL.gz" xlink:actuate="onRequest">
       <templ:showChildren>true</templ:showChildren>
-      <templ:style style="tinLineStyle" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/Line/WSP_line.sld" xlink:type="simple"/>
+      <templ:style linktype="sld" style="tinLineStyle" xlink:type="simple" xlink:href="../styles/Line/WSP_line.sld" xlink:actuate="onRequest"/>
       <templ:property name="deleteable">true</templ:property>
       <templ:property name="themeInfoId">org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?geometry={http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}triangulatedSurfaceMember&amp;format=${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#parameter;-}: %.2f ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#unit;-}</templ:property>
     </mapv:layer>
-    <mapv:layer visible="true" name="Wasserspiegellagen,  (Isoflächen), Zeitschritt (02.01.10 00:00:00 MEZ), Demo2D" featurePath="" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../results/CalculationUnit2D121299806933713174/timestep-02.01.2010_00_00_00_000_MEZ/Tin/tin_WATERLEVEL.gz" xlink:type="simple">
+    <mapv:layer name="Wasserspiegellagen,  (Isoflächen), Zeitschritt (02.01.10 00:00:00 MEZ), Demo2D" visible="true" id="ID_3" featurePath="" linktype="gml" xlink:type="simple" xlink:href="../results/CalculationUnit2D121299806933713174/timestep-02.01.2010_00_00_00_000_MEZ/Tin/tin_WATERLEVEL.gz" xlink:actuate="onRequest">
       <templ:showChildren>true</templ:showChildren>
-      <templ:style style="tinPolygonStyle" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/Polygon/wsp_polygon.sld" xlink:type="simple"/>
+      <templ:style linktype="sld" style="tinPolygonStyle" xlink:type="simple" xlink:href="../styles/Polygon/wsp_polygon.sld" xlink:actuate="onRequest"/>
       <templ:property name="deleteable">true</templ:property>
       <templ:property name="themeInfoId">org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?geometry={http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}triangulatedSurfaceMember&amp;format=${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#parameter;-}: %.2f ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#unit;-}</templ:property>
     </mapv:layer>
-    <mapv:layer visible="false" name="Modellhöhen,  (Isoflächen), Demo2D, Ergebnisse" featurePath="" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="../results/CalculationUnit2D121299806933713174/model/Tin/tin_TERRAIN.gz" xlink:type="simple">
+    <mapv:layer name="Modellhöhen,  (Isoflächen), Demo2D, Ergebnisse" visible="false" id="ID_4" featurePath="" linktype="gml" xlink:type="simple" xlink:href="../results/CalculationUnit2D121299806933713174/model/Tin/tin_TERRAIN.gz" xlink:actuate="onRequest">
       <templ:showChildren>true</templ:showChildren>
-      <templ:style style="tinPolygonStyle" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/Polygon/dgm.sld" xlink:type="simple"/>
+      <templ:style linktype="sld" style="tinPolygonStyle" xlink:type="simple" xlink:href="../styles/Polygon/dgm.sld" xlink:actuate="onRequest"/>
       <templ:property name="deleteable">true</templ:property>
       <templ:property name="themeInfoId">org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?geometry={http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}triangulatedSurfaceMember&amp;format=${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#parameter;-}: %.2f ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults#unit;-}</templ:property>
     </mapv:layer>
-    <mapv:layer visible="true" name="FE-Netz" id="ID_5" linktype="gmt" xlink:actuate="onRequest" xlink:href="../maps/fenet.gmt" xlink:type="simple">
+    <mapv:layer name="%fenet.mapv.gismapview.FE-Netz" visible="true" id="ID_5" featurePath="" linktype="gmt" xlink:type="simple" xlink:href="../maps/fenet.gmt" xlink:actuate="onRequest">
       <templ:showChildren>true</templ:showChildren>
       <templ:property name="deleteable">false</templ:property>
     </mapv:layer>
