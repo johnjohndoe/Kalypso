@@ -331,12 +331,14 @@ public class DeleteFeElementsHelper
           for( final IFELine line : continuityLines )
           {
             for( final EasyFeatureWrapper element : selected )
+            {
               if( line.getId().equals( element.getFeature().getId() ) )
               {
                 SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.24" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.25" ) ); //$NON-NLS-1$ //$NON-NLS-2$
                 selectionManager.clear();
                 return Status.OK_STATUS;
               }
+            }
           }
         }
         if( complexElement instanceof IJunctionElement )
@@ -346,32 +348,38 @@ public class DeleteFeElementsHelper
           for( final IFELine line : continuityLines )
           {
             for( final EasyFeatureWrapper element : selected )
+            {
               if( line.getId().equals( element.getFeature().getId() ) )
               {
                 SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.26" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.27" ) ); //$NON-NLS-1$ //$NON-NLS-2$
                 selectionManager.clear();
                 return Status.OK_STATUS;
               }
+            }
           }
         }
       }
+
       final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.13" ) ); //$NON-NLS-1$
 
       // check for boundary conditions on the continuity lines
       final IFeatureBindingCollection<IFlowRelationship> wrappedList = flowRelationshipModel.getFlowRelationsShips();
       for( final IFlowRelationship flowRelationship : wrappedList )
       {
-        final IBoundaryCondition bc = (IBoundaryCondition)flowRelationship;
-        if( bc != null )
+        if( flowRelationship instanceof IBoundaryCondition )
         {
+          final IBoundaryCondition bc = (IBoundaryCondition)flowRelationship;
+
           final String parentElementID = bc.getParentElementID();
           for( final EasyFeatureWrapper element : selected )
+          {
             if( element.getFeature().getId().equals( parentElementID ) )
             {
               SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.28" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.29" ) ); //$NON-NLS-1$ //$NON-NLS-2$
               selectionManager.clear();
               return Status.OK_STATUS;
             }
+          }
         }
       }
 
