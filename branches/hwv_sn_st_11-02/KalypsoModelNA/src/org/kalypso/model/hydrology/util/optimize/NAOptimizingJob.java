@@ -59,11 +59,15 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
@@ -100,15 +104,17 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   private SortedMap<Date, Double> m_measuredTS;
 
+  private final IStatusCollector m_resultLog = new StatusCollector( ModelNA.PLUGIN_ID );
+
   private final File m_bestOptimizedFile;
 
   private final File m_bestOptimizeRunDir;
 
   private int m_counter = 0;
 
-  private boolean m_lastSucceeded = false;
+  private IStatus m_lastResult = null;
 
-  private boolean m_bestSucceeded = false;
+  private IStatus m_bestResult = null;
 
   private final File m_optimizeRunDir;
 
@@ -138,13 +144,11 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   /**
    * Run myself in the {@link OptimizerRunner}.
-   * 
-   * @see org.kalypso.simulation.core.ISimulationRunnable#run(org.kalypso.simulation.core.ISimulationMonitor)
    */
   @Override
-  public boolean run( final ISimulationMonitor monitor ) throws SimulationException
+  public IStatus run( final ISimulationMonitor monitor ) throws SimulationException
   {
-    monitor.setMessage( "Loading simulation data..." );
+    monitor.setMessage( "Lade Eingangsdaten..." );
 
     final NAControl metaControl = m_data.getMetaControl();
     final Date optimizationStartDate = metaControl.getOptimizationStart();
@@ -175,16 +179,22 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     {
       if( m_counter == 0 )
         // FIXME: if first run fails, we cannot 'runAgain', as the processor may not be initialized.
-        m_lastSucceeded = runFirst( monitor );
+        m_lastResult = runFirst( monitor );
       else
-        m_lastSucceeded = runAgain( monitor );
+        m_lastResult = runAgain( monitor );
 
-      return m_lastSucceeded;
+      final String stepMessage = String.format( "Schritt %d", m_counter + 1 );
+      final MultiStatus stepStatus = new MultiStatus( ModelNA.PLUGIN_ID, IStatus.OK, new IStatus[] { m_lastResult }, stepMessage, null );
+      // TODO: güte der Optimierung in den stepStatus schreiben?!
+      m_resultLog.add( stepStatus );
+
+      return !m_lastResult.matches( IStatus.ERROR );
     }
     catch( final OperationCanceledException e )
     {
       final String msg = "Simulation canceled by user";
       m_logger.log( Level.INFO, msg );
+      m_resultLog.add( IStatus.INFO, msg );
       monitor.setFinishInfo( IStatus.CANCEL, msg );
       return false;
     }
@@ -192,6 +202,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     {
       final String msg = "Unexpected error during simulation";
       m_logger.log( Level.SEVERE, msg, exception );
+      m_resultLog.add( IStatus.ERROR, msg );
       return false;
     }
     finally
@@ -200,7 +211,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     }
   }
 
-  private boolean runFirst( final ISimulationMonitor monitor ) throws Exception
+  private IStatus runFirst( final ISimulationMonitor monitor ) throws Exception
   {
     final NACalculationLogger naCalculationLogger = new NACalculationLogger( new File( m_tmpDir, "logRun_" + m_counter ) );
 
@@ -217,15 +228,12 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     }
   }
 
-  private boolean runAgain( final ISimulationMonitor monitor ) throws Exception
+  private IStatus runAgain( final ISimulationMonitor monitor ) throws Exception
   {
     final NAOptimize optimize = m_data.getNaOptimize();
     return m_simulation.rerunForOptimization( optimize, monitor );
   }
 
-  /**
-   * @see org.kalypso.optimize.IOptimizingJob#setBestEvaluation(boolean)
-   */
   @Override
   public void setBestEvaluation( final boolean lastWasBest )
   {
@@ -242,6 +250,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
         if( m_bestOptimizeRunDir != null )
           FileUtils.copyDirectory( m_optimizeRunDir, m_bestOptimizeRunDir );
+
         FileUtils.copyDirectory( resultDir, m_bestResultDir );
       }
       catch( final IOException e )
@@ -250,7 +259,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
         e.printStackTrace();
       }
 
-      m_bestSucceeded = m_lastSucceeded;
+      m_bestResult = m_lastResult;
     }
 
 // // FIXME DEBUG: save last run
@@ -277,9 +286,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     FileUtils.deleteQuietly( dir );
   }
 
-  /**
-   * @see org.kalypso.optimize.IOptimizingJob#optimize(org.kalypso.optimizer.Parameter[], double[])
-   */
   @Override
   public void optimize( final Parameter[] parameterConf, final double values[] ) throws Exception
   {
@@ -384,9 +390,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     return result;
   }
 
-  /**
-   * @see org.kalypso.optimize.IOptimizingJob#getOptimizeConfiguration()
-   */
   @Override
   public AutoCalibration getOptimizeConfiguration( )
   {
@@ -394,14 +397,13 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
   }
 
   @Override
-  public boolean isSucceeded( )
+  public IStatus getResultStatus( )
   {
-    return m_bestSucceeded;
+    // TODO: before: gesamtergebnis war das ergebnis (boolesch) des besten laufs
+
+    return m_resultLog.asMultiStatus( "Optimierungrechnung" );
   }
 
-  /**
-   * @see org.kalypso.optimize.IOptimizingJob#getResultDir()
-   */
   @Override
   public File getResultDir( )
   {
@@ -413,13 +415,9 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     return m_bestOptimizedFile;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable#getOptimizeResult()
-   */
   @Override
   public File getOptimizeResult( )
   {
     return m_bestOptimizedFile;
   }
-
 }

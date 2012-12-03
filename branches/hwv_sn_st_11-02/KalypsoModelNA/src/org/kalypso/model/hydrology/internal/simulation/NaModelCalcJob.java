@@ -68,11 +68,6 @@ public class NaModelCalcJob implements ISimulation
 {
   public static final String NACALCJOB_SPEC_XML_LOCATION = "nacalcjob_spec.xml"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
-   *      org.kalypso.services.calculation.job.ICalcMonitor)
-   */
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
@@ -88,8 +83,10 @@ public class NaModelCalcJob implements ISimulation
       data = NaSimulationDataFactory.load( dataProvider );
 
       runnable = createRunnable( data, tmpdir );
-      /* final boolean success = */runnable.run( monitor );
-      // FIXME: what to do of not succeeded?
+      final IStatus status = runnable.run( monitor );
+      // FIXME: what to do if not succeeded?
+      log.add( status );
+
       publishResults( resultEater, runnable );
     }
     catch( final SimulationException e )
@@ -103,10 +100,16 @@ public class NaModelCalcJob implements ISimulation
     }
     finally
     {
-      StatusLogUtilities.writeStatusLogQuietly( log, new File( runnable.getResultDir(), "Protokoll.gml" ) );
-
       if( data != null )
+      {
+        final String pegelID = data.getNaOptimize().getId();
+
+        final String protokollFilename = String.format( "Protokoll_%s.gml", pegelID );
+        final File protokollFile = new File( runnable.getResultDir(), protokollFilename );
+        StatusLogUtilities.writeStatusLogQuietly( log, protokollFile );
+
         data.dispose();
+      }
     }
   }
 
@@ -152,9 +155,6 @@ public class NaModelCalcJob implements ISimulation
     return optimize.doOptimize();
   }
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
-   */
   @Override
   public URL getSpezifikation( )
   {

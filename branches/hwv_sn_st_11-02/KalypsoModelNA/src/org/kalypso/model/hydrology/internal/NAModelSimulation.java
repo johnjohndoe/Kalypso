@@ -47,6 +47,10 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
@@ -90,41 +94,74 @@ public class NAModelSimulation
     m_logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.13", m_startDateText ) ); //$NON-NLS-1$ 
   }
 
-  public boolean runSimulation( final ISimulationMonitor monitor ) throws Exception
+  public IStatus runSimulation( final ISimulationMonitor monitor ) throws Exception
   {
-    monitor.setMessage( "Simulation wird gestartet..." );
-    preprocess( m_simulationData, monitor );
-    if( monitor.isCanceled() )
-      return false;
+    /* The status collector. */
+    final IStatusCollector collector = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
 
-    final NAControl metaControl = m_simulationData.getMetaControl();
-    final String exeVersion = metaControl.getExeVersion();
-    m_processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
-    m_processor.prepare();
-    m_processor.run( monitor );
+    try
+    {
+      monitor.setMessage( "Simulation wird gestartet..." );
 
-    if( monitor.isCanceled() )
-      return false;
+      preprocess( m_simulationData, monitor );
 
-    return postProcess( m_simulationData, monitor );
+      /* Pre processing. */
+      final IStatus preProcessStatus = preprocess( m_simulationData, monitor );
+      collector.add( preProcessStatus );
+      if( monitor.isCanceled() )
+      {
+        collector.add( new Status( IStatus.CANCEL, ModelNA.PLUGIN_ID, "Simulation abgebrochen..." ) );
+        return collector.asMultiStatus( "Simulation abgebrochen..." );
+      }
+
+      /* Processing. */
+      final IStatus processStatus = process( m_simulationData, monitor );
+      collector.add( processStatus );
+      if( monitor.isCanceled() )
+      {
+        collector.add( new Status( IStatus.CANCEL, ModelNA.PLUGIN_ID, "Simulation abgebrochen..." ) );
+        return collector.asMultiStatus( "Simulation abgebrochen..." );
+      }
+
+      /* Post processing. */
+      final IStatus postProcessStatus = postProcess( m_simulationData, monitor );
+      collector.add( postProcessStatus );
+
+      return collector.asMultiStatus( "Simulation abgeschlossen" );
+    }
+    catch( final Exception ex )
+    {
+      collector.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, ex.getLocalizedMessage(), ex ) );
+      return collector.asMultiStatus( "Simulation fehlgeschlagen" );
+    }
   }
 
-  public boolean rerunForOptimization( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
+  public IStatus rerunForOptimization( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
   {
+    /* The status collector. */
+    final IStatusCollector collector = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
+
     // FIXME: clear old result file (we_nat_out etc.)
     m_preprocessor.processCallibrationFiles( optimize, monitor );
     if( monitor.isCanceled() )
-      return false;
+      return Status.CANCEL_STATUS;
+    // FIXME: get status from preprocessor method
+    collector.add( IStatus.OK, "Vorverarbeitung" );
 
     m_processor.run( monitor );
+    // FIXME: get status from preprocessor method
+    collector.add( IStatus.OK, "Verarbeitung" );
 
     if( monitor.isCanceled() )
-      return false;
+      return Status.CANCEL_STATUS;
 
-    return postProcess( m_simulationData, monitor );
+    final IStatus postStatus = postProcess( m_simulationData, monitor );
+    collector.add( postStatus );
+
+    return collector.asMultiStatus( "Simulation" );
   }
 
-  private void preprocess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
+  private IStatus preprocess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
@@ -133,6 +170,8 @@ public class NAModelSimulation
 
       final File idMapFile = new File( m_simDirs.simulationDir, "IdMap.txt" ); //$NON-NLS-1$
       m_preprocessor.getIdManager().dump( idMapFile );
+
+      return new Status( IStatus.OK, ModelNA.PLUGIN_ID, "Vorverarbeitung" );
     }
     catch( final NAPreprocessorException e )
     {
@@ -142,7 +181,29 @@ public class NAModelSimulation
     }
   }
 
-  private boolean postProcess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws Exception
+  private IStatus process( final INaSimulationData simulationData, final ISimulationMonitor monitor )
+  {
+    /* The status collector. */
+    final IStatusCollector collector = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
+
+    try
+    {
+      /* Processing. */
+      final NAControl metaControl = simulationData.getMetaControl();
+      final String exeVersion = metaControl.getExeVersion();
+      m_processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
+      m_processor.prepare();
+      m_processor.run( monitor );
+    }
+    catch( final SimulationException e )
+    {
+      collector.add( IStatus.ERROR, e.getLocalizedMessage(), e );
+    }
+
+    return collector.asMultiStatus( "Verarbeitung" );
+  }
+
+  private IStatus postProcess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws Exception
   {
     final String messageStartPostprocess = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.28" ); //$NON-NLS-1$
     monitor.setMessage( messageStartPostprocess );
@@ -156,7 +217,13 @@ public class NAModelSimulation
 
     final NaPostProcessor postProcessor = new NaPostProcessor( idManager, m_logger, modelWorkspace, naControl, hydroHash );
     postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
-    return postProcessor.isSucceeded();
+
+    final boolean succeeded = postProcessor.isSucceeded();
+
+    if( succeeded )
+      return new Status( IStatus.OK, ModelNA.PLUGIN_ID, "Nachverarbeitung" );
+    else
+      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Nachverarbeitung fehlgeschlagen" );
   }
 
   public INaSimulationData getSimulationData( )

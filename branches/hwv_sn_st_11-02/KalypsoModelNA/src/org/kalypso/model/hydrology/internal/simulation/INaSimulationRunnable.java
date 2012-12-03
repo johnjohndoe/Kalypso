@@ -42,6 +42,7 @@ package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 
@@ -55,7 +56,7 @@ public interface INaSimulationRunnable
   File getResultDir( );
 
   // FIXME: change interface to ICoreRunnable
-  boolean run( ISimulationMonitor monitor ) throws SimulationException;
+  IStatus run( ISimulationMonitor monitor ) throws SimulationException;
 
   File getOptimizeResult( );
 }

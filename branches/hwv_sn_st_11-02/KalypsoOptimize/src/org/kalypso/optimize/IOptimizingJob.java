@@ -45,6 +45,7 @@ import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.SortedMap;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.Parameter;
@@ -96,7 +97,7 @@ public interface IOptimizingJob
 
   AutoCalibration getOptimizeConfiguration( );
 
-  boolean isSucceeded( );
+  IStatus getResultStatus( );
 
   File getResultDir( );
 }
