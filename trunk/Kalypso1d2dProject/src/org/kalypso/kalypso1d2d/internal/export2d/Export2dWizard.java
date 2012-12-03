@@ -44,61 +44,54 @@ import java.io.File;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
-public class Export2dWizard extends Wizard implements INewWizard
+public class Export2dWizard extends Wizard implements IWorkbenchWizard
 {
-
   private Export2dFileSelectWizardPage m_page1;
 
   protected IProject m_project = null;
 
   public Export2dWizard( )
   {
-    final IDialogSettings settings = KalypsoGisPlugin.getDefault().getDialogSettings();
+    final IDialogSettings section = DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), "ExportAsFileWizard" ); //$NON-NLS-1$
 
-    IDialogSettings section = settings.getSection( "ExportAsFileWizard" ); //$NON-NLS-1$
-    if( section == null )
-    {
-      section = settings.addNewSection( "ExportAsFileWizard" ); //$NON-NLS-1$
-    }
     setDialogSettings( section );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+  }
+
   @Override
   public void addPages( )
   {
     super.addPages();
-    m_page1 = new Export2dFileSelectWizardPage( "fileselect", new String[] { "*.2d", "*.2dm", "*.hmo" }, new String[] { Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.3"), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.4"), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.8") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+
+    m_page1 = new Export2dFileSelectWizardPage( "fileselect", new String[] { "*.2d", "*.2dm", "*.hmo" }, new String[] { Messages.getString( "org.kalypso.wizards.export2d.Export2dWizard.3" ), Messages.getString( "org.kalypso.wizards.export2d.Export2dWizard.4" ), Messages.getString( "org.kalypso.wizards.export2d.Export2dWizard.8" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+
     addPage( m_page1 );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPageControls( final Composite pageContainer )
   {
-    setWindowTitle( Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.5") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.wizards.export2d.Export2dWizard.6" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
@@ -112,19 +105,9 @@ public class Export2dWizard extends Wizard implements INewWizard
     final ICoreRunnableWithProgress operation = new Export2dMeshRunnable( exportFile, selectedExtension, exportRoughness, exportMiddleNodes );
 
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.6"), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.7"), result ); //$NON-NLS-1$ //$NON-NLS-2$
+    if( !result.isOK() )
+      StatusDialog.open( getShell(), result, getWindowTitle() );
 
-    return result.isOK();
-  }
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    // TODO Auto-generated method stub
-
+    return !result.matches( IStatus.ERROR );
   }
 }

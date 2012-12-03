@@ -95,6 +95,10 @@ final class Export2dMeshRunnable implements ICoreRunnableWithProgress
       final I2DMeshConverter converter = MeshConverterFactory.getConverter( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, m_exportMiddleNodes, new GeoLog( null ), m_selectedExtension );
       converter.writeMesh( m_exportFile );
     }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
     catch( final Exception e )
     {
       e.printStackTrace();
