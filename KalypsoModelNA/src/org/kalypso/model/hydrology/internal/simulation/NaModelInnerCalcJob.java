@@ -46,6 +46,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
@@ -74,7 +75,7 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
   }
 
   @Override
-  public boolean run( final ISimulationMonitor monitor ) throws SimulationException
+  public IStatus run( final ISimulationMonitor monitor ) throws SimulationException
   {
     final NACalculationLogger naCalculationLogger = new NACalculationLogger( m_simDirs.currentResultDirs.logDir );
     final Logger logger = naCalculationLogger.getLogger();
@@ -94,7 +95,7 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
       final String msg = "Simulation cancelled by user";
       logger.log( Level.INFO, msg );
       monitor.setFinishInfo( IStatus.CANCEL, msg );
-      return false;
+      return Status.CANCEL_STATUS;
     }
     catch( final Exception e )
     {

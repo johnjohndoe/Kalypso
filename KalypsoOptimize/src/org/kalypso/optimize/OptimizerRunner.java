@@ -43,6 +43,8 @@ package org.kalypso.optimize;
 import java.io.File;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
@@ -72,7 +74,7 @@ public class OptimizerRunner
     m_optimizingJob = job;
   }
 
-  public boolean run( final ISimulationMonitor monitor ) throws SimulationException
+  public IStatus run( final ISimulationMonitor monitor ) throws SimulationException
   {
     final AutoCalibration autoCalibration = m_optimizingJob.getOptimizeConfiguration();
     final SceJob sceJob = new SceJob( autoCalibration, m_tmpdir );
@@ -80,9 +82,10 @@ public class OptimizerRunner
     final SceIOHandler sceIO = new SceIOHandler( m_logger, autoCalibration, m_optimizingJob );
 
     if( monitor.isCanceled() )
-      return false;
+      return Status.CANCEL_STATUS;
+
     sceJob.optimize( sceIO, monitor );
 
-    return m_optimizingJob.isSucceeded();
+    return m_optimizingJob.getResultStatus();
   }
 }

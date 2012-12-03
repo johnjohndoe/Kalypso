@@ -52,7 +52,7 @@ import org.kalypso.contribs.java.util.logging.SimplisticFormatter;
  */
 public class NACalculationLogger
 {
-  public static final String LOGFILE_NAME = "calculation.log"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+  public static final String LOGFILE_NAME = "calculation.log"; //$NON-NLS-1$
 
   private Logger m_logger;
 

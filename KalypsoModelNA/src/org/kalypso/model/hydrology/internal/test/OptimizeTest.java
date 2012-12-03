@@ -53,6 +53,7 @@ import java.util.logging.Logger;
 import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -152,7 +153,9 @@ public class OptimizeTest
       data = NaSimulationDataFactory.load( dataProvider );
 
       final NAOptimizingJob optimizeJob = new NAOptimizingJob( tmpDir, data, logger );
-      final boolean succeeded = optimizeJob.run( monitor );
+      final IStatus runStatus = optimizeJob.run( monitor );
+
+      final boolean succeeded = !runStatus.matches( IStatus.ERROR );
 
       disconnectLogger( logger );
       data.dispose();
