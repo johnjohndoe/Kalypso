@@ -60,8 +60,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -293,14 +295,14 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       writeRMA10sModel( formatter );
       FormatterUtils.checkIoException( formatter );
     }
-    catch( final CoreException e )
+    catch( final CoreException | IOException e )
     {
       throw e;
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
-      throw new IOException();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "Unexpected error while writing .2d file.", e );
+      throw new CoreException( status );
     }
   }
 
