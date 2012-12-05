@@ -99,6 +99,8 @@ public class NaAsciiDirs
 
   public final File swaleAndTrenchFile;
 
+  public File exe_log;
+
   public NaAsciiDirs( @SuppressWarnings("hiding") final File asciiDir )
   {
     this.asciiDir = asciiDir;
@@ -108,6 +110,7 @@ public class NaAsciiDirs
 
     output_res = new File( startDir, "output.res" ); //$NON-NLS-1$ 
     output_err = new File( startDir, "output.err" ); //$NON-NLS-1$ 
+    exe_log = new File( asciiDir, "exe.log" ); //$NON-NLS-1$ 
 
     klimaDatDir = new File( asciiDir, DIR_KLIMA_DAT );
     hydroTopDir = new File( asciiDir, DIR_HYDRO_TOP );
@@ -131,5 +134,4 @@ public class NaAsciiDirs
     bodenartFile = new File( hydroTopDir, "bod_art.dat" ); //$NON-NLS-1$
     schneeFile = new File( hydroTopDir, "snowtyp.dat" ); //$NON-NLS-1$
   }
-
 }

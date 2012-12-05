@@ -43,6 +43,7 @@ package org.kalypso.model.hydrology.internal.processing;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -125,12 +126,13 @@ public class KalypsoNaProcessor
 
     final long timeOut = 0l; // no timeout control
 
-    FileOutputStream logOS = null;
-    FileOutputStream errorOS = null;
+    OutputStream logOS = null;
+    OutputStream errorOS = null;
     try
     {
       logOS = new FileOutputStream( new File( m_asciiDirs.asciiDir, FILENAME_EXE_LOG ) );
       errorOS = new FileOutputStream( new File( m_asciiDirs.asciiDir, FILENAME_EXE_ERR ) );
+
       ProcessHelper.startProcess( commandString, null, m_asciiDirs.startDir, monitor, timeOut, logOS, errorOS, null );
     }
     catch( final Exception e )

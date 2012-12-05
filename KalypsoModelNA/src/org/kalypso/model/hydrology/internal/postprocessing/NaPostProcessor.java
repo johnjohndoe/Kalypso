@@ -40,17 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.postprocessing;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.commons.java.util.zip.GZipUtils;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.IDManager;
@@ -119,25 +115,17 @@ public class NaPostProcessor
 
   private void copyNaExeLogs( final NaAsciiDirs asciiDirs, final NaResultDirs currentResultDirs )
   {
-    ZipOutputStream zos = null;
     try
     {
-      zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( currentResultDirs.exe_logs_zip ) ) );
-      // REMARK: We rename the files in the zip, else the windoes explorer will show an empty zip by default (unknown
-      // extensions)
-      ZipUtilities.writeZipEntry( zos, asciiDirs.output_res, "output.txt" ); //$NON-NLS-1$
-      ZipUtilities.writeZipEntry( zos, asciiDirs.output_err, "error.txt" ); //$NON-NLS-1$
-      zos.close();
+      GZipUtils.gzip( asciiDirs.output_res, currentResultDirs.logOutputRes );
+      GZipUtils.gzip( asciiDirs.output_err, currentResultDirs.logOutputErr );
+      GZipUtils.gzip( asciiDirs.exe_log, currentResultDirs.logExeLog );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
       final String msg = String.format( "Failed to copy Kalypso-NA log files.", e.getLocalizedMessage() );
       m_logger.severe( msg );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( zos );
     }
   }
 

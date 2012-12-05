@@ -41,6 +41,9 @@
 package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.kalypso.commons.java.util.zip.GZipUtils;
 
 /**
  * Helper class that holds all the directories inside the 'current' result dir
@@ -59,15 +62,28 @@ public class NaResultDirs
 
   public final File reportDir;
 
-  public final File exe_logs_zip;
+  public File logOutputRes;
+
+  public File logOutputErr;
+
+  public File logExeLog;
 
   public NaResultDirs( final File resultDir )
   {
     currentResultDir = resultDir;
     anfangswertDir = new File( currentResultDir, "Anfangswerte" );//$NON-NLS-1$
     bilanzDir = new File( currentResultDir, "Bilanz" );//$NON-NLS-1$
+
     logDir = new File( currentResultDir, "Log" );//$NON-NLS-1$
-    exe_logs_zip = new File( logDir, "output.zip" );//$NON-NLS-1$
+    logOutputRes = new File( logDir, "output.res.gz" );
+    logOutputErr = new File( logDir, "output.err.gz" );
+    logExeLog = new File( logDir, "exe.log.gz" );
+
     reportDir = new File( currentResultDir, "Report" );//$NON-NLS-1$
+  }
+
+  public void copyExeLog( final File targetFile ) throws IOException
+  {
+    GZipUtils.gunzip( logExeLog, targetFile );
   }
 }
