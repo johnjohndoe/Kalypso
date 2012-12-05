@@ -51,6 +51,8 @@ import org.kalypso.model.hydrology.NaModelConstants;
  */
 public class NaSimulationDirs
 {
+  public static final String DIR_AKTUELL = "Aktuell"; //$NON-NLS-1$
+
   public final File simulationDir;
 
   public final File outputDir;
@@ -76,7 +78,7 @@ public class NaSimulationDirs
 
     resultDir = new File( outputDir, NaModelConstants.RESULT_DIR_NAME );
 
-    currentResultDir = new File( resultDir, "Aktuell" ); //$NON-NLS-1$
+    currentResultDir = new File( resultDir, DIR_AKTUELL );
     currentResultDirs = new NaResultDirs( currentResultDir );
   }
 }

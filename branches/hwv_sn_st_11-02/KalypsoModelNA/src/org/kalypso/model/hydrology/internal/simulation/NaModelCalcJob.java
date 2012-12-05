@@ -41,10 +41,12 @@
 package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.model.hydrology.INaSimulationData;
@@ -104,12 +106,38 @@ public class NaModelCalcJob implements ISimulation
       {
         final String pegelID = data.getNaOptimize().getId();
 
+        final String logFilename = String.format( "Protokoll_%s.log", pegelID );
         final String protokollFilename = String.format( "Protokoll_%s.gml", pegelID );
+
         final File protokollFile = new File( runnable.getResultDir(), protokollFilename );
+        final File logFile = new File( runnable.getResultDir(), logFilename );
+
+        /* also pusblish exe-log under a separate name */
+        final IStatus publishStatus = publishExeLog( runnable, logFile );
+        if( !publishStatus.isOK() )
+          log.add( publishStatus );
+
         StatusLogUtilities.writeStatusLogQuietly( log, protokollFile );
 
         data.dispose();
       }
+    }
+  }
+
+  private IStatus publishExeLog( final INaSimulationRunnable runnable, final File targetFile )
+  {
+    if( runnable == null )
+      return Status.OK_STATUS;
+
+    try
+    {
+      runnable.copyExeLog( targetFile );
+      return Status.OK_STATUS;
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      return new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, "Fehler beim Kopieren der Logdatei des Rechenkerns", e );
     }
   }
 

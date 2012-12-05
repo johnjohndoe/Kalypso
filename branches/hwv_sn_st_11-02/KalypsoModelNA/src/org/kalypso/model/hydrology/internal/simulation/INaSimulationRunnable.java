@@ -41,6 +41,7 @@
 package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -59,4 +60,9 @@ public interface INaSimulationRunnable
   IStatus run( ISimulationMonitor monitor ) throws SimulationException;
 
   File getOptimizeResult( );
+
+  /**
+   * Copies the exe.log to the given filename. Used for prognose stuff.
+   */
+  void copyExeLog( File targetFile ) throws IOException;
 }

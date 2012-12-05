@@ -71,6 +71,7 @@ import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
+import org.kalypso.model.hydrology.internal.NaResultDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable;
 import org.kalypso.ogc.sensor.IAxis;
@@ -399,7 +400,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
   @Override
   public IStatus getResultStatus( )
   {
-    // TODO: before: gesamtergebnis war das ergebnis (boolesch) des besten laufs
+    // TODO: before: Gesamtergebnis war das Ergebnis (boolesch) des besten laufs
 
     return m_resultLog.asMultiStatus( "Optimierungrechnung" );
   }
@@ -419,5 +420,13 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
   public File getOptimizeResult( )
   {
     return m_bestOptimizedFile;
+  }
+
+  @Override
+  public void copyExeLog( final File targetFile ) throws IOException
+  {
+    final File currentResultDir = new File( m_bestResultDir, NaSimulationDirs.DIR_AKTUELL );
+    final NaResultDirs currentResultDirs = new NaResultDirs( currentResultDir );
+    currentResultDirs.copyExeLog( targetFile );
   }
 }

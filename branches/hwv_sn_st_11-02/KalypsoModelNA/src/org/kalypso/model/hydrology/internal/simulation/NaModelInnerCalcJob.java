@@ -41,6 +41,7 @@
 package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -123,12 +124,15 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
     return m_simDirs.resultDir;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable#getOptimizeResult()
-   */
   @Override
   public File getOptimizeResult( )
   {
     return null;
+  }
+
+  @Override
+  public void copyExeLog( final File targetFile ) throws IOException
+  {
+    m_simDirs.currentResultDirs.copyExeLog( targetFile );
   }
 }
