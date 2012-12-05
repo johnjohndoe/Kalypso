@@ -24,5 +24,7 @@ Export-Package: org.kalypso.model.hydrology,
  org.kalypso.model.hydrology.binding.suds,
  org.kalypso.model.hydrology.operation.hydrotope,
  org.kalypso.model.hydrology.project,
+ org.kalypso.model.hydrology.simulation,
+ org.kalypso.model.hydrology.util,
  org.kalypso.model.hydrology.util.optimize
 Bundle-Activator: org.kalypso.model.hydrology.internal.ModelNA

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.simulation;
+package org.kalypso.model.hydrology.simulation;
 
 import java.io.File;
 import java.io.IOException;
