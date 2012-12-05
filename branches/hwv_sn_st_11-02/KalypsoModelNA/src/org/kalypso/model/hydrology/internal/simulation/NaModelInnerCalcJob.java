@@ -53,6 +53,7 @@ import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.simulation.INaSimulationRunnable;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 

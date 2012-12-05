@@ -73,7 +73,7 @@ import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
 import org.kalypso.model.hydrology.internal.NaResultDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
-import org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable;
+import org.kalypso.model.hydrology.simulation.INaSimulationRunnable;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
