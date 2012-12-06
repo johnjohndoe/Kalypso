@@ -3,7 +3,7 @@
 <plugin
    id="org.kalypso.grafikmanual"
    name="Kalypso - Grafik - Manual"
-   version="11.6.2.qualifier"
+   version="12.12.0.qualifier"
    provider-name="kalypso.sourceforge.net">
 
    <requires>
