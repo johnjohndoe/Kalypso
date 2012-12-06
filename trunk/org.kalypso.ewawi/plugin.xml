@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="ewawi2shapeApp"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.kalypso.ewawi.shape.Ewawi2ShapeApp">
+         </run>
+      </application>
+   </extension>
+   <extension
+         id="ewawi2shapeProduct"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.kalypso.ewawi.ewawi2shapeApp"
+            description="Konvertiert EWAWI+ in das Shapeformat"
+            name="Ewawi2Shape">
+         <property
+               name="appName"
+               value="Ewawi2Shape">
+         </property>
+      </product>
+   </extension>
+
+</plugin>
