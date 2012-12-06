@@ -67,6 +67,8 @@ public final class RainfallExtensionUtilities
 
   private static final String ATTRIBUTE_CLASS = "class"; //$NON-NLS-1$
 
+  public static final String RAINFALL_CONFIGURATOR_ID = "org.kalypso.hwv.ui.utils.RdbRainfallConfigurator";
+
   private RainfallExtensionUtilities( )
   {
   }
