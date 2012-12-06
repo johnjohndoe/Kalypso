@@ -7,10 +7,6 @@
               simulationClass="org.kalypso.model.hydrology.internal.simulation.NaModelCalcJob"
               catalogClass="org.kalypso.convert.namodel.schema.UrlCatalogNA"
               typeID="KalypsoNA"/>
-        <simulation
-              simulationClass="org.kalypso.model.hydrology.internal.simulation.NaMultiOptimizeCalcJob"
-              typeID="KalypsoNaMultiOptimize">
-        </simulation>
       <simulation
             simulationClass="org.kalypso.model.hydrology.internal.simulation.planerclient.global_preprocessing.NA_GlobalPreprocessingJob"
             typeID="KalypsoNA_GlobalPreprocessing">
