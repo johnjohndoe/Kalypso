@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.ewawi.shape.writer.log;
+package org.kalypso.model.wspm.ewawi.utils.log;
 
 import java.io.File;
 import java.io.IOException;

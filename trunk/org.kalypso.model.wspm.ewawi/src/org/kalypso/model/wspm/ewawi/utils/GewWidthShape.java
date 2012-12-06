@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
-import org.kalypso.model.wspm.ewawi.shape.writer.log.XyzEwawiLogger;
+import org.kalypso.model.wspm.ewawi.utils.log.XyzEwawiLogger;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
