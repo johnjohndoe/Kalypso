@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.kalypso.ewawi
+Bundle-Name: org.kalypso.model.wspm.ewawi
 Bundle-SymbolicName: org.kalypso.model.wspm.ewawi;singleton:=true
 Bundle-Version: 12.11.0.qualifier
 Bundle-Activator: org.kalypso.model.wspm.ewawi.WspmEwawiPlugin
@@ -15,5 +15,6 @@ Export-Package: org.kalypso.model.wspm.ewawi.data,
  org.kalypso.model.wspm.ewawi.data.enums,
  org.kalypso.model.wspm.ewawi.data.reader,
  org.kalypso.model.wspm.ewawi.utils,
+ org.kalypso.model.wspm.ewawi.utils.log,
  org.kalypso.model.wspm.ewawi.utils.profiles,
  org.kalypso.model.wspm.ewawi.utils.structures
