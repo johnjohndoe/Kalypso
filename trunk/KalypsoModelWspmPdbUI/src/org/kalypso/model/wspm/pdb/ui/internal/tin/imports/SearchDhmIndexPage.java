@@ -46,6 +46,7 @@ import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -98,16 +99,23 @@ public class SearchDhmIndexPage extends WizardPage
   protected DhmIndexComposite m_dhmIndexComposite;
 
   /**
+   * The data container.
+   */
+  private final IContainer m_dataContainer;
+
+  /**
    * The constructor.
    * 
    * @param pageName
    *          The name of the page.
    * @param settingsData
    *          The settings.
+   * @param dataContainer
+   *          The data container.
    */
-  public SearchDhmIndexPage( final String pageName, final PdbImportConnectionChooserData settingsData )
+  public SearchDhmIndexPage( final String pageName, final PdbImportConnectionChooserData settingsData, final IContainer dataContainer )
   {
-    this( pageName, null, null, settingsData );
+    this( pageName, null, null, settingsData, dataContainer );
   }
 
   /**
@@ -121,12 +129,15 @@ public class SearchDhmIndexPage extends WizardPage
    *          The image descriptor for the title of this wizard page, or null if none.
    * @param settingsData
    *          The settings.
+   * @param dataContainer
+   *          The data container.
    */
-  public SearchDhmIndexPage( final String pageName, final String title, final ImageDescriptor titleImage, final PdbImportConnectionChooserData settingsData )
+  public SearchDhmIndexPage( final String pageName, final String title, final ImageDescriptor titleImage, final PdbImportConnectionChooserData settingsData, final IContainer dataContainer )
   {
     super( pageName, title, titleImage );
 
     m_settingsData = settingsData;
+    m_dataContainer = dataContainer;
     m_searchViewer = null;
     m_dhmIndexComposite = null;
 
@@ -224,7 +235,7 @@ public class SearchDhmIndexPage extends WizardPage
 
     final DataBinder dhmIndexBinder = new DataBinder( targetIndex, modelIndex );
     dhmIndexBinder.addTargetBeforeSetValidator( new NotNullValidator<>( DhmIndex.class, IStatus.ERROR, Messages.getString( "SearchDhmIndexPage.0" ) ) ); //$NON-NLS-1$
-    // dhmIndexBinder.addModelAfterGetValidator( new NotNullValidator<>( DhmIndex.class, IStatus.ERROR, "Please select an entry." ) );
+    dhmIndexBinder.addTargetBeforeSetValidator( new ExistsValidator( DhmIndex.class, IStatus.ERROR, Messages.getString( "SearchDhmIndexPage.1" ), m_settingsData, m_dataContainer ) ); //$NON-NLS-1$
     dataBinding.bindValue( dhmIndexBinder );
 
     /* Add a listener. */
