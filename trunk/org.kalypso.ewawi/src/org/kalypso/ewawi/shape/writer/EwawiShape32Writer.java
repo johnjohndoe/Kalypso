@@ -73,6 +73,11 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
   private void writeData( final ShapeFile shapeFile, final EwawiPlus data, final XyzEwawiLogger logger ) throws DBaseException, IOException, SHPException
   {
     final File file = getFotoList();
+    if( !file.exists() )
+    {
+      logger.logXyzLine( -9999.0, -9999.0, -9999.0, String.format( "Die Datei der Fotostandorte '%s' existiert nicht und wird übersprungen.", file.getAbsolutePath() ), "", -9999.0 );
+      return;
+    }
 
     final FotoListReader reader = new FotoListReader();
     reader.read( file );
