@@ -151,7 +151,7 @@ public class PdbImportCoveragesWizard extends Wizard
     if( m_settingsData.getConnection() == null )
       addPage( new ConnectionChooserPage( "connectionChooser", m_settingsData ) ); //$NON-NLS-1$
 
-    addPage( new SearchDhmIndexPage( "searchDhmIndex", m_settingsData ) ); //$NON-NLS-1$
+    addPage( new SearchDhmIndexPage( "searchDhmIndex", m_settingsData, m_dataContainer ) ); //$NON-NLS-1$
   }
 
   @Override
