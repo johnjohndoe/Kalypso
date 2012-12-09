@@ -74,7 +74,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
 //  private WeightedGraph<IFE1D2DNode, IFE1D2DEdge> m_discGraph;
 
-  private IStatus m_contiLineStatus;
+  private IStatus m_contiLineStatus = Status.OK_STATUS;
 
   public CreateFEContinuityLineWidget( )
   {
@@ -116,7 +116,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
       m_currentEdge = null;
     }
 
-    m_contiLineStatus = null;
+    m_contiLineStatus = Status.OK_STATUS;
 
     for( final ContinuityEdge edge : m_continuityEdges )
       edge.dispose();
@@ -251,6 +251,9 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( m_currentEdge == null )
       return;
 
+    if( !m_contiLineStatus.isOK() )
+      return;
+
     final IFE1D2DNode currentNode = m_currentEdge.getEndNode();
     if( ContinuityLineEditValidator.is2dNode( currentNode ) )
     {
@@ -271,6 +274,9 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   {
     // REMARK: if double click on last point, ignore problem
     if( m_currentEdge == null )
+      return;
+
+    if( !m_contiLineStatus.isOK() )
       return;
 
     createBoundaryLine2D();
@@ -419,7 +425,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
       m_pointSnapper.paint( g );
 
     final Point warningPosition = new Point( m_currentMapPoint.x + 10, m_currentMapPoint.y - 10 );
-    if( m_contiLineStatus != null && !m_contiLineStatus.isOK() )
+    if( !m_contiLineStatus.isOK() )
     {
       /* problems with conti line preceed over other warnings */
       m_contilineWarningRenderer.setTooltip( "Resulting continuity line is invalid" );
@@ -440,7 +446,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( curve == null )
       return;
 
-    if( m_contiLineStatus == null || m_contiLineStatus.isOK() )
+    if( m_contiLineStatus.isOK() )
       m_previewPainter.paint( g, projection, curve );
     else
       m_previewWarningPainter.paint( g, projection, curve );
@@ -462,8 +468,6 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
   void previewChanged( )
   {
-    m_contiLineStatus = null;
-
     /* revalidate existing path */
     final ContinuityLineBuilder builder = new ContinuityLineBuilder();
 
