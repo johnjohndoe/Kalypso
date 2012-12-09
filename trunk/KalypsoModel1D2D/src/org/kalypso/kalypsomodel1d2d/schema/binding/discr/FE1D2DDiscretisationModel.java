@@ -533,7 +533,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, CLUSTER_TOLERANCE );
       final List<IFE1D2DElement> elements = queryElements( reqEnvelope, null );
       final Geometry pBuffer = JTSAdapter.export( point ).buffer( CLUSTER_TOLERANCE );
-      for( IFE1D2DElement element : elements )
+      for( final IFE1D2DElement element : elements )
       {
         final Geometry geom = JTSAdapter.export( element.getGeometry() );
         if( pBuffer.intersects( geom ) )
@@ -697,7 +697,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
 
     try
     {
-      final IContinuityLine1D line = (IContinuityLine1D)FeatureHelper.createFeatureForListProp( getLinesInternal(), ICalculationUnit1D.QNAME, -1 );
+      final IContinuityLine1D line = (IContinuityLine1D)FeatureHelper.createFeatureForListProp( getLinesInternal(), IContinuityLine1D.QNAME, -1 );
       line.setNode( node );
       return line;
     }
