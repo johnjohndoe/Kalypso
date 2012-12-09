@@ -22,10 +22,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.vecmath.Vector2d;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -107,32 +110,81 @@ public class ContinuityLine2DGeometryBuilder
     IFE1D2DNode currentNode = startNode;
 
     // TODO: !!!Potential endless loop!! I once got it (Gernot)
-    while( endNode != currentNode )
+    while( currentNode != endNode )
     {
-      final Collection<IFE1D2DNode> neighbourNodes = currentNode.getAdjacentNodes();
+      currentNode = findNextNode( currentNode, endNode, path, monitor );
 
-      IFE1D2DNode bestCandidateNode = null;
-      double shortestDistance = Double.MAX_VALUE;
+      if( currentNode == null )
+        break;
 
-      for( final IFE1D2DNode node : neighbourNodes )
-      {
-        final double nodesDistance = nodesDistance( node, endNode );
-        if( nodesDistance < shortestDistance )
-        {
-          shortestDistance = nodesDistance;
-          bestCandidateNode = node;
-        }
-
-        ProgressUtilities.worked( monitor, 1 );
-      }
-
-      currentNode = bestCandidateNode;
       path.add( currentNode );
 
       ProgressUtilities.worked( monitor, 1 );
     }
 
     return path.toArray( new IFE1D2DNode[path.size()] );
+  }
+
+  private IFE1D2DNode findNextNode( final IFE1D2DNode currentNode, final IFE1D2DNode endNode, final Collection<IFE1D2DNode> path, final IProgressMonitor monitor )
+  {
+    final Collection<IFE1D2DNode> neighbourNodes = currentNode.getAdjacentNodes();
+
+    final Vector2d currentDirection = nodesDirection( currentNode, endNode );
+
+    // REMARK: using the best direction instead of search by distance yealds better results in pratice
+
+    IFE1D2DNode nearestNode = null;
+    IFE1D2DNode straightestNode = null;
+    double shortestDistance = Double.MAX_VALUE;
+    double smallestAngle = Double.MAX_VALUE;
+
+    for( final IFE1D2DNode node : neighbourNodes )
+    {
+      if( node == endNode )
+        return node;
+
+      if( path.contains( node ) )
+        continue;
+
+      final Vector2d direction = nodesDirection( currentNode, node );
+
+      final double nodesDistance = nodesDistance( node, endNode );
+
+      /* calculate angle between both directions */
+      double nodesAngle = Math.atan2( direction.y, direction.x ) - Math.atan2( currentDirection.y, currentDirection.x );
+      if( nodesAngle > Math.PI )
+        nodesAngle -= Math.PI * 2;
+      else if( nodesAngle < -Math.PI )
+        nodesAngle += Math.PI * 2;
+      nodesAngle = Math.abs( nodesAngle );
+
+      if( nodesDistance < shortestDistance )
+      {
+        shortestDistance = nodesDistance;
+        nearestNode = node;
+      }
+
+      if( nodesAngle < smallestAngle )
+      {
+        smallestAngle = nodesAngle;
+        straightestNode = node;
+      }
+
+      ProgressUtilities.worked( monitor, 1 );
+    }
+
+    return straightestNode;
+//    return nearestNode;
+  }
+
+  private Vector2d nodesDirection( final IFE1D2DNode node1, final IFE1D2DNode node2 )
+  {
+    final GM_Point p1 = node1.getPoint();
+    final GM_Point p2 = node2.getPoint();
+
+    final Vector2d v = new Vector2d( p1.getX() - p2.getX(), p1.getY() - p2.getY() );
+    // v.normalize();
+    return v;
   }
 
 //  private IFE1D2DNode[] calculatePathFromGraph( final WeightedGraph<IFE1D2DNode, IFE1D2DEdge> discGraph, final IFE1D2DNode startNode, final IFE1D2DNode endNode )
@@ -184,10 +236,8 @@ public class ContinuityLine2DGeometryBuilder
 
   private double nodesDistance( final IFE1D2DNode node1, final IFE1D2DNode node2 )
   {
-    final double x1 = node1.getPoint().getX();
-    final double y1 = node1.getPoint().getY();
-    final double x2 = node2.getPoint().getX();
-    final double y2 = node2.getPoint().getY();
-    return Math.sqrt( Math.pow( x1 - x2, 2 ) + Math.pow( y1 - y2, 2 ) );
+    final GM_Point p1 = node1.getPoint();
+    final GM_Point p2 = node2.getPoint();
+    return p1.distance( p2 );
   }
 }
