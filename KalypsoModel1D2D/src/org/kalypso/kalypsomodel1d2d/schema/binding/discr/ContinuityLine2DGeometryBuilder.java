@@ -19,9 +19,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,25 +36,26 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class ContinuityLine2DGeometryBuilder
 {
-  private final IFE1D2DNode[] m_continuityNodes;
+  private final List<IFE1D2DNode> m_continuityNodes = new ArrayList<>();
 
   public ContinuityLine2DGeometryBuilder( final IFE1D2DNode[] nodes, final IProgressMonitor monitor )
   {
-    m_continuityNodes = recalculateContinuityLine( nodes, monitor );
+    recalculateContinuityLine( nodes, monitor );
   }
 
   public GM_Curve getCurve( )
   {
-    if( m_continuityNodes.length < 2 )
+    final IFE1D2DNode[] nodes = getContinuityNodes();
+    if( nodes.length < 2 )
       return null;
 
-    final GM_Position[] nodePositions = new GM_Position[m_continuityNodes.length];
+    final GM_Position[] nodePositions = new GM_Position[nodes.length];
     for( int i = 0; i < nodePositions.length; i++ )
-      nodePositions[i] = m_continuityNodes[i].getPoint().getPosition();
+      nodePositions[i] = nodes[i].getPoint().getPosition();
 
     try
     {
-      final String crs = m_continuityNodes[0].getPoint().getCoordinateSystem();
+      final String crs = nodes[0].getPoint().getCoordinateSystem();
       if( crs == null )
         throw new IllegalStateException();
 
@@ -70,48 +69,117 @@ public class ContinuityLine2DGeometryBuilder
 
   public IFE1D2DNode[] getContinuityNodes( )
   {
-    return m_continuityNodes;
+    return m_continuityNodes.toArray( new IFE1D2DNode[m_continuityNodes.size()] );
   }
 
-  private IFE1D2DNode[] recalculateContinuityLine( final IFE1D2DNode[] nodes, final IProgressMonitor monitor )
+  private void recalculateContinuityLine( final IFE1D2DNode[] nodes, final IProgressMonitor monitor )
   {
-    final Iterator<IFE1D2DNode> iterator = Arrays.asList( nodes ).iterator();
+    for( int i = 0; i < nodes.length - 1; i++ )
+    {
+      final IFE1D2DNode startNode = nodes[i];
+      final IFE1D2DNode endNode = nodes[i + 1];
 
-    final IFE1D2DNode startNode = iterator.next();
+      if( startNode != endNode )
+      {
+        final IFE1D2DNode[] path = calculatePath( startNode, endNode, monitor );
+        addContinuityNodes( path );
+      }
+    }
+  }
 
-    final List<IFE1D2DNode> curveNodes = new ArrayList<>();
+  private IFE1D2DNode[] calculatePath( /* final WeightedGraph<IFE1D2DNode, IFE1D2DEdge> discGraph, */final IFE1D2DNode startNode, final IFE1D2DNode endNode, final IProgressMonitor monitor )
+  {
+    if( startNode.isAdjacentNode( endNode ) )
+      return new IFE1D2DNode[] { startNode, endNode };
 
-    curveNodes.add( startNode );
+//    if( discGraph == null )
+    return calculateOwnPath( startNode, endNode, monitor );
+//    else
+//      return calculatePathFromGraph( discGraph, startNode, endNode );
+  }
+
+  private IFE1D2DNode[] calculateOwnPath( final IFE1D2DNode startNode, final IFE1D2DNode endNode, final IProgressMonitor monitor )
+  {
+    final Collection<IFE1D2DNode> path = new ArrayList<>();
+
+    path.add( startNode );
+
     IFE1D2DNode currentNode = startNode;
 
-    for( ; iterator.hasNext(); )
+    // TODO: !!!Potential endless loop!! I once got it (Gernot)
+    while( endNode != currentNode )
     {
-      final IFE1D2DNode nextMilestoneNode = iterator.next();
-      // TODO: !!!Potential endless loop!! I once got it (Gernot)
-      while( !nextMilestoneNode.getId().equals( currentNode.getId() ) )
-      {
-        final Collection<IFE1D2DNode> neighbourNodes = currentNode.getAdjacentNodes();
-        IFE1D2DNode bestCandidateNode = null;
-        double shortestDistance = Double.MAX_VALUE;
-        for( final IFE1D2DNode node : neighbourNodes )
-        {
-          final double nodesDistance = nodesDistance( node, nextMilestoneNode );
-          if( nodesDistance < shortestDistance )
-          {
-            shortestDistance = nodesDistance;
-            bestCandidateNode = node;
-          }
+      final Collection<IFE1D2DNode> neighbourNodes = currentNode.getAdjacentNodes();
 
-          ProgressUtilities.worked( monitor, 1 );
+      IFE1D2DNode bestCandidateNode = null;
+      double shortestDistance = Double.MAX_VALUE;
+
+      for( final IFE1D2DNode node : neighbourNodes )
+      {
+        final double nodesDistance = nodesDistance( node, endNode );
+        if( nodesDistance < shortestDistance )
+        {
+          shortestDistance = nodesDistance;
+          bestCandidateNode = node;
         }
-        currentNode = bestCandidateNode;
-        curveNodes.add( currentNode );
 
         ProgressUtilities.worked( monitor, 1 );
       }
+
+      currentNode = bestCandidateNode;
+      path.add( currentNode );
+
+      ProgressUtilities.worked( monitor, 1 );
     }
 
-    return curveNodes.toArray( new IFE1D2DNode[curveNodes.size()] );
+    return path.toArray( new IFE1D2DNode[path.size()] );
+  }
+
+//  private IFE1D2DNode[] calculatePathFromGraph( final WeightedGraph<IFE1D2DNode, IFE1D2DEdge> discGraph, final IFE1D2DNode startNode, final IFE1D2DNode endNode )
+//  {
+//    final List<IFE1D2DEdge> path = BellmanFordShortestPath.findPathBetween( discGraph, startNode, endNode );
+//    if( path == null || path.size() == 0 )
+//      return null;
+//
+//    /* extract nodes from path, edges are not directed in direction of path */
+//    IFE1D2DNode lastNode = startNode;
+//
+//    final Collection<IFE1D2DNode> nodes = new ArrayList<>();
+//    nodes.add( startNode );
+//
+//    for( final IFE1D2DEdge edge : path )
+//    {
+//      final IFE1D2DNode[] edgeNodes = edge.getNodes();
+//
+//      final IFE1D2DNode node1 = edgeNodes[0];
+//      final IFE1D2DNode node2 = edgeNodes[1];
+//
+//      if( node1 == lastNode )
+//      {
+//        nodes.add( node2 );
+//        lastNode = node2;
+//      }
+//      else if( node2 == lastNode )
+//      {
+//        nodes.add( node1 );
+//        lastNode = node1;
+//      }
+//      else
+//        throw new IllegalStateException();
+//    }
+//
+//    return nodes.toArray( new IFE1D2DNode[nodes.size()] );
+//  }
+
+  private void addContinuityNodes( final IFE1D2DNode[] nodes )
+  {
+    for( final IFE1D2DNode node : nodes )
+    {
+      /* avoid adding duplicate nodes */
+      final int size = m_continuityNodes.size();
+      if( size == 0 || m_continuityNodes.get( size - 1 ) != node )
+        m_continuityNodes.add( node );
+    }
   }
 
   private double nodesDistance( final IFE1D2DNode node1, final IFE1D2DNode node2 )
