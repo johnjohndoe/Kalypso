@@ -56,13 +56,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface IFE1D2DNode extends Feature
 {
-  public static final QName FEATURE_1D2DNODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Node" ); //$NON-NLS-1$
+  QName FEATURE_1D2DNODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Node" ); //$NON-NLS-1$
 
-  public final static QName MEMBER_NODE_CONTAINERS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "nodeContainer" ); //$NON-NLS-1$
+  QName MEMBER_NODE_CONTAINERS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "nodeContainer" ); //$NON-NLS-1$
 
-  public final static QName PROPERTY_POINT = new QName( NS.GML3, "pointProperty" ); //$NON-NLS-1$
+  QName PROPERTY_POINT = new QName( NS.GML3, "pointProperty" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_HAS_ELEVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "hasElevation" ); //$NON-NLS-1$
+  QName PROPERTY_HAS_ELEVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "hasElevation" ); //$NON-NLS-1$
 
   GM_Point getPoint( );
 
@@ -73,15 +73,13 @@ public interface IFE1D2DNode extends Feature
   void addLinkedEdge( IFE1D2DEdge edge );
 
   void removeLinkedEdge( IFE1D2DEdge edge );
-  
-  IFE1D2DEdge[] getLinkedEdges( );
 
-//  void addLinkedLine( IFELine line );
-//  
-//  void removeLinkedLine( IFELine line );
-//
-//  IFELine[] getLinkedLines( );
+  IFE1D2DEdge[] getLinkedEdges( );
 
   IFE1D2DElement[] getAdjacentElements( );
 
+  /**
+   * Checks if another node is adjacent (i.e. connected by an edge) to this node.
+   */
+  boolean isAdjacentNode( IFE1D2DNode node );
 }

@@ -48,27 +48,13 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
     final FeatureList linkedItemsInternal = linkedItemsInternal();
     final Feature[] features = linkedItemsInternal.toFeatures( new Feature[linkedItemsInternal.size()] );
     final List<IFE1D2DEdge> results = new ArrayList<>( linkedItemsInternal.size() );
-    for( Feature item : features )
+    for( final Feature item : features )
     {
       if( item instanceof IFE1D2DEdge )
         results.add( (IFE1D2DEdge)item );
     }
     return results.toArray( new IFE1D2DEdge[results.size()] );
   }
-
-//  @Override
-//  public IFELine[] getLinkedLines( )
-//  {
-//    final FeatureList linkedItemsInternal = linkedItemsInternal();
-//    final IFENetItem[] features = linkedItemsInternal.toFeatures( new IFENetItem[linkedItemsInternal.size()] );
-//    final List<IFELine> results = new ArrayList<>();
-//    for( IFENetItem item : features )
-//    {
-//      if( item instanceof IFELine )
-//        results.add( (IFELine)item );
-//    }
-//    return results.toArray( new IFELine[results.size()] );
-//  }
 
   /**
    * Returns all elements, this node is part of.
@@ -105,7 +91,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   }
 
   @Override
-  public void addLinkedEdge( IFE1D2DEdge edge )
+  public void addLinkedEdge( final IFE1D2DEdge edge )
   {
     Assert.throwIAEOnNullParam( edge, "edge" ); //$NON-NLS-1$
     if( !linkedItemsInternal().containsOrLinksTo( edge ) )
@@ -113,28 +99,12 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   }
 
   @Override
-  public void removeLinkedEdge( IFE1D2DEdge edge )
+  public void removeLinkedEdge( final IFE1D2DEdge edge )
   {
     Assert.throwIAEOnNullParam( edge, "edge" ); //$NON-NLS-1$
     if( linkedItemsInternal().containsOrLinksTo( edge ) )
       linkedItemsInternal().removeLink( edge );
   }
-
-//  @Override
-//  public void addLinkedLine( IFELine line )
-//  {
-//    Assert.throwIAEOnNullParam( line, "line" );
-//    if( !linkedItemsInternal().containsOrLinksTo( line ) )
-//      linkedItemsInternal().addLink( line );
-//  }
-//
-//  @Override
-//  public void removeLinkedLine( IFELine line )
-//  {
-//    Assert.throwIAEOnNullParam( line, "line" );
-//    if( linkedItemsInternal().containsOrLinksTo( line ) )
-//      linkedItemsInternal().removeLink( line );
-//  }
 
   @Override
   public String toString( )
@@ -147,11 +117,17 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
     // edges
     final Feature[] containers = getLinkedEdges();
     buf.append( "{Edges=" ); //$NON-NLS-1$
-    for( int i = 0; i < containers.length; i++ )
-      buf.append( ((IFE1D2DEdge)containers[i]).getId() );
+    for( final Feature container : containers )
+      buf.append( ((IFE1D2DEdge)container).getId() );
     buf.append( '}' );
     buf.append( ']' );
     return buf.toString();
   }
 
+  @Override
+  public boolean isAdjacentNode( final IFE1D2DNode node )
+  {
+    final List<IFE1D2DNode> adjacentNodes = getAdjacentNodes();
+    return adjacentNodes.contains( node );
+  }
 }
