@@ -62,9 +62,9 @@ class ContinuityLineBuilder
   {
     final IFE1D2DNode[] continuityLine = getContinuityLine();
 
-    final ContinuityLineEditValidator validator = new ContinuityLineEditValidator( discModel, panel, continuityLine, null );
-    final String message = validator.execute();
+    final ContinuityLine2DValidator validator = new ContinuityLine2DValidator( discModel, panel, continuityLine );
 
+    final String message = validator.execute();
     if( message == null )
       return Status.OK_STATUS;
 
