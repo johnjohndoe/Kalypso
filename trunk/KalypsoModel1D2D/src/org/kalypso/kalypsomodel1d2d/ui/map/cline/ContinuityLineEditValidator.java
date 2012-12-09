@@ -26,6 +26,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.LineString;
@@ -56,7 +57,7 @@ class ContinuityLineEditValidator
   public String execute( )
   {
     /* 1d-nodes: only on end of line */
-    if( m_nodes.length == 0 && !is2dNode( m_snapNode ) )
+    if( m_snapNode != null && m_nodes.length == 0 && !is2dNode( m_snapNode ) )
     {
       final IFE1D2DElement[] elements = m_snapNode.getAdjacentElements();
       if( elements.length == 0 )
@@ -67,13 +68,17 @@ class ContinuityLineEditValidator
     }
 
     /* check for any conti line on node */
-    final IFELine touchedLine = m_discModel.findContinuityLine( m_snapNode.getPoint(), IFEDiscretisationModel1d2d.CLUSTER_TOLERANCE );
-    if( touchedLine != null )
-      return "Node is already part of a continuity line";
+    final GM_Point snapPoint = m_snapNode == null ? null : m_snapNode.getPoint();
+    if( m_snapNode != null )
+    {
+      final IFELine touchedLine = m_discModel.findContinuityLine( snapPoint, IFEDiscretisationModel1d2d.CLUSTER_TOLERANCE );
+      if( touchedLine != null )
+        return "Node is already part of a continuity line";
+    }
 
     if( m_nodes.length > 0 )
     {
-      if( !is2dNode( m_snapNode ) )
+      if( m_snapNode != null && !is2dNode( m_snapNode ) )
         return "2D-continuity line cannot touch 1D-node";
 
       /* last point: special handling, else double click to finish will not work; also prevents line with only one point */
@@ -90,7 +95,7 @@ class ContinuityLineEditValidator
       try
       {
         /* build geometry */
-        final LineGeometryBuilder lineBuilder = CreateFEContinuityLineWidget.createLineBuilder( m_panel, m_nodes, m_snapNode.getPoint() );
+        final LineGeometryBuilder lineBuilder = CreateFEContinuityLineWidget.createLineBuilder( m_panel, m_nodes, snapPoint );
         final GM_Curve curve = (GM_Curve)lineBuilder.finish();
 
         /* self intersection */
@@ -110,6 +115,7 @@ class ContinuityLineEditValidator
       }
       catch( final Exception e )
       {
+        e.printStackTrace();
         return e.getLocalizedMessage();
       }
     }

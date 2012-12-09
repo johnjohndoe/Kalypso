@@ -39,6 +39,10 @@ class ContinuityLinePreviewJob extends Job
 
   private final IFE1D2DNode[] m_nodes;
 
+//  private final WeightedGraph<IFE1D2DNode, IFE1D2DEdge> m_discGraph;
+
+  private IFE1D2DNode[] m_contiNodes;
+
   public ContinuityLinePreviewJob( final IFE1D2DNode[] nodes )
   {
     super( "Calculate continuity line preview" ); //$NON-NLS-1$
@@ -46,7 +50,15 @@ class ContinuityLinePreviewJob extends Job
     m_nodes = nodes;
   }
 
-  public GM_Curve getContinuityLine( )
+  /**
+   * Returns the nodes of the calculated continuit line, only for 2d lines.
+   */
+  public IFE1D2DNode[] getContinuityNodes( )
+  {
+    return m_contiNodes;
+  }
+
+  public GM_Curve getPreview( )
   {
     return m_contiLine;
   }
@@ -77,6 +89,7 @@ class ContinuityLinePreviewJob extends Job
 
     /* 2D conti-line */
     final ContinuityLine2DGeometryBuilder builder = new ContinuityLine2DGeometryBuilder( m_nodes, monitor );
+    m_contiNodes = builder.getContinuityNodes();
     return builder.getCurve();
   }
 }

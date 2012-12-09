@@ -7,22 +7,18 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressConstants2;
+import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -57,35 +53,28 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 {
   private final ToolTipRenderer m_toolTipRenderer = ToolTipRenderer.createStandardTooltip();
 
-  private final ToolTipRenderer m_warningRenderer = ToolTipRenderer.createErrorTooltip();
+  private final ToolTipRenderer m_liveWarningRenderer = ToolTipRenderer.createErrorTooltip();
 
-  private final List<IFE1D2DNode> m_nodeList = new ArrayList<>();
+  private final ToolTipRenderer m_contilineWarningRenderer = ToolTipRenderer.createErrorTooltip();
 
-  private final ISchedulingRule m_previewJobRule = new MutexRule();
-
-  private final IJobChangeListener m_previewJobListener = new JobChangeAdapter()
-  {
-    @Override
-    public void done( final IJobChangeEvent event )
-    {
-      handlePreviewCalculated( event.getJob() );
-    }
-  };
+  private final List<ContinuityEdge> m_continuityEdges = new ArrayList<>();
 
   private final SLDPainter2 m_previewPainter = new SLDPainter2( getClass().getResource( "continuityLinePreview.sld" ) ); //$NON-NLS-1$
 
-  private Job m_previewJob = null;
+  private final SLDPainter2 m_previewWarningPainter = new SLDPainter2( getClass().getResource( "continuityLinePreviewWarned.sld" ) ); //$NON-NLS-1$
 
   private IFEDiscretisationModel1d2d m_discModel = null;
 
   /* The current node of the disc-model under the cursor. */
-  private IFE1D2DNode m_currentNode = null;
+  private ContinuityEdge m_currentEdge = null;
 
   private Point m_currentMapPoint = null;
 
   private PointSnapper m_pointSnapper = null;
 
-  private GM_Curve m_preview = null;
+//  private WeightedGraph<IFE1D2DNode, IFE1D2DEdge> m_discGraph;
+
+  private IStatus m_contiLineStatus;
 
   public CreateFEContinuityLineWidget( )
   {
@@ -105,24 +94,52 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     m_discModel = UtilMap.findFEModelTheme( mapPanel );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
 
+//    /* initialize graph in separate thread */
+//    final DiscretisationGraphOperation graphOp = new DiscretisationGraphOperation( m_discModel );
+//
+//    final IWorkbenchPartSite site = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActivePart().getSite();
+//    final IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService)site.getService( IWorkbenchSiteProgressService.class );
+//    final IStatus status = RunnableContextHelper.execute( service, true, false, graphOp );
+//    if( !status.isOK() )
+//      handleError( status );
+//
+//    m_discGraph = graphOp.getGraph();
+
     reinit();
   }
 
   private void reinit( )
   {
-    if( m_previewJob != null )
-      m_previewJob.cancel();
+    if( m_currentEdge != null )
+    {
+      m_currentEdge.dispose();
+      m_currentEdge = null;
+    }
 
-    m_currentNode = null;
-    m_nodeList.clear();
-    m_preview = null;
+    m_contiLineStatus = null;
+
+    for( final ContinuityEdge edge : m_continuityEdges )
+      edge.dispose();
+    m_continuityEdges.clear();
 
     repaintMap();
   }
 
-  private IFE1D2DNode[] getNodes( )
+  private IFE1D2DNode[] getClickedNodes( )
   {
-    return m_nodeList.toArray( new IFE1D2DNode[m_nodeList.size()] );
+    final Collection<IFE1D2DNode> nodes = new ArrayList<>();
+
+    for( final ContinuityEdge edge : m_continuityEdges )
+    {
+      // REMARK: start is null for first edge
+      final IFE1D2DNode startNode = edge.getStartNode();
+      if( startNode != null )
+        nodes.add( startNode );
+
+      nodes.add( edge.getEndNode() );
+    }
+
+    return nodes.toArray( new IFE1D2DNode[nodes.size()] );
   }
 
   @Override
@@ -136,8 +153,12 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     }
     else if( KeyEvent.VK_BACK_SPACE == keyChar || KeyEvent.VK_DELETE == keyChar )
     {
-      if( m_nodeList.size() > 1 )
-        m_nodeList.remove( m_nodeList.size() - 1 );
+      if( m_continuityEdges.size() > 1 )
+      {
+        final ContinuityEdge edge = m_continuityEdges.remove( m_continuityEdges.size() - 1 );
+        edge.dispose();
+        previewChanged();
+      }
       else
         reinit();
     }
@@ -159,21 +180,21 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     final IFE1D2DNode snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
 
     /* reset */
-    m_currentNode = null;
-    m_warningRenderer.setTooltip( null );
+    if( m_currentEdge != null )
+      m_currentEdge.dispose();
+    m_currentEdge = null;
+    m_liveWarningRenderer.setTooltip( null );
 
     if( snapNode != null )
     {
       if( isValidSnapNode( mapPanel, snapNode ) )
       {
-        m_currentNode = snapNode;
-        recalculatePreview( getNodes(), snapNode );
+        final IFE1D2DNode lastNode = m_continuityEdges.isEmpty() ? null : m_continuityEdges.get( m_continuityEdges.size() - 1 ).getEndNode();
+        m_currentEdge = new ContinuityEdge( this, lastNode, snapNode );
       }
-      else
-        recalculatePreview( getNodes(), null );
     }
 
-    if( m_currentNode == null )
+    if( m_currentEdge == null )
       m_currentMapPoint = p;
     else
       m_currentMapPoint = MapUtilities.retransform( getMapPanel(), snapNode.getPoint() );
@@ -186,32 +207,11 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     repaintMap();
   }
 
-  private void recalculatePreview( final IFE1D2DNode[] nodes, final IFE1D2DNode snapNode )
-  {
-    if( m_previewJob != null )
-      m_previewJob.cancel();
-
-    final IFE1D2DNode[] allNodes = snapNode == null ? nodes : ArrayUtils.add( nodes, snapNode );
-
-    final Job job = new ContinuityLinePreviewJob( allNodes );
-
-    job.setUser( false );
-    job.setSystem( true );
-    job.setProperty( IProgressConstants2.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, Boolean.TRUE );
-    job.setRule( m_previewJobRule );
-
-    job.addJobChangeListener( m_previewJobListener );
-
-    m_previewJob = job;
-
-    job.schedule();
-  }
-
   private boolean isValidSnapNode( final IMapPanel mapPanel, final IFE1D2DNode snapNode )
   {
-    final ContinuityLineEditValidator validator = new ContinuityLineEditValidator( m_discModel, mapPanel, getNodes(), snapNode );
+    final ContinuityLineEditValidator validator = new ContinuityLineEditValidator( m_discModel, mapPanel, getClickedNodes(), snapNode );
     final String warning = validator.execute();
-    m_warningRenderer.setTooltip( warning );
+    m_liveWarningRenderer.setTooltip( warning );
 
     return warning == null;
   }
@@ -248,30 +248,32 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
   private void clickedLeft( )
   {
-    if( m_currentNode == null )
+    if( m_currentEdge == null )
       return;
 
-    if( ContinuityLineEditValidator.is2dNode( m_currentNode ) )
+    final IFE1D2DNode currentNode = m_currentEdge.getEndNode();
+    if( ContinuityLineEditValidator.is2dNode( currentNode ) )
     {
-      final IFE1D2DNode lastNode = m_nodeList.isEmpty() ? null : m_nodeList.get( m_nodeList.size() - 1 );
+      final IFE1D2DNode lastNode = m_continuityEdges.isEmpty() ? null : m_continuityEdges.get( m_continuityEdges.size() - 1 ).getEndNode();
+
       /* special handling for last node: is not warned, but should still not be added (allows double click on last point to finish) */
-      if( m_currentMapPoint != lastNode )
-        m_nodeList.add( m_currentNode );
+      if( currentNode != lastNode )
+        m_continuityEdges.add( m_currentEdge );
     }
     else
     {
       // REMARK: no check needed, illegal situations already prevented by validation
-      createBoundaryLine1D( m_currentNode );
+      createBoundaryLine1D( currentNode );
     }
   }
 
   private void doubleClickedLeft( )
   {
     // REMARK: if double click on last point, ignore problem
-    if( m_currentNode == null )
+    if( m_currentEdge == null )
       return;
 
-    createBoundaryLine2D( getNodes() );
+    createBoundaryLine2D();
   }
 
   private void createBoundaryLine1D( final IFE1D2DNode node )
@@ -298,12 +300,43 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     }
   }
 
-  private void createBoundaryLine2D( final IFE1D2DNode[] nodes )
+  private void createBoundaryLine2D( )
+  {
+    final Runnable op = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        doCreateBoundaryLine2D();
+      }
+    };
+
+    final Shell shell = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActivePart().getSite().getShell();
+    shell.getDisplay().asyncExec( op );
+  }
+
+  protected void doCreateBoundaryLine2D( )
   {
     try
     {
-      // TODO: validation!
-      // TODO: check if there is already a boundary line
+      final ContinuityEdge[] edges = m_continuityEdges.toArray( new ContinuityEdge[m_continuityEdges.size()] );
+
+      final ContinuityLineBuilderOperation operation = new ContinuityLineBuilderOperation( m_discModel, getMapPanel(), edges );
+
+      final IWorkbenchPartSite site = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActivePart().getSite();
+      final IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService)site.getService( IWorkbenchSiteProgressService.class );
+
+      // REMARK: needs to be called in swt thread
+      final IStatus status = RunnableContextHelper.execute( service, true, false, operation );
+      if( !status.isOK() )
+      {
+        handleError( status );
+        return;
+      }
+
+      reinit();
+
+      final IFE1D2DNode[] nodes = operation.getContinuityLine();
 
       final IKalypsoTheme theme = UtilMap.findEditableTheme( getMapPanel(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
       final CommandableWorkspace workspace = ((IKalypsoFeatureTheme)theme).getWorkspace();
@@ -318,10 +351,6 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     catch( final Exception e )
     {
       handleError( e );
-    }
-    finally
-    {
-      reinit();
     }
   }
 
@@ -356,7 +385,9 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
       return;
 
     /* Paint preview if exists */
-    m_previewPainter.paint( g, projection, m_preview );
+    for( final ContinuityEdge edge : m_continuityEdges )
+      paintEdge( g, projection, edge );
+    paintEdge( g, projection, m_currentEdge );
 
     /* Paint handle of mouse position */
     final int[][] posPoints = UtilMap.getPointArrays( m_currentMapPoint );
@@ -366,7 +397,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
     UtilMap.drawHandles( g, arrayX, arrayY );
 
-    final IFE1D2DNode[] nodes = getNodes();
+    final IFE1D2DNode[] nodes = getClickedNodes();
     if( nodes.length != 0 )
     {
       try
@@ -387,11 +418,32 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( m_pointSnapper != null )
       m_pointSnapper.paint( g );
 
-    if( m_currentMapPoint != null )
+    final Point warningPosition = new Point( m_currentMapPoint.x + 10, m_currentMapPoint.y - 10 );
+    if( m_contiLineStatus != null && !m_contiLineStatus.isOK() )
     {
-      final Point warningPosition = new Point( m_currentMapPoint.x + 10, m_currentMapPoint.y - 10 );
-      m_warningRenderer.paintToolTip( warningPosition, g, bounds );
+      /* problems with conti line preceed over other warnings */
+      m_contilineWarningRenderer.setTooltip( "Resulting continuity line is invalid" );
+      m_contilineWarningRenderer.paintToolTip( warningPosition, g, bounds );
     }
+    else if( m_currentMapPoint != null )
+    {
+      m_liveWarningRenderer.paintToolTip( warningPosition, g, bounds );
+    }
+  }
+
+  private void paintEdge( final Graphics g, final GeoTransform projection, final ContinuityEdge edge )
+  {
+    if( edge == null )
+      return;
+
+    final GM_Curve curve = edge.getPathAsGeometry();
+    if( curve == null )
+      return;
+
+    if( m_contiLineStatus == null || m_contiLineStatus.isOK() )
+      m_previewPainter.paint( g, projection, curve );
+    else
+      m_previewWarningPainter.paint( g, projection, curve );
   }
 
   static LineGeometryBuilder createLineBuilder( final IMapPanel mapPanel, final IFE1D2DNode[] nodes, final GM_Point currentPoint ) throws Exception
@@ -402,15 +454,30 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     for( final IFE1D2DNode node : nodes )
       geometryBuilder.addPoint( node.getPoint() );
 
-    geometryBuilder.addPoint( currentPoint );
+    if( currentPoint != null )
+      geometryBuilder.addPoint( currentPoint );
 
     return geometryBuilder;
   }
 
-  protected void handlePreviewCalculated( final Job job )
+  void previewChanged( )
   {
-    final ContinuityLinePreviewJob previewJob = (ContinuityLinePreviewJob)job;
-    m_preview = previewJob.getContinuityLine();
+    m_contiLineStatus = null;
+
+    /* revalidate existing path */
+    final ContinuityLineBuilder builder = new ContinuityLineBuilder();
+
+    for( final ContinuityEdge edge : m_continuityEdges )
+    {
+      final IFE1D2DNode[] path = edge.getPath();
+      builder.addPath( path );
+    }
+
+    if( m_currentEdge != null )
+      builder.addPath( m_currentEdge.getPath() );
+
+    m_contiLineStatus = builder.validate( m_discModel, getMapPanel() );
+
     repaintMap();
   }
 }
