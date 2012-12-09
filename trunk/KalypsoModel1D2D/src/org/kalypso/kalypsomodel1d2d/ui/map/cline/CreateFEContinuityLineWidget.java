@@ -9,12 +9,20 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressConstants2;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -32,10 +40,12 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -49,16 +59,33 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
   private final ToolTipRenderer m_warningRenderer = ToolTipRenderer.createErrorTooltip();
 
+  private final List<IFE1D2DNode> m_nodeList = new ArrayList<>();
+
+  private final ISchedulingRule m_previewJobRule = new MutexRule();
+
+  private final IJobChangeListener m_previewJobListener = new JobChangeAdapter()
+  {
+    @Override
+    public void done( final IJobChangeEvent event )
+    {
+      handlePreviewCalculated( event.getJob() );
+    }
+  };
+
+  private final SLDPainter2 m_previewPainter = new SLDPainter2( getClass().getResource( "continuityLinePreview.sld" ) ); //$NON-NLS-1$
+
+  private Job m_previewJob = null;
+
   private IFEDiscretisationModel1d2d m_discModel = null;
 
   /* The current node of the disc-model under the cursor. */
   private IFE1D2DNode m_currentNode = null;
 
-  private Point m_currentMapPoint;
+  private Point m_currentMapPoint = null;
 
-  private PointSnapper m_pointSnapper;
+  private PointSnapper m_pointSnapper = null;
 
-  private final List<IFE1D2DNode> m_nodeList = new ArrayList<>();
+  private GM_Curve m_preview = null;
 
   public CreateFEContinuityLineWidget( )
   {
@@ -83,8 +110,14 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
   private void reinit( )
   {
+    if( m_previewJob != null )
+      m_previewJob.cancel();
+
     m_currentNode = null;
     m_nodeList.clear();
+    m_preview = null;
+
+    repaintMap();
   }
 
   private IFE1D2DNode[] getNodes( )
@@ -129,8 +162,16 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     m_currentNode = null;
     m_warningRenderer.setTooltip( null );
 
-    if( snapNode != null && isValidSnapNode( mapPanel, snapNode ) )
-      m_currentNode = snapNode;
+    if( snapNode != null )
+    {
+      if( isValidSnapNode( mapPanel, snapNode ) )
+      {
+        m_currentNode = snapNode;
+        recalculatePreview( getNodes(), snapNode );
+      }
+      else
+        recalculatePreview( getNodes(), null );
+    }
 
     if( m_currentNode == null )
       m_currentMapPoint = p;
@@ -140,19 +181,30 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( snapNode == null )
       mapPanel.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
     else
-    {
       mapPanel.setCursor( Cursor.getDefaultCursor() );
-
-      recalculatePreview( getNodes(), snapNode );
-    }
 
     repaintMap();
   }
 
   private void recalculatePreview( final IFE1D2DNode[] nodes, final IFE1D2DNode snapNode )
   {
-    // TODO Auto-generated method stub
+    if( m_previewJob != null )
+      m_previewJob.cancel();
 
+    final IFE1D2DNode[] allNodes = snapNode == null ? nodes : ArrayUtils.add( nodes, snapNode );
+
+    final Job job = new ContinuityLinePreviewJob( allNodes );
+
+    job.setUser( false );
+    job.setSystem( true );
+    job.setProperty( IProgressConstants2.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, Boolean.TRUE );
+    job.setRule( m_previewJobRule );
+
+    job.addJobChangeListener( m_previewJobListener );
+
+    m_previewJob = job;
+
+    job.schedule();
   }
 
   private boolean isValidSnapNode( final IMapPanel mapPanel, final IFE1D2DNode snapNode )
@@ -294,6 +346,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   public void paint( final Graphics g )
   {
     final IMapPanel mapPanel = getMapPanel();
+    final GeoTransform projection = mapPanel.getProjection();
 
     final Rectangle bounds = mapPanel.getScreenBounds();
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
@@ -301,6 +354,9 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     /* always paint a small rectangle of current position */
     if( m_currentMapPoint == null )
       return;
+
+    /* Paint preview if exists */
+    m_previewPainter.paint( g, projection, m_preview );
 
     /* Paint handle of mouse position */
     final int[][] posPoints = UtilMap.getPointArrays( m_currentMapPoint );
@@ -319,7 +375,6 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
         final LineGeometryBuilder geometryBuilder = createLineBuilder( mapPanel, nodes, currentPoint );
 
-        final GeoTransform projection = mapPanel.getProjection();
         geometryBuilder.paint( g, projection, null );
       }
       catch( final Exception e )
@@ -350,5 +405,12 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     geometryBuilder.addPoint( currentPoint );
 
     return geometryBuilder;
+  }
+
+  protected void handlePreviewCalculated( final Job job )
+  {
+    final ContinuityLinePreviewJob previewJob = (ContinuityLinePreviewJob)job;
+    m_preview = previewJob.getContinuityLine();
+    repaintMap();
   }
 }
