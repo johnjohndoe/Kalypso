@@ -40,11 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
@@ -53,23 +48,18 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
-public class CreateContinuityLineCommand implements IFeatureChangeCommand
+public class CreateContinuityLine2DCommand implements IFeatureChangeCommand
 {
-  private boolean m_processed = false;
-
   private IFELine m_line;
 
   final private IFEDiscretisationModel1d2d m_model;
 
-  final private List<IFE1D2DNode> m_nodeList;
+  final private IFE1D2DNode[] m_nodes;
 
-  final private QName m_lineElementQName;
-
-  public CreateContinuityLineCommand( final IFEDiscretisationModel1d2d model, final List<IFE1D2DNode> nodeList, final QName lineElementQName )
+  public CreateContinuityLine2DCommand( final IFEDiscretisationModel1d2d model, final IFE1D2DNode[] nodes )
   {
     m_model = model;
-    m_nodeList = nodeList;
-    m_lineElementQName = lineElementQName;
+    m_nodes = nodes;
   }
 
   @Override
@@ -81,42 +71,31 @@ public class CreateContinuityLineCommand implements IFeatureChangeCommand
   @Override
   public boolean isUndoable( )
   {
-    return true;
+    return false;
   }
 
   @Override
-  public void process( ) throws Exception
+  public void process( )
   {
     // TODO check if such a line already exists (with same nodes etc...)
 
-    final Feature parentFeature = m_model;
-    final GMLWorkspace workspace = parentFeature.getWorkspace();
+    final GMLWorkspace workspace = m_model.getWorkspace();
 
-    if( m_lineElementQName.equals( IContinuityLine1D.QNAME ) )
-      m_line = m_model.createContinuityLine1D( m_nodeList.get( 0 ) );
-    else
-      m_line = m_model.createContinuityLine2D( m_nodeList.toArray( new IFE1D2DNode[m_nodeList.size()] ) );
+    m_line = m_model.createContinuityLine2D( m_nodes );
 
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, m_line, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    m_processed = true;
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_model, m_line, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   @Override
-  public void redo( ) throws Exception
+  public void redo( )
   {
-    if( !m_processed )
-    {
-      process();
-    }
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  public void undo( ) throws Exception
+  public void undo( )
   {
-    if( m_processed )
-    {
-      // TODO remove element and links to it edges and delete element
-    }
+    throw new UnsupportedOperationException();
   }
 
   @Override
