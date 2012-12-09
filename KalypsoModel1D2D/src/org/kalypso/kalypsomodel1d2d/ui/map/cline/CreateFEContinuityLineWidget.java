@@ -3,37 +3,42 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cline;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateContinuityLineCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateContinuityLine1DCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateContinuityLine2DCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -41,8 +46,10 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  */
-public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
+public class CreateFEContinuityLineWidget extends AbstractWidget
 {
+  // FIXME: tooltips
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
   private IFEDiscretisationModel1d2d m_discModel = null;
 
@@ -53,218 +60,208 @@ public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
 
   private PointSnapper m_pointSnapper;
 
-  private List<IFE1D2DNode> m_nodeList = null;
-
-  private QName m_lineType = null;
+  private final List<IFE1D2DNode> m_nodeList = new ArrayList<>();
 
   public CreateFEContinuityLineWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_nodeList = new ArrayList<>();
+    m_toolTipRenderer.setTooltip( "Edit new boundary / transition line.\r\n    '<Click>': Add node to line\r\n    '<Double-Click>': Finish line\r\n    '<ESC>': Cancel current edit\r\n    '<DEL>': Remove last point" );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
-    if( getMapPanel().getMapModell() == null )
+
+    if( mapPanel.getMapModell() == null )
       return;
 
-    m_discModel = UtilMap.findFEModelTheme( getMapPanel() );
+    m_discModel = UtilMap.findFEModelTheme( mapPanel );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
+
     reinit();
   }
 
   private void reinit( )
   {
     m_currentNode = null;
-    m_lineType = null;
     m_nodeList.clear();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyTyped( final KeyEvent e )
   {
-    if( KeyEvent.VK_ESCAPE == e.getKeyChar() )
+    final char keyChar = e.getKeyChar();
+
+    if( KeyEvent.VK_ESCAPE == keyChar )
     {
       reinit();
-      getMapPanel().repaintMap();
     }
-  }
-
-  @Override
-  public void moved( final Point p )
-  {
-    final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return;
-
-    final Object newNode = checkNewNode( p );
-    if( newNode instanceof IFE1D2DNode )
+    else if( KeyEvent.VK_BACK_SPACE == keyChar || KeyEvent.VK_DELETE == keyChar )
     {
-      final IFE1D2DNode candidateNode = (IFE1D2DNode)newNode;
-      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), candidateNode.getPoint() );
-
-      if( m_lineType == null )
-        m_currentNode = (IFE1D2DNode)newNode;
-      else
-      {
-        if( m_lineType.equals( IContinuityLine1D.QNAME ) )
-        {
-          if( candidateNode.getAdjacentElements()[0] instanceof IElement1D )
-            m_currentNode = candidateNode;
-          else
-            m_currentNode = null;
-        }
-        else
-        {
-          if( candidateNode.getAdjacentElements()[0] instanceof IElement1D )
-            m_currentNode = null;
-          else
-            m_currentNode = candidateNode;
-        }
-      }
-    }
-    else
-      m_currentMapPoint = p;
-
-    if( newNode == null )
-      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
-    else
-      getMapPanel().setCursor( Cursor.getDefaultCursor() );
-
-    repaintMap();
-
-    // if no line is started before, allowed selection is element 1D or element 2D
-    // if 2D line is started: if selection is 2d node, add it; if selection is 1d node, ignore it
-    // opposite for 1d line
-
-  }
-
-  private Object checkNewNode( final Point p )
-  {
-    final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return null;
-
-    final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
-    final IFE1D2DNode snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
-    final Object newNode = snapNode;
-
-    return newNode;
-  }
-
-  @Override
-  public void leftClicked( final Point p )
-  {
-    final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return;
-
-    if( m_currentNode == null )
-      return;
-
-    m_nodeList.add( m_currentNode );
-
-    if( m_currentNode.getAdjacentElements()[0] instanceof IElement1D )
-    {
-      m_lineType = IContinuityLine1D.QNAME;
-
-      // TODO: check if there is already a 1d boundary line
-      if( !checkFor1DContiLine() )
-      {
-        createBoundaryLine();
-        m_nodeList.clear();
-      }
+      if( m_nodeList.size() > 1 )
+        m_nodeList.remove( m_nodeList.size() - 1 );
       else
         reinit();
     }
-    else
-      m_lineType = IContinuityLine2D.QNAME;
 
-    getMapPanel().repaintMap();
+    repaintMap();
   }
 
   @Override
-  public void doubleClickedLeft( final Point p )
+  public void mouseMoved( final MouseEvent event )
   {
-    if( m_currentNode == null )
-    {
-      // reinit();
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
       return;
-    }
-    else
+
+    final Point p = event.getPoint();
+
+    /* try to snap to node */
+    final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
+    final IFE1D2DNode snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
+
+    m_currentNode = null;
+
+    if( snapNode != null )
     {
-      if( m_nodeList.size() == 1 )
+      if( m_nodeList.size() == 0 )
+        m_currentNode = snapNode;
+      else if( is2dNode( snapNode ) )
       {
-        m_lineType = IContinuityLine1D.QNAME;
-
-        // TODO: check if there is already a 1d boundary line
-
-        if( !checkFor1DContiLine() )
-        {
-          createBoundaryLine();
-          m_nodeList.clear();
-        }
-        else
-          reinit();
+        /* as soon as we have nodes, it is a 2d conti line, so we can only select 2d elements */
+        m_currentNode = snapNode;
       }
     }
-    createBoundaryLine();
+
+    if( m_currentNode == null )
+      m_currentMapPoint = p;
+    else
+      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), snapNode.getPoint() );
+
+    if( snapNode == null )
+      mapPanel.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
+    else
+      mapPanel.setCursor( Cursor.getDefaultCursor() );
+
+    repaintMap();
   }
 
-  private boolean checkFor1DContiLine( )
+  private boolean is2dNode( final IFE1D2DNode node )
   {
-    final IFE1D2DNode node = m_nodeList.get( 0 );
+    final IFE1D2DElement[] elements = node.getAdjacentElements();
+    for( final IFE1D2DElement element : elements )
+    {
+      if( !(element instanceof IPolyElement) )
+        return false;
+    }
 
+    return true;
+  }
+
+  @Override
+  public void mousePressed( final MouseEvent event )
+  {
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+
+    if( event.getClickCount() == 1 )
+      clickedLeft();
+  }
+
+  @Override
+  public void mouseClicked( final MouseEvent event )
+  {
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+
+    if( event.getClickCount() == 2 )
+      doubleClickedLeft();
+
+    repaintMap();
+  }
+
+  private void clickedLeft( )
+  {
+    if( m_currentNode == null )
+      return;
+
+    if( is2dNode( m_currentNode ) )
+      m_nodeList.add( m_currentNode );
+    else if( checkFor1DContiLine( m_currentNode ) )
+      createBoundaryLine1D( m_currentNode );
+    else
+      reinit();
+  }
+
+  private void doubleClickedLeft( )
+  {
+    if( m_currentNode == null )
+      return;
+
+    createBoundaryLine2D( m_nodeList.toArray( new IFE1D2DNode[m_nodeList.size()] ) );
+  }
+
+  private boolean checkFor1DContiLine( final IFE1D2DNode node )
+  {
     if( node == null )
       return false;
 
-    final IFELine contiLine = m_discModel.findContinuityLine( node.getPoint(), 0.1 );
-    if( contiLine == null || contiLine instanceof IContinuityLine2D )
+    // TODO: would be nice to show the validations during mouse move
+
+    /* check for end of reach */
+    final IFE1D2DElement[] elements = node.getAdjacentElements();
+    if( elements.length == 0 )
+    {
+      final IStatus status = new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "This is a single 1D node that is not attached to the net. Continuity line not added." );
+      handleError( status );
       return false;
-    else
+    }
+    else if( elements.length > 1 )
+    {
+      final IStatus status = new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "This node is not at the end of the 1D-reach. Continuity line not added." );
+      handleError( status );
+      return false;
+    }
+
+    /* check for existance of another conti line */
+    final IFELine contiLine = m_discModel.findContinuityLine( node.getPoint(), 0.1 );
+    if( contiLine == null )
       return true;
+
+    final IStatus status = new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "There already is a continuity line at the end of this 1D reach. Continuity line not added." );
+    handleError( status );
+
+    return false;
+    // return contiLine == null || contiLine instanceof IContinuityLine2D;
   }
 
-  private void createBoundaryLine( )
+  private void createBoundaryLine1D( final IFE1D2DNode node )
   {
     try
     {
-      if( m_nodeList.isEmpty() )
-        return;
-
-      // TODO: check if there is already a boundary line
-
       final IKalypsoTheme theme = UtilMap.findEditableTheme( getMapPanel(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
       final CommandableWorkspace workspace = ((IKalypsoFeatureTheme)theme).getWorkspace();
 
-      final CreateContinuityLineCommand command = new CreateContinuityLineCommand( m_discModel, m_nodeList, m_lineType );
+      final CreateContinuityLine1DCommand command = new CreateContinuityLine1DCommand( m_discModel, node );
       workspace.postCommand( command );
+    }
+    catch( final CoreException e )
+    {
+      handleError( e.getStatus() );
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-
-      final Shell shell = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActivePart().getSite().getShell();
-      shell.getDisplay().asyncExec( new Runnable()
-      {
-        @Override
-        public void run( )
-        {
-          ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.2" ), status ); //$NON-NLS-1$
-        }
-      } );
+      handleError( e );
     }
     finally
     {
@@ -272,43 +269,91 @@ public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
+  private void createBoundaryLine2D( final IFE1D2DNode[] nodes )
+  {
+    try
+    {
+      // TODO: validation!
+      // TODO: check if there is already a boundary line
+
+      final IKalypsoTheme theme = UtilMap.findEditableTheme( getMapPanel(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+      final CommandableWorkspace workspace = ((IKalypsoFeatureTheme)theme).getWorkspace();
+
+      final CreateContinuityLine2DCommand command = new CreateContinuityLine2DCommand( m_discModel, nodes );
+      workspace.postCommand( command );
+    }
+    catch( final CoreException e )
+    {
+      handleError( e.getStatus() );
+    }
+    catch( final Exception e )
+    {
+      handleError( e );
+    }
+    finally
+    {
+      reinit();
+    }
+  }
+
+  private void handleError( final Exception e )
+  {
+    final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.2" ); //$NON-NLS-1$
+    final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, e );
+
+    handleError( status );
+  }
+
+  private void handleError( final IStatus status )
+  {
+    KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+
+    final Shell shell = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActivePart().getSite().getShell();
+    final StatusDialog statusDialog = new StatusDialog( shell, status, getName() );
+    SWT_AWT_Utilities.openSwtWindow( statusDialog );
+  }
+
   @Override
   public void paint( final Graphics g )
   {
+    final IMapPanel mapPanel = getMapPanel();
+
+    final Rectangle bounds = mapPanel.getScreenBounds();
+    m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+
     /* always paint a small rectangle of current position */
     if( m_currentMapPoint == null )
       return;
 
+    /* Paint handle of mouse position */
     final int[][] posPoints = UtilMap.getPointArrays( m_currentMapPoint );
 
     final int[] arrayX = posPoints[0];
     final int[] arrayY = posPoints[1];
 
-    /* Paint as linestring. */
-    g.drawPolygon( arrayX, arrayY, arrayX.length );
     UtilMap.drawHandles( g, arrayX, arrayY );
-
-    /* paint the snap */
-    if( m_pointSnapper != null )
-      m_pointSnapper.paint( g );
 
     if( !m_nodeList.isEmpty() )
     {
-      final LineGeometryBuilder geometryBuilder = new LineGeometryBuilder( 0, getMapPanel().getMapModell().getCoordinatesSystem() );
+      final IKalypsoLayerModell modell = mapPanel.getMapModell();
+
+      final LineGeometryBuilder geometryBuilder = new LineGeometryBuilder( 0, modell.getCoordinatesSystem() );
       try
       {
         for( int i = 0; i < m_nodeList.size(); i++ )
           geometryBuilder.addPoint( m_nodeList.get( i ).getPoint() );
-        geometryBuilder.paint( g, getMapPanel().getProjection(), m_currentMapPoint );
+
+        final GeoTransform projection = mapPanel.getProjection();
+        geometryBuilder.paint( g, projection, m_currentMapPoint );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
       }
     }
-  }
 
+    /* paint the snap */
+    if( m_pointSnapper != null )
+      m_pointSnapper.paint( g );
+  }
 }
