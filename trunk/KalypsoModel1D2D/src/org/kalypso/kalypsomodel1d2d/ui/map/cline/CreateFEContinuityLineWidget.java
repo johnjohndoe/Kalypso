@@ -39,7 +39,11 @@ import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Gernot Belger
@@ -48,8 +52,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class CreateFEContinuityLineWidget extends AbstractWidget
 {
-  // FIXME: tooltips
-  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+  private final ToolTipRenderer m_toolTipRenderer = ToolTipRenderer.createStandardTooltip();
+
+  private final ToolTipRenderer m_warningRenderer = ToolTipRenderer.createErrorTooltip();
 
   private IFEDiscretisationModel1d2d m_discModel = null;
 
@@ -122,9 +127,11 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
     final IFE1D2DNode snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
 
+    /* reset */
     m_currentNode = null;
+    m_warningRenderer.setTooltip( null );
 
-    if( snapNode != null )
+    if( snapNode != null && isValidSnapNode( mapPanel, snapNode ) )
     {
       if( m_nodeList.size() == 0 )
         m_currentNode = snapNode;
@@ -146,6 +153,78 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
       mapPanel.setCursor( Cursor.getDefaultCursor() );
 
     repaintMap();
+  }
+
+  private boolean isValidSnapNode( final IMapPanel mapPanel, final IFE1D2DNode snapNode )
+  {
+    final String warning = validateSnapeNode( mapPanel, snapNode );
+    m_warningRenderer.setTooltip( warning );
+
+    return warning == null;
+  }
+
+  private String validateSnapeNode( final IMapPanel mapPanel, final IFE1D2DNode snapNode )
+  {
+    /* 1d-nodes: only on end of line */
+    if( m_nodeList.size() == 0 && !is2dNode( snapNode ) )
+    {
+      final IFE1D2DElement[] elements = snapNode.getAdjacentElements();
+      if( elements.length == 0 )
+        return "Cannot add continuity line to single 1D node that is not attached to the net";
+
+      if( elements.length > 1 )
+        return "1D-continuity line must be at end of 1D-reach";
+    }
+
+    /* check for any conti line on node */
+    final IFELine touchedLine = m_discModel.findContinuityLine( snapNode.getPoint(), IFEDiscretisationModel1d2d.CLUSTER_TOLERANCE );
+    if( touchedLine != null )
+      return "Node is already part of a continuity line";
+
+    if( m_nodeList.size() > 0 )
+    {
+      if( !is2dNode( snapNode ) )
+        return "2D-continuity line cannot touch 1D-node";
+
+      /* duplicate point */
+      for( final IFE1D2DNode node : m_nodeList )
+      {
+        if( node == snapNode )
+          return "Node already contained in line";
+      }
+
+      try
+      {
+        /* build geometry */
+        final LineGeometryBuilder lineBuilder = createLineBuilder( mapPanel );
+        final GM_Curve curve = (GM_Curve)lineBuilder.finish();
+
+        /* new node on line */
+        if( snapNode.getPoint().distance( curve ) < IFEDiscretisationModel1d2d.CLUSTER_TOLERANCE )
+          return "Line is self-intersecting";
+
+        /* self intersection */
+        final LineString line = (LineString)JTSAdapter.export( curve );
+        if( !line.isSimple() )
+          return "Line is self-intersecting";
+
+        /* intersection with other conti lines */
+        // REMARK: we assume that we have not too many conti lines and just do a linear search here
+        final IFELine[] contiLines = m_discModel.getContinuityLines();
+        for( final IFELine contiLine : contiLines )
+        {
+          final GM_Curve geometry = contiLine.getGeometry();
+          if( curve.intersects( geometry ) )
+            return "Line intersect an existing continuity line";
+        }
+      }
+      catch( final Exception e )
+      {
+        return e.getLocalizedMessage();
+      }
+    }
+
+    return null;
   }
 
   private boolean is2dNode( final IFE1D2DNode node )
@@ -197,10 +276,11 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
     if( is2dNode( m_currentNode ) )
       m_nodeList.add( m_currentNode );
-    else if( checkFor1DContiLine( m_currentNode ) )
-      createBoundaryLine1D( m_currentNode );
     else
-      reinit();
+    {
+      // REMARK: no check needed, illegal situations already prevented by validation
+      createBoundaryLine1D( m_currentNode );
+    }
   }
 
   private void doubleClickedLeft( )
@@ -209,40 +289,6 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
       return;
 
     createBoundaryLine2D( m_nodeList.toArray( new IFE1D2DNode[m_nodeList.size()] ) );
-  }
-
-  private boolean checkFor1DContiLine( final IFE1D2DNode node )
-  {
-    if( node == null )
-      return false;
-
-    // TODO: would be nice to show the validations during mouse move
-
-    /* check for end of reach */
-    final IFE1D2DElement[] elements = node.getAdjacentElements();
-    if( elements.length == 0 )
-    {
-      final IStatus status = new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "This is a single 1D node that is not attached to the net. Continuity line not added." );
-      handleError( status );
-      return false;
-    }
-    else if( elements.length > 1 )
-    {
-      final IStatus status = new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "This node is not at the end of the 1D-reach. Continuity line not added." );
-      handleError( status );
-      return false;
-    }
-
-    /* check for existance of another conti line */
-    final IFELine contiLine = m_discModel.findContinuityLine( node.getPoint(), 0.1 );
-    if( contiLine == null )
-      return true;
-
-    final IStatus status = new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, "There already is a continuity line at the end of this 1D reach. Continuity line not added." );
-    handleError( status );
-
-    return false;
-    // return contiLine == null || contiLine instanceof IContinuityLine2D;
   }
 
   private void createBoundaryLine1D( final IFE1D2DNode node )
@@ -335,16 +381,12 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
     if( !m_nodeList.isEmpty() )
     {
-      final IKalypsoLayerModell modell = mapPanel.getMapModell();
-
-      final LineGeometryBuilder geometryBuilder = new LineGeometryBuilder( 0, modell.getCoordinatesSystem() );
       try
       {
-        for( int i = 0; i < m_nodeList.size(); i++ )
-          geometryBuilder.addPoint( m_nodeList.get( i ).getPoint() );
+        final LineGeometryBuilder geometryBuilder = createLineBuilder( mapPanel );
 
         final GeoTransform projection = mapPanel.getProjection();
-        geometryBuilder.paint( g, projection, m_currentMapPoint );
+        geometryBuilder.paint( g, projection, null );
       }
       catch( final Exception e )
       {
@@ -355,5 +397,26 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     /* paint the snap */
     if( m_pointSnapper != null )
       m_pointSnapper.paint( g );
+
+    if( m_currentMapPoint != null )
+    {
+      final Point warningPosition = new Point( m_currentMapPoint.x + 10, m_currentMapPoint.y - 10 );
+      m_warningRenderer.paintToolTip( warningPosition, g, bounds );
+    }
+  }
+
+  private LineGeometryBuilder createLineBuilder( final IMapPanel mapPanel ) throws Exception
+  {
+    final IKalypsoLayerModell modell = mapPanel.getMapModell();
+
+    final LineGeometryBuilder geometryBuilder = new LineGeometryBuilder( 0, modell.getCoordinatesSystem() );
+    for( int i = 0; i < m_nodeList.size(); i++ )
+      geometryBuilder.addPoint( m_nodeList.get( i ).getPoint() );
+
+    final GM_Point currentPoint = MapUtilities.transform( getMapPanel(), m_currentMapPoint );
+
+    geometryBuilder.addPoint( currentPoint );
+
+    return geometryBuilder;
   }
 }
