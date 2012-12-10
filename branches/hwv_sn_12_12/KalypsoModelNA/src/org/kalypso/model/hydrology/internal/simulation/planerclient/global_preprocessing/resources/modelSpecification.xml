@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	typeID="KalypsoNA_GlobalPreprocessing">
+	<input id="parametersModel" relativeToCalcCase="false" path="parameter.gml" />
+	<output id="sudsModel" relativeToCalcCase="false" path="suds.gml" />
+	<output id="SudsFolder" relativeToCalcCase="false" path="suds" />
+</modelspec>
