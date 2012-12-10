@@ -3,22 +3,30 @@ package org.kalypso.model.flood.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gml.ui.map.CoverageManagementWidget;
+import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
 
-public class VisualizeGridDataHandler extends AbstractHandler
+public class VisualizeGridDataHandler extends AbstractHandler implements IHandler
 {
+
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -43,14 +51,22 @@ public class VisualizeGridDataHandler extends AbstractHandler
       return null;
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "org.kalypso.model.flood.handlers.VisualizeGridDataHandler.3" ), Messages.getString( "org.kalypso.model.flood.handlers.VisualizeGridDataHandler.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
-    coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
-    coverageManagementWidget.setAllowUserChangeGridFolder( false );
+    try
+    {
+      final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString("org.kalypso.model.flood.handlers.VisualizeGridDataHandler.3"), Messages.getString("org.kalypso.model.flood.handlers.VisualizeGridDataHandler.4") ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+      coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
+      coverageManagementWidget.setAllowUserChangeGridFolder( false );
 
-    final ActivateWidgetJob job = new ActivateWidgetJob( Messages.getString( "org.kalypso.model.flood.handlers.VisualizeGridDataHandler.6" ), coverageManagementWidget, mapPanel, activePage ); //$NON-NLS-1$
-    job.schedule();
+      final ActivateWidgetJob job = new ActivateWidgetJob( Messages.getString("org.kalypso.model.flood.handlers.VisualizeGridDataHandler.6"), coverageManagementWidget, mapPanel, activePage ); //$NON-NLS-1$
+      job.schedule();
+    }
+    catch( final CoreException e )
+    {
+      KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
 
     return null;
   }
+
 }

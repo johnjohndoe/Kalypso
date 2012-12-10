@@ -24,7 +24,7 @@
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General License for more details.
+ *  Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
@@ -47,7 +47,7 @@ import java.util.Date;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -57,89 +57,107 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  * @author Gernot Belger
  * @author Thomas Jung
  */
-public interface ITinReference extends Feature
+public interface ITinReference extends IFeatureWrapper2
 {
   enum SOURCETYPE
   {
-    gml( "GML" ), //$NON-NLS-1$
-    hmo( "HMO-Datei" ), //$NON-NLS-1$
-    shape( "ESRI Shape-Datei" ); //$NON-NLS-1$
-
-    private final String m_label;
-
-    private SOURCETYPE( final String label )
+    gml
     {
-      m_label = label;
-    }
-
-    @Override
-    public String toString( )
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "GML"; //$NON-NLS-1$
+      }
+    },
+    hmo
     {
-      return m_label;
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "HMO-Datei"; //$NON-NLS-1$
+      }
+    },
+    shape
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "ESRI Shape-Datei"; //$NON-NLS-1$
+      }
     }
   }
 
-  QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "TinReference" ); //$NON-NLS-1$
+  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "TinReference" ); //$NON-NLS-1$
 
-  QName QNAME_PROP_MIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "min" ); //$NON-NLS-1$
+  public final static QName QNAME_PROP_MIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "min" ); //$NON-NLS-1$
 
-  QName QNAME_PROP_MAX = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "max" ); //$NON-NLS-1$
+  public final static QName QNAME_PROP_MAX = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "max" ); //$NON-NLS-1$
 
-  QName QNAME_PROP_SOURCE_LOCATION = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceLocation" ); //$NON-NLS-1$
+  public final static QName QNAME_PROP_SOURCE_LOCATION = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceLocation" ); //$NON-NLS-1$
 
-  QName QNAME_PROP_SOURCE_PATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourcePath" ); //$NON-NLS-1$
+  public final static QName QNAME_PROP_SOURCE_PATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourcePath" ); //$NON-NLS-1$
 
-  QName QNAME_PROP_SOURCE_DATE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceDate" ); //$NON-NLS-1$
+  public final static QName QNAME_PROP_SOURCE_DATE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceDate" ); //$NON-NLS-1$
 
-  QName QNAME_PROP_SOURCE_TYPE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceType" ); //$NON-NLS-1$
+  public final static QName QNAME_PROP_SOURCE_TYPE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceType" ); //$NON-NLS-1$
 
-  QName QNAME_PROP_TIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "tin" ); //$NON-NLS-1$
+  public final static QName QNAME_PROP_TIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "tin" ); //$NON-NLS-1$
 
-  void setMin( BigDecimal min );
+  public void setMin( BigDecimal min );
 
-  BigDecimal getMin( );
+  public BigDecimal getMin( );
 
-  void setMax( BigDecimal max );
+  public void setMax( BigDecimal max );
 
-  BigDecimal getMax( );
+  public BigDecimal getMax( );
 
-  void setTin( GM_TriangulatedSurface surface );
+  public void setTin( GM_TriangulatedSurface surface );
 
-  GM_TriangulatedSurface getTin( );
+  public GM_TriangulatedSurface getTin( );
 
-  void setSourceLocation( URL location );
+  public void setSourceLocation( URL location );
 
-  URL getSourceLocation( );
+  public URL getSourceLocation( );
 
-  SOURCETYPE getSourceType( );
+  public SOURCETYPE getSourceType( );
 
-  void setSourceFeaturePath( final GMLXPath path );
+  public void setSourceFeaturePath( final GMLXPath path );
 
-  GMLXPath getSourceFeaturePath( );
+  public GMLXPath getSourceFeaturePath( );
 
-  void setUpdateDate( Date date );
+  public void setUpdateDate( Date date );
 
-  void setSourceType( final SOURCETYPE type );
+  public void setSourceType( final SOURCETYPE type );
 
-  Date getUpdateDate( );
+  public Date getUpdateDate( );
 
   // Non-Binding helpers
 
   /**
    * Finds the (linearly-)interpolated value of this tin at the given position.<br>
    * If the position is not covered by this surface, {@link Double#NaN} will be returned.
-   *
+   * 
    * @param pos
    *            A position in the same coordinate system as this geometry.
    */
-  double getValue( final GM_Position pos );
+  public double getValue( final GM_Position pos );
 
   /**
    * Returns the parent of this referenz as a {@link IRunoffEvent}.
-   *
+   * 
    * @return The paretn feature adapted to {@link IRunoffEvent}, ma be <code>null</code>.
    */
-  IRunoffEvent getRunoffEvent( );
+  public IRunoffEvent getRunoffEvent( );
 
-  GM_Triangle getTriangle( final GM_Position pos );
+  public GM_Triangle getTraingle( final GM_Position pos );
+
 }

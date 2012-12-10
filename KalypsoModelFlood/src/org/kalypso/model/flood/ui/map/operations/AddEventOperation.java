@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -33,11 +34,9 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Gernot Belger
@@ -54,13 +53,11 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   private final String m_eventName;
 
-  private final IScenarioDataProvider m_provider;
+  private final SzenarioDataProvider m_provider;
 
   private final URL m_sldContent;
 
-  private IRunoffEvent m_newEvent;
-
-  public AddEventOperation( final String eventName, final IFloodModel model, final IFolder eventsFolder, final IKalypsoCascadingTheme wspThemes, final IScenarioDataProvider provider, final URL sldContent )
+  public AddEventOperation( final String eventName, final IFloodModel model, final IFolder eventsFolder, final IKalypsoCascadingTheme wspThemes, final SzenarioDataProvider provider, final URL sldContent )
   {
     m_eventName = eventName;
     m_model = model;
@@ -80,8 +77,8 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       final String dialogValue = FileUtilities.validateName( m_eventName, "_" ); //$NON-NLS-1$
 
       /* Create a unique name */
-      final IFeatureBindingCollection<IRunoffEvent> events = m_model.getEvents();
-      final Set<String> names = new HashSet<>();
+      final IFeatureWrapperCollection<IRunoffEvent> events = m_model.getEvents();
+      final Set<String> names = new HashSet<String>();
       for( final IRunoffEvent runoffEvent : events )
         names.add( runoffEvent.getName() );
 
@@ -95,15 +92,15 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       ProgressUtilities.worked( monitor, 1 );
 
       /* Add new feature */
-      final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class.getName() );
-      final Feature parentFeature = events.getParentFeature();
-      final IRelationType parentRelation = events.getFeatureList().getPropertyType();
+      final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class );
+      final Feature parentFeature = events.getFeature();
+      final IRelationType parentRelation = events.getWrappedList().getParentFeatureTypeProperty();
       final IFeatureType featureType = parentRelation.getTargetFeatureType();
       final Feature newEventFeature = workspace.createFeature( parentFeature, parentRelation, featureType, 1 );
 
-      m_newEvent = (IRunoffEvent) newEventFeature.getAdapter( IRunoffEvent.class );
-      m_newEvent.setName( m_eventName );
-      m_newEvent.setDataPath( dataPath );
+      final IRunoffEvent newEvent = (IRunoffEvent) newEventFeature.getAdapter( IRunoffEvent.class );
+      newEvent.setName( m_eventName );
+      newEvent.setDataPath( dataPath );
 
       /* Create new folder and fill with defaults */
       final IFolder newEventFolder = m_eventsFolder.getFolder( dataPath );
@@ -115,8 +112,8 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
       // - check if theme is already there
       // - add theme to map
-      checkSLDFile( m_newEvent, newEventFolder, m_sldContent );
-      addEventThemes( m_wspThemes, m_newEvent );
+      checkSLDFile( newEvent, newEventFolder, m_sldContent );
+      addEventThemes( m_wspThemes, newEvent );
 
       final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, newEventFeature, null, true );
       workspace.postCommand( command );
@@ -126,7 +123,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       /*
        * Save model and map, as undo is not possible here and the user should not be able to discard the changes
        */
-      m_provider.saveModel( IFloodModel.class.getName(), new SubProgressMonitor( monitor, 1 ) );
+      m_provider.saveModel( IFloodModel.class, new SubProgressMonitor( monitor, 1 ) );
       // TODO: save map. Necessary?
 
       return Status.OK_STATUS;
@@ -159,7 +156,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     final IFile propertiesDeFile = eventFolder.getFile( "wsp_de.properties" ); //$NON-NLS-1$
     if( !sldFile.exists() )
     {
-      final String eventID = event.getId();
+      final String eventID = event.getFeature().getId();
 
       final URL propertiesLocation = new URL( sldTemplate, "wsp.properties" ); //$NON-NLS-1$
       final URL propertiesDeLocation = new URL( sldTemplate, "wsp_de.properties" ); //$NON-NLS-1$
@@ -179,7 +176,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   public static void addEventThemes( final IKalypsoCascadingTheme wspThemes, final IRunoffEvent event ) throws Exception
   {
-    final String eventID = event.getId();
+    final String eventID = event.getFeature().getId();
 
     {// Polygone
       final StyledLayerType polygoneLayer = new StyledLayerType();
@@ -250,7 +247,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       final Property layerPropertyThemeInfoId = new Property();
       layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
 
-      final String infoFormat = String.format( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.2" ), event.getName() ); //$NON-NLS-1$
+      final String infoFormat = String.format( Messages.getString("org.kalypso.model.flood.ui.map.operations.AddEventOperation.2"), event.getName() ); //$NON-NLS-1$
       final String infoValue = "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=" + infoFormat; //$NON-NLS-1$
       layerPropertyThemeInfoId.setValue( infoValue );
 
@@ -281,8 +278,4 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     return "../events/" + event.getDataPath().toPortableString() + "/wsp.sld"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public IRunoffEvent getNewEvent( )
-  {
-    return m_newEvent;
-  }
 }

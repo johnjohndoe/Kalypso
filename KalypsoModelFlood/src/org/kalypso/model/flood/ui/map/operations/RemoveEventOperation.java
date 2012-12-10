@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
@@ -30,8 +31,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
-
 /**
  * @author Gernot Belger
  */
@@ -39,11 +38,11 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
 {
   private final Object[] m_treeSelection;
 
-  protected final IScenarioDataProvider m_provider;
+  protected final SzenarioDataProvider m_provider;
 
   private final IKalypsoCascadingTheme m_wspThemes;
 
-  public RemoveEventOperation( final Object[] treeSelection, final IScenarioDataProvider provider, final IKalypsoCascadingTheme wspThemes )
+  public RemoveEventOperation( final Object[] treeSelection, final SzenarioDataProvider provider, final IKalypsoCascadingTheme wspThemes )
   {
     m_treeSelection = treeSelection;
     m_provider = provider;
@@ -54,8 +53,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( Messages.getString("RemoveEventOperation_0"), m_treeSelection.length + 10 ); //$NON-NLS-1$
-
-    final Collection<IStatus> removeResults = new ArrayList<>();
+    final Collection<IStatus> removeResults = new ArrayList<IStatus>();
     try
     {
       for( final Object element : m_treeSelection )
@@ -161,10 +159,10 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
               final Feature feature = (Feature) object;
 
               // the papa papa of the coverage is the event
-              final Feature parent = feature.getOwner().getOwner();
+              final Feature parent = feature.getParent().getParent();
               if( parent != null )
               {
-                if( parent.getId().equals( event.getId() ) )
+                if( parent.getId().equals( event.getGmlID() ) )
                 {
                   wspThemes.removeTheme( kalypsoTheme );
                 }

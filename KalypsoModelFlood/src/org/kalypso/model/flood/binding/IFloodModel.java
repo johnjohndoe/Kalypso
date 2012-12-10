@@ -42,11 +42,10 @@ package org.kalypso.model.flood.binding;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-
-import de.renew.workflow.connector.cases.IModel;
 
 /**
  * @author Thomas Jung
@@ -65,8 +64,8 @@ public interface IFloodModel extends IModel
 
   // get Events
 
-  public IFeatureBindingCollection<IFloodPolygon> getPolygons( );
+  public IFeatureWrapperCollection<IFloodPolygon> getPolygons( );
 
-  public IFeatureBindingCollection<IRunoffEvent> getEvents( );
+  public IFeatureWrapperCollection<IRunoffEvent> getEvents( );
 
 }

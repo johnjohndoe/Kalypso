@@ -42,7 +42,7 @@ package org.kalypso.model.flood.extension;
 
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.model.flood.i18n.Messages;
-import org.kalypso.module.AbstractKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
  * @author Dirk Kuch

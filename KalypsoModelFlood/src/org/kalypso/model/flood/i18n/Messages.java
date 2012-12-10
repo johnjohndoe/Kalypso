@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,18 +36,17 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.i18n;
 
+import java.util.IllegalFormatException;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
  * @author kimwerner
- * 
+ *
  */
 public class Messages
 {
@@ -55,20 +54,39 @@ public class Messages
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
+  private static final Object[] NO_ARGS = new Object[0];
+
   private Messages( )
   {
   }
 
-  /**
-   * java reflections needs this method-signatur
-   */
+/*
+ * java reflections needs this method-signatur
+ */
   public static String getString( final String key )
   {
-    return getString( key, ArrayUtils.EMPTY_OBJECT_ARRAY );
+    return getString( key, NO_ARGS );
   }
 
   public static String getString( final String key, final Object... args )
   {
-    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
+    String formatStr = ""; //$NON-NLS-1$
+    try
+    {
+      formatStr = RESOURCE_BUNDLE.getString( key );
+      if( args.length == 0 )
+        return formatStr;
+
+      return String.format( formatStr, args );
+    }
+    catch( final MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
+    catch( final IllegalFormatException e )
+    {
+      e.printStackTrace();
+      return '!' + formatStr + '!';
+    }
   }
 }

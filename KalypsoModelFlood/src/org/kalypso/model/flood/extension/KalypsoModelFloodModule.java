@@ -2,21 +2,16 @@ package org.kalypso.model.flood.extension;
 
 import java.net.URL;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
+import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard;
 import org.kalypso.model.flood.ui.wizards.NewProjectWizard;
-import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
-import org.kalypso.module.ISetAsBaseScenarioHandler;
-import org.kalypso.module.welcome.INewProjectWizard;
-import org.kalypso.module.welcome.INewProjectWizardProvider;
+import org.kalypso.project.database.client.extension.AbstractKalypsoModule;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
-
-import de.renew.workflow.base.IWorkflow;
-import de.renew.workflow.connector.WorkflowProjectNature;
 
 public class KalypsoModelFloodModule extends AbstractKalypsoModule
 {
@@ -49,6 +44,15 @@ public class KalypsoModelFloodModule extends AbstractKalypsoModule
   public URL getInfoURL( )
   {
     return getInfoURL( getClass(), KalypsoModelFloodPlugin.getDefault() );
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.IKalypsoModule#getRemoteDatabaseSettings()
+   */
+  @Override
+  public IKalypsoModuleDatabaseSettings getDatabaseSettings( )
+  {
+    return new KalypsoFloodRemoteDatabaseSettings();
   }
 
   @Override
@@ -95,37 +99,4 @@ public class KalypsoModelFloodModule extends AbstractKalypsoModule
     return new SzenarioProjectOpenAction( ID );
   }
 
-  /**
-   * @see org.kalypso.module.IKalypsoModule#acceptProject(org.eclipse.core.resources.IProject)
-   */
-  @Override
-  public boolean acceptProject( final IProject project ) throws CoreException
-  {
-    final WorkflowProjectNature nature = WorkflowProjectNature.toThisNature( project );
-    if( nature == null )
-      return false;
-
-    final IWorkflow workflow = nature.getCurrentWorklist();
-    final String uri = workflow.getURI();
-
-    return uri.contains( "org.kalypso.model.flood.WF_KalypsoFlood" ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.module.IKalypsoModule#getNewProjectCategoryId()
-   */
-  @Override
-  public String getNewProjectCategoryId( )
-  {
-    return NewProjectWizard.CATEGORY_ID;
-  }
-
-  /**
-   * @see org.kalypso.module.IKalypsoModule#getSetAsBaseScenarioHandler()
-   */
-  @Override
-  public ISetAsBaseScenarioHandler getSetAsBaseScenarioHandler( )
-  {
-    return null;
-  }
 }

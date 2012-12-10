@@ -52,9 +52,10 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gml.ui.coverage.CoverageManagementHelper;
-import org.kalypso.gml.ui.coverage.CoverageThemeInfo;
+import org.kalypso.gml.ui.map.CoverageManagementHelper;
+import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.i18n.Messages;
@@ -71,10 +72,9 @@ import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Thomas Jung
@@ -95,12 +95,12 @@ public class FloodModelHelper
       final IKalypsoTheme theme = themes[i];
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)theme;
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
-        if( featureList != null && featureList.getPropertyType().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
+        if( featureList != null && featureList.getParentFeatureTypeProperty().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
         {
-          final Feature parentFeature = featureList.getOwner();
-          if( parentFeature.getId().equals( runoffEvent.getId() ) )
+          final Feature parentFeature = featureList.getParentFeature();
+          if( parentFeature.getId().equals( runoffEvent.getFeature().getId() ) )
             return i;
         }
       }
@@ -122,15 +122,15 @@ public class FloodModelHelper
       final IKalypsoTheme theme = themes[i];
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)theme;
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
-        if( featureList != null && featureList.getOwner() != null )
+        if( featureList != null && featureList.getParentFeature() != null )
         {
-          final Feature grandPa = featureList.getOwner();
+          final Feature grandPa = featureList.getParentFeature();
           if( grandPa != null && grandPa.getParentRelation() != null && grandPa.getParentRelation().getQName().equals( IRunoffEvent.QNAME_PROP_RESULT_COVERAGES ) )
           {
             final Feature grandGrandPa = grandPa.getOwner();
-            if( grandGrandPa.getId().equals( runoffEvent.getId() ) )
+            if( grandGrandPa.getId().equals( runoffEvent.getFeature().getId() ) )
               return i;
           }
         }
@@ -151,19 +151,19 @@ public class FloodModelHelper
     {
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)theme;
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
         if( featureList == null )
           continue;
-        final QName memberFT = featureList.getPropertyType().getQName();
+        final QName memberFT = featureList.getParentFeatureTypeProperty().getQName();
         if( eventsToRemove != null )
         {
           for( final IRunoffEvent runoffEvent : eventsToRemove )
           {
-            Feature parentFeature = featureList.getOwner();
+            Feature parentFeature = featureList.getParentFeature();
             while( parentFeature != null )
             {
-              if( memberFT.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) && runoffEvent.getId().equals( parentFeature.getId() ) )
+              if( memberFT.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) && runoffEvent.getGmlID().equals( parentFeature.getId() ) )
               {
                 wspTheme.removeTheme( theme );
                 break;
@@ -192,7 +192,7 @@ public class FloodModelHelper
     final StyledLayerType wspLayer = new StyledLayerType();
 
     wspLayer.setName( Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.0", event.getName() ) ); //$NON-NLS-1$
-    wspLayer.setFeaturePath( "#fid#" + event.getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/" + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/" + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     wspLayer.setLinktype( "gml" ); //$NON-NLS-1$
     wspLayer.setType( "simple" ); //$NON-NLS-1$
     wspLayer.setVisible( true );
@@ -206,7 +206,7 @@ public class FloodModelHelper
     layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
 
     final String infoFormat = String.format( Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.10" ), event.getName() ); //$NON-NLS-1$
-    final String infoValue = String.format( "%s?format=%s", CoverageThemeInfo.ID, infoFormat );//$NON-NLS-1$
+    final String infoValue = String.format( "%s?format=%s", CoverageThemeInfo.class.getName(), infoFormat );//$NON-NLS-1$ 
     layerPropertyThemeInfoId.setValue( infoValue );
 
     final List<Property> layerPropertyList = wspLayer.getProperty();
@@ -232,9 +232,9 @@ public class FloodModelHelper
    * Removes the specified coverage file.<br/>
    * The model is NOT automatically saved after this operation.
    */
-  public static IStatus removeResultCoverages( final IScenarioDataProvider dataProvider, final ICoverageCollection resultCoverages )
+  public static IStatus removeResultCoverages( final SzenarioDataProvider dataProvider, final ICoverageCollection resultCoverages )
   {
-    final IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
+    IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
     final ICoverage[] coverages = resultCoveragesList.toArray( new ICoverage[resultCoveragesList.size()] );
     try
     {
@@ -243,7 +243,7 @@ public class FloodModelHelper
       for( final ICoverage coverageToDelete : coverages )
       {
         /* Delete underlying grid grid file */
-        final IStatus status = CoverageManagementHelper.deleteRangeSetFile( coverageToDelete );
+        final IStatus status = CoverageManagementHelper.deleteGridFile( coverageToDelete );
         if( !status.isOK() )
           return status;
 
@@ -267,9 +267,10 @@ public class FloodModelHelper
    * @param shell
    * @param events
    *          the RunoffEvents
+   * 
    * @return a array of selected {@link IRunoffEvent}
    */
-  public static IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureBindingCollection<IRunoffEvent> events )
+  public static IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureWrapperCollection<IRunoffEvent> events )
   {
     final LabelProvider labelProvider = new RunoffEventForProcessingLabelProvider();
 
@@ -281,12 +282,12 @@ public class FloodModelHelper
 
     final Object[] selectedObjects = dialog.getResult();
 
-    final List<IRunoffEvent> selectedEventList = new LinkedList<>();
+    final List<IRunoffEvent> selectedEventList = new LinkedList<IRunoffEvent>();
     for( final Object object : selectedObjects )
     {
       if( object instanceof IRunoffEvent )
       {
-        selectedEventList.add( (IRunoffEvent)object );
+        selectedEventList.add( (IRunoffEvent) object );
       }
     }
     return selectedEventList.toArray( new IRunoffEvent[selectedEventList.size()] );
@@ -304,6 +305,6 @@ public class FloodModelHelper
     if( index == -1 )
       return null;
 
-    return (IKalypsoFeatureTheme)wspThemes.getAllThemes()[index];
+    return (IKalypsoFeatureTheme) wspThemes.getAllThemes()[index];
   }
 }
