@@ -1,0 +1,1767 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="Grafik_Programm">
+  <chapterinfo>
+    <date></date>
+
+    <indexterm>
+      <primary>Einführung</primary>
+    </indexterm>
+  </chapterinfo>
+
+  <title>Interaktive Gangliniengrafik</title>
+
+  <section id="grafik_einfuehrung">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Einführung</title>
+
+    <para id="para1">Das Programm zur Gangliniendarstellung ist zur schnellen
+    interaktiven oder automatischen Darstellung und Auswertung von
+    beobachteten oder berechneten Zeitreihen aus Messnetzsystemen,
+    Modellrechnungen oder Datenbanken vorgesehen.</para>
+
+    <figure>
+      <title>Oberfläche des Grafikprogramms</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild1.png" scale="75" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Es können bis zu 10 Kurven gleichzeitig eingeladen und dargestellt
+    werden.</para>
+
+    <para>Die Datenreihen können wahlweise 2 verschiedenen y-Achsen zugeordnet
+    werden. Die Darstellung der Ganglinien kann unter Wahl der Farben und
+    Linienarten als Linien-, Balken-, Treppen-, Punkt- oder Linien- mit
+    Punktdarstellung erfolgen.</para>
+
+    <para>Die Datenformate werden automatisch erkannt und umgewandelt. Es
+    werden zur Zeit 8 verschiedene Formate unterschieden. Als Standardformat
+    wird folgender Aufbau der Daten verwendet:</para>
+
+    <para>„TT.MM.JJ hh:mm Wert“ bzw. „TT.MM.JJJJ hh:mm:ss Wert“</para>
+
+    <para>Die einzelnen unterstützten Dateiformate werden im Anhang näher
+    erläutert. (Datenformate )</para>
+
+    <para>Liegen entsprechend dem BCENA-Format Blöcke mit Knotennummern vor,
+    so wird der Anwender zur Auswahl einer Nummer aufgefordert. Die einzelnen
+    Jahresblöcke werden entsprechend der ausgewählten Knotennummer zu einer
+    zeitlich kontinuierlichen Ganglinie zusammengesetzt und
+    dargestellt.</para>
+
+    <para>Die zuerst eingelesene Datenreihe bestimmt den Anfangszeitpunkt der
+    Datendarstellung und die x-Achsenbeschriftung. Die x-Achsenbeschriftung
+    kann in vielfältiger Art durch den Anwender eingestellt werden.</para>
+
+    <para>Das Grafikmodul besitzt die wichtigsten Grundfunktionen zur
+    Seitenansicht, Druckereinstellung und zum Ausdrucken der Ganglinien. Über
+    einen Zusatzmenüpunkt können komfortable Korrekturmöglichkeiten angewandt
+    werden.</para>
+
+    <para>Weiterführende Gestaltungsmöglichkeiten zur Gangliniendarstellung
+    können über die Exportschnittstelle zur Datensicherung und der
+    anschließenden Bearbeitung zum Beispiel in Excel erfolgen.</para>
+
+    <para>Eine Reihe von Menüpunkten, Schaltflächen und Werkzeugen ermöglichen
+    eine Vielzahl von Darstellungen und Auswertungen, die im folgenden näher
+    erläutert werden sollen.</para>
+  </section>
+
+  <section id="grafik_menu_datei">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Menü: Datei</title>
+
+    <figure>
+      <title>Menü Datei</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild2.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Über den Menüpunkt <guimenu>Datei</guimenu> sind alle wichtigen
+    Funktionen zum Laden, Sichern, Drucken und Seiten- und
+    Druckereinstellungen enthalten. Die folgende Tabelle enthält die
+    Erläuterung der einzelnen Menüpunkte.</para>
+
+    <informaltable>
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry><emphasis role="bold">Menüpunkt</emphasis></entry>
+
+            <entry><emphasis role="bold">Funktion</emphasis></entry>
+          </row>
+
+          <row>
+            <entry>Daten laden:</entry>
+
+            <entry>Neue Datenreihe einladen</entry>
+          </row>
+
+          <row>
+            <entry>Nochmals laden:</entry>
+
+            <entry>Letzte Datenreihe wird nochmals eingeladen. Voraussetzung
+            ist, dass bereits eine Datenreihe über den Menüpunkt Daten laden
+            eingeladen wurde. Bei einigen Formaten, in denen die Auswahl von
+            Blocknummern oder Spaltennummern notwendig ist, wird diese Auswahl
+            erneut angeboten.</entry>
+          </row>
+
+          <row>
+            <entry>Vorlage laden:</entry>
+
+            <entry>Eine vorher als Vorlage gesicherte Einstellung wird
+            geladen. Es kann gewählt werden, ob die bisher geladenen
+            Datenreihen im Diagramm enthalten bleiben sollen oder
+            nicht.</entry>
+          </row>
+
+          <row>
+            <entry>Vorlage sichern:</entry>
+
+            <entry>Alle aktuellen Einstellungen werden unter einem Namen als
+            Vorlage (Template) gesichert und können als Vorlage verwendet
+            werden. Gesichert werden unter anderem: Name der Datenreihe,
+            Anzeige, Diagrammart, y-Achse, Maßstab, Beschriftung u.s.w..
+            Hinweis: Es werden nicht die Datenwerte selbst gesichert.</entry>
+          </row>
+
+          <row>
+            <entry>Grafik exportieren:</entry>
+
+            <entry>Für eine weitere Verwendung als Bitmap kann die aktuelle
+            Darstellung als BMP-Datei abgelegt werden. Hinweis: Analog kann
+            über Bearbeiten - Grafik in die Zwischenablage die Übergabe der
+            Darstellung in ein externes Bildbearbeitungsprogramm
+            erfolgen.</entry>
+          </row>
+
+          <row>
+            <entry>Drucken:</entry>
+
+            <entry>Die Diagrammdarstellung wird auf den Drucker ausgegeben.
+            Der Windows-Standarddialog ermöglicht eine Einstellung des
+            Druckers und seiner Eigenschaften.</entry>
+          </row>
+
+          <row>
+            <entry>Seitenansicht:</entry>
+
+            <entry>Vorschau der Druckausgabe.</entry>
+          </row>
+
+          <row>
+            <entry>Druckereinrichtung:</entry>
+
+            <entry>Einstellung der Druckereigenschaften (Seitenformat u.a.m.)
+            ohne anschließendes Drucken.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    <para>Die Vorgehensweise bei der Arbeit mit Vorlagen wird in der
+    Technischen Dokumentation zum Programm KALYPSO beschrieben.</para>
+  </section>
+
+  <section id="grafik_menu_bearbeiten">
+    <title>Menü: Bearbeiten</title>
+
+    <para>Das Menü Bearbeiten enthält Funktionen zur Bearbeitung von
+    Datenreihen, Kopieren eines Diagramms in die Zwischenablage und zum
+    Entfernen aller angezeigter Kurven aus dem Diagramm.</para>
+
+    <figure>
+      <title>Menü Bearbeiten</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild3.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Im Einzelnen stehen die folgenden Funktionen zur Verfügung:</para>
+
+    <section id="menu_bearbeiten">
+      <sectioninfo>
+        <date><indexterm>
+            <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Korrekturmodus</title>
+
+      <para>Die Werte der Datenreihen können in verschiedener Art und Weise
+      korrigiert werden. Voraussetzung dazu ist die zusätzliche Aktivierung
+      des Korrekturmodus.</para>
+
+      <para>Nach Einschalten des Korrekturmodus erscheint eine zusätzliche
+      Werkzeugleiste mit folgenden Funktionen:</para>
+
+      <figure>
+        <title>Schaltflächenleiste im Korrekturmodus</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild4.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <itemizedlist>
+        <listitem>
+          <para>Auswahl der zu korrigierenden Datenreihe</para>
+        </listitem>
+
+        <listitem>
+          <para>Werte löschen</para>
+        </listitem>
+
+        <listitem>
+          <para>Werte aus anderen Datenreihen übernehmen</para>
+        </listitem>
+
+        <listitem>
+          <para>Einzelwerte hinzufügen</para>
+        </listitem>
+
+        <listitem>
+          <para>Stützstellenkorrektur (y-Achse)</para>
+        </listitem>
+
+        <listitem>
+          <para>Stützstellenkorrektur (Zeit-Achse)</para>
+        </listitem>
+
+        <listitem>
+          <para>Multiplikation mit einem Wert</para>
+        </listitem>
+
+        <listitem>
+          <para>Addieren von Datenreihen</para>
+        </listitem>
+
+        <listitem>
+          <para>Subtrahieren von Datenreihen</para>
+        </listitem>
+
+        <listitem>
+          <para>Spiegeln von Kurvenabschnitten</para>
+        </listitem>
+
+        <listitem>
+          <para>Verschieben von Datenreihen</para>
+        </listitem>
+
+        <listitem>
+          <para>Bestimmung des Abflussbeiwertes</para>
+        </listitem>
+
+        <listitem>
+          <para>geänderte Datenreihe sichern</para>
+        </listitem>
+
+        <listitem>
+          <para>letzte Änderung rückgängig machen</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Nach Wahl der zu korrigierenden Datenreihe wird diese farbig und
+      alle anderen Kurven im Grauton dargestellt. Als Voreinstellung wird die
+      erste sichtbare Datenreihe gewählt.</para>
+
+      <para>Der zu korrigierende Bereich wird durch einen Cursorstrich, der
+      über die Maus oder die Cursortasten bewegt werden kann, eingestellt. Ein
+      Doppelklick mit der linken Maustaste oder die &lt;enter&gt;-Taste
+      setzten den Strich. Anschließend erscheint je nach gewähltem Werkzeug
+      ein entsprechendes Eingabemenü.</para>
+
+      <informaltable>
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>Werte löschen:</entry>
+
+              <entry>Die innerhalb des gewählten Abschnitt befindlichen
+              Messwerte werden entfernt. Die Darstellung wird über diesen
+              Bereich interpoliert.</entry>
+            </row>
+
+            <row>
+              <entry>Werte übernehmen:</entry>
+
+              <entry>Für den gewählten Abschnitt werden alle Messwerte
+              gelöscht und anschließend die im gleichen Zeitraum befindlichen
+              Messwerte einer anderen Messreihe übernommen. Die zu
+              übernehmende Messreihe wird aus den in der Grafik eingeladenen
+              Datenreihen ausgewählt. Bei der Übernahme der Werte kann noch
+              ein Faktor und eine Verschiebung (Offset) eingestellt werden.
+              Die Messwertübernahme kann auf Messwertausfälle beschränkt
+              werden. (siehe auch <xref
+              linkend="grafik_messwertausfall" />)</entry>
+            </row>
+
+            <row>
+              <entry>Werte hinzufügen:</entry>
+
+              <entry>Entsprechend der Mausposition wird in x- und y-Richtung
+              ein neuer Messwert ermittelt und zur Übernahme angeboten. Der
+              y-Wert kann noch entsprechend verändert werden.</entry>
+            </row>
+
+            <row>
+              <entry>Stützstellenkorrektur (y-Achse):</entry>
+
+              <entry>Nach Wahl des Anfangs- und Endzeitpunktes können für
+              beide Zeitpunkte eine Verschiebung der y-Werte eingeben werden.
+              Ist zum Beispiel für einen Pegelschreiber bekannt, dass er zum
+              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber um 2 cm
+              nachgestellt werden musste, so kann die Datenreihe mit Offset
+              (t0)=0 und Offset (t1)=2 korrigiert werden. Die Abweichung der
+              Daten zwischen den beiden Zeitpunkten wird dabei linear von 0
+              auf 2cm interpoliert.</entry>
+            </row>
+
+            <row>
+              <entry>Stützstellenkorrektur (Zeit-Achse):</entry>
+
+              <entry>Nach Wahl des Anfangs- und Endzeitpunktes können für
+              beide Zeitpunkte in der Zeitachse verändert werden. Damit können
+              Laufzeitfehler bei Messreihenaufzeichnungen korrigiert werden.
+              Ist zum Beispiel für einen Datenschreiber bekannt, dass er zum
+              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber die Uhr
+              30 min nachgeht, so kann die Datenreihe mit Offset(t0)=0 und
+              Offset(t1)=120 min korrigiert werden. Die Datenreihe wird
+              zwischen den beiden Zeitpunkten entsprechend gestreckt.
+              Eventuell vorhanden neue Messwerte im überlappenden Bereich
+              werden überschrieben.</entry>
+            </row>
+
+            <row>
+              <entry>Multiplikation mit einem Wert:</entry>
+
+              <entry>Die Werte der aktuellen Kurve werden mit einem Zahlenwert
+              multipliziert.</entry>
+            </row>
+
+            <row>
+              <entry>Addieren von Datenreihen:</entry>
+
+              <entry>Zwei Datenreihen werden addiert.</entry>
+            </row>
+
+            <row>
+              <entry>Subtrahieren von Datenreihen:</entry>
+
+              <entry>Zwei Datenreihen werden subtrahiert.</entry>
+            </row>
+
+            <row>
+              <entry>Spiegeln von Kurvenabschnitten:</entry>
+
+              <entry>Ein Kurvenabschnitt wird in y-Richtung gespiegelt.
+              Bezugspunkt ist der y- Wert am Abschnittsanfang.</entry>
+            </row>
+
+            <row>
+              <entry>Verschieben von Datenreihen:</entry>
+
+              <entry>Die Werte werden um einen bestimmten Betrag auf der
+              Zeitachse verschoben. Die Verschiebung wird durch den Cursor als
+              Anfangs- und Zielpunkt markiert.</entry>
+            </row>
+
+            <row>
+              <entry>Abflussbeiwert:</entry>
+
+              <entry>Bestimmung des Abflussbeiwertes. Nähere Erläuterungen
+              sind im Abschnitt zum Abflussbeiwert (<xref
+              linkend="grafik_abflussbeiwert" />) vorhanden.</entry>
+            </row>
+
+            <row>
+              <entry>geänderte Datenreihe sichern:</entry>
+
+              <entry>Die aktuell bearbeitete Datenreihe wird gesichert. Die
+              Originaldaten werden dabei überschrieben. Als Datenformat wird
+              das Standardformat (Datum Zeit Wert) verwendet.</entry>
+            </row>
+
+            <row>
+              <entry>letzte Änderung rückgängig:</entry>
+
+              <entry>Der letzte Bearbeitungsschritt wird aufgehoben. Die
+              vorherige Version der Datenreihe ist immer als graue Punktlinie
+              dargestellt. Bei nochmaliger Betätigung dieser Aktion werden
+              alle Änderungen bis zum letzten Speichern aufgehoben. Ein
+              Speichern der Datenreihe ist in der Art endgültig, dass eine
+              Korrektur der Änderungen nicht mehr möglich ist.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      <para>Zusätzlich zu den Menüpunkten kann die Schaltfläche zum Export der
+      Daten genutzt werden.</para>
+
+      <figure>
+        <title>Schaltfläche Datenexport</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild5.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Die Daten werden im aktuell dargestellten Ausschnitt in einem
+      allgemeinen Textformat ausgegeben. Es werden nur die sichtbaren
+      Datenreihen ausgegeben. Das Format ist für den Import in Excel
+      vorbereitet, kann aber universell auch für andere Fremdprogramme genutzt
+      werden.</para>
+
+      <para>Die Daten werden wie folgt gespeichert: 1. Zeile Beschriftung der
+      Datenreihen (Legendentext) folgende Zeilen</para>
+
+      <para>TA1 YA1 TB1 YB1 TC1 YC1 ...</para>
+
+      <para>TA2 YA2 TB2 YB2 TC2 YC2 ... ...</para>
+
+      <para>TAn YAn TBn YBn TCn YCn ...</para>
+
+      <para>T = Zeitachsenwert, Y = Datenwert, A,B,C,... einzelnen
+      Datenreihen</para>
+
+      <para>Alle Spalten sind durch Tabulatoren getrennt. Dezimalpunkte werden
+      durch Komma dargestellt. Allerdings kann das Dezimalpunktzeichen über
+      das Menü Extras-Optionen auch beliebig gewählt werden.</para>
+    </section>
+
+    <section>
+      <title>Kopieren</title>
+
+      <para>Die Gangliniengrafik wird als "Foto" in die Zwischenablage kopiert
+      und kann nun in externen Programmen (z.B. Office-Komponenten) als Bild
+      eingefügt werden.</para>
+    </section>
+
+    <section>
+      <title>Alle Kurven entfernen</title>
+
+      <para>Alle Datenreihen werden aus der Darstellung entfernt. Dabei werden
+      eine Reihe von Einstellungen, wie zum Beispiel der Anfangszeitpunkt
+      rückgesetzt. Für eine Gangliniendarstellung müssen wieder neue
+      Messreihen eingelesen werden. Diese Aktion ist dem einzelnen Löschen
+      aller Datenreihen unter <guimenu>Anzeige - aktuelle Kurven - Entferne
+      Nr.:</guimenu> gleichzusetzen.</para>
+    </section>
+  </section>
+
+  <section id="grafik_menu_anzeige" label="">
+    <title>Menü: Anzeige</title>
+
+    <para>Einstellungen zur Anzeige der Datenreihen können über das Menü
+    Anzeige verändert werden. Einige der Menüpunkte können auch direkt über
+    Schaltflächen aufgerufen werden. Die entsprechenden Schaltflächen sind im
+    Folgenden mit dargestellt.</para>
+
+    <figure>
+      <title>Menü Anzeige</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild6.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="menu_anzeige">
+      <sectioninfo>
+        <date><indexterm>
+            <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Aktuelle Kurven</title>
+
+      <figure>
+        <title>Eingabemaske 'Aktuelle Kurven' (Tastenkürzel A)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild7.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Über die Schalter 1..10 können die Linienfarben und Linienarten
+      bzw. Punktsymbole der einzelnen Datenreihen verändert werden. Die neu
+      eingestellten Linienarten bleiben auch nach Verlassen des
+      Grafikprogramms erhalten. Sie werden in der Datei Grafik.ini im
+      Verzeichnis des Programms für den nächsten Aufruf
+      zwischengespeichert.</para>
+
+      <para>Alle derzeit geladenen Datenreihen werden als vollständiger
+      Dateiname aufgelistet.</para>
+
+      <para>Im linken Eingabefeld kann der Titel für jede Datenreihe
+      festgelegt werden. Dieser Text erscheint in der Legende.</para>
+
+      <para>Frei wählbar sind für jede der Datenreihe:</para>
+
+      <informaltable>
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>An:</entry>
+
+              <entry>Anzeige an- bzw. ausschalten</entry>
+            </row>
+
+            <row>
+              <entry>Rechte y-Achse:</entry>
+
+              <entry>Datenreihe bezieht sich auf die rechte y-Achse. In der
+              Legende steht die Linie der Datenreihe zur Kennzeichnung rechts
+              vom Text.</entry>
+            </row>
+
+            <row>
+              <entry>Diagrammart:</entry>
+
+              <entry>Darstellungsart der Kurven</entry>
+            </row>
+
+            <row>
+              <entry>Entferne Nr.:</entry>
+
+              <entry>Bei Auswahl einer Nummer wird nach Betätigen von
+              <guimenu>Ok</guimenu> die Datenreihe aus der grafischen
+              Darstellung vollständig entfernt.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+
+    <section>
+      <title>Maßstabsänderungen</title>
+
+      <figure>
+        <title>Schaltfläche Maßstabsänderungen (Tastenkürzel "M")</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild8.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <figure>
+        <title>Eingabemaske Maßstab</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild9.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Es können für beide y-Achsen, die Niederschlags-Achse und die
+      x-Achse die Minimal-, Maximalwert und die Skalierung festgelegt
+      werden.</para>
+
+      <para><emphasis role="bold">Y beim Zoom konstant
+      halten</emphasis></para>
+
+      <para>Beim Zoomen mit der Maus (Rechteck aufziehen) wird nur der
+      x-Bereich (Zeitachse) verändert. Die Einstellung der y-Werte bleiben
+      unverändert.</para>
+
+      <para><emphasis role="bold">dx,dY beim Zoom autom.
+      anpassen</emphasis></para>
+
+      <para>Beim Zoomen mit der Maus (Rechteck aufziehen) werden die
+      Skalierungsabstände automatisch neu berechnet.</para>
+
+      <para>Über den Schalter <emphasis role="bold">Darstellung</emphasis>
+      kann der für die Achsendarstellung tatsächlich dargestellte Bereich
+      eingegrenzt werden.</para>
+
+      <para>Die Einstellungen für die rechte y-Achse werden nur dann
+      verfügbar, wenn dieser Achse mindestens eine Datenreihe zugeordnet
+      wurde. Die Zuordnung erfolgt über den Menüpunkt <guimenu>Anzeige -
+      Aktuelle Kurven</guimenu>.</para>
+    </section>
+
+    <section>
+      <title>Letzte Ansicht</title>
+
+      <figure>
+        <title>Schaltfläche Letzte Ansicht</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild10.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Nach dem Zoomen mit der Maus (Rechteck aufziehen) wird die letzte
+      Maßstabseinstellung wieder aufgerufen.</para>
+    </section>
+
+    <section>
+      <title>Zahlenwerte</title>
+
+      <figure>
+        <title>Schaltfläche Zahlenwerte</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild11.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Ein Fenster mit der Anzeige der Datenwerte von maximal 3
+      Datenreihen wird eingeblendet. Gleichzeitig wird der Cursormode
+      aktiviert. Über die Maus kann eine Cursor-Linie im Diagramm bewegt
+      werden. Zur ausgewählten Position werden die Werte der einzelnen
+      Datenreihen angezeigt. Es können bis zu drei frei wählbare Datenreihen
+      gleichzeitig angezeigt werden.</para>
+    </section>
+
+    <section>
+      <title>Legende</title>
+
+      <para>Die Legende kann ein- bzw. ausgeblendet werden. Soll die Position
+      der Legende verschoben werden, so muss nach Anwahl dieses Menüpunktes
+      mit der Maus eine neue linke obere Ecke angewählt werden.</para>
+    </section>
+
+    <section>
+      <title>Vorlagenliste anzeigen</title>
+
+      <para>Über eine Vorlagenliste (siehe auch <xref
+      linkend="grafik_vorlagenliste" />) kann eine Art "Film" durch Ablauf
+      verschiedener Darstellungen erzielt werden.</para>
+    </section>
+
+    <section>
+      <title>Einstellungen</title>
+
+      <para>Selbst gewählte Bezeichnungen, wie Überschrift (Titel),
+      Beschriftung der x- und beider y-Achsen werden an fest vordefinierte
+      Stellen geschrieben. Für die Druckausgabe kann eine Kopf- und eine
+      Fußzeile festgelegt werden. Dabei ist die Eingabe für diese Zeilen in
+      drei Bereiche (linksbündig, zentriert, rechtsbündig) möglich.</para>
+    </section>
+
+    <section>
+      <title>Weitere Ansichtseinstellungen</title>
+
+      <para>Weitere zusätzliche Einstellungen zur Ansichtssteuerung des
+      Diagramms sind in der Zeile der Schaltflächen zu finden. Es sollen hier
+      nur diejenigen erläutert werden, die im Funktionsumfang die bereits
+      beschriebenen Menüpunkte erweitern.</para>
+
+      <figure>
+        <title>Schaltfläche Anpassen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild12.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Die Maßstabseinstellungen werden auf den größten
+      Ausdehnungsbereich angepasst. Dabei wird unterschieden, welche
+      Datenreihen der 1. und welche der 2. y-Achse zugeordnet sind.</para>
+
+      <figure>
+        <title>Schaltfläche Cursormode</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild13.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Um die Zeitachse nach Zwischenwerten hinsichtlich Datum und
+      Uhrzeit abzufragen, kann der Cursormodus verwendet werden. Dieser Modus
+      ist auch automatisch bei der numerischen Anzeige der Datenreihen
+      aktiviert.</para>
+
+      <figure>
+        <title>Schaltfläche Freitext</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild14.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Über das Werkzeug zur Textbeschriftung<emphasis role="bold"> TXT
+      </emphasis>können bis zu 100 Texte beliebig im Diagrammbereich gesetzt
+      werden. Zu Beginn der Eingabe muss immer die Schaltfläche gedrückt
+      werden.</para>
+
+      <informaltable>
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>Text neu setzen:</entry>
+
+              <entry>Mit der linken Maustaste wird eine neue Position
+              angeklickt. Es erscheint ein Texteingabedialog.</entry>
+            </row>
+
+            <row>
+              <entry>Textinhalt ändern:</entry>
+
+              <entry>Wird beim Festlegen der Mausposition für den neuen Text
+              festgestellt, dass hier bereits ein Text vorliegt, so wird
+              dieser im Texteingabedialog angeboten.</entry>
+            </row>
+
+            <row>
+              <entry>Textposition ändern:</entry>
+
+              <entry>Es wird auf eine alte Textposition geklickt. Bei gedrückt
+              gehaltener linker Maustaste wird der alte Textinhalt
+              „mitgenommen“ und beim Loslassen mit der neuen Position im
+              Texteingabedialog zu einer eventuellen Änderung
+              angeboten.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+  </section>
+
+  <section>
+    <title>Menü: Auswertung</title>
+
+    <figure>
+      <title>Menü Auswertung (Standard)</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild15.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Für die Auswertung der Datenreihen stehen einige grundlegende
+    statistische Funktionen bereit. Diese sind für einen ersten Überblick
+    gedacht und ersetzen kein umfangreiches Statistikprogramm. Zu den hier
+    angebotenen Funktionen gehören vielmehr vorbereitende Funktionen wie das
+    Erzeugen von Messwerten mit gleichen Zeitabständen (Zeitschritte) und
+    erste Ergebnisse (Mittelwert, usw.) für einen Überblick zu den
+    Eigenschaften der Datenreihen.</para>
+
+    <para>Weitere Funktionen hinsichtlich Korrelation, Tages- und
+    Monatsstatistik, Dauerlinie und Datentest stehen bei Installation der
+    Zusatzmodule zur Verfügung.</para>
+
+    <figure>
+      <title>Menü Auswertung (mit Zusatzmodulen)</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild17.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Die oben gezeigten Menüpunkte und auch weitere stehen nur bei
+    Installation der Zusatzmodule zur Verfügung. Ein weiterführende
+    Erläuterung gibt es im Abschnitt <emphasis
+    role="bold">Zusatzmodule.</emphasis></para>
+
+    <para>Zur Auswertung der Datenreihen werden folgende Möglichkeiten
+    angeboten:</para>
+
+    <section id="grafik_menu_auswertung">
+      <sectioninfo>
+        <date><indexterm>
+            <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Zeitschritte</title>
+
+      <para>Die eventuell in ungleichen Zeitschritten vorliegenden Daten
+      werden in zeitgleiche (äquidistante) Schritte umgerechnet. Es kann
+      wahlweise entschieden werden auf welche Datenreihen die Berechnung
+      angewendet werden soll und ob die Originalreihen dabei aus der Grafik
+      entfernt werden sollen. Ein Abspeichern der so erzeugten Datenreihen ist
+      nur über die zusätzlichen Funktionen des Korrekturmodus oder im externen
+      Datenformat (Daten sichern) möglich.</para>
+    </section>
+
+    <section>
+      <title>Monatsmittel</title>
+
+      <para>Ausgehend von der Zeitachsenbeschriftung werden die Werte aller
+      Datenreihen zu einem Monatsmittel zusammengefasst und dargestellt. Die
+      Originalwerte innerhalb des Diagramms werden dabei überschrieben. Alle
+      bisherigen Funktionen innerhalb des Grafikmoduls (z. B. Statistik,
+      Sichern, Mumerische Anzeige, ...) werden auf die neuen Zahlenwerte
+      angewendet. Sollen wieder Tageswerte angezeigt werden, müssen diese neu
+      eingelesen werden. Das Aggregieren der Daten erfolgt dabei über folgende
+      Regel: Test der Datumsangabe in der 1. Spalte, falls ab 4. Position
+      identisch, dann Übernahme !</para>
+
+      <para>01.02.98 14:30 oder 01.02.1998 14:30</para>
+
+      <para>Bsp.</para>
+
+      <para>02.02.98 15:15 oder 02.02.1998 15:15</para>
+
+      <para>Analog ist auch ein anschließendes Aggregieren auf Jahreswerte
+      möglich:</para>
+
+      <para>Bsp.</para>
+
+      <para>02.98 oder 02.1998</para>
+
+      <para>02.98 oder 02.1998</para>
+    </section>
+
+    <section>
+      <title>Aufsummieren</title>
+
+      <para>Alle Werte einer Datenreihe werden aufsummiert. Es ist zu
+      beachten, dass ein Aufsummieren nur für zeitgleiche Zeitschritte
+      sinnvoll erscheint. Eine Anwendung des Aufsummierens ist die Darstellung
+      als Dauerlinien.</para>
+    </section>
+
+    <section>
+      <title>Datenausfälle</title>
+
+      <para>Auf Basis eines eingestellten Zeitrasters wird ermittelt, ob
+      mindestens ein Messwert vorliegt. Ist dies nicht der Fall, wird ein
+      Kennwert für Messwertausfall eingetragen. Die Kennung ist auch unter
+      Extras - Optionen - Daten laden einstellbar.</para>
+    </section>
+
+    <section>
+      <title>Änderungen Rückgängig</title>
+
+      <para>Die Berechnung kann soweit kein Abspeichern auf der Festplatte
+      vorgenommen wurde verworfen werden. Die Originaldatenreihen werden
+      wieder eingelesen.</para>
+    </section>
+
+    <section>
+      <title>Statistik</title>
+
+      <figure>
+        <title>Schaltfläche Statistik</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild16.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Vom aktuell eingestellten Zeitraum werden das Minimum, der
+      Mittelwert, das Maximum, die Anzahl der Werte, die Summe, der
+      Korrelationskoeffizient und das Verhältnis (Faktor) zur 1. Datenreihe
+      berechnet. Zusätzlich wird im aktuellen Pfad eine Datei STAT.TXT mit den
+      gezeigten und noch weiteren (Faktor zu 1, Restquadratsumme zu 1)
+      Ergebnissen angelegt.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Menü: Extras</title>
+
+    <figure>
+      <title>Menü Extras</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild18.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="grafik_menu_extras">
+      <sectioninfo>
+        <date><indexterm>
+            <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Texte Speichern</title>
+
+      <para>Abspeichern der freistehenden Textbeschriftungen (Freitext) in
+      eine Datei (siehe auch <xref linkend="grafik_menu_anzeige" />).</para>
+    </section>
+
+    <section>
+      <title>Symbolleiste</title>
+
+      <para>Ein- und Ausschalten der Symbolleiste. Die Symbolleiste ist die
+      Zeile mit den Schaltsymbolen. Das Ausschalten der Symbolleiste schränkt
+      die Verfügbarkeit einiger Funktionen ein.</para>
+    </section>
+
+    <section>
+      <title>Statusleiste</title>
+
+      <para>Ein- und Ausschalten der Statuszeile. Die Statuszeile befindet
+      sich unterhalb des Grafikfensters und dient zur kurzen Erläuterung von
+      Aktionen und Menüpunkten.</para>
+    </section>
+
+    <section>
+      <title>Optionen</title>
+
+      <para>Globale Einstellungen zur Anzeige der Daten werden hier
+      festgesetzt.</para>
+
+      <figure>
+        <title>Eingabe der Einstellungs-Optionen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild19.png" scale="70" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para><emphasis role="bold">x-Achse</emphasis></para>
+
+      <para>Beschriftung, Formate:</para>
+
+      <para>Es kann jeweils für die 1. und 2. Zeile getrennt ein Datenformat
+      eingestellt werden. Liegen die Datenreihen nicht in einem Zeitformat
+      vor, so wird automatisch die laufende Position angezeigt. Folgende
+      Datenformate sind für jeweils beide Zeilen einstellbar:</para>
+
+      <para>TT.MM.JJJJ hh:mm:ss</para>
+
+      <para>TT.MM.JJJJ hh:mm</para>
+
+      <para>TT.MM.JJJJ</para>
+
+      <para>TT.MM.</para>
+
+      <para>MM/JJJJ</para>
+
+      <para>TT</para>
+
+      <para>MM</para>
+
+      <para>JJJJ</para>
+
+      <para>hh:mm</para>
+
+      <para>hh</para>
+
+      <para>dT in min</para>
+
+      <para>lfd. Position</para>
+
+      <para>automatisch wählen:</para>
+
+      <para>Soweit es die Datengrundlage erlaubt, werden die Formate nach
+      folgendem Schema eingestellt: Zeithorizont 1. Zeile 2. Zeile</para>
+
+      <para>0 ... 5 Tage hh:mm TT.MM.JJJJ</para>
+
+      <para>5 ... 90 Tage (ca. 3 Monate) TT MM/JJJJ</para>
+
+      <para>90 ... 1800 Tage (ca. 3 Jahre) MM JJJJ</para>
+
+      <para>1800 Tage ... JJJJ -</para>
+
+      <para>keine doppelten Beschriftungen:</para>
+
+      <para>Datumsangaben, die mehrfach auftreten werden nur zum ersten
+      Zeitpunkt angezeigt.</para>
+
+      <para>Bsp:</para>
+
+      <para>14:00 18:00 00:00 04:00 08:00</para>
+
+      <para>01.03.99 02.03.99</para>
+
+      <para>14:00 18:00 00:00 04:00 08:00</para>
+
+      <para>01.03.99 02.03.99</para>
+
+      <para>gleiche Zeitbestände:</para>
+
+      <para>Bei Messreihen mit zeitlich unterschiedlichen Messwerten
+      (nichtäquidistante Zeitschritte) wird die x-Achse nur bei den
+      vorhandenen Zeitwerten beschriftet. Dies ergibt oftmals ein
+      unerwünschtes Erscheinungsbild mit sehr unterschiedlichen Zeitabständen.
+      Über diese Möglichkeit kann ein zeitgleicher Abstand in der Beschriftung
+      der x-Achse eingestellt werden. Der Anfangszeitpunkt der
+      x-Achsenbeschriftung ist ebenfalls frei wählbar. Bei einer automatisch
+      Beschriftung (automatisch wählen) wird die Einstellung auf gleiche
+      Zeitabstände gesetzt und der Zeitabstand entsprechend des
+      darzustellenden Zeitraumes automatisch berechnet.</para>
+
+      <para>Sollen Datenreihen aus unterschiedlichen Zeiträume verglichen
+      werden, so kann über Anfangszeitpunkte gleichsetzen eingestellt werden,
+      dass die Datenreihen zum gleichen Zeitpunkt beginnend dargestellt
+      werden.</para>
+
+      <para>x-Achse abfallend sortieren</para>
+
+      <para>Standardmäßig werden zeitliche Werte und fortlaufende Position
+      immer aufsteigend dargestellt. Soll diese Einstellung (abfallende
+      Zahlenwerte) geändert werden, muss dieses Kontrollkästchen aktiviert
+      werden. Bei Datenreihen mit zeitlichen Bezug (Datumswerte in der
+      x-Achse) wird diese Einstellung ignoriert und zurückgesetzt.</para>
+
+      <para><emphasis role="bold">Ansicht</emphasis></para>
+
+      <para>Es können ein- bzw. ausgeschaltet werden:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Gitternetzdarstellung</para>
+        </listitem>
+
+        <listitem>
+          <para>Datenreihen sollen alle in gleicher Liniensträke und -art
+          dargestellt werden</para>
+        </listitem>
+
+        <listitem>
+          <para>Nullwerte bei Liniendiagramme ausblenden</para>
+        </listitem>
+
+        <listitem>
+          <para>Nullachse anzeigen</para>
+        </listitem>
+
+        <listitem>
+          <para>Balkenbreite bei der Darstellung als Balkendiagramm
+          einstellen.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><emphasis role="bold">Daten laden</emphasis></para>
+
+      <para>Für das Laden der Daten ist standardmäßig die automatische
+      Formaterkennung eingestellt. Kurzzeitig kann hier ausdrücklich ein
+      gewünschtes Format voreingestellt werden. Soll die Datei nur zur
+      Identifikation der einzulesenden Daten genutzt werden, so muss diese
+      Einstellung gewählt werden. Die "Einstiegsdatei" muss dann im folgenden
+      Format aufgebaut worden:</para>
+
+      <informaltable>
+        <tgroup cols="5">
+          <tbody>
+            <row>
+              <entry>&lt;Dateiname&gt;</entry>
+
+              <entry>&lt;x-Spalte&gt;</entry>
+
+              <entry>&lt;x-Name&gt;</entry>
+
+              <entry>&lt;y-Spalte&gt;</entry>
+
+              <entry>&lt;y-Name&gt;</entry>
+            </row>
+
+            <row>
+              <entry>Bsp.:</entry>
+
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+            </row>
+
+            <row>
+              <entry>konform.asj</entry>
+
+              <entry>1</entry>
+
+              <entry>fl-km</entry>
+
+              <entry>2</entry>
+
+              <entry>Temperatur</entry>
+            </row>
+
+            <row>
+              <entry>konform.asj</entry>
+
+              <entry>1</entry>
+
+              <entry>fl-km</entry>
+
+              <entry>3</entry>
+
+              <entry>C-BSB5</entry>
+            </row>
+
+            <row>
+              <entry>konform.asj</entry>
+
+              <entry>1</entry>
+
+              <entry>fl-km</entry>
+
+              <entry>6</entry>
+
+              <entry>O2 (Sauerstoff)</entry>
+            </row>
+
+            <row>
+              <entry>I:\sim\daten\tabalg</entry>
+
+              <entry>1</entry>
+
+              <entry>fl-km</entry>
+
+              <entry>5</entry>
+
+              <entry>Mortalitaet</entry>
+            </row>
+
+            <row>
+              <entry>I:\sim\daten\tabalg</entry>
+
+              <entry>1</entry>
+
+              <entry>fl-km</entry>
+
+              <entry>4</entry>
+
+              <entry>Respiration</entry>
+            </row>
+
+            <row>
+              <entry>I:\sim\daten\guetaus</entry>
+
+              <entry>1</entry>
+
+              <entry>fl-km</entry>
+
+              <entry>2</entry>
+
+              <entry>Temperatur (Güte)</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      <para><emphasis role="bold">Daten speichern</emphasis></para>
+
+      <para>Für den Export von Daten kann der Dezimalpunkt gesondert
+      festgelegt werde n.</para>
+
+      <para><emphasis role="bold">Schriften einstellen</emphasis></para>
+
+      <para>Einstellungen zur Schriftart und Größe werden über diese
+      Eingabemaske festgelegt.</para>
+
+      <para><emphasis role="bold"> Weitere Einstellungen</emphasis></para>
+
+      <para>Korrekturmodus: Einfügen von Zwischenpunkten - Im Korrekturmodus
+      wird beim Festlegen des Anfangs- und des Endzeitpunktes der Zeitpunkt
+      entweder dem nächsten dazugehörigen Datenwert zugeordnet oder ein neuer
+      Zeitpunkt interpoliert.</para>
+    </section>
+  </section>
+
+  <section id="grafik_messwertausfall">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Auswertung: Messwertausfall</title>
+
+    <para>Die Behandlung von Datenausfällen kann über Extras – Optionen -
+    Daten laden – Kennzeichnung von Messwertausfällen eingestellt werden. Alle
+    Datenwerte, die mit dieser Kennung übereinstimmen werden:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>in der Ansicht nicht dargestellt,</para>
+      </listitem>
+
+      <listitem>
+        <para>bei der Berechnung, des maximalen und minimalen y-Wertes nicht
+        berücksichtigt,</para>
+      </listitem>
+
+      <listitem>
+        <para>nicht in der Statistik ausgewertet,</para>
+      </listitem>
+
+      <listitem>
+        <para>im Korrekturmodus Datenwerte aus einer anderen Reihe übernehmen
+        beim Markieren der Option entsprechend übernommen. Die Datenkorrektur
+        ersetzt in diesem Fall bei Übernahme von Werten aus einer anderen
+        Datenreihe nur die Datenwerte, die als Datenausfall eindeutig
+        entsprechend der Kennung markiert sind und in der anderen Datenreihe
+        genau zum selben Zeitpunkt vorliegen.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Datenausfälle werden zusätzlich noch mit einem kleinen Kreis auf der
+    x-Achse markiert. Dabei ist bei dieser Darstellung nicht unterscheidbar,
+    in welcher Datenreihe dieser Ausfall vorliegt.</para>
+  </section>
+
+  <section id="grafik_abflussbeiwert">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Auswertung: Abflussbeiwert</title>
+
+    <para>Bei der Auswertung von Hochwasserereignissen wird die vom
+    Basisabfluss bereinigte Ganglinie und die Wirkung des
+    Effektivniederschlages benötigt.</para>
+
+    <para>Dazu werden im Grafikprogramm folgende Arbeitsschritte
+    angeboten:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Einlesen und Darstellen der Abflussganglinie und des zugehörigen
+        Effektivniederschlages</para>
+      </listitem>
+
+      <listitem>
+        <para>Auswahl des Hochwasserereignisses aus diesen Zeitreihen</para>
+      </listitem>
+
+      <listitem>
+        <para>Interaktive Möglichkeit zum Abzug des Basisabflusse vom
+        Hochwasserereignis</para>
+      </listitem>
+
+      <listitem>
+        <para>Bestimmen des zugehörigen Niederschlagzeitraumes</para>
+      </listitem>
+
+      <listitem>
+        <para>Berechnen des Abflussbeiwertes</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Der Ablauf soll nachfolgend näher erläutert werden:</para>
+
+    <para><emphasis role="bold">Einlesen und Darstellen der Abflussganglinie
+    und des zugehörigen Effektivniederschlages</emphasis></para>
+
+    <para>und</para>
+
+    <para><emphasis role="bold">Auswahl des Hochwasserereignisses aus diesen
+    Zeitreihen.</emphasis></para>
+
+    <para>Als Ganglinien werden die Abflussganglinie und der
+    Effektivniederschlag eingelesen. Die Niederschlagsdaten müssen dabei als
+    nächste Kurve nach den Abflusswerten folgen.</para>
+
+    <figure>
+      <title>Auswahl eines HW-Ereignisses (Beispiel)</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild20.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Das gewünschte Hochwasserereignis wird über die Zoomeinstellung
+    ausgewählt.</para>
+
+    <figure>
+      <title>Schaltfläche Abflussbeiwert</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild21.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Über das Werkzeug zur Bestimmung des Abflussbeiwerte werden die
+    nachfolgenden Schritte angeboten. Dieses Werkzeug ist in der
+    Werkzeugleiste zur Korrektur von Datenreihen enthalten.</para>
+
+    <para><emphasis role="bold">Interaktive Möglichkeit zum Abzug des
+    Basisabflusse vom Hochwasserereignis</emphasis> Der Bereich des
+    tatsächlichen Hochwasserabflusses wird über Cursorstriche ausgewählt. Im
+    Ergebnis wird die Scheitelkurve für den ausgewählten Zeitraum ohne dem
+    Basisabfluss ermittelt.</para>
+
+    <figure>
+      <title>Ermittlung des Abflussbeiwertes (Beispiel)</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild22.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Als Basisabfluss wird dabei die interpolierte Wasserstandsganglinie
+    zwischen dem ausgewählten Anfangs- und Endzeitpunkt angenommen. Die
+    Darstellung wechselt zur Niederschlagsdatenreihe (hier rot). Für den
+    gewählten Abflusszeitraum wird analog der dazugehörige Niederschlag
+    gewählt.</para>
+
+    <para>Auf Basis dieser beiden Datenreihen wird im Anschluss der
+    Abflussbeiwert wie folgt berechnet:</para>
+
+    <para><emphasis role="bold">Abflussbeiwert = (Summe Abfluss je Zeitschritt
+    am Pegel) / (Summe NS je Zeitschritt im Einzugsgebiet) </emphasis></para>
+
+    <para>NS in [mm], Q in [m³/s], AE in [m²]</para>
+
+    <para>Die Einzugsgebietsfläche wird im Dialog abgefragt, wenn nicht eine
+    Datei grafik.abw mit folgendem Inhalt existiert: &lt;Kurvenname&gt;
+    &lt;Einzugsgebietsgröße in m²&gt; Die Datei muss sich im beim
+    Programmaufruf aktuellem Arbeitsverzeichnis befinden.</para>
+
+    <para>Das Ergebnis wird angezeigt und gleichzeitig im Protokoll Grafik.pro
+    abgelegt.</para>
+
+    <graphic fileref="img/ganglinien_bild23.png" />
+  </section>
+
+  <section id="grafik_zusatzmodule">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Zusatzmodule</title>
+
+    <para>Für weiterführende Auswertungen und Datenaufbereitungen können
+    direkt aus dem Grafikprogramm Zusatzmodule aufgerufen werden.</para>
+
+    <para>Dazu gehören folgende Komplexe:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Statistik (mit Korrelationsanalysen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Hydrologische Hauptzahlen</para>
+      </listitem>
+
+      <listitem>
+        <para>Test und Darstellung von Messwertausfällen</para>
+      </listitem>
+
+      <listitem>
+        <para>Grafikausdruck über ein Winword- Textdokument</para>
+      </listitem>
+
+      <listitem>
+        <para>Interaktives Bestimmen des Abflussbeiwertes</para>
+      </listitem>
+    </itemizedlist>
+
+    <section>
+      <title>Statistik</title>
+
+      <para>Der Aufruf des Statistikmoduls kann separat oder aus einem anderen
+      Programm (z.B. Gangliniengrafik) heraus erfolgen. Auf jeden Fall muss
+      eine Datenreihe und die Art der Statistik übergeben werden (siehe
+      Programmaufruf).</para>
+
+      <figure>
+        <title>Dateiausgabe nach statistischer Auswertung</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild24.png" scale="75" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para><emphasis role="bold">Korrelation</emphasis> Stat [/K]
+      [&lt;Datenreihe1&gt;] [&lt;Datenreihe2&gt;] [&lt;Ergebnisreihe&gt;]
+      [/G]</para>
+
+      <para>Es wird die Kreuzkorrelationsfunktion zwischen den Datenreihen 1
+      und 2 berechnet und in der Ergebnisreihe abgelegt.</para>
+
+      <figure>
+        <title>Kreuzkorrelation (Beispiel)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild25.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Sind die Datenreihen 1 und 2 identisch, so wird die
+      Autokorrelation berechnet. Die grafische Darstellung ergibt den
+      entsprechenden Verlauf der Korrelationskoeffizienten zu jedem
+      Zeitschritt.</para>
+
+      <para><emphasis role="bold">Monatsstatistik</emphasis> Stat [/M]
+      [&lt;Datenreihe&gt;] [/G]</para>
+
+      <para>Zu den Werte der Datenreihe wird unter hydrologischen
+      Gesichtspunkten eine Monatsstatistik über die Jahre gebildet. Im
+      Abschluss der Einzeljahre werden die Ergebnisse zu einer Gesamtstatistik
+      zusammengefasst. Für die grafische Darstellung der Ergebnisse (/G) muss
+      sich das Gangliniengrafikprogramm im aktuellen Pfad befinden.</para>
+
+      <graphic fileref="img/ganglinien_tabelle1.png" />
+
+      <para>Die Statistik wird in der Datei Stat.tab abgelegt.</para>
+
+      <para>Als Datenreihen werden die Extremwerte der Einzelmonate in
+      Stat-HQ.dat, Stat-MQ.dat, Stat-NQ.dat, ausgegeben und können u.a. mit
+      Hilfe der dazu erstellten Grafikvorlage Stat.tpl grafisch dargestellt
+      werden.</para>
+
+      <para><emphasis role="bold">Tagesstatistik </emphasis> Stat [/T]
+      [&lt;Datenreihe&gt;] [/G]</para>
+
+      <para>Analog der Monatsstatistik wird von den Eingangsdaten eine
+      Tagesstatistik erstellt. Es werden Maxima, Minima, Mittelwert, Summe und
+      Anzahl der Werte je Tag gebildet. Für die grafische Darstellung der
+      Ergebnisse (/G) muss sich das Gangliniengrafikprogramm im aktuellen Pfad
+      befinden.</para>
+
+      <graphic fileref="img/ganglinien_tabelle2.png" />
+
+      <para>Die Statistik wird in der Datei Stat.tab abgelegt.</para>
+
+      <para>Als Datenreihen werden die Extremwerte analog der Monatsstatistik
+      in Stat-HQ.dat, Stat-MQ.dat, Stat-NQ.dat, ausgegeben und können mit
+      Hilfe der dazu erstellten Grafikvorlage Stat.tpl grafisch dargestellt
+      werden. Eine Zusammenfassung der Werte erfolgt nicht.</para>
+
+      <para><emphasis role="bold">Dauerlinie</emphasis> Stat [/D]
+      [&lt;Datenreihe&gt;] [/G]</para>
+
+      <para>Von der Datenreihe wird die Dauerlinie gebildet und analog den
+      oben beschriebenen Dateien in Stat-DL.dat und StatDL.tpl abgelegt und
+      eventuell dargestellt.</para>
+
+      <para><emphasis role="bold">BCENA-Statistik </emphasis>Stat [/B]
+      [&lt;Datenreihe&gt;] [dT0] [/G]</para>
+
+      <para>Analog der Monatsstatistik wird eine statistische Auswertung über
+      eine im BCENA-Format liegende Ergebnisdatei durchgeführt. Es werden
+      dabei alle Knoten berücksichtigt. Die Datenreihen werden konvertiert und
+      im Tabellenformat in der Datei Stat_dat.tab abgelegt. Der Parameter dT0
+      gibt dabei an, ab welchen Zeitschritt die Auswertung erfolgen soll. Der
+      Anfangszeitschritt wird in stat.ini abgespeichert und bleibt solange
+      bestehen, bis dieser Wert gelöscht oder neu belegt wird.</para>
+
+      <para>Folgende Werte werden jeweils in Abhängigkeit für jeden Monat, für
+      das Winter- und Sommerhalbjahr und für den Gesamtzeitraum
+      berechnet:</para>
+
+      <graphic fileref="img/ganglinien_tabelle3.png" />
+
+      <para>Werden weitergehende Auswertungen zu einem Knoten benötigt, kann
+      weiterhin die Datenreihe des betreffenden Knotens der Ergebnisdaten in
+      das Ganglinienprogramm eingeladen und wie bereits oben beschrieben
+      statistisch ausgewertet werden.</para>
+
+      <para>Existiert eine Datei stat.ini mit folgender Eintragung: ArcView:
+      &lt;Kennungen, ...&gt; so wird eine weitere Textdatei stat_av.txt
+      angelegt, die für den direkten Import der Tabelle in ArcView vorbereitet
+      ist. Der Inhalt der Tabelle wird durch die Kennung bestimmt.</para>
+
+      <para>Folgendes Beispiel zeigt die Ergebnisdatei und den Aufbau der
+      Kennung:</para>
+
+      <para>Ergebnisdatei: stat.tab</para>
+
+      <graphic fileref="img/ganglinien_tabelle4.png" />
+
+      <para>Parameterdatei: stat.ini</para>
+
+      <para>ArcView: NQ11 HQ11 NQ01 MQ10 MQSommer MQWinter</para>
+
+      <para>... es entsteht die Tabelle für den Import in ArcView:
+      stat_av.txt</para>
+
+      <informaltable>
+        <tgroup cols="7">
+          <tbody>
+            <row>
+              <entry>Knoten</entry>
+
+              <entry>NQ11</entry>
+
+              <entry>HQ11</entry>
+
+              <entry>NQ01</entry>
+
+              <entry>MQ10</entry>
+
+              <entry>MQSommer</entry>
+
+              <entry>MQWinter</entry>
+            </row>
+
+            <row>
+              <entry>411</entry>
+
+              <entry>0.004</entry>
+
+              <entry>0.004</entry>
+
+              <entry>0.021</entry>
+
+              <entry>0.0038</entry>
+
+              <entry>0.004</entry>
+
+              <entry>0.0375</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      <para>Die Kennung setzt sich aus der Spalte der Ergebnisdatei
+      (NQ,MNQ,...,Anzahl) und der entsprechenden Zeilenbeschriftung
+      (11,12,...,Winter, Gesamt) zusammen.</para>
+
+      <para>Bei der Angabe der Kennung ist unbedingt die zeitliche Reihenfolge
+      der Monate entsprechend der Ergebnistabelle einzuhalten, das heißt der
+      Monat 01 kommt immer nach dem Monat 12 des hydrologischen Jahres.</para>
+
+      <para>Die Art der Statistikauswertung wird durch den 1. Schalter
+      angegeben (/K, /M, /T, ...). Der letzte Schalter /G erzwingt
+      anschließend eine grafische Darstellung der Ergebnisse.</para>
+
+      <para>Beispiel: Stat /K pegel1.dat pegel1.dat kk11.dat /G berechnet von
+      der Datenreihe pegel1.dat die Autokorrelation, legt die Werte in
+      kk11.dat ab und zeigt die Ergebnisse anschließend in der grafischen
+      Darstellung.</para>
+    </section>
+
+    <section>
+      <title>Datentest</title>
+
+      <para>Über dieses Modul können Messwerte auf Ausfälle überprüft werden.
+      Der Aufruf des Moduls kann separat oder aus einem anderen Programm (z.B.
+      Gangliniengrafik) heraus erfolgen. Auf jeden Fall muss die Kennung für
+      den Messwertausfall und mindestens eine Datenreihe übergeben werden
+      (siehe Programmaufruf). Weitere unterschiedliche Auswertungen sind
+      zukünftig über die Schalter auszuwählen.</para>
+
+      <figure>
+        <title>Dateiausgabe nach Datentest</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild26.png" scale="80" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Einzelaufruf: DatTest &lt;Kennung&gt; &lt;Datenreihe1&gt;
+      [&lt;Datenreihe2&gt; ... ] [/G]</para>
+
+      <para>Die Kennung ist ein Zahlenwert, der zur Darstellung von
+      Datenausfällen genutzt wird. Üblich sind Zahlenwerte wie zum Beispiel
+      –9999, -777.</para>
+
+      <para>Der letzte Schalter /G erzwingt anschließend eine grafische
+      Darstellung der Ergebnisse.</para>
+
+      <figure>
+        <title>Messwertausfälle (Beispiel)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild27.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Beispiel:</para>
+
+      <para>DatTest -777 pegel1.dat pegel2.dat /G ermittelt von der Datenreihe
+      pegel1.dat und pegel2.dat die Datenausfälle (-777), speichert die
+      Ergebnisse in stat.tab ab und stellt die Datenausfälle grafisch
+      dar.</para>
+    </section>
+
+    <section>
+      <title>Ansteuerung von Textdokumenten</title>
+
+      <para>Für die Darstellung von einer oder mehreren Grafikdarstellungen in
+      einem Textdokument können über die Zwischenablage oder über das
+      Bitmap-Format die mit dem Programm zur interaktiven
+      Zeitreihendarstellung erstellten Diagrammbilder an den gewünschten
+      Stellen eingefügt werden.</para>
+
+      <para>Um über diesen Weg ein automatisches Ausfüllen von vorbereiteten
+      Formularen zu realisieren, kann das Modul Graf_Doc.exe angewendet
+      werden.</para>
+
+      <para>Bei Installation dieses Moduls kann über einen Menüpunkt im
+      Grafikprogramm Auswertung -Textdokument auf Basis einer vorher zu
+      erstellenden Vorlage über Verknüpfungen zum Ergebnisdokument der
+      entsprechende Ergebnisbericht vollständig automatisch erstellt
+      werden.</para>
+
+      <para>Dabei sind folgende Voraussetzungen und Ablaufschritte
+      einzuhalten. Die nachfolgenden Punkte 1-4 haben dabei vorbereitenden
+      Charakter und sind demzufolge nur bei der Erstellung einer Variante
+      notwendig:</para>
+
+      <para><emphasis role="bold">1. Erstellen von Grafikvorlagen *.tpl für
+      die entsprechend gewünschten Darstellungen</emphasis></para>
+
+      <para>Die Grafikvorlagen entsprechen den im Ganglinienprogramm
+      verwendeten üblichen Grafikvorlagen und können über den Menüpunkt Datei
+      – Vorlage sichern abgelegt werden.</para>
+
+      <para>Bsp.: 4 Vorlagedateien mit den Ansichten abb1.tpl, abb2.tpl,
+      abb3.tpl, abb4.tpl.</para>
+
+      <para><emphasis role="bold">2. Anlegen einer Liste mit der Zuordnung der
+      Grafikvorlagen zu den im Ergebnisdokument gewünschten
+      Bildverknüpfungen.</emphasis></para>
+
+      <para>Die Liste muss als einfache Textdatei mit der Endung .tpd
+      (template doc) im aktuellen Pfad vorhanden sein. Der Aufbau der Datei
+      ist wie folgt:</para>
+
+      <para>&lt;Name der 1.Vorlage&gt; &lt;Name der im Dokument zu
+      verknüpfenden Bilddatei&gt;</para>
+
+      <para>...</para>
+
+      <para>Doc: &lt;Aufruf des Textprogramms, z.B. WinWord mit Textdatei als
+      Übergabeparameter</para>
+
+      <para>Bsp.: Datei Anlage1.tpd mit folgendem Inhalt: abb1.tpl abb1.bmp
+      abb2.tpl abb2.bmp abb3.tpl abb3.bmp abb4.tpl abb4.bmp Doc:
+      "C:\Programme\Microsoft Office\Offi</para>
+
+      <para>ce\WINWORD.EXE" Anlage1.doc</para>
+
+      <para><emphasis role="bold">3. Aufruf des Moduls zur Erstellung der
+      Bitmapvorlagen (Auswertung - Textdokument)</emphasis></para>
+
+      <para>Die in der Datei *.tpd festgelegten Bilddateien werden
+      erstellt.</para>
+
+      <para>Bsp.: Auswahl der Datei Anlage1.tpd führt zur Erstellung der 4
+      Bitmap-Dateien: abb1.bmp, abb2.bmp, abb3.bmp, abb4.bmp</para>
+
+      <para><emphasis role="bold">4. Erstellen eines Textdokumentes z.B. mit
+      WinWord</emphasis></para>
+
+      <para>Anlegen eines neuen Dokumentes, Schreiben des begleitenden
+      Textes,</para>
+
+      <para>Einfügen der Platzhalter für die Grafikdarstellungen
+      (Textfeldrahmen !)</para>
+
+      <para>Einfügen der entsprechenden Verknüpfung zur Bitmap-Datei über
+      Einfügen – Grafik – Aus Datei und</para>
+
+      <para>denEigenschaften: "Verknüpfung zu Datei" und "nicht mit Dokument
+      speichern"</para>
+
+      <graphic fileref="img/ganglinien_bild28.png" />
+
+      <para><emphasis role="bold">Erstellen eines Formblattes mit den
+      gewünschten Grafiken</emphasis></para>
+
+      <para>Wird nun ein analog aufgebautes Dokument mit aktualisierten
+      Datenreihen benötigt, braucht jetzt nur noch der oben erläuterte Punkt 3
+      (Aufruf des Moduls zur Erstellung der Bitmapvorlagen Auswertung -
+      Textdokument) ausgeführt werden.</para>
+
+      <para>Es werden automatisch auf Basis der vorbereiteten Grafikvorlagen
+      die entsprechenden Bitmap-Dateien erstellt und das Textdokument mit den
+      aktualisierten Bilder geöffnet.</para>
+
+      <graphic fileref="img/ganglinien_bild29.png" />
+
+      <para>Der Ablauf kann nun immer wieder mit aktualisierten Datenwerten
+      und Datenreihen gestartet werden.</para>
+    </section>
+  </section>
+
+  <section id="grafik_vorlagenliste">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Vorlagenliste</title>
+
+    <para>Über eine Liste, in der die Namen von mehreren vorher erstellten
+    Vorlagen enthalten sind, kann eine Art Dia-Show aufgerufen werden. Der
+    Name dieser Datei endet mit "*.lst"</para>
+
+    <para>Bsp.:</para>
+
+    <para>dia1.lst: anfpkt.tpl</para>
+
+    <para>zeitpkt1.tpl</para>
+
+    <para>zeitpkt2.tpl</para>
+
+    <para>endpkt.tpl</para>
+
+    <para>Dabei werden die Vorlagen *.tpl der Reihe nach geladen und
+    dargestellt.</para>
+
+    <para>Es besteht die Wahl eines automatischen und eines
+    benutzergesteuerten Ablaufes. Der Ablauf der benutzergesteuerten Variante
+    kann über die Tasten &lt;enter&gt; oder &lt;Leertaste&gt; weitergeführt
+    und über &lt;esc&gt; oder &lt;alt F4&gt; abgebrochen werden.</para>
+
+    <para>Die zuletzt geladene Variante bleibt zum Schluss erhalten.</para>
+  </section>
+</chapter>
