@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.model.rcm.ombrometer" version="0.1" xmlns:ombr="org.kalypso.model.rcm.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+  <annotation>
+    <appinfo xmlns:kapp="org.kalypso.appinfo">
+      <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+    </appinfo>
+  </annotation>
+
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="obslink.zml.kalypso.org" />
+
+  <element name="OmbrometerCollection" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="hasBeenProcessed" type="boolean" default="true" />
+            <element name="generationStrategy" type="ombr:GenerationStrategyType" default="thiessen" minOccurs="0" />
+            <element name="thiessenIdwMaxStations" type="unsignedShort" minOccurs="0" />
+            <element name="ombrometerMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence minOccurs="0" maxOccurs="1">
+                  <element ref="ombr:Ombrometer" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="Ombrometer" substitutionGroup="gml:_Feature">
+    <annotation>
+      <documentation xml:lang="de">
+        <name>Ombrometer</name>
+        <label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+        <tooltip>Ombrometer</tooltip>
+        <description>Ombrometer</description>
+      </documentation>
+    </annotation>
+
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="shortName" type="string" nillable="true" />
+            <element name="externalId" type="string" />
+            <element name="isUsed" type="boolean" />
+            <element name="stationLocation" type="gml:PointPropertyType" />
+            <element name="affectedArea" type="gml:PolygonPropertyType" />
+            <!-- Several predefined measurement links. Add others if needed -->
+            <element name="precipitationLink1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+            <element name="precipitationLink2" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+            <element name="temperatureLink1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+            <element name="temperatureLink2" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  
+  <simpleType name="GenerationStrategyType">
+    <restriction base="string">
+        <enumeration value="thiessen"/>
+        <enumeration value="thiessen_idw"/>
+    </restriction>
+  </simpleType>
+</schema>
