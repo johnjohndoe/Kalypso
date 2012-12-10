@@ -301,7 +301,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "Unexpected error while writing .2d file.", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, "Unexpected error while writing .2d file.", e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

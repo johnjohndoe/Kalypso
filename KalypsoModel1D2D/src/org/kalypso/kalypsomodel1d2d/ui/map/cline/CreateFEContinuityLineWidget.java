@@ -80,7 +80,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_toolTipRenderer.setTooltip( "Edit new boundary / transition line.\r\n    '<Click>': Add node to line\r\n    '<Double-Click>': Finish line\r\n    '<ESC>': Cancel current edit\r\n    '<DEL>': Remove last point" );
+    m_toolTipRenderer.setTooltip( Messages.getString("CreateFEContinuityLineWidget.0") ); //$NON-NLS-1$
   }
 
   @Override
@@ -327,7 +327,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     {
       final ContinuityEdge[] edges = m_continuityEdges.toArray( new ContinuityEdge[m_continuityEdges.size()] );
 
-      final ContinuityLineBuilderOperation operation = new ContinuityLineBuilderOperation( m_discModel, getMapPanel(), edges );
+      final ContinuityLineBuilderOperation operation = new ContinuityLineBuilderOperation( getMapPanel(), edges );
 
       final IWorkbenchPartSite site = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActivePart().getSite();
       final IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService)site.getService( IWorkbenchSiteProgressService.class );
@@ -428,7 +428,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( !m_contiLineStatus.isOK() )
     {
       /* problems with conti line preceed over other warnings */
-      m_contilineWarningRenderer.setTooltip( "Resulting continuity line is invalid" );
+      m_contilineWarningRenderer.setTooltip( Messages.getString("CreateFEContinuityLineWidget.1") ); //$NON-NLS-1$
       m_contilineWarningRenderer.paintToolTip( warningPosition, g, bounds );
     }
     else if( m_currentMapPoint != null )
@@ -480,7 +480,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( m_currentEdge != null )
       builder.addPath( m_currentEdge.getPath() );
 
-    m_contiLineStatus = builder.validate( m_discModel, getMapPanel() );
+    m_contiLineStatus = builder.validate( getMapPanel() );
 
     repaintMap();
   }

@@ -351,7 +351,7 @@ public class IterationInfoSWAN implements IIterationInfo
     final String firstFormat = m_timeStepFormat.format( m_calendarFirst );
     final String stepFormat = m_timeStepFormat.format( stepDate );
 
-    obsName = firstFormat + "-" + stepFormat;
+    obsName = firstFormat + "-" + stepFormat; //$NON-NLS-1$
     // FIXME: these string make no sense!
     obsDesc = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15", firstFormat ) + "-" + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15", stepFormat ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     fileName = String.format( "Iteration_SWAN%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ-%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ.gml", m_calendarFirst, calendar ); //$NON-NLS-1$

@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.ogc.gml.map.IMapPanel;
 
 /**
@@ -34,13 +33,10 @@ class ContinuityLineBuilderOperation implements ICoreRunnableWithProgress
 
   private IFE1D2DNode[] m_continuityLine;
 
-  private final IFEDiscretisationModel1d2d m_discModel;
-
   private final IMapPanel m_panel;
 
-  public ContinuityLineBuilderOperation( final IFEDiscretisationModel1d2d discModel, final IMapPanel panel, final ContinuityEdge[] edges )
+  public ContinuityLineBuilderOperation( final IMapPanel panel, final ContinuityEdge[] edges )
   {
-    m_discModel = discModel;
     m_panel = panel;
     m_edges = edges;
   }
@@ -58,7 +54,7 @@ class ContinuityLineBuilderOperation implements ICoreRunnableWithProgress
 
     m_continuityLine = builder.getContinuityLine();
 
-    return builder.validate( m_discModel, m_panel );
+    return builder.validate( m_panel );
   }
 
   public IFE1D2DNode[] getContinuityLine( )

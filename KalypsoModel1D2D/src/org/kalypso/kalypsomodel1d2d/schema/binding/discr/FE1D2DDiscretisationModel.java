@@ -118,7 +118,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   @Override
   public IElement1D createElement1D( final IFE1D2DEdge edge )
   {
-    Assert.throwIAEOnNull( edge, "edge" );
+    Assert.throwIAEOnNull( edge, "edge" ); //$NON-NLS-1$
     if( edge.getLinkedElements().length != 0 )
       throw new IllegalStateException( "The edge is already contained in one or more elements." ); //$NON-NLS-1$
 

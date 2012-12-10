@@ -267,7 +267,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
         final SimpleShapeData dataProvider = new SimpleShapeData( Charset.defaultCharset(), coordinateSystem, ShapeType.POLYGONZ, new IDBFField[0] );
         dataProvider.addRow( shapeTin, new Object[0] );
         final ShapeWriter shapeWriter = new ShapeWriter( dataProvider );
-        shapeWriter.write( "d:/scratch/polder_tin", null );
+        shapeWriter.write( "d:/scratch/polder_tin", null ); //$NON-NLS-1$
       }
       catch( final Exception ex )
       {
@@ -312,7 +312,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
 
       if( !Double.isNaN( m_currentZ ) )
       {
-        m_toolTipRenderer.setTooltip( String.format( "%.2f", m_currentZ ) );
+        m_toolTipRenderer.setTooltip( String.format( "%.2f", m_currentZ ) ); //$NON-NLS-1$
         m_toolTipRenderer.paintToolTip( m_currentPoint, g, mapPanel.getScreenBounds() );
       }
     }
