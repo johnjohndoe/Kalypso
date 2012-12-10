@@ -1,0 +1,94 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.model.wspm.tuhh.core.profile.pattern;
+
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import org.kalypso.observation.result.IRecord;
+
+/**
+ * @author Gernot Belger
+ */
+public class PointComponentPattern extends AbstractPatternInput<IProfilePatternData>
+{
+  public PointComponentPattern( )
+  {
+    super( "Component", "Component" );
+  }
+
+  /**
+   * @see org.kalypso.commons.patternreplace.AbstractPatternInput#getShowInMenu()
+   */
+  @Override
+  public boolean getShowInMenu( )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
+   */
+  @Override
+  public String getReplacement( final IProfilePatternData data, final String param )
+  {
+    final IRecord value = data.getPoint();
+    if( value == null )
+      return StringUtils.EMPTY;
+
+    final int indexOfComponent = value.indexOfComponent( param );
+    if( indexOfComponent == -1 )
+      return "null"; //$NON-NLS-1$
+
+    final Object recordValue = value.getValue( indexOfComponent );
+
+    return formatValue( recordValue );
+  }
+
+  private String formatValue( final Object value )
+  {
+    // TODO: we need a more sophisticated handling of types here...
+    if( value instanceof Number )
+      return String.format( "%.4f", value ); //$NON-NLS-1$
+
+    return ObjectUtils.toString( value );
+  }
+}
