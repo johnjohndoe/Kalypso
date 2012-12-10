@@ -24,6 +24,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -57,22 +58,31 @@ class ContinuityLineEditValidator
     {
       final IFE1D2DElement[] elements = m_snapNode.getAdjacentElements();
       if( elements.length == 0 )
-        return "Cannot add continuity line to single 1D node that is not attached to the net";
+        return Messages.getString("ContinuityLineEditValidator_0"); //$NON-NLS-1$
 
       if( elements.length > 1 )
-        return "1D-continuity line must be at end of 1D-reach";
+        return Messages.getString("ContinuityLineEditValidator_1"); //$NON-NLS-1$
     }
 
     /* check for any conti line on node */
     final GM_Point snapPoint = m_snapNode.getPoint();
     final IFELine touchedLine = m_discModel.findContinuityLine( snapPoint, IFEDiscretisationModel1d2d.CLUSTER_TOLERANCE );
-    if( touchedLine != null )
-      return "Node is already part of a continuity line";
+    if( is2dNode( m_snapNode ) )
+    {
+      // REMARK: 2d lines may intersect and touch
+      // if( touchedLine != null )
+      // return "Node is already part of a continuity line";
+    }
+    else
+    {
+      if( touchedLine != null && !is2dNode( m_snapNode ) )
+        return Messages.getString("ContinuityLineEditValidator_2"); //$NON-NLS-1$
+    }
 
     if( m_nodes.length > 0 )
     {
       if( !is2dNode( m_snapNode ) )
-        return "2D-continuity line cannot touch 1D-node";
+        return Messages.getString("ContinuityLineEditValidator_3"); //$NON-NLS-1$
 
       /* last point: special handling, else double click to finish will not work; also prevents line with only one point */
       if( m_nodes.length > 1 && m_snapNode == m_nodes[m_nodes.length - 1] )
@@ -82,10 +92,10 @@ class ContinuityLineEditValidator
       for( final IFE1D2DNode node : m_nodes )
       {
         if( node == m_snapNode )
-          return "Node already contained in line";
+          return Messages.getString("ContinuityLineEditValidator_4"); //$NON-NLS-1$
       }
 
-      final ContinuityLine2DValidator validator2d = new ContinuityLine2DValidator( m_discModel, m_panel, ArrayUtils.add( m_nodes, m_snapNode ) );
+      final ContinuityLine2DValidator validator2d = new ContinuityLine2DValidator( m_panel, ArrayUtils.add( m_nodes, m_snapNode ) );
       return validator2d.execute();
     }
 

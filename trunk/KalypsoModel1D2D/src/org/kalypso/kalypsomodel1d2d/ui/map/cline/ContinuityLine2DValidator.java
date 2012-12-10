@@ -19,8 +19,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cline;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -39,11 +38,8 @@ class ContinuityLine2DValidator
 
   private final IFE1D2DNode[] m_nodes;
 
-  private final IFEDiscretisationModel1d2d m_discModel;
-
-  public ContinuityLine2DValidator( final IFEDiscretisationModel1d2d discModel, final IMapPanel panel, final IFE1D2DNode[] nodes )
+  public ContinuityLine2DValidator( final IMapPanel panel, final IFE1D2DNode[] nodes )
   {
-    m_discModel = discModel;
     m_panel = panel;
     m_nodes = nodes;
   }
@@ -53,7 +49,7 @@ class ContinuityLine2DValidator
     try
     {
       if( m_nodes.length < 2 )
-        return "Line has less than two points";
+        return Messages.getString("ContinuityLine2DValidator_0"); //$NON-NLS-1$
 
       /* build geometry */
       final LineGeometryBuilder lineBuilder = CreateFEContinuityLineWidget.createLineBuilder( m_panel, m_nodes, null );
@@ -64,17 +60,19 @@ class ContinuityLine2DValidator
       /* self intersection */
       final LineString line = (LineString)JTSAdapter.export( curve );
       if( !line.isSimple() )
-        return "Line is self-intersecting";
+        return Messages.getString("ContinuityLine2DValidator_1"); //$NON-NLS-1$
 
-      /* intersection with other conti lines */
-      // REMARK: we assume that we have not too many conti lines and just do a linear search here
-      final IFELine[] contiLines = m_discModel.getContinuityLines();
-      for( final IFELine contiLine : contiLines )
-      {
-        final GM_Curve geometry = contiLine.getGeometry();
-        if( curve.intersects( geometry ) )
-          return "Line intersect an existing continuity line";
-      }
+      // REMARK: 2d lines may intersect and touch!
+
+//      /* intersection with other conti lines */
+//      // REMARK: we assume that we have not too many conti lines and just do a linear search here
+//      final IFELine[] contiLines = m_discModel.getContinuityLines();
+//      for( final IFELine contiLine : contiLines )
+//      {
+//        final GM_Curve geometry = contiLine.getGeometry();
+//        if( curve.intersects( geometry ) )
+//          return "Line intersect an existing continuity line";
+//      }
 
       return null;
     }

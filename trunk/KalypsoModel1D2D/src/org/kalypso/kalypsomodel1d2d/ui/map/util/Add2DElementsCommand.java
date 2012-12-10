@@ -115,7 +115,7 @@ public class Add2DElementsCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return "Adding elements to existing model";
+    return "Adding elements to existing model"; //$NON-NLS-1$
   }
 
   @Override

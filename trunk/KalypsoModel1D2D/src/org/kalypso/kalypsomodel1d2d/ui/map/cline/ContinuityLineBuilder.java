@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.ogc.gml.map.IMapPanel;
 
 /**
@@ -58,11 +57,11 @@ class ContinuityLineBuilder
     return m_nodes.toArray( new IFE1D2DNode[m_nodes.size()] );
   }
 
-  public IStatus validate( final IFEDiscretisationModel1d2d discModel, final IMapPanel panel )
+  public IStatus validate( final IMapPanel panel )
   {
     final IFE1D2DNode[] continuityLine = getContinuityLine();
 
-    final ContinuityLine2DValidator validator = new ContinuityLine2DValidator( discModel, panel, continuityLine );
+    final ContinuityLine2DValidator validator = new ContinuityLine2DValidator( panel, continuityLine );
 
     final String message = validator.execute();
     if( message == null )

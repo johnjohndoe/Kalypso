@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
@@ -214,7 +215,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     /* Only allow a drag, if something is selected. */
     if( !(data instanceof IRecord) )
     {
-      final String msg = "Cannot drag crossing, move data point instead.";
+      final String msg = Messages.getString("BuildingParameterLayer_0"); //$NON-NLS-1$
       return new EditInfo( this, dragStartData.getHoverFigure(), null, null, msg, newPos );
     }
 
