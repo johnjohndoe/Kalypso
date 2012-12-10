@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>Verdunstung Fuhlsbüttel</name>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-06-25T00:00:00;2004-06-26T00:00:00;2004-06-27T00:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Verdunstung" type="E" unit="mm">
+        <valueArray separator=";">1.728;2.597;1.954</valueArray>
+    </axis>
+</observation>
+
