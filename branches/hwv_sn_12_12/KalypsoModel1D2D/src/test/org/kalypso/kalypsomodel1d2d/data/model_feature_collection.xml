@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="WINDOWS-1252"?>
+<!-- A collection of feature used to test with link features -->
+
+<gml:FeatureCollection 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	>
+	
+	<!-- ===========================NODE========================== -->
+	<wb1d2d:FE1D2DNode
+		xmlns:xlink="http://www.w3.org/1999/xlink" 
+		xmlns:gml="http://www.opengis.net/gml" 
+		xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+		xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+		gml:id="mfc_node1">
+			<gml:name>node00</gml:name>
+				<gml:pointProperty>
+					<gml:Point 
+						srsName="EPSG:31467">
+						<gml:coordinates ts="," decimal="." cs=" ">0.0020 0.0010</gml:coordinates>
+					</gml:Point>
+				</gml:pointProperty>
+	
+		<wb1d2d:fe1d2dNodeContainer>
+			<wb1d2d:FE1D2DEdge gml:id="mfc_node1_edge1">
+				<gml:name>edge1</gml:name>
+				<wb1d2d:geometry/>
+				<wb1d2d:fe1d2dDirectedNode xlink:href="#node00"/>
+				<wb1d2d:fe1d2dDirectedNode>
+					<wb1d2d:FE1D2DNode>
+						<gml:name>node1</gml:name>
+						<gml:pointProperty>
+							<gml:Point 
+								srsName="EPSG:31467">
+								<gml:coordinates ts="," decimal="." cs=" ">0.0 1.0</gml:coordinates>
+							</gml:Point>
+						</gml:pointProperty>
+					</wb1d2d:FE1D2DNode>			
+				</wb1d2d:fe1d2dDirectedNode>
+			</wb1d2d:FE1D2DEdge> 
+		</wb1d2d:fe1d2dNodeContainer>
+	
+		<wb1d2d:fe1d2dNodeContainer>
+			<wb1d2d:FE1D2DEdge gml:id="mfc_node1_edge2">
+				<gml:name>edge2</gml:name>
+				<wb1d2d:geometry/>
+				<wb1d2d:fe1d2dDirectedNode xlink:href="#node0"/>
+				<wb1d2d:fe1d2dDirectedNode>
+					<wb1d2d:FE1D2DNode>
+						<gml:name>node3</gml:name>
+						<gml:pointProperty>
+							<gml:Point 
+								srsName="EPSG:31467">
+								<gml:coordinates ts="," decimal="." cs=" ">0.0 1.0</gml:coordinates>
+							</gml:Point>
+						</gml:pointProperty>
+					</wb1d2d:FE1D2DNode>
+				</wb1d2d:fe1d2dDirectedNode>
+			</wb1d2d:FE1D2DEdge> 
+		</wb1d2d:fe1d2dNodeContainer>
+	</wb1d2d:FE1D2DNode>
+	
+	
+	<!-- ===========================EDGE========================== -->
+	<wb1d2d:FE1D2DEdge 
+		xmlns:xlink="http://www.w3.org/1999/xlink" 
+		xmlns:gml="http://www.opengis.net/gml" 
+		xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+		xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+		gml:id="mfc_edge1">
+		<gml:name>mfc_edge1</gml:name>
+		<wb1d2d:fe1d2dDirectedNode xlink:href="#node00"/>
+		<wb1d2d:fe1d2dDirectedNode>
+			<wb1d2d:FE1D2DNode>
+				<gml:name>mfc_edge1_node1</gml:name>
+				<gml:pointProperty>
+					<gml:Point 
+						srsName="EPSG:31467">
+						<gml:coordinates ts="," decimal="." cs=" ">0.0 0.0</gml:coordinates>
+					</gml:Point>
+				</gml:pointProperty>
+			</wb1d2d:FE1D2DNode>			
+		</wb1d2d:fe1d2dDirectedNode>
+		
+		<wb1d2d:fe1d2dDirectedNode>
+			<wb1d2d:FE1D2DNode>
+				<gml:name>mfc_edge1_node2</gml:name>
+				<gml:pointProperty>
+					<gml:Point 
+						srsName="EPSG:31467">
+						<gml:coordinates ts="," decimal="." cs=" ">0.0 1.0</gml:coordinates>
+					</gml:Point>
+				</gml:pointProperty>
+			</wb1d2d:FE1D2DNode>			
+		</wb1d2d:fe1d2dDirectedNode>
+		
+		<wb1d2d:fe1d2dMiddleNode>
+			<wb1d2d:FE1D2DNode>
+				<gml:name>mfc_edge1_node1</gml:name>
+				<gml:pointProperty>
+					<gml:Point 
+						srsName="EPSG:31467">
+						<gml:coordinates ts="," decimal="." cs=" ">0.0 1.0</gml:coordinates>
+					</gml:Point>
+				</gml:pointProperty>
+			</wb1d2d:FE1D2DNode>			
+		</wb1d2d:fe1d2dMiddleNode>
+		<wb1d2d:fe1d2dEdgeContainer>
+			<wb1d2d:FE1D2DQuadriElement gml:id="mfc_edge1_QuadriElement">
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			</wb1d2d:FE1D2DQuadriElement>
+		</wb1d2d:fe1d2dEdgeContainer>
+			<wb1d2d:fe1d2dEdgeContainer>
+			<wb1d2d:FE1D2DTriElement gml:id="mfc_edge1_FE1D2DTriElement">
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			</wb1d2d:FE1D2DTriElement>
+		</wb1d2d:fe1d2dEdgeContainer>
+		<wb1d2d:fe1d2dEdgeContainer>
+			<wb1d2d:FE1D2DContinuityLine gml:id="mfc_edge1_ContinuityLine">
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
+			</wb1d2d:FE1D2DContinuityLine>
+		</wb1d2d:fe1d2dEdgeContainer>
+	</wb1d2d:FE1D2DEdge>
+</gml:FeatureCollection>
+

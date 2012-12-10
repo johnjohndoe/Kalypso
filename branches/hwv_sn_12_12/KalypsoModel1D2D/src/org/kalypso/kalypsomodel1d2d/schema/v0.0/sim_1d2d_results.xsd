@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		Provide schema for the results of the 1d2d model @author Thomas Jung
+	-->
+
+<xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults"
+	xmlns:res1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:math="org.kalypso.gml.common.math" xmlns:wspmprof="org.kalypso.model.wspmprofile"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import namespace="http://www.opengis.net/om" />
+
+	<!-- NodeResultCollection -->
+	<xs:element name="NodeResultCollection" type="res1d2d:NodeResultCollectionType"
+		substitutionGroup="gml:_Feature" />
+
+	<xs:complexType name="NodeResultCollectionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="nodeResultMember" type="res1d2d:NodeResultPropertyType"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NodeResultPropertyType">
+		<xs:sequence>
+			<xs:element ref="res1d2d:NodeResult" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- NodeResult -->
+
+	<xs:element name="NodeResult" type="res1d2d:NodeResultType"
+		substitutionGroup="gml:_Feature" />
+
+	<xs:complexType name="NodeResultType">
+		<xs:annotation>
+			<xs:documentation>The results on one node of a 1d2d calculation.
+			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
+					kapp:property="res1d2d:velocityNorm" kapp:isVirtual="true"
+					kapp:valueType="xs:double">
+					<kapp:parameter>
+						<kapp:name>vectorProperty</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}velocity]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>norm</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
+					kapp:property="res1d2d:velocityRotation" kapp:isVirtual="true"
+					kapp:valueType="xs:double">
+					<kapp:parameter>
+						<kapp:name>vectorProperty</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}velocity]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>rotation</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction"
+					kapp:property="res1d2d:depth" kapp:isVirtual="true" kapp:valueType="xs:double">
+					<kapp:parameter>
+						<kapp:name>waterlevel</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waterlevel]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>value</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:waterlevelColor" kapp:isVirtual="true" kapp:valueType="xs:string">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waterlevel]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>color</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:depthColor" kapp:isVirtual="true" kapp:valueType="xs:string">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waterlevel]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>color</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:wavehsigColor" kapp:isVirtual="true" kapp:valueType="xs:string">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waveHsig]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>color</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:waveperiodColor" kapp:isVirtual="true" kapp:valueType="xs:string">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}wavePer]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>color</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:wavehsig" kapp:isVirtual="true" kapp:valueType="xs:double">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waveHsig]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name> 
+						<kapp:value>value</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:waveperiod" kapp:isVirtual="true" kapp:valueType="xs:double">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}wavePer]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>value</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+					kapp:property="res1d2d:wavedirection" kapp:isVirtual="true" kapp:valueType="xs:double">
+					<kapp:parameter>
+						<kapp:name>resultType</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waveDir]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>resultKind</kapp:name>
+						<kapp:value>value</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+			</xs:appinfo>
+		</xs:annotation>
+
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="calcId" type="xs:int">
+						<xs:annotation>
+							<xs:documentation>
+
+								Calculation Node ID
+								
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="location" type="gml:PointPropertyType">
+						<xs:annotation>
+							<xs:documentation>
+
+								Location
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="waterlevel" type="xs:double">
+						<xs:annotation>
+							<xs:documentation>
+								Waterlevel
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="virtualdepth" type="xs:double">
+						<xs:annotation>
+
+							<xs:documentation>
+								virtualdepth
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="virtDepPrevStep" type="xs:double">
+						<xs:annotation>
+
+							<xs:documentation>
+								virtualdepth of the previous time step
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="virtDepOverTime" type="xs:double">
+						<xs:annotation>
+
+							<xs:documentation>
+								derivative of virtual depth over time
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="virtDepOverTimePrevStep" type="xs:double">
+						<xs:annotation>
+
+							<xs:documentation>
+								derivative of virtual depth over time in last
+								time step
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="depth" type="xs:double">
+						<xs:annotation>
+
+							<xs:documentation>
+								depth
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="velocity" type="gml:VectorType">
+						<xs:annotation>
+
+							<xs:documentation>
+								Velocity
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="waveHsig" type="xs:double">
+						<xs:annotation>
+							<xs:documentation>
+								Significant wave height
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="wavePer" type="xs:double">
+						<xs:annotation>
+							<xs:documentation>
+								Wave Period
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<!-- 
+					<xs:element name="waveDir" type="gml:VectorType">
+					 -->						
+					<xs:element name="waveDir" type="xs:double">
+						<xs:annotation>
+							<xs:documentation>
+								Wave Direction
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="velPrevStep" type="gml:VectorType">
+						<xs:annotation>
+
+							<xs:documentation>
+								velocity of the previous time step
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="velOverTime" type="gml:VectorType">
+						<xs:annotation>
+
+							<xs:documentation>
+								derivative of the velocity with respect to time
+								of the previous time step
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="velOverTimePrevStep" type="gml:VectorType">
+						<xs:annotation>
+
+							<xs:documentation>
+								derivative of the velocity with respect to time
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="discharge" type="xs:double">
+						<xs:annotation>
+
+							<xs:documentation>
+								Discharge
+								<xs:description><![CDATA[only for 1d elements.]]></xs:description>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="midside" type="xs:boolean">
+						<xs:annotation>
+
+							<xs:documentation>
+								midside node
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dry" type="xs:int">
+						<xs:annotation>
+
+							<xs:documentation>
+								dry node
+								<xs:description><![CDATA[indicates, if the node was set dry or wet during calculation.]]></xs:description>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- TIN Result -->
+	<xs:element name="TinResult" type="res1d2d:TinResultType"
+		substitutionGroup="gml:_Feature" />
+
+	<xs:complexType name="TinResultType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="triangulatedSurfaceMember"
+						type="res1d2d:TriangulatedSurfacePropertyType" />
+					<xs:element name="unit" type="xs:string"></xs:element>
+					<xs:element name="parameter" type="xs:string"></xs:element>
+					<xs:element name="date" type="xs:dateTime"></xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="TriangulatedSurfacePropertyType">
+		<xs:sequence>
+			<xs:element ref="gml:TriangulatedSurface" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Hydrograph Results -->
+	<xs:element name="HydrographCollection" type="res1d2d:HydrographCollectionType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+
+			<xs:documentation>
+				List of Hydropgraphs
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="HydrographCollectionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="hydrographMember" type="res1d2d:HydrographPropertyType"
+						minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+
+							<xs:documentation>
+								Hydrograph
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="resultMember" type="res1d2d:HydrographResultPropertyType"
+						minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation><![CDATA[paths to the resultfiles.]]></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="HydrographPropertyType">
+		<xs:sequence>
+			<xs:element ref="res1d2d:Hydrograph" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="HydrographResultPropertyType">
+		<xs:sequence>
+			<xs:element ref="res1d2d:HydrographResult" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+	<xs:element name="Hydrograph" type="res1d2d:HydrographType"
+		substitutionGroup="om:Observation">
+		<xs:annotation>
+
+			<xs:documentation>
+				Hydrographs
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:element name="HydrographResult" type="res1d2d:HydrographResultType">
+		<xs:annotation>
+
+
+			<xs:documentation>
+				result
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="HydrographResultType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="path" type="xs:anyURI" nillable="false">
+						<xs:annotation>
+							<xs:documentation><![CDATA[Path to the result file.]]></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="date" type="xs:dateTime" nillable="false">
+						<xs:annotation>
+							<xs:documentation><![CDATA[Time of simulated timestep.]]></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="HydrographType">
+		<xs:complexContent>
+			<xs:extension base="om:ObservationType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

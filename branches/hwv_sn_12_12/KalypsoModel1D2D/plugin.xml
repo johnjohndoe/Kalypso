@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+  <extension point="org.kalypso.contribs.java.urlCatalog">
+    <catalog class="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D" id="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D" />
+  </extension>
+  <extension point="org.kalypso.deegree.functionProperty">
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometryFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"
+      name="FE1D2DEdgeTypeGeometry" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry" id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+      name="FE1D2D_2DElementTypeGeometry" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeElevationAvailabilityInfoFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeElevationAvailabilityInfoFunction"
+      name="NodeElevationAvailabilityInfoFunction" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry" id="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"
+      name="Element1DTypeGeometry" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction"
+      id="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction" name="AbstractJunctionGeometryPropertyFunction" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.ControlModelNamePropertyFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.ControlModelNamePropertyFunction"
+      name="ControlModelNamePropertyFunction" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
+      name="NodeResultVelocityFunction" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultExtFunction"
+      name="NodeResultExtFunction" />
+      <!--
+      --> 
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction" id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction"
+      name="NodeResultDepthFunction" />
+    <function class="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc" id="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc"
+      name="StaticModelBBoxFunc" />
+  </extension>
+
+  <extension id="org.kalypso.core.adapters" name="Kalypso Model 1D 2D Adapter Factory" point="org.eclipse.core.runtime.adapters">
+    <factory adaptableType="org.kalypsodeegree.model.feature.Feature" class="org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoModel1D2DFeatureFactory">
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d" />
+      <adapter type="org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator" />
+      <adapter type="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IAbstractJunction" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult" />
+      <adapter type="org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta" />
+      <adapter type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection" />
+      <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph" />
+    </factory>
+  </extension>
+
+  <extension point="org.kalypso.core.catalogContribution">
+    <catalogContribution class="org.kalypso.kalypsomodel1d2d.schema.KalypsoModel1D2DCatalogContribution"
+      name="org.kalypso.kalypsomodel1d2d.schema.KalypsoModel1D2DCatalogContribution" />
+    <catalogContribution class="org.kalypso.kalypsomodel1d2d.ui.catalog.Model1d2dCatalogContribution"
+      name="Model1d2dCatalogContribution" />
+  </extension>
+
+  <extension point="org.kalypso.ui.featureViewExtensionControl">
+    <extensionControl class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory"
+      id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory" />
+    <extensionControl class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControlFactory"
+      id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControlFactory" />
+    <extensionControl class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelNewControlFactory"
+      id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelNewControlFactory"
+    >
+    </extensionControl>
+    <extensionControl class="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControlFactory"
+      id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControlFactory"
+    >
+    </extensionControl>
+  </extension>
+
+  <extension point="org.eclipse.ui.handlers">
+    <!-- 1D-Elements -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.1D">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.element1d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.1D">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.element1d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget" />
+      </class>
+    </handler>
+    <!-- 2D-Elements -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.2D">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.element2d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirElement.2D">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param2d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateFE2DWeirWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditWeirElement.2D">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param2d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditWeir2DFlowrelationWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.2D">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.element2d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.2D">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.element2d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D">
+      <activeWhen>
+        <reference definitionId="org.kalypso.ui.views.mapView.expressions.element2d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D">
+      <activeWhen>
+        <reference definitionId="org.kalypso.ui.views.mapView.expressions.element2d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.MergeTrianglesWidget" />
+      </class>
+    </handler>
+    <!-- Continuity Lines -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.line"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.ContLine">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.line"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget" />
+      </class>
+    </handler>
+    <!-- Boundary-Conditions -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.BoundCond">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.boundaryCondition"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.BoundCond">
+      <activeWhen>
+        <reference definitionId="org.kalypso.ui.views.mapView.expressions.boundaryCondition"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteBCWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.BoundCond">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.boundaryCondition"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditBCWidget" />
+      </class>
+    </handler>
+	<!-- Transition-Elements -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTransition">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.transitionElement"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateTransitionElementWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteTransition">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.transitionElement"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.DeleteTransitionElementWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditTransition">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.transitionElement"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.EditTransitionElementWidget" />
+      </class>
+    </handler>
+    <!-- Junction-Elements -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateJunction">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.junctionElement"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteJunction">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.junctionElement"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.DeleteJunctionElementWidget" />
+      </class>
+    </handler>
+	<!-- 1D-Parameter -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation">
+      <enabledWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param1d" />
+      </enabledWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidget"/>
+      </class>
+    </handler>
+	<!--
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation">
+      <enabledWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param1d" />
+      </enabledWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateKingFlowrelationWidget"/>
+      </class>
+    </handler>
+    -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation">
+      <enabledWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param1d" />
+      </enabledWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidget"/>
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation">
+      <enabledWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param1d" />
+      </enabledWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBridgeFlowrelationWidget"/>
+      </class>
+    </handler>
+	
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteFlowRelation">
+      <activeWhen>
+        <reference definitionId="org.kalypso.ui.views.mapView.expressions.param1d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteParameter1DWidget"/>
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditFlowRelation">
+      <activeWhen>
+        <reference definitionId="org.kalypso.ui.views.mapView.expressions.param1d"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget"/>
+      </class>
+    </handler>
+    <!-- 2D-Parameter --> 
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation.2D">
+      <enabledWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param2d" />
+      </enabledWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateFE2DWeirWidget"/>
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditWeirFlowRelation.2D">
+      <enabledWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param2d" />
+      </enabledWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditWeir2DFlowrelationWidget"/>
+      </class>
+    </handler>
+   
+    <!-- Hydrograph -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateHydrograph">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.hydrograph"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.result.CreateHydrographWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteHydrograph">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.hydrograph"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.result.DeleteHydrographWidget" />
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditHydrograph">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.hydrograph"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.result.ShowHydrographWidget" />
+      </class>
+    </handler>
+	<!-- Roughness-Polygons -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateRoughnessPolygon">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.roughnessPolygon"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.CreatePolygonWidgetWrapper"/>
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteRoughnessPolygon">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.roughnessPolygon"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.DeletePolygonWidgetWrapper"/>
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygon">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.roughnessPolygon"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditPolygonWidgetWrapper"/>
+      </class>
+    </handler>
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygonProperties">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.roughnessPolygon"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+          value="org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditRoughnessParametersOfPolygonWidget" />
+      </class>
+    </handler>
+    <!-- WSPM-Profiles -->
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile">
+      <activeWhen>
+      	<reference definitionId="org.kalypso.ui.views.mapView.expressions.wspmProfile"/>
+      </activeWhen>
+      <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+        <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget" />
+      </class>
+    </handler>
+  </extension>
+
+  <extension point="org.eclipse.ui.commands">
+	<!-- 1D-Elements -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.1D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.1D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.1D.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.1D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.1D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.1D.description" />
+	<!-- 2D-Elements -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.2D.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.2D.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.2D.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D.description" />
+	<!-- Continuity Lines -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.ContLine" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.ContLine.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.ContLine.description" />
+    <!-- Boundary-Conditions -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.BoundCond" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.BoundCond.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.BoundCond.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.BoundCond" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.BoundCond.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.BoundCond.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.BoundCond" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.BoundCond.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.BoundCond.description" />
+	<!-- Transition-Elements -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTransition" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTransition.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTransition.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteTransition" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteTransition.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteTransition.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditTransition" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditTransition.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditTransition.description" />
+    <!-- Junction-Elements -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateJunction" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateJunction.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateJunction.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteJunction" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteJunction.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteJunction.description" />
+	<!-- 1D-Parameter -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation.description"/>
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation.description"/>
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation.description"/>
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation.description"/>
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteFlowRelation" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteFlowRelation.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteFlowRelation.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditFlowRelation" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditFlowRelation.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditFlowRelation.description" />
+	<!-- 2D-Parameter -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirElement.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirElement.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirElement.2D.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditWeirElement.2D" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditWeirElement.2D.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditWeirElement.2D.description"/>
+    <!-- Hydrograph -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateHydrograph" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateHydrograph.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateHydrograph.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteHydrograph" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteHydrograph.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteHydrograph.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditHydrograph" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditHydrograph.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditHydrograph.description" />
+	<!-- Roughness-Polygons -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateRoughnessPolygon" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateRoughnessPolygon.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateRoughnessPolygon.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteRoughnessPolygon" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteRoughnessPolygon.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteRoughnessPolygon.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygon" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygon.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygon.description" />
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygonProperties" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygonProperties.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygonProperties.description" />
+    <!-- WSPM-Profiles -->
+    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile" name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile.name" description="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile"/>
+
+	<!-- Tuple-Results -->
+    <command categoryId="org.kalypso.ui.tupleResult.category" id="org.kalypso.model1d2d.Command1D2DTimestepsAddRow" name="%org.kalypso.model1d2d.Command1D2DTimestepsAddRow.name" description="%org.kalypso.model1d2d.Command1D2DTimestepsAddRow.description"/>
+    <command categoryId="org.kalypso.ui.tupleResult.category" id="org.kalypso.model1d2d.Command1D2DTimestepsInterpolate" name="%org.kalypso.model1d2d.Command1D2DTimestepsInterpolate.name" description="%org.kalypso.model1d2d.Command1D2DTimestepsInterpolate.description"/>
+  </extension>
+
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="toolbar:org.kalypso.ui.views.mapView?before=widgets">
+	  <!-- 1D-Elements -->    
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.1D" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.element1d"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.1D" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.element1d"/>
+        </visibleWhen>
+      </command>
+	  <!-- 2D-Elements -->    
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.2D" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.element2d"/>
+        </visibleWhen>
+      </command>
+	  <!-- 2D-Params -->    
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirElement.2D" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param2d"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditWeirElement.2D" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.param2d"/>
+        </visibleWhen>
+      </command>
+      
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.2D" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.element2d"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.2D" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.element2d"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D"
+        id="org.kalypso.ui.view.mapView.refine2DMenu" style="pulldown">
+        <visibleWhen checkEnabled="false">
+          <reference definitionId="org.kalypso.ui.views.mapView.expressions.element2d"/>
+        </visibleWhen>
+      </command>
+      <!-- Continuity-Lines -->
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.line"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.ContLine" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.line"/>
+        </visibleWhen>
+      </command>
+      <!-- Boundary-Conditions -->
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.BoundCond" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.boundaryCondition"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.BoundCond" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.boundaryCondition"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.BoundCond" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.boundaryCondition"/>
+        </visibleWhen>
+      </command>
+      <!-- Transition-Elements -->
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTransition" style="radio">
+        <visibleWhen checkEnabled="false">
+      	    <reference definitionId="org.kalypso.ui.views.mapView.expressions.transitionElement"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteTransition" style="radio">
+        <visibleWhen checkEnabled="false">
+      	    <reference definitionId="org.kalypso.ui.views.mapView.expressions.transitionElement"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditTransition" style="radio">
+        <visibleWhen checkEnabled="false">
+      	    <reference definitionId="org.kalypso.ui.views.mapView.expressions.transitionElement"/>
+        </visibleWhen>
+      </command>
+      <!-- Junction-Elements -->
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateJunction" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.junctionElement"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteJunction" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.junctionElement"/>
+        </visibleWhen>
+      </command>
+	  <!-- 1D-Parameter -->
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
+        id="org.kalypso.ui.view.mapView.createParameterMenu" style="pulldown" 
+        label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation.label" tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation.tooltip">
+        <visibleWhen checkEnabled="false">
+          <reference definitionId="org.kalypso.ui.views.mapView.expressions.param1d" />
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteFlowRelation" style="radio">
+        <visibleWhen checkEnabled="false">
+          <reference definitionId="org.kalypso.ui.views.mapView.expressions.param1d" />
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditFlowRelation" style="radio">
+        <visibleWhen checkEnabled="false">
+          <reference definitionId="org.kalypso.ui.views.mapView.expressions.param1d" />
+        </visibleWhen>
+      </command>
+      <!-- Hydrograph -->
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateHydrograph" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.hydrograph"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteHydrograph" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.hydrograph"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditHydrograph" style="radio">
+        <visibleWhen checkEnabled="false">
+        	<reference definitionId="org.kalypso.ui.views.mapView.expressions.hydrograph"/>
+        </visibleWhen>
+      </command>
+      <!-- Roughness-Polygons -->
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateRoughnessPolygon" style="radio">
+        <visibleWhen checkEnabled="false">
+      		<reference definitionId="org.kalypso.ui.views.mapView.expressions.roughnessPolygon"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteRoughnessPolygon" style="radio">
+        <visibleWhen checkEnabled="false">
+      		<reference definitionId="org.kalypso.ui.views.mapView.expressions.roughnessPolygon"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygon" style="radio">
+        <visibleWhen checkEnabled="false">
+      		<reference definitionId="org.kalypso.ui.views.mapView.expressions.roughnessPolygon"/>
+        </visibleWhen>
+      </command>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygonProperties" style="radio">
+        <visibleWhen checkEnabled="false">
+      		<reference definitionId="org.kalypso.ui.views.mapView.expressions.roughnessPolygon"/>
+        </visibleWhen>
+      </command>
+      <!-- WSPM-Profiles -->
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile" style="radio">
+        <visibleWhen checkEnabled="false">
+           <with variable="activeMapPanel">
+               <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+           </with>
+        </visibleWhen>
+      </command>
+    </menuContribution>
+
+	<!-- Sub-Menues -->
+    <menuContribution locationURI="menu:org.kalypso.ui.view.mapView.createParameterMenu">
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation" style="radio"/>
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation" style="radio" />
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation" style="radio" />
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation" style="radio"/>
+    </menuContribution>
+
+    <menuContribution locationURI="menu:org.kalypso.ui.view.mapView.refine2DMenu">
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D" style="radio" 
+        label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D.label" tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D.tooltip" />
+      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D" style="radio" 
+        label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D.label" tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D.tooltip" />
+    </menuContribution>
+  </extension>
+
+  <extension point="org.eclipse.core.expressions.definitions">
+    <definition id="org.kalypso.ui.views.mapView.expressions.param1d">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation1D" />
+      </with>
+    </definition>
+    <definition id="org.kalypso.ui.views.mapView.expressions.element1d">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" />
+      </with>
+    </definition>
+    <definition id="org.kalypso.ui.views.mapView.expressions.element2d">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
+      </with>
+    </definition>
+    <definition id="org.kalypso.ui.views.mapView.expressions.param2d">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation2D" />
+      </with>
+    </definition>
+    <definition id="org.kalypso.ui.views.mapView.expressions.line">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Line" />
+      </with>
+    </definition>
+    
+    <definition id="org.kalypso.ui.views.mapView.expressions.boundaryCondition">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" />
+      </with>
+    </definition>
+    
+    <definition id="org.kalypso.ui.views.mapView.expressions.transitionElement">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement" />
+      </with>
+    </definition>
+    
+    <definition id="org.kalypso.ui.views.mapView.expressions.hydrograph">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph" />
+      </with>
+    </definition>
+    
+    <definition id="org.kalypso.ui.views.mapView.expressions.junctionElement">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionElement" />
+      </with>
+    </definition>
+    
+    <definition id="org.kalypso.ui.views.mapView.expressions.wspmProfile">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+      </with>
+    </definition>
+    
+    <definition id="org.kalypso.ui.views.mapView.expressions.roughnessPolygon">
+      <with variable="activeMapPanel">
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon" />
+      </with>
+    </definition>
+  </extension>
+
+  <extension point="org.kalypso.deegree.functionExpression">
+    <function class="org.kalypso.kalypsomodel1d2d.ui.map.function.BorderEdgeFunctionExpression" label="%org.kalypso.kalypsomodel1d2d.ui.map.function.BorderEdgeFunctionExpression.label"
+      name="org.kalypso.kalypsomodel1d2d.ui.map.function.BorderEdgeFunctionExpression" />
+  </extension>
+
+  <extension point="org.kalypso.afgui.scenarioData">
+    <dataSet id="org.kalypso.kalypso1d2d">
+      <scenarioDatum classKey="org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta"
+        modelPath="models/scenarioResultMeta.gml" />
+      <scenarioDatum classKey="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"
+        modelPath="models/static_model.gml" />
+      <scenarioDatum classKey="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup"
+        modelPath="models/control.gml" />
+      <scenarioDatum classKey="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d"
+        modelPath="models/discretisation.gml" />
+    </dataSet>
+  </extension>
+
+  <extension point="org.kalypso.ui.modelAdapter">
+    <modelAdapter adapterClass="org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor"
+      featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}DiscretisationModel" />
+    <modelAdapter adapterClass="org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter"
+      featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl}ControlModelGroup" />
+  </extension>
+
+  <extension name="1d2dChartCommands" point="org.eclipse.ui.commands">
+    <command categoryId="org.kalypso.chart.ui.commands.category" id="org.kalypso.model1d2d.removeBuildingParameter" name="%org.kalypso.model1d2d.removeBuildingParameter.name" description="%org.kalypso.model1d2d.removeBuildingParameter.description" />
+    <command categoryId="org.kalypso.chart.ui.commands.category" id="org.kalypso.model1d2d.saveBuildingParameter"   name="%org.kalypso.model1d2d.saveBuildingParameter.name" description="%org.kalypso.model1d2d.saveBuildingParameter.description" />
+  </extension>
+
+  <extension name="chartHandlers" point="org.eclipse.ui.handlers">
+    <handler class="org.kalypso.kalypsomodel1d2d.ui.chart.EditBuildingParameterHandler" commandId="org.kalypso.model1d2d.removeBuildingParameter" />
+    <handler class="org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler" commandId="org.kalypso.model1d2d.saveBuildingParameter" />
+    <handler class="org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsAddRow"
+      commandId="org.kalypso.model1d2d.Command1D2DTimestepsAddRow" />
+    <handler class="org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate"
+      commandId="org.kalypso.model1d2d.Command1D2DTimestepsInterpolate" />
+  </extension>
+
+  <extension point="org.eclipse.ui.commandImages">
+    <!-- 1D-Elements -->
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.1D" icon="icons/elcl16/01_add_1D.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.1D" icon="icons/elcl16/05_cut_1D.gif"/>
+    <!-- 2D-Elements -->    
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.2D" icon="icons/elcl16/02_add_2D.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.2D" icon="icons/elcl16/04_cut_2D.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.2D" icon="icons/elcl16/07_move_FE_knot.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.2D" icon="icons/elcl16/33_refine_2D.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.MergeTriangles.2D" icon="icons/elcl16/34_merge_triangles.gif"/>
+    <!-- Continuity-Lines -->
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.ContLine" icon="icons/elcl16/03_add_conti.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.ContLine" icon="icons/elcl16/06_cut_conti.gif"/>
+    <!-- Boundary-Conditions -->
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.BoundCond" icon="icons/elcl16/13_flowrelation_add_NodalBC.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.BoundCond" icon="icons/elcl16/14_flowrelation_cut_NodalBC.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.BoundCond" icon="icons/elcl16/15_flowrelation_edit_NodalBC.gif"/>
+	<!-- Transition-Elements -->
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTransition" icon="icons/elcl16/30_add_1D2DTransition.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteTransition" icon="icons/elcl16/31_delete_1D2DTransition.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditTransition" icon="icons/elcl16/32_edit_1D2DTransition.gif"/>
+    <!-- Junction-Elements -->
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateJunction" icon="icons/elcl16/01_add_1D.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteJunction" icon="icons/elcl16/cut.png"/>
+	<!-- 2D-Parameter -->
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirElement.2D" icon="icons/elcl16/02_add_2D.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditWeirElement.2D" icon="icons/elcl16/11_flowrelation_edit.gif"/>
+	<!-- 1D-Parameter -->
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation" icon="icons/elcl16/09_add_parameter_teschke.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation" icon="icons/elcl16/10_add_parameter_king.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation" icon="icons/elcl16/08_add_weir.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation" icon="icons/elcl16/08a_add_bridge.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteFlowRelation" icon="icons/elcl16/12_flowrelation_delete.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditFlowRelation" icon="icons/elcl16/11_flowrelation_edit.gif"/>
+    <!-- Hydrograph -->
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateHydrograph" icon="icons/elcl16/hydrograph_create.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteHydrograph" icon="icons/elcl16/hydrograph_delete.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditHydrograph" icon="icons/elcl16/hydrograph_select.gif"/>
+	<!-- Roughness-Polygons -->
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateRoughnessPolygon" icon="icons/elcl16/02_add_2D.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteRoughnessPolygon" icon="icons/elcl16/04_cut_2D.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygon" icon="icons/elcl16/07_move_FE_knot.gif"/>
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditRoughnessPolygonProperties" icon="icons/elcl16/editPolygon.gif"/>
+    <!-- WSPM-Profiles -->
+    <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile" icon="icons/elcl16/16_select_profile_enable.gif"/>
+
+
+	<!-- Chart-Stuff -->
+    <image commandId="org.kalypso.model1d2d.removeBuildingParameter" icon="icons/obj16/removeBuildingParameter.gif" />
+    <image commandId="org.kalypso.model1d2d.saveBuildingParameter" icon="icons/obj16/saveBuildingParameter.gif" />
+    
+    <image commandId="org.kalypso.model1d2d.Command1D2DTimestepsAddRow" icon="icons/obj16/add.gif" />
+    <image commandId="org.kalypso.model1d2d.Command1D2DTimestepsInterpolate" icon="icons/obj16/loop.gif" />
+  </extension>
+
+  <extension id="velodiff2d" point="org.eclipse.core.runtime.applications">
+    <application cardinality="singleton-global" thread="main" visible="true">
+      <run class="org.kalypso.kalypsomodel1d2d.apps.velodiff2d.VeloDiff2dApplication" />
+    </application>
+  </extension>
+
+  <extension id="velodiff2d" point="org.eclipse.core.runtime.products">
+    <product application="org.kalypso.model1d2d.velodiff2d" description="VeloDiff2D" name="VeloDiff">
+      <property name="appName" value="VeloDiff" />
+    </product>
+  </extension>
+
+  <extension point="org.kalypso.simulation.core.simulation">
+    <simulation simulationClass="org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation" typeID="org.kalypso.model1d2d" />
+    <simulation
+          simulationClass="org.kalypso.kalypsomodel1d2d.sim.PreRMAKalypso"
+          typeID="org.kalypso.simulation.rma.preRMAKalypso">
+    </simulation>
+  </extension>
+  <extension point="org.kalypso.simulation.core.simulation">
+    <simulation simulationClass="org.kalypso.kalypsomodel1d2d.sim.SWANKalypsoSimulation" typeID="org.kalypso.model1d2d.swan" />
+    <simulation
+          simulationClass="org.kalypso.kalypsomodel1d2d.sim.PreSWANKalypso"
+          typeID="org.kalypso.simulation.swan.preSWANKalypso">
+    </simulation>
+  </extension>
+  <extension
+        point="de.openali.odysseus.chart.factory.LayerProvider">
+     <provider
+           class="org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayerProvider"
+           id="org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayerProvider">
+     </provider>
+  </extension>
+  <extension
+        point="org.kalypso.core.themeInfo">
+     <themeInfo
+           class="org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo"
+           id="org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo">
+     </themeInfo>
+  </extension>
+</plugin>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="c1d2d:Timesteps" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:swe="http://www.opengis.net/swe"
+	xmlns:om="http://www.opengis.net/om" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="4" />
+	<!-- text="Zeitschrittvorgabe" tooltip="Zeitschrittvorgabe der quasi stationaeren Berechnung"-->
+	<gft:label property="c1d2d:TimestepsObservation" visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+    <gft:tupleResult property="om:result" 
+        style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION" xmlns:gml="http://www.opengis.net/gml">
+        <gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="4"
+            horizontalAlignment="SWT.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+    </gft:tupleResult>
+</gft:featureview>
