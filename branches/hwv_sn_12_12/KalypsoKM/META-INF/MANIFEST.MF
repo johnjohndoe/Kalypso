@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-Name: KalypsoKM
+Bundle-SymbolicName: org.kalypso.rrm.kalininmiljukov;singleton:=true
+Bundle-Version: 12.12.0.qualifier
+Bundle-Vendor: kalypso.sourceforge.net
+Require-Bundle: org.junit;resolution:=optional,
+ org.kalypso.commons,
+ org.kalypso.core;bundle-version="2.3.0",
+ org.kalypso.NACalcJob;bundle-version="2.3.0",
+ org.kalypso.ui;bundle-version="2.3.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Activator: org.kalypso.model.km.internal.KMPlugin
+Bundle-ActivationPolicy: lazy
