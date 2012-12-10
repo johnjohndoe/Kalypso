@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview xmlns:gft="featureview.template.kalypso.org" xmlns:tuhh="org.kalypso.model.wspm.tuhh" typename="tuhh:WaterlevelParameter" style="SWT.NONE">
+    <gft:gridData grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
+    <gft:gridLayout numColumns="4"/>
+
+    <gft:label property="tuhh:exeVersion" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+    </gft:label>
+	<gft:extensioncontrol style="SWT.BEGINNING" property="tuhh:exeVersion" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+        <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="2" horizontalAlignment="GridData.FILL"/>
+		<gft:param name="dir" value="bin" />
+		<gft:param name="label" value="1D·Kalypso" />
+		<gft:param name="exePattern" value="Kalypso-1D(.*).exe" />
+		<gft:param name="alignment" value="SWT.LEFT" />
+		<gft:param name="displayFormat" value="Kalypso-1D%s.exe" />
+	</gft:extensioncontrol>
+    <gft:validatorlabel property="tuhh:exeVersion" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+    </gft:validatorlabel>
+    
+    <gft:label property="tuhh:wspIteration" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+    </gft:label>
+    <gft:combo property="tuhh:wspIteration" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="2" horizontalAlignment="GridData.FILL"/>
+    </gft:combo>
+    <gft:validatorlabel property="tuhh:wspIteration" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+    </gft:validatorlabel>
+
+    <gft:label property="tuhh:verzoegerungsverlust" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+    </gft:label>
+    <gft:combo property="tuhh:verzoegerungsverlust" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="2" horizontalAlignment="GridData.FILL"/>
+    </gft:combo>
+    <gft:validatorlabel property="tuhh:verzoegerungsverlust" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+    </gft:validatorlabel>
+    
+    <gft:label property="tuhh:reibungsverlust" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER"/>
+    </gft:label>
+    <gft:combo property="tuhh:reibungsverlust" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="2" horizontalAlignment="GridData.FILL"/>
+    </gft:combo>
+    <gft:validatorlabel property="tuhh:reibungsverlust" visible="true" style="SWT.NONE">
+        <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+    </gft:validatorlabel>
+
+    <gft:group property="tuhh:specialOptionsMember" style="SWT.NONE">
+        <gft:gridData grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" horizontalSpan="4" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL"/>
+        <gft:gridLayout numColumns="2" marginHeight="0" marginWidth="0"/>
+        <gft:subcomposite property="tuhh:specialOptionsMember" style="SWT.NONE">
+            <gft:gridData grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" horizontalSpan="2" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL"/>
+        </gft:subcomposite>
+    </gft:group>
+</gft:featureview>
