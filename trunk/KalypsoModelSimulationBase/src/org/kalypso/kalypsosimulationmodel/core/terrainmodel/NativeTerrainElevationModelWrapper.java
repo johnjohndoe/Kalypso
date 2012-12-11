@@ -62,10 +62,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * Provide the implementation of {@link ITerrainElevationModel} for simBase:NativeTerrainElevationModelWrapper model.
  * This class collaborates with ...
- *
+ * 
  * @author Madanagopal
  * @author Patrice Congo
- *
  */
 public class NativeTerrainElevationModelWrapper extends TerrainElevationModel implements INativeTerrainElevationModelWrapper
 {
@@ -129,13 +128,21 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   @Override
   public double getElevation( final GM_Point location ) throws ElevationException
   {
-    return getElevationProvider().getElevation( location );
+    final IElevationModel elevationProvider = getElevationProvider();
+    if( elevationProvider == null )
+      return Double.NaN;
+
+    return elevationProvider.getElevation( location );
   }
 
   @Override
   public GM_Envelope getBoundingBox( ) throws ElevationException
   {
-    return getElevationProvider().getBoundingBox();
+    final IElevationModel elevationProvider = getElevationProvider();
+    if( elevationProvider == null )
+      return null;
+
+    return elevationProvider.getBoundingBox();
   }
 
   @Override
@@ -156,19 +163,27 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   @Override
   public double getMaxElevation( ) throws ElevationException
   {
-    return getElevationProvider().getMaxElevation();
+    final IElevationModel elevationProvider = getElevationProvider();
+    if( elevationProvider == null )
+      return Double.NaN;
+
+    return elevationProvider.getMaxElevation();
   }
 
   @Override
   public double getMinElevation( ) throws ElevationException
   {
-    return getElevationProvider().getMinElevation();
+    final IElevationModel elevationProvider = getElevationProvider();
+    if( elevationProvider == null )
+      return Double.NaN;
+
+    return elevationProvider.getMinElevation();
   }
 
   @Override
   public IFile getSourceFile( )
   {
-    final String sourceName = (String) getProperty( SIM_BASE_PROP_FILE_NAME );
+    final String sourceName = (String)getProperty( SIM_BASE_PROP_FILE_NAME );
 
     // why using urls and file? We live in an eclipse workspace! Use IRources
     final URL sourceURL = makeSourceURL( sourceName, this.getWorkspace().getContext() );
