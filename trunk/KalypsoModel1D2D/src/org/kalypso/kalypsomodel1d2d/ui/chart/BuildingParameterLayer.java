@@ -107,7 +107,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     if( m_paintData == null )
       return null;

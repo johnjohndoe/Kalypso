@@ -126,7 +126,7 @@ public class KingLayer extends AbstractChartLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange< ? > range )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> range )
   {
     return null;
   }

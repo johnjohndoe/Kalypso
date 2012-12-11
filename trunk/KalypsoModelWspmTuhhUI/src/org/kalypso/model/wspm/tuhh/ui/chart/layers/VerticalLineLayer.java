@@ -112,7 +112,7 @@ public class VerticalLineLayer extends AbstractLineLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( IDataRange<Double> domainIntervall )
   {
     // TODO Auto-generated method stub
     return null;
