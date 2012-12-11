@@ -198,6 +198,6 @@ public class PolyElement extends FE1D2DElement implements IPolyElement
   @Override
   public boolean containsEdge( final IFE1D2DEdge edge )
   {
-    return edgesInternal().containsOrLinksTo( edge );
+    return edgesInternal().containsLinkTo( edge );
   }
 }

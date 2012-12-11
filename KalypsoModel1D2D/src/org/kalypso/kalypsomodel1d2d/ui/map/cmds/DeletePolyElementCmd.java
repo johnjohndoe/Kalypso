@@ -92,7 +92,7 @@ public class DeletePolyElementCmd implements IFeatureChangeCommand
       // delete link to complex elements
       final IFE1D2DComplexElement[] parentComplexElements = poly.getLinkedElements();
       for( final IFE1D2DComplexElement complexElement : parentComplexElements )
-        complexElement.removeLinkedItem( poly );
+        complexElement.removeLinkedItems( new IPolyElement[] { poly } );
     }
 
     // delete elements from model

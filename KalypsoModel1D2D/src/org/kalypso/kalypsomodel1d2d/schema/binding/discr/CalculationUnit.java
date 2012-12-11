@@ -81,27 +81,23 @@ public abstract class CalculationUnit extends Feature_Impl implements ICalculati
 
     final FeatureList elementsInternal = elementsInternal();
 
-    // FIXME: major performance hot spot in 'containsOrLinksTo' -> use geo index instead?
-    if( !elementsInternal.containsOrLinksTo( element ) )
+    if( !elementsInternal.containsLinkTo( element ) )
       elementsInternal.addLink( element );
 
     element.addLinkedComplexElement( this );
   }
 
   @Override
-  public void removeLinkedItem( final IFENetItem element )
+  public void removeLinkedItems( final IFENetItem[] elements )
   {
-    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( elements, "element" ); //$NON-NLS-1$
 
     final FeatureList elementsInternal = elementsInternal();
 
-    // REMARK: no need for this check here, actually removeLink internally uses the same check
-    // if( elementsInternal.containsOrLinksTo( element ) )
+    elementsInternal.removeLinks( elements );
 
-    // FIXME: major performance hot spot in 'containsOrLinksTo' -> use geo index instead?
-    elementsInternal.removeLink( element );
-
-    element.removeLinkedComplexElement( this );
+    for( final IFENetItem element : elements )
+      element.removeLinkedComplexElement( this );
   }
 
   @Override
@@ -131,9 +127,7 @@ public abstract class CalculationUnit extends Feature_Impl implements ICalculati
   {
     Assert.throwIAEOnNullParam( member, "member" ); //$NON-NLS-1$
 
-    // FIXME: very slow
-
-    return elementsInternal().containsOrLinksTo( member );
+    return elementsInternal().containsLinkTo( member );
   }
 
   @Override
@@ -169,8 +163,10 @@ public abstract class CalculationUnit extends Feature_Impl implements ICalculati
   {
     if( result == null )
     {
+      // FIXME: bad!
       result = new ArrayList<>( 100 );
     }
+
     return elementsInternal().queryResolved( env, result );
   }
 
