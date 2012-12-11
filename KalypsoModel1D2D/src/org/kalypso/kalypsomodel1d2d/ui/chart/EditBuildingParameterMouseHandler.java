@@ -166,7 +166,7 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
           final ZoomInVisitor visitor = new ZoomInVisitor( zoomMin, zoomMax );
 
           final IChartModel model = getChart().getChartModel();
-          model.getMapperRegistry().accept( visitor );
+          model.getAxisRegistry().accept( visitor );
         }
         else if( data instanceof IRecord )
           layer.delete( info );
