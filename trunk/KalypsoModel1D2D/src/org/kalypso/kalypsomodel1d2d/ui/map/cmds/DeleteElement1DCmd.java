@@ -102,7 +102,7 @@ public class DeleteElement1DCmd implements IFeatureChangeCommand
       final IFE1D2DComplexElement[] elementConmtainers = element1d.getLinkedElements();
       for( final IFE1D2DComplexElement elementContainer : elementConmtainers )
       {
-        elementContainer.removeLinkedItem( element1d );
+        elementContainer.removeLinkedItems( new IElement1D[] { element1d } );
         m_changedFeatures.add( elementContainer );
       }
 

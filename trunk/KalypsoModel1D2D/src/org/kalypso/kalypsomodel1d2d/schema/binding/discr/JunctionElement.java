@@ -60,7 +60,6 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public class JunctionElement extends Feature_Impl implements IJunctionElement
 {
-
   public JunctionElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -105,7 +104,7 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     final FeatureList linesInternal = getLinesInternal();
-    if( !linesInternal.containsOrLinksTo( element ) )
+    if( !linesInternal.containsLinkTo( element ) )
       linesInternal.addLink( element );
   }
 
@@ -117,12 +116,17 @@ public class JunctionElement extends Feature_Impl implements IJunctionElement
   }
 
   @Override
-  public void removeLinkedItem( final IFELine element )
+  public void removeLinkedItems( final IFELine[] elements )
   {
-    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( elements, "element" ); //$NON-NLS-1$
+
     final FeatureList linesInternal = getLinesInternal();
-    if( linesInternal.containsOrLinksTo( element ) )
-      linesInternal.remove( element.getId() );
+
+    for( final IFELine element : elements )
+    {
+      if( linesInternal.containsLinkTo( element ) )
+        linesInternal.remove( element.getId() );
+    }
   }
 
   @Override

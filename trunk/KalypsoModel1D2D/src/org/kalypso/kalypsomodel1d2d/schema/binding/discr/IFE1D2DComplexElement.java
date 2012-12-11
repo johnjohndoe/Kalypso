@@ -51,5 +51,5 @@ public interface IFE1D2DComplexElement<T extends IFENetItem> extends Feature
 
   void addLinkedItem( T element );
 
-  void removeLinkedItem( T elment );
+  void removeLinkedItems( T[] elment );
 }

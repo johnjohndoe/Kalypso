@@ -55,7 +55,7 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge
   public void addLinkedElement( final IFE1D2DElement element )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
-    if( !elementsInternal().containsOrLinksTo( element ) )
+    if( !elementsInternal().containsLinkTo( element ) )
       elementsInternal().addLink( element );
   }
 
@@ -63,7 +63,7 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge
   public void removeLinkedElement( final IFE1D2DElement element )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
-    if( elementsInternal().containsOrLinksTo( element ) )
+    if( elementsInternal().containsLinkTo( element ) )
       elementsInternal().removeLink( element );
   }
 
@@ -106,7 +106,7 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge
   public boolean containsNode( final IFE1D2DNode node )
   {
     Assert.throwIAEOnNullParam( node, "node" ); //$NON-NLS-1$
-    return nodesInternal().containsOrLinksTo( node );
+    return nodesInternal().containsLinkTo( node );
   }
 
   @Override

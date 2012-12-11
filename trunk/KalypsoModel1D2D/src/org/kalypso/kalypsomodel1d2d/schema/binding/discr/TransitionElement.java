@@ -97,7 +97,7 @@ public class TransitionElement extends Feature_Impl implements ITransitionElemen
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     final FeatureList linesInternal = getLinesInternal();
-    if( !linesInternal.containsOrLinksTo( element ) )
+    if( !linesInternal.containsLinkTo( element ) )
       linesInternal.addLink( element );
   }
 
@@ -109,12 +109,16 @@ public class TransitionElement extends Feature_Impl implements ITransitionElemen
   }
 
   @Override
-  public void removeLinkedItem( final IFELine element )
+  public void removeLinkedItems( final IFELine[] elements )
   {
-    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( elements, "element" ); //$NON-NLS-1$
+
     final FeatureList linesInternal = getLinesInternal();
-    if( linesInternal.containsOrLinksTo( element ) )
-      linesInternal.remove( element.getId() );
+    for( final IFELine line : elements )
+    {
+      if( linesInternal.containsLinkTo( line ) )
+        linesInternal.remove( line.getId() );
+    }
   }
 
   @Override

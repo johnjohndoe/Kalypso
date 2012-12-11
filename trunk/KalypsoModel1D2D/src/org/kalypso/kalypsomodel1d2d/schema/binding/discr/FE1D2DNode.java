@@ -94,7 +94,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   public void addLinkedEdge( final IFE1D2DEdge edge )
   {
     Assert.throwIAEOnNullParam( edge, "edge" ); //$NON-NLS-1$
-    if( !linkedItemsInternal().containsOrLinksTo( edge ) )
+    if( !linkedItemsInternal().containsLinkTo( edge ) )
       linkedItemsInternal().addLink( edge );
   }
 
@@ -102,7 +102,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   public void removeLinkedEdge( final IFE1D2DEdge edge )
   {
     Assert.throwIAEOnNullParam( edge, "edge" ); //$NON-NLS-1$
-    if( linkedItemsInternal().containsOrLinksTo( edge ) )
+    if( linkedItemsInternal().containsLinkTo( edge ) )
       linkedItemsInternal().removeLink( edge );
   }
 

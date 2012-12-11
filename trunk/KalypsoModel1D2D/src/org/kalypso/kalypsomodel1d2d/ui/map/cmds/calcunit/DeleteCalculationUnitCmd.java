@@ -129,8 +129,7 @@ public class DeleteCalculationUnitCmd implements IFeatureChangeCommand
       ((ICalculationUnit1D2D)m_calcUnitToDelete).getSubCalculationUnits().clear();
 
     // delete links to elements
-    for( final IFENetItem element : m_calcUnitToDelete.getElements() )
-      m_calcUnitToDelete.removeLinkedItem( element );
+    m_calcUnitToDelete.removeLinkedItems( m_calcUnitToDelete.getElements() );
 
     /* delete control model, if present */
     deleteControlModel( m_calcUnitToDelete );

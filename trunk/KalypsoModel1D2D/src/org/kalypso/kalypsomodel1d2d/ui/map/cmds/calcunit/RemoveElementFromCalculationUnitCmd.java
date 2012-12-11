@@ -40,11 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
-import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -99,30 +95,15 @@ public class RemoveElementFromCalculationUnitCmd implements IFeatureChangeComman
   @Override
   public void process( ) throws Exception
   {
-    for( final IFE1D2DElement element : m_elementsToRemove )
-    {
-      LinksOps.delRelationshipElementAndComplexElement( element, m_calculationUnit );
-    }
+    m_calculationUnit.removeLinkedItems( m_elementsToRemove );
+
     fireProcessChanges();
   }
 
   private final void fireProcessChanges( )
   {
-    final List<Feature> features = new ArrayList<>( m_elementsToRemove.length * 2 );
-    features.add( m_calculationUnit );
-    for( final IFE1D2DElement ele : m_elementsToRemove )
-    {
-      features.remove( ele );
-    }
-
     final GMLWorkspace workspace = m_calculationUnit.getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
-    // workspace,
-    m_model1d2d,// Feature parentFeature,
-    features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
-    FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE// final int changeType
-    );
-    workspace.fireModellEvent( event );
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_model1d2d, new Feature[] { m_calculationUnit }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   @Override

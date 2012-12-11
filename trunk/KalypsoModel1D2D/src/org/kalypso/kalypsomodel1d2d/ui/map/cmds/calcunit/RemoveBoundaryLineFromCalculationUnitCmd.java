@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
@@ -55,7 +54,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * Removes a boundary line from a calculation unit.
- *
+ * 
  * @author Patrice Congo
  */
 public class RemoveBoundaryLineFromCalculationUnitCmd implements IFeatureChangeCommand
@@ -111,7 +110,8 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IFeatureChangeC
     {
       if( !m_done )
       {
-        LinksOps.delRelationshipElementAndComplexElement( m_bLineToRemove, m_calculationUnit );
+        m_calculationUnit.removeLinkedItems( new IFELine[] { m_bLineToRemove } );
+
         fireProcessChanges();
         m_done = true;
       }
@@ -132,7 +132,7 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IFeatureChangeC
 
     final GMLWorkspace workspace = calUnitFeature.getWorkspace();
     final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
-                                                                                               // workspace,
+    // workspace,
     model1d2dFeature,// Feature parentFeature,
     features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
     FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE// final int changeType

@@ -69,7 +69,7 @@ public abstract class FELine extends Feature_Impl implements IFELine
   public void addLinkedComplexElement( IFE1D2DComplexElement element )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
-    if( !complexElementsInternal().containsOrLinksTo( element ) )
+    if( !complexElementsInternal().containsLinkTo( element ) )
       complexElementsInternal().addLink( element );
   }
 
@@ -77,7 +77,7 @@ public abstract class FELine extends Feature_Impl implements IFELine
   public void removeLinkedComplexElement( IFE1D2DComplexElement element )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
-    if( complexElementsInternal().containsOrLinksTo( element ) )
+    if( complexElementsInternal().containsLinkTo( element ) )
       complexElementsInternal().removeLink( element );
   }
 
