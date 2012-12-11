@@ -230,7 +230,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     final IAxis[] axesSrc = m_axisMappingPage.getAxisMappingSrc();
     final IAxis[] axesNew = m_axisMappingPage.getAxisMappingTarget();
 
-    final ImportObservationOperation importOperation = new ImportObservationOperation( data, shell, axesSrc, axesNew, selection );
+    final ImportObservationOperation importOperation = new ImportObservationOperation( data, axesSrc, axesNew, selection );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, importOperation );
     if( !status.isOK() )
       StatusDialog.open( getShell(), status, getWindowTitle() );
@@ -257,7 +257,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     catch( final CoreException e )
     {
       final String title = getWindowTitle();
-      final String message = Messages.getString("ImportObservationWizard.0"); //$NON-NLS-1$
+      final String message = Messages.getString( "ImportObservationWizard.0" ); //$NON-NLS-1$
 
       final IStatus error = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, message, e );
 
