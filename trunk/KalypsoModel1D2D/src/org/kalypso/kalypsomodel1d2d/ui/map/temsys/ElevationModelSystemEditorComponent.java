@@ -98,7 +98,7 @@ public class ElevationModelSystemEditorComponent extends Composite
 
     ControlUtils.addDisposeListener( this );
 
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).spacing( 0, 0 ).applyTo( this );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).spacing( 0, 0 ).applyTo( this );
 
     final Control elevationControl = createElevationViewer( toolkit, this );
     /* Exactly as hight as the toolbar */
@@ -137,7 +137,7 @@ public class ElevationModelSystemEditorComponent extends Composite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleSelectionChanged( (IStructuredSelection) event.getSelection() );
+        handleSelectionChanged( (IStructuredSelection)event.getSelection() );
       }
     } );
 
@@ -187,7 +187,7 @@ public class ElevationModelSystemEditorComponent extends Composite
       for( final Object object : list )
       {
         if( object instanceof ITerrainElevationModel )
-          elevationModels.add( (ITerrainElevationModel) object );
+          elevationModels.add( (ITerrainElevationModel)object );
       }
 
       m_dataModel.setElevationModels( elevationModels.toArray( new ITerrainElevationModel[elevationModels.size()] ) );
@@ -201,7 +201,7 @@ public class ElevationModelSystemEditorComponent extends Composite
     for( final IAction action : m_actions )
     {
       if( action instanceof IUpdateable )
-        ((IUpdateable) action).update();
+        ((IUpdateable)action).update();
     }
   }
 

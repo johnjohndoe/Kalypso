@@ -45,18 +45,15 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -64,7 +61,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.internal.WorkbenchMessages;
+import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
@@ -122,7 +119,7 @@ public class AssignNodeElevationFaceComponent extends Composite
 
     m_dataModel = dataModel;
 
-    GridLayoutFactory.swtDefaults().applyTo( this );
+    GridLayoutFactory.fillDefaults().applyTo( this );
     toolkit.adapt( this );
     createControls( toolkit, this );
 
@@ -156,29 +153,12 @@ public class AssignNodeElevationFaceComponent extends Composite
   private Control createNoElevationSelector( final FormToolkit toolkit, final Composite parent )
   {
     final Composite panel = toolkit.createComposite( parent );
-    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( true ).applyTo( panel );
 
-    toolkit.createLabel( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.17" ) ); //$NON-NLS-1$
-
-    final Button selectNoElevationButton = toolkit.createButton( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.18" ), SWT.PUSH ); //$NON-NLS-1$
-
-    selectNoElevationButton.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent event )
-      {
-        handleNoElevationButtonPressed();
-      }
-    } );
+    final SectionNoElevationAction noElevationAction = new SectionNoElevationAction( this, m_dataModel );
+    createButton( toolkit, panel, noElevationAction );
 
     return panel;
-  }
-
-  void handleNoElevationButtonPressed( )
-  {
-    final IFE1D2DNode[] allNonElevationNodes = ApplyElevationHelper.getAllNonElevationNodes( m_dataModel );
-    m_nodeElevationViewer.setInput( allNonElevationNodes );
-    m_nodeElevationViewer.refresh();
   }
 
   private Control createNodeTable( final FormToolkit toolkit, final Composite parent )
@@ -187,12 +167,14 @@ public class AssignNodeElevationFaceComponent extends Composite
     GridLayoutFactory.fillDefaults().numColumns( 1 ).applyTo( panel );
 
     final Table table = toolkit.createTable( panel, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
+
     final GridData tableData = new GridData( SWT.FILL, SWT.FILL, true, true );
     tableData.minimumHeight = 100;
     tableData.heightHint = 100;
     tableData.minimumWidth = 2;
     tableData.widthHint = 2;
     table.setLayoutData( tableData );
+
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
@@ -216,70 +198,21 @@ public class AssignNodeElevationFaceComponent extends Composite
     m_nodeElevationViewer.addSelectionChangedListener( nodeSelectionListener );
 
     final Composite buttonPanel = toolkit.createComposite( panel );
-    buttonPanel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    GridLayoutFactory.fillDefaults().numColumns( 3 ).equalWidth( true ).applyTo( buttonPanel );
+    buttonPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( true ).applyTo( buttonPanel );
 
-    final Button selectAll = toolkit.createButton( buttonPanel, WorkbenchMessages.SelectionDialog_selectLabel, SWT.PUSH );
-    selectAll.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    selectAll.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent event )
-      {
-        table.selectAll();
-      }
-    } );
-
-    final Button selectAllWithoutElevation = toolkit.createButton( buttonPanel, Messages.getString( "AssignNodeElevationFaceComponent.2" ), SWT.PUSH ); //$NON-NLS-1$
-    selectAllWithoutElevation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    selectAllWithoutElevation.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent event )
-      {
-        selectAllWithoutElevation();
-      }
-    } );
-
-    final Button deSelectAll = toolkit.createButton( buttonPanel, WorkbenchMessages.SelectionDialog_deselectLabel, SWT.PUSH );
-    deSelectAll.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    deSelectAll.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent event )
-      {
-        table.deselectAll();
-      }
-    } );
-
-    final Button applySelected = toolkit.createButton( buttonPanel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.26" ), SWT.PUSH ); //$NON-NLS-1$
-    applySelected.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    applySelected.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent event )
-      {
-        applyElevation();
-      }
-    } );
+    createButton( toolkit, buttonPanel, new SelectAllAction( table ) );
+    createButton( toolkit, buttonPanel, new DeselectAllAction( table ) );
+    createButton( toolkit, buttonPanel, new SelectAllWithoutElevationAction( m_nodeElevationViewer ) );
+    createButton( toolkit, buttonPanel, new AssignElevationAction( m_nodeElevationViewer, m_dataModel ) );
 
     return panel;
   }
 
-  protected void selectAllWithoutElevation( )
+  private void createButton( final FormToolkit toolkit, final Composite buttonPanel, final IAction action )
   {
-    final List<IFE1D2DNode> nodesWithoutElevation = new ArrayList<>();
-
-    final IFE1D2DNode[] allNodes = (IFE1D2DNode[])m_nodeElevationViewer.getInput();
-    for( final IFE1D2DNode node : allNodes )
-    {
-      final GM_Point point = node.getPoint();
-      if( point != null && Double.isNaN( point.getZ() ) )
-        nodesWithoutElevation.add( node );
-    }
-
-    final ISelection selection = new StructuredSelection( nodesWithoutElevation );
-    m_nodeElevationViewer.setSelection( selection );
+    final Button button = ActionButton.createButton( toolkit, buttonPanel, action );
+    button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
   }
 
   private void createNameColumn( final TableViewer viewer )
@@ -312,32 +245,6 @@ public class AssignNodeElevationFaceComponent extends Composite
     heightColumn.setEditingSupport( new FENodeHeightEditingSupport( viewer, m_dataModel ) );
 
     column.setWidth( 100 );
-  }
-
-  protected final void applyElevation( )
-  {
-    try
-    {
-      final ISelection selection = m_nodeElevationViewer.getSelection();
-      if( !(selection instanceof IStructuredSelection) )
-        return;
-
-      final List<IFE1D2DNode> nodeList = new ArrayList<>();
-
-      for( final Object selected : ((IStructuredSelection)selection).toList() )
-      {
-        if( selected instanceof IFE1D2DNode )
-          nodeList.add( (IFE1D2DNode)selected );
-      }
-
-      ApplyElevationHelper.assignElevationToSelectedNodes( m_dataModel, nodeList );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    m_nodeElevationViewer.refresh();
   }
 
   public TableViewer getTableViewer( )
