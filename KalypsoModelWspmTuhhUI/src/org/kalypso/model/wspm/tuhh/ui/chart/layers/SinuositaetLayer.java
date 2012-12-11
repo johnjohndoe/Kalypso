@@ -139,7 +139,7 @@ public class SinuositaetLayer extends AbstractProfilLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     return null;
   }

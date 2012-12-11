@@ -98,7 +98,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisRegistry;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -425,15 +425,15 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   }
 
   @Override
-  public IAxis[] registerAxis( final IMapperRegistry mapperRegistry )
+  public IAxis[] registerAxis( final IAxisRegistry mapperRegistry )
   {
     if( mapperRegistry == null )
       return new IAxis[] {};
 
-    mapperRegistry.addMapper( m_domainAxis );
-    mapperRegistry.addMapper( m_targetAxisLeft );
-    mapperRegistry.addMapper( m_targetAxisRight );
-    mapperRegistry.addMapper( m_screenAxisVertical );
+    mapperRegistry.addAxis( m_domainAxis );
+    mapperRegistry.addAxis( m_targetAxisLeft );
+    mapperRegistry.addAxis( m_targetAxisRight );
+    mapperRegistry.addAxis( m_screenAxisVertical );
 
     return new IAxis[] { m_domainAxis, m_targetAxisLeft, m_targetAxisRight, m_screenAxisVertical };
   }

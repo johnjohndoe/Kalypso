@@ -35,7 +35,7 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     final IObservation<TupleResult> obs = valueData.getObservation();
