@@ -135,7 +135,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
     m_dataModel = dataModel;
 
     toolkit.adapt( this );
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( false ).applyTo( this );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( false ).applyTo( this );
 
     m_preferenceStore.addPropertyChangeListener( m_storePropertyChangeListener );
     initStoreDefaults();
@@ -321,7 +321,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
     GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( minMaxGroup );
 
     /* max label */
-    final Label maxLabel = toolkit.createLabel( minMaxGroup, Messages.getString("ColorModelChangeComponent.0"), SWT.NONE ); //$NON-NLS-1$
+    final Label maxLabel = toolkit.createLabel( minMaxGroup, Messages.getString( "ColorModelChangeComponent.0" ), SWT.NONE ); //$NON-NLS-1$
     final GridData gridDataMaxLabel = new GridData( SWT.CENTER, SWT.UP, false, false );
     maxLabel.setLayoutData( gridDataMaxLabel );
 
@@ -345,7 +345,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
     m_maxTextLabel.setLayoutData( new GridData( SWT.CENTER, SWT.UP, false, false ) );
 
     /* min label */
-    final Label minLabel = toolkit.createLabel( minMaxGroup, Messages.getString("ColorModelChangeComponent.1") ); //$NON-NLS-1$
+    final Label minLabel = toolkit.createLabel( minMaxGroup, Messages.getString( "ColorModelChangeComponent.1" ) ); //$NON-NLS-1$
     minLabel.setLayoutData( new GridData( SWT.CENTER, SWT.DOWN, false, false ) );
 
     /* label for the min displayed elevation value */
@@ -385,7 +385,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
 
   /**
    * Creates the preview of the number of classes selected along with selected MAX Color and selected MIN Color.
-   *
+   * 
    * @param GraphicCanvas
    */
   void paintElevationColorSelection( final GC graphicCanvas )
@@ -395,7 +395,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
     final Point size = m_legendCanvas.getSize();
     final int legendHeight = Math.max( size.y - 5, 0 );
 
-    final int coord = (int) Math.floor( legendHeight / m_numOfClasses );
+    final int coord = (int)Math.floor( legendHeight / m_numOfClasses );
     if( coord == 0 )
       return;
 
@@ -441,7 +441,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
       selectElevation = MAXI_ELEVATION - i * step;
 
       coordStart = coordEnd;
-      coordEnd = coordStart + (int) (Math.ceil( restHeigth / (m_numOfClasses - (i + 1)) ));
+      coordEnd = coordStart + (int)(Math.ceil( restHeigth / (m_numOfClasses - (i + 1)) ));
       classHeigth = coordEnd - coordStart;
       restHeigth = restHeigth - classHeigth;
 
@@ -645,7 +645,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
 
   /**
    * Returns java.awt Color for RGB
-   *
+   * 
    * @param RGB
    * @return java.awt.Color
    */
@@ -656,7 +656,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
 
   /**
    * Returns RGB for java.awt Color
-   *
+   * 
    * @param java
    *          .awt.Color
    * @return RGB
@@ -668,7 +668,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
 
   /**
    * Returns Color from Preference Store of this Plugin with Key.
-   *
+   * 
    * @param RGB
    * @return java.awt.Color
    */
@@ -684,7 +684,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
 
   /**
    * checks the user typed string for the min elevation value
-   *
+   * 
    * @param elevationChooseComposite
    *          composite of the text field
    * @param minText
@@ -740,7 +740,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
 
   /**
    * checks the user typed string for the max elevation value
-   *
+   * 
    * @param elevationChooseComposite
    *          composite of the text field
    * @param maxText
@@ -801,7 +801,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
 
       if( source instanceof FieldEditor )
       {
-        ((FieldEditor) source).store();
+        ((FieldEditor)source).store();
       }
       else if( source instanceof ColorSelector )
       {
@@ -811,15 +811,15 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
       }
       else if( LINE_MAX_COLOR.equals( property ) )
       {
-        ElevationColorControl.setMaxColor( makeAWTColor( (RGB) event.getNewValue() ) );
+        ElevationColorControl.setMaxColor( makeAWTColor( (RGB)event.getNewValue() ) );
       }
       else if( LINE_MIN_COLOR.equals( property ) )
       {
-        ElevationColorControl.setMinColor( makeAWTColor( (RGB) event.getNewValue() ) );
+        ElevationColorControl.setMinColor( makeAWTColor( (RGB)event.getNewValue() ) );
       }
       else if( LINE_NO_COLOR.equals( property ) )
       {
-        ElevationColorControl.setNoElevationColor( makeAWTColor( (RGB) event.getNewValue() ) );
+        ElevationColorControl.setNoElevationColor( makeAWTColor( (RGB)event.getNewValue() ) );
       }
       else if( ELEV_MAX.equals( property ) )
       {

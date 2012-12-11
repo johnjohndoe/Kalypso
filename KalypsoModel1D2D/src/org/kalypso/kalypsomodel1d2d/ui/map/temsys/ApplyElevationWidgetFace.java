@@ -114,7 +114,7 @@ class ApplyElevationWidgetFace
 
     if( source instanceof FieldEditor )
     {
-      ((FieldEditor) source).store();
+      ((FieldEditor)source).store();
     }
     else if( source instanceof ColorSelector )
     {
@@ -158,7 +158,7 @@ class ApplyElevationWidgetFace
 
     final Composite panel = toolkit.createComposite( region );
     region.setClient( panel );
-    GridLayoutFactory.swtDefaults().applyTo( panel );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( true ).applyTo( panel );
 
     final Action previewAction = new PreviewModelDtm( m_dataModel );
 
@@ -233,13 +233,13 @@ class ApplyElevationWidgetFace
     {
       Feature selecFeature = null;
       if( selected instanceof Feature )
-        selecFeature = (Feature) selected;
+        selecFeature = (Feature)selected;
       else if( selected instanceof EasyFeatureWrapper )
-        selecFeature = ((EasyFeatureWrapper) selected).getFeature();
+        selecFeature = ((EasyFeatureWrapper)selected).getFeature();
 
       if( selecFeature != null )
       {
-        final IFE1D2DNode selecNode = (IFE1D2DNode) selecFeature.getAdapter( IFE1D2DNode.class );
+        final IFE1D2DNode selecNode = (IFE1D2DNode)selecFeature.getAdapter( IFE1D2DNode.class );
         if( selecNode != null )
           nodeList.add( selecNode );
       }
