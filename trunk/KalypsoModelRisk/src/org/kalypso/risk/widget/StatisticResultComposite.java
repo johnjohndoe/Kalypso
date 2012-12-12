@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.widget;
 
-
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
@@ -59,7 +59,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Composite which is showing the statistic result of a flood risk calculation
- *
+ * 
  * @author Dirk Kuch
  */
 public class StatisticResultComposite extends Composite
@@ -85,7 +85,15 @@ public class StatisticResultComposite extends Composite
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    m_viewer = new TableViewer( table );
+    m_viewer = new TableViewer( table )
+    {
+      @Override
+      protected void hookEditingSupport( final Control control )
+      {
+        // remove, as this clashes with excel table cursor behavior
+      }
+    };
+
     m_viewer.setUseHashlookup( true );
 
     m_viewer.setContentProvider( new TupleResultContentProvider2( provider ) );
