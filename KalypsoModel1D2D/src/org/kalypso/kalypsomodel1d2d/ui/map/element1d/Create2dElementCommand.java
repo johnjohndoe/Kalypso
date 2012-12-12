@@ -40,34 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.element1d;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
+ * @deprecated Use {@link Add2DElementsCommand} instead.
  * @author Gernot Belger
  */
+@Deprecated
 public class Create2dElementCommand implements ICommand
 {
   private final IFEDiscretisationModel1d2d m_discModel;
-
-  private final Set<IFE1D2DNode> m_changedNodes = new HashSet<>();
-
-  private final Set<IFE1D2DEdge> m_changedEdges = new HashSet<>();
-
-  private final Set<IElement1D> m_changedElements = new HashSet<>();
 
   private final GM_Point[] m_points;
 
@@ -119,16 +110,9 @@ public class Create2dElementCommand implements ICommand
     /* fire workspace events */
     final GMLWorkspace discWorkspace = m_discModel.getWorkspace();
 
-    // FIXME: fill hashsets with changed elements to improve events
-
-    final Feature[] changedNodes = m_changedNodes.toArray( new Feature[m_changedNodes.size()] );
-    discWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( discWorkspace, m_discModel, changedNodes, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
-    final Feature[] changedEdges = m_changedEdges.toArray( new Feature[m_changedEdges.size()] );
-    discWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( discWorkspace, m_discModel, changedEdges, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
-    final Feature[] changedElements = m_changedElements.toArray( new Feature[m_changedElements.size()] );
-    discWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( discWorkspace, m_discModel, changedElements, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    discWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( discWorkspace, m_discModel, nodes, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    discWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( discWorkspace, m_discModel, edges, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    discWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( discWorkspace, m_discModel, m_newElement, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   public IPolyElement getNewElement( )
