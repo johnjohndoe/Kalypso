@@ -246,12 +246,20 @@ public class PrfSource implements IProfileSource
 
   private void readBuilding( final IProfile p, final PrfReader pr )
   {
+    final Integer defaultSpecification = 0;
+
     IDataBlock db = pr.getDataBlock( "EI" ); //$NON-NLS-1$
+
     if( db == null )
       db = pr.getDataBlock( "TRA" ); //$NON-NLS-1$
 
     if( db == null )
+    {
       db = pr.getDataBlock( "KRE" ); //$NON-NLS-1$
+      // FIXME: special, case, this is not a KREIS, but what is it?
+      if( db != null && "KREISSEGMENT".equals( db.getFirstLine() ) )
+        db = null;
+    }
 
     if( db == null )
       db = pr.getDataBlock( "MAU" ); //$NON-NLS-1$
@@ -267,9 +275,14 @@ public class PrfSource implements IProfileSource
     if( dbRau != null && dbRau.getY().length > 0 )
       rauheit = dbRau.getY()[0];
 
-    final IProfileBuilding building = getProfileBuilding( dbh.getSpecification( 8 ), values, rauheit );
+    // REMARK: we got sometimes profiel without correctly set specification, so we fall back to the specification got from the db type
+    Integer specification = dbh.getSpecification( 8 );
+    if( specification == null || specification == 0 )
+      specification = defaultSpecification;
 
-    p.addProfileObjects( new IProfileObject[] { building } );
+    final IProfileBuilding building = getProfileBuilding( specification, values, rauheit );
+    if( building != null )
+      p.addProfileObjects( new IProfileObject[] { building } );
   }
 
   private IProfileBuilding getProfileBuilding( final Integer specification, final Double[] values, final double rauheit )
@@ -325,6 +338,7 @@ public class PrfSource implements IProfileSource
 
         return building;
       }
+
       default:
         return null;
     }
