@@ -54,7 +54,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -128,7 +128,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
   public TriangulateGeometryWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "Elemente triangulieren", "Elemente triangulieren" );
   }
 
   @Override
@@ -457,7 +457,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     final ScrolledForm form = toolkit.createScrolledForm( parent );
     final DatabindingForm binding = new DatabindingForm( form, toolkit );
     final Composite body = form.getBody();
-    GridLayoutFactory.swtDefaults().applyTo( body );
+    body.setLayout( new FillLayout() );
     m_composite = new TriangulateGeometryComposite( toolkit, binding, m_builder, m_discModelWorkspace );
     return m_composite;
   }
