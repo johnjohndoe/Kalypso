@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -227,12 +228,14 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       if( m_modePolygon )
       {
         final GM_Polygon boundaryGeom = (GM_Polygon)m_boundaryGeometryBuilder.finish();
-        m_builder.setBoundary( boundaryGeom, true );
+        m_builder.addBoundary( boundaryGeom );
+        m_builder.finish();
       }
       else
       {
         final GM_Curve finish = (GM_Curve)m_breaklineGeometryBuilder.finish();
-        m_builder.addBreakLine( finish, true );
+        m_builder.addBreakLine( finish );
+        m_builder.finish();
       }
 
       final GM_MultiCurve breaklines = m_builder.getBreaklines();
@@ -377,7 +380,14 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   @Override
   public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
   {
-    m_builder.paint( g, projection, monitor );
+    try
+    {
+      m_builder.paint( g, projection, monitor );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   @Override

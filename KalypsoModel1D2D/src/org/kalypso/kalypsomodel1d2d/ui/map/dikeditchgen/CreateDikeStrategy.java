@@ -21,14 +21,19 @@ package org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -39,7 +44,6 @@ import com.vividsolutions.jts.densify.Densifier;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateFilter;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 /**
@@ -76,12 +80,20 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
   {
     final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final CoordinateFilter interpolateElevationFilter = new InterpolateElevationFilter( coordinateSystem, m_elevationModel );
-    final Polygon outer = getRingPoly( m_network, m_outerLeftWidth, m_outerRightWidth );
+    final Geometry outer = getRingPolygons( m_network, m_outerLeftWidth, m_outerRightWidth );
     final double outerDensifyTol = m_ringDistancesLeft[0] * 2 * Math.pow( 2, getRingCount() );
-    final Polygon outerDensified = (Polygon)Densifier.densify( outer, outerDensifyTol );
+    final Geometry outerDensified = Densifier.densify( outer, outerDensifyTol );
     outerDensified.apply( interpolateElevationFilter );
-    final GM_Polygon outerRing = (GM_Polygon)JTSAdapter.wrap( outerDensified, coordinateSystem );
-    builder.setBoundary( outerRing, false );
+
+    final GM_Object outerRing = JTSAdapter.wrap( outerDensified, coordinateSystem );
+    if( outerRing instanceof GM_Polygon )
+      builder.addBoundary( (GM_Polygon)outerRing );
+    else
+    {
+      final GM_Polygon[] allSurfaces = ((GM_MultiSurface)outerRing).getAllSurfaces();
+      for( GM_Polygon polygon : allSurfaces )
+        builder.addBoundary( polygon );
+    }
   }
 
   private void addBreaklines( final TriangulationBuilder tinBuilder ) throws GM_Exception
@@ -99,28 +111,32 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
     double innerDensifyTolerance = m_ringDistancesLeft[0] * 4;
 
     // add inner polygon rings
-    for( int j = 0; j < getRingCount(); j++ )
+    for( int i = 0; i < getRingCount(); i++ )
     {
       // add all inner polygon rings as breaklines
-      final Polygon inner = getRingPoly( m_network, m_ringDistancesLeft[j], m_ringDistancesRight[j] );
-      final Polygon innerDensified = (Polygon)Densifier.densify( inner, innerDensifyTolerance );
-      if( j == 0 )
+      final Geometry inner = getRingPolygons( m_network, m_ringDistancesLeft[i], m_ringDistancesRight[i] );
+      final Geometry innerDensified = Densifier.densify( inner, innerDensifyTolerance );
+      if( i == 0 )
         innerDensified.apply( setInnerElevationFilter );
 
-      final GM_Polygon innerRing = (GM_Polygon)JTSAdapter.wrap( innerDensified, coordinateSystem );
-      final GM_PolygonPatch surfacePatch = innerRing.getSurfacePatch();
-      final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
-      final GM_Curve innerRingExteriorAsCurve = GeometryFactory.createGM_Curve( exteriorRing, coordinateSystem );
-      tinBuilder.addBreakLine( innerRingExteriorAsCurve, false );
-      final GM_Position[][] interiorRings = surfacePatch.getInteriorRings();
-      if( interiorRings != null )
+      for( int j = 0; j < innerDensified.getNumGeometries(); j++ )
       {
-        for( final GM_Position[] ring : interiorRings )
+        final GM_Polygon innerRing = (GM_Polygon)JTSAdapter.wrap( innerDensified.getGeometryN( j ), coordinateSystem );
+        final GM_PolygonPatch surfacePatch = innerRing.getSurfacePatch();
+        final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
+        final GM_Curve innerRingExteriorAsCurve = GeometryFactory.createGM_Curve( exteriorRing, coordinateSystem );
+        tinBuilder.addBreakLine( innerRingExteriorAsCurve );
+        final GM_Position[][] interiorRings = surfacePatch.getInteriorRings();
+        if( interiorRings != null )
         {
-          final GM_Curve innerRingHoleAsCurve = GeometryFactory.createGM_Curve( ring, coordinateSystem );
-          tinBuilder.addBreakLine( innerRingHoleAsCurve, false );
+          for( final GM_Position[] ring : interiorRings )
+          {
+            final GM_Curve innerRingHoleAsCurve = GeometryFactory.createGM_Curve( ring, coordinateSystem );
+            tinBuilder.addBreakLine( innerRingHoleAsCurve );
+          }
         }
       }
+
       // double densification distance with each inner ring
       innerDensifyTolerance = innerDensifyTolerance * 2;
     }
@@ -144,13 +160,10 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
     return ringDistancesLeft;
   }
 
-  private static Polygon getRingPoly( final Geometry network, final double leftWidth, final double rightWidth )
+  private static Geometry getRingPolygons( final Geometry network, final double leftWidth, final double rightWidth )
   {
     final Geometry buffer = LineStringBufferBuilder.buffer( network, leftWidth, rightWidth );
-    if( buffer.getNumGeometries() == 1 )
-      return (Polygon)DouglasPeuckerSimplifier.simplify( buffer.getGeometryN( 0 ), Math.min( leftWidth, rightWidth ) / 6 );
-    else
-      throw new IllegalStateException( "Network is not simply-connected." );
+    return DouglasPeuckerSimplifier.simplify( buffer.getGeometryN( 0 ), Math.min( leftWidth, rightWidth ) / 6 );
   }
 
   @Override
@@ -160,7 +173,7 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
   }
 
   @Override
-  public void createMesh( TriangulationBuilder tinBuilder )
+  public IStatus createMesh( TriangulationBuilder tinBuilder )
   {
     try
     {
@@ -170,7 +183,8 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
     }
     catch( GM_Exception e )
     {
-      e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e );
     }
+    return Status.OK_STATUS;
   }
 }

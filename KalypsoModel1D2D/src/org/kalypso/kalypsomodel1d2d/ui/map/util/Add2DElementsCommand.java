@@ -177,7 +177,7 @@ public class Add2DElementsCommand implements ICommand
     if( m_discModel.isValidElement( points ) )
       createElement( points );
     else
-      m_log.add( IStatus.WARNING, Messages.getString( "Add2DElementsCommand_1" ), null, ring ); //$NON-NLS-1$
+      m_log.add( IStatus.WARNING, Messages.getString( "Add2DElementsCommand_1" ), null, (Object)points ); //$NON-NLS-1$
   }
 
   private void createElement( final GM_Point[] points )

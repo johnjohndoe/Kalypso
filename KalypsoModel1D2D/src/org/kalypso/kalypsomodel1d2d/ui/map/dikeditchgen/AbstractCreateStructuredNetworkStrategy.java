@@ -35,15 +35,16 @@ public class AbstractCreateStructuredNetworkStrategy
 
     // exterior ring
     final GM_Curve exteriorRingAsCurve = GeometryFactory.createGM_Curve( outerRing.getSurfacePatch().getExteriorRing(), coordinateSystem );
-    tinBuilder.addBreakLine( exteriorRingAsCurve, false );
+    tinBuilder.addBreakLine( exteriorRingAsCurve );
 
     // interior rings
     final GM_Position[][] interiorRings = outerRing.getSurfacePatch().getInteriorRings();
-    for( int i = 0; i < interiorRings.length; i++ )
-    {
-      final GM_Position[] interiorRing = interiorRings[i];
-      final GM_Curve innerRingAsCurve = GeometryFactory.createGM_Curve( interiorRing, coordinateSystem );
-      tinBuilder.addBreakLine( innerRingAsCurve, false );
-    }
+    if( interiorRings != null )
+      for( int i = 0; i < interiorRings.length; i++ )
+      {
+        final GM_Position[] interiorRing = interiorRings[i];
+        final GM_Curve innerRingAsCurve = GeometryFactory.createGM_Curve( interiorRing, coordinateSystem );
+        tinBuilder.addBreakLine( innerRingAsCurve );
+      }
   }
 }

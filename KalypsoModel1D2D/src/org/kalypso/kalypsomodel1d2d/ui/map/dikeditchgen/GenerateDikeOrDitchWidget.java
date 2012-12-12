@@ -26,6 +26,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.nio.charset.Charset;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -199,7 +200,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
   {
     final GM_Point snapPoint = snapTo( event.getPoint() );
     final GM_TriangulatedSurface tin = m_tinBuilder.getTin();
-    if( tin != null )
+    if( snapPoint != null && tin != null )
     {
       m_currentZ = tin.getValue( snapPoint );
     }
@@ -236,7 +237,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
       final GM_Polygon boundary = (GM_Polygon)m_networkBuilder.finish();
       if( boundary == null )
         return;
-      m_tinBuilder.setBoundary( boundary, false );
+      m_tinBuilder.addBoundary( boundary );
     }
     catch( final Exception e )
     {
@@ -285,7 +286,14 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
   public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
   {
     if( m_tinBuilder != null )
-      m_tinBuilder.paint( g, projection, monitor );
+      try
+      {
+        m_tinBuilder.paint( g, projection, monitor );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
   }
 
   @Override

@@ -45,6 +45,8 @@ import java.io.File;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -54,6 +56,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -61,9 +64,11 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.commons.databinding.validation.NumberNotNegativeValidator;
 import org.kalypso.commons.databinding.validation.NumberRangeValidator;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.core.status.StatusComposite;
-import org.kalypso.gml.processes.constDelaunay.TriangleExe;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen.TriangulationBuilder;
@@ -76,7 +81,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class TriangulateGeometryComposite extends Composite
 {
-  private final TriangulationBuilder m_triangulationBuilder;
+  final TriangulationBuilder m_triangulationBuilder;
 
   private final DatabindingForm m_binding;
 
@@ -113,6 +118,24 @@ public class TriangulateGeometryComposite extends Composite
       triangleStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false, 2, 1 ) );
     }
 
+    final IValueChangeListener valueChangedListener = new IValueChangeListener()
+    {
+      @Override
+      public void handleValueChange( final ValueChangeEvent event )
+      {
+        try
+        {
+          m_triangulationBuilder.finish();
+        }
+        catch( final Exception e )
+        {
+          final Shell shell = parent.getShell();
+          final IStatus result = StatusUtilities.statusFromThrowable( e );
+          StatusDialog.open( shell, result, event.getObservableValue().toString() );
+        }
+      }
+    };
+
     /* maximal Area */
     toolkit.createLabel( sectionComposite, Messages.getString( "TriangulateGeometryWidget.7" ) ); //$NON-NLS-1$
 
@@ -124,6 +147,7 @@ public class TriangulateGeometryComposite extends Composite
     final DataBinder maxAreaBinder = new DataBinder( targetMaxArea, modelMaxArea );
     maxAreaBinder.addTargetAfterConvertValidator( new NumberNotNegativeValidator( IStatus.ERROR, Messages.getString( "TriangulateGeometryWidget.8" ) ) ); //$NON-NLS-1$
     m_binding.bindValue( maxAreaBinder );
+    targetMaxArea.addValueChangeListener( valueChangedListener );
 
     /* Minimum Angle */
     toolkit.createLabel( sectionComposite, Messages.getString( "TriangulateGeometryWidget.10" ) ); //$NON-NLS-1$
@@ -135,6 +159,7 @@ public class TriangulateGeometryComposite extends Composite
     final DataBinder minAngleBinder = new DataBinder( targetMinAngle, modelMinAngle );
     minAngleBinder.addTargetAfterConvertValidator( new NumberRangeValidator( IStatus.ERROR, 0, 32, Messages.getString( "TriangulateGeometryWidget.12" ) ) ); //$NON-NLS-1$
     m_binding.bindValue( minAngleBinder );
+    targetMinAngle.addValueChangeListener( valueChangedListener );
 
     /* Steiner checkbox */
     final Button noSteinerButton = toolkit.createButton( sectionComposite, Messages.getString( "TriangulateGeometryWidget.14" ), SWT.CHECK ); //$NON-NLS-1$
@@ -143,6 +168,7 @@ public class TriangulateGeometryComposite extends Composite
     final ISWTObservableValue targetSteiner = SWTObservables.observeSelection( noSteinerButton );
     final IObservableValue modelSteiner = BeansObservables.observeValue( m_triangulationBuilder, TriangulationBuilder.PROPERTY_NO_STEINER_ON_BOUNDARY );
     m_binding.bindValue( targetSteiner, modelSteiner );
+    targetSteiner.addValueChangeListener( valueChangedListener );
 
     /* 'Apply To' button */
     final Composite buttonPanel = toolkit.createComposite( parent );
@@ -156,7 +182,7 @@ public class TriangulateGeometryComposite extends Composite
 
   private IStatus checkForTriangleExe( )
   {
-    final File triangleExe = TriangleExe.findTriangleExe();
+    final File triangleExe = ConstraintDelaunayHelper.findTriangleExe();
     if( triangleExe != null && triangleExe.isFile() )
       return Status.OK_STATUS;
 

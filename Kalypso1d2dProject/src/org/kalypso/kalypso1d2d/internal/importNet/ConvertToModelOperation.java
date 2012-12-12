@@ -38,6 +38,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -137,12 +138,12 @@ class ConvertToModelOperation implements ICoreRunnableWithProgress
     return new GM_PolygonPatch[] { singlePatch };
   }
 
-  private GM_PolygonPatch[] triangulatePolygon( final Polygon polygon ) throws GM_Exception
+  private GM_Triangle[] triangulatePolygon( final Polygon polygon ) throws GM_Exception
   {
     final String srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     final GM_Polygon poly = (GM_Polygon)JTSAdapter.wrap( polygon, srsName );
 
-    return ConstraintDelaunayHelper.convertToTriangles( poly, srsName, poly.getSurfacePatch().getExteriorRing().length > 5 );
+    return ConstraintDelaunayHelper.triangulateSimple( poly );
   }
 }

@@ -18,6 +18,7 @@
  */
 package org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -31,5 +32,5 @@ public interface CreateStructuredNetworkStrategy
 
   Control createControl( Composite body, FormToolkit toolkit, IMapModell mapModell );
 
-  void createMesh( TriangulationBuilder tinBuilder );
+  IStatus createMesh( TriangulationBuilder tinBuilder );
 }
