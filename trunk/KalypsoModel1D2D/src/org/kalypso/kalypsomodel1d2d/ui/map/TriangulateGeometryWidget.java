@@ -428,6 +428,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       final IStatus result = ProgressUtilities.busyCursorWhile( triangulateGeometryOperation );
       if( !result.isOK() )
         StatusDialog.open( m_composite.getDisplay().getActiveShell(), result, getName() );
+      reinit();
     }
     else
       super.keyPressed( e );

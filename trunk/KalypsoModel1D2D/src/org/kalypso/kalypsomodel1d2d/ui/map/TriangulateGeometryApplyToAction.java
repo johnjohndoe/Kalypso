@@ -86,10 +86,12 @@ public class TriangulateGeometryApplyToAction extends Action
         setEnabled( event.diff.getNewValue() != null );
       }
     } );
-    
+
     setEnabled( triangulationBuilder.getTin() != null );
   }
 
+  // FIXME: reinit widget!
+  // TODO: should fall back to the same code that the widget uses for ENTER
   @Override
   public void runWithEvent( final Event event )
   {
@@ -98,6 +100,6 @@ public class TriangulateGeometryApplyToAction extends Action
     final IStatus result = ProgressUtilities.busyCursorWhile( operation );
     if( !result.isOK() )
       StatusDialog.open( shell, result, getText() );
-  }
 
+  }
 }
