@@ -105,7 +105,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 {
   private static final double NODE_SEARCH_DIST = 0.2;
 
-  private static final int WSP_EXTRAPOLATION_RANGE = 1;
+//  private static final int WSP_EXTRAPOLATION_RANGE = 1;
 
   private final Map<Integer, INodeResult> m_nodeIndex = new HashMap<>();
 
@@ -187,28 +187,28 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * extrapolates the water level into the dry elements until every dry element got assigned or until the maximum
    * extrapolation range has been reached.
    */
-  private void extrapolateWaterLevel( int count )
-  {
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    if( count > WSP_EXTRAPOLATION_RANGE )
-      return;
-    int assigned = 0;
-    for( final ElementResult element : m_elemIndex.values() )
-    {
-      if( element.checkWaterlevels() )
-        assigned = assigned + 1;
-    }
-    if( assigned > 0 )
-    {
-      count = count + 1;
-
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.3" ) + assigned + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.6" ) + count + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-      extrapolateWaterLevel( count );
-    }
-  }
+//  private void extrapolateWaterLevel( int count )
+//  {
+//    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+//
+//    if( count > WSP_EXTRAPOLATION_RANGE )
+//      return;
+//    int assigned = 0;
+//    for( final ElementResult element : m_elemIndex.values() )
+//    {
+//      if( element.checkWaterlevels() )
+//        assigned = assigned + 1;
+//    }
+//    if( assigned > 0 )
+//    {
+//      count = count + 1;
+//
+//      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.3" ) + assigned + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.6" ) + count + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//
+//      extrapolateWaterLevel( count );
+//    }
+//  }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#getCreatedFeatures()
@@ -679,7 +679,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
     final GM_Position[] positions = lListPos.toArray( new GM_Position[lListPos.size()] );
     final GM_Polygon poly = GeometryFactory.createGM_Surface( positions, null, crs );
-    final GM_Triangle[] elements2 = ConstraintDelaunayHelper.convertToTriangles( poly, crs );
+    final GM_Triangle[] elements2 = ConstraintDelaunayHelper.triangulateSimple( poly );
 
     for( final GM_Triangle element : elements2 )
     {

@@ -166,11 +166,12 @@ public class LineStringBufferBuilder
 
   public static void addRawBufferLines( final LineString linestring, final double startLeftWidth, final double endLeftWidth, final double startRightWidth, final double endRightWidth, final Collection<SegmentString> bufferSegStrList )
   {
+    final double totalLength = linestring.getLength();
     final int numPoints = linestring.getNumPoints();
     final boolean closeRing = linestring.getStartPoint().distance( linestring.getEndPoint() ) < 0.01;
 
-    final double leftWidthIncrement = (endLeftWidth - startLeftWidth) / (numPoints - 1);
-    final double rightWidthIncrement = (endRightWidth - startRightWidth) / (numPoints - 1);
+    final double leftWidthDiff = endLeftWidth - startLeftWidth;
+    final double rightWidthDiff = endRightWidth - startRightWidth;
 
     // left and right coordinates go in parallel, i.e. opposite order
 //    final int initialCapacity = numPoints * 2 + 6;
@@ -181,7 +182,9 @@ public class LineStringBufferBuilder
     final LineSegment first = new LineSegment( linestring.getCoordinateN( 0 ), linestring.getCoordinateN( 1 ) );
     final LineSegment firstLeft = new LineSegment();
     final LineSegment firstRight = new LineSegment();
-    computeLeftAndRightSegments( first, startLeftWidth, startLeftWidth + leftWidthIncrement, firstLeft, startRightWidth, startRightWidth + rightWidthIncrement, firstRight );
+    final double firstFracLength = first.getLength();
+    final double firstFrac = firstFracLength / totalLength;
+    computeLeftAndRightSegments( first, startLeftWidth, startLeftWidth + leftWidthDiff * firstFrac, firstLeft, startRightWidth, startRightWidth + rightWidthDiff * firstFrac, firstRight );
 
     if( !closeRing )
       // make start tip
@@ -192,18 +195,17 @@ public class LineStringBufferBuilder
     final LineSegment rightSeg01 = new LineSegment();
     seg01.p0 = first.p0;
     seg01.p1 = first.p1;
+    double fracLength0 = 0;
+    double fracLength1 = firstFracLength;
     for( int i = 2; i < numPoints; i++ )
     {
       final Coordinate nextCoordinate = linestring.getCoordinateN( i );
 
       // compute the left and right offset segments
-      final double leftWidth0 = startLeftWidth + leftWidthIncrement * (i - 2);
-      final double leftWidth1 = startLeftWidth + leftWidthIncrement * (i - 1);
-      final double leftWidth2 = startLeftWidth + leftWidthIncrement * i;
-
-      final double rightWidth0 = startRightWidth + rightWidthIncrement * (i - 2);
-      final double rightWidth1 = startRightWidth + rightWidthIncrement * (i - 1);
-      final double rightWidth2 = startRightWidth + rightWidthIncrement * i;
+      final double leftWidth0 = startLeftWidth + leftWidthDiff * fracLength0 / totalLength;
+      final double leftWidth1 = startLeftWidth + leftWidthDiff * fracLength1 / totalLength;
+      final double rightWidth0 = startRightWidth + rightWidthDiff * fracLength0 / totalLength;
+      final double rightWidth1 = startRightWidth + rightWidthDiff * fracLength1 / totalLength;
 
       // for the segment p0-p1
       computeLeftAndRightSegments( seg01, leftWidth0, leftWidth1, leftSeg01, rightWidth0, rightWidth1, rightSeg01 );
@@ -212,16 +214,21 @@ public class LineStringBufferBuilder
       final LineSegment seg12 = new LineSegment( seg01.p1, nextCoordinate );
       final LineSegment leftSeg12 = new LineSegment();
       final LineSegment rightSeg12 = new LineSegment();
+      final double fracLength2 = fracLength1 + seg12.getLength();
+      final double leftWidth2 = startLeftWidth + leftWidthDiff * fracLength2 / totalLength;
+      final double rightWidth2 = startRightWidth + rightWidthDiff * fracLength2 / totalLength;
       computeLeftAndRightSegments( seg12, leftWidth1, leftWidth2, leftSeg12, rightWidth1, rightWidth2, rightSeg12 );
 
       addTurn( seg01, leftSeg01, rightSeg01, seg12, leftSeg12, rightSeg12, leftCoordinates, rightCoordinates );
 
       seg01.p0 = seg12.p0;
       seg01.p1 = seg12.p1;
+      fracLength0 = fracLength1;
+      fracLength1 = fracLength2;
     }
 
     // make end tip or turn
-    computeLeftAndRightSegments( seg01, endLeftWidth - leftWidthIncrement, endLeftWidth, leftSeg01, endRightWidth - rightWidthIncrement, endRightWidth, rightSeg01 );
+    computeLeftAndRightSegments( seg01, startLeftWidth + leftWidthDiff * fracLength0 / totalLength, endLeftWidth, leftSeg01, endRightWidth + rightWidthDiff * fracLength0 / totalLength, endRightWidth, rightSeg01 );
     if( closeRing )
     {
       addTurn( seg01, leftSeg01, rightSeg01, first, firstLeft, firstRight, leftCoordinates, rightCoordinates );
@@ -260,7 +267,10 @@ public class LineStringBufferBuilder
     if( orientation == 0 )
     {
       // co-linear segments seg01, seg12
-      // can savely be ignored
+      // can savely be ignored?
+      // System.out.println( "colinear" );
+      leftCoordinates.add( leftSeg01.p1, false );
+      rightCoordinates.add( rightSeg01.p1, false );
     }
     final double tolerance = leftSeg01.distance( rightSeg01 ) / 3;
     if( outsideTurn )
@@ -320,7 +330,7 @@ public class LineStringBufferBuilder
 
     // make a 180 degree turn
     final double startAngle = Math.atan2( dy0, dx0 );
-    final int numHalfCircleFractions = 8;
+    final int numHalfCircleFractions = 6;
     final double sectionAngle = Math.PI / numHalfCircleFractions;
     for( int i = 1; i < numHalfCircleFractions; i++ )
     {
@@ -368,7 +378,7 @@ public class LineStringBufferBuilder
     final com.vividsolutions.jts.geom.GeometryFactory geomFact = new GeometryFactory( new PrecisionModel( 1000 ) );
     final MCIndexNoder noder = new MCIndexNoder();
     final LineIntersector li = new RobustLineIntersector();
-    li.setPrecisionModel( geomFact.getPrecisionModel() );
+//    li.setPrecisionModel( geomFact.getPrecisionModel() );
     noder.setSegmentIntersector( new IntersectionAdder( li ) );
     noder.computeNodes( bufferSegStrList );
     final Collection<SegmentString> nodedSegStrings = noder.getNodedSubstrings();

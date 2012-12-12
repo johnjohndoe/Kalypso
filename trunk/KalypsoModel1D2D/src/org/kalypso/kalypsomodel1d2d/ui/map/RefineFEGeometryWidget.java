@@ -476,29 +476,17 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
     final Refinement refinement = new Refinement();
 
-    final GM_Object[] refinements = refinement.doRefine( multiSurfaces, m_geom );
+    final GM_Polygon[] refinements = refinement.doRefine( multiSurfaces, m_geom );
 
     final List<GM_Polygon> refinementList = new ArrayList<>();
 
-    for( final GM_Object refineGeom : refinements )
+    for( final GM_Polygon surface : refinements )
     {
-      if( refineGeom instanceof GM_Polygon )
-      {
-        final GM_Polygon surface = (GM_Polygon)refineGeom;
-        final GM_PolygonPatch surfacePatch = surface.getSurfacePatch();
-        final int nodeCount = surfacePatch.getExteriorRing().length;
-        final GM_Polygon newSurface = GeometryFactory.createGM_Surface( surfacePatch );
-        if( nodeCount > 5 || !newSurface.getConvexHull().equals( newSurface ) )
-        {
-          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( newSurface, newSurface.getCoordinateSystem() );
-          for( final GM_Triangle triangle : triangles )
-            refinementList.add( GeometryFactory.createGM_Surface( triangle ) );
-        }
-        else
-        {
-          refinementList.add( newSurface );
-        }
-      }
+      final GM_PolygonPatch surfacePatch = surface.getSurfacePatch();
+      final GM_Polygon newSurface = GeometryFactory.createGM_Surface( surfacePatch );
+      final GM_Triangle[] triangles = ConstraintDelaunayHelper.triangulateSimple( newSurface );
+      for( final GM_Triangle triangle : triangles )
+        refinementList.add( GeometryFactory.createGM_Surface( triangle ) );
     }
 
     if( refinementList.size() == 0 )
@@ -533,24 +521,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
   private List<IPolyElement> selectFeatures( final GM_Object theGeom )
   {
     final List<IPolyElement> selectedFeatures = new ArrayList<>();
-
-    // *** Why this??
-    GM_Object selectGeometry = theGeom;
-    try
-    {
-      if( theGeom instanceof GM_Curve )
-      {
-        final GM_Position[] positions = ((GM_Curve)theGeom).getAsLineString().getPositions();
-        selectGeometry = GeometryFactory.createGM_Surface( positions, null, selectGeometry.getCoordinateSystem() );
-      }
-    }
-    catch( final GM_Exception e )
-    {
-    }
-
-    // *****
-
-    final GM_Envelope envelope = selectGeometry.getEnvelope();
+    final GM_Envelope envelope = theGeom.getEnvelope();
     final List<IFE1D2DElement> result = m_model1d2d.queryElements( envelope, null );
 
     for( final IFE1D2DElement element : result )
@@ -559,12 +530,8 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
       {
         final IPolyElement polyElement = (IPolyElement)element;
         final GM_Object geom = polyElement.getGeometry();
-        if( geom != null )
-        {
-          final GM_Object intersection = selectGeometry.intersection( geom );
-          if( intersection != null )
-            selectedFeatures.add( polyElement );
-        }
+        if( theGeom.intersects( geom ) )
+          selectedFeatures.add( polyElement );
       }
     }
 

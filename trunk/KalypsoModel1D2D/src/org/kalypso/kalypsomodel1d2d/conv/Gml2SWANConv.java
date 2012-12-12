@@ -124,8 +124,6 @@ public class Gml2SWANConv implements INativeIDProvider
 
   private boolean m_boolDoShift = true;
 
-  private String m_strCRS;
-
   private final Map<IFELine, Integer> m_mapContiLineWithSWANBoundaryToCondition = new HashMap<>();
 
   /**
@@ -363,7 +361,6 @@ public class Gml2SWANConv implements INativeIDProvider
    */
   private void writeSWANNodesModel( )
   {
-    m_strCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final List<GM_Triangle> lListResults = new ArrayList<>();
     for( final Object object : m_listAllElements )
     {
@@ -373,8 +370,7 @@ public class Gml2SWANConv implements INativeIDProvider
         try
         {
           final GM_Polygon lGM_Surface = lPolyElement.getGeometry();
-          //          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, "-YY" ); //$NON-NLS-1$
-          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, false, "-YY" ); //$NON-NLS-1$
+          final GM_Triangle[] triangles = ConstraintDelaunayHelper.triangulateSimple( lGM_Surface );
           lListResults.addAll( Arrays.asList( triangles ) );
         }
         catch( final Throwable e )
@@ -503,7 +499,8 @@ public class Gml2SWANConv implements INativeIDProvider
     IFELine lContiLineAct = null;
     try
     {
-      lContiLineAct = m_discretisationModel1d2d.findContinuityLine( GeometryFactory.createGM_Point( position, m_strCRS ), 0.01 );
+      final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      lContiLineAct = m_discretisationModel1d2d.findContinuityLine( GeometryFactory.createGM_Point( position, crs ), 0.01 );
     }
     catch( final Exception e )
     {

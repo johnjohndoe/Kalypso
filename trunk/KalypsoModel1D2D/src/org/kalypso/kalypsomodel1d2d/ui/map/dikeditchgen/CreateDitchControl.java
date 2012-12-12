@@ -43,8 +43,6 @@ import org.kalypsodeegree.model.geometry.GM_AbstractSurface;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * @author kurzbach
@@ -169,7 +167,7 @@ public class CreateDitchControl extends Composite implements IUpdateable
           return false;
 
         final IValuePropertyType pt2 = (IValuePropertyType)pt;
-        return Double.class.equals( pt2.getValueClass() );
+        return Double.class.equals( pt2.getValueClass() ) || Float.class.equals( pt2.getValueClass() );
       }
     };
     m_startWidthPd = new PropertyDescriptor( "Width (&Start)", doubleFilter, true );
@@ -206,6 +204,11 @@ public class CreateDitchControl extends Composite implements IUpdateable
     return m_networkThemeChooser.getProperty( m_curveGeometryPd );
   }
 
+  public IPropertyType getBoundaryGeometryProperty( )
+  {
+    return m_boundaryThemeChooser.getProperty( m_polygonGeometryPd );
+  }
+
   public IPropertyType getNetworkStartWidthProperty( )
   {
     return m_networkThemeChooser.getProperty( m_startWidthPd );
@@ -232,26 +235,13 @@ public class CreateDitchControl extends Composite implements IUpdateable
     return theme.getFeatureList();
   }
 
-  public GM_Polygon getBoundaryPolygon( )
+  public FeatureList getBoundaryFeatures( )
   {
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)m_boundaryThemeChooser.getTheme();
     if( theme == null )
       return null;
 
-    final FeatureList featureList = theme.getFeatureList();
-    if( !featureList.isEmpty() )
-    {
-      final GM_Object geometry = (GM_Object)featureList.getResolved( 0 ).getProperty( m_boundaryThemeChooser.getProperty( m_polygonGeometryPd ) );
-      if( geometry instanceof GM_Polygon )
-        return (GM_Polygon)geometry;
-      else if( geometry instanceof GM_MultiSurface )
-
-        return ((GM_MultiSurface)geometry).getSurfaceAt( 0 );
-      else
-        // should never happen
-        return null;
-    }
-    else
-      return null;
+    return theme.getFeatureList();
   }
+
 }
