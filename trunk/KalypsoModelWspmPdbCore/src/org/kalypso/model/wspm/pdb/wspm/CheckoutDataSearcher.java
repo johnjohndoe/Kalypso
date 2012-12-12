@@ -115,8 +115,11 @@ public class CheckoutDataSearcher
       m_events.add( event );
 
       final State state = event.getState();
-      m_states.add( state );
-      addElements( state.getCrossSections() );
+      if( state != null )
+      {
+        m_states.add( state );
+        addElements( state.getCrossSections() );
+      }
 
       m_waterBodies.add( event.getWaterBody() );
     }
