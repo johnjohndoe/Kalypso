@@ -51,7 +51,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
@@ -85,9 +84,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class ElementGeometryBuilder
 {
-  // search distance in meter
-  private static final double SEARCH_DISTANCE = 0.10;
-
   /**
    * Stores the count of points which this geometry must have. If it is 0, there is no rule.
    */
@@ -260,7 +256,7 @@ public class ElementGeometryBuilder
       }
 
       // 1a) Node lies on 1d node
-      final IFE1D2DNode node = discModel.findNode( newPoint, IFEDiscretisationModel1d2d.CLUSTER_TOLERANCE);
+      final IFE1D2DNode node = discModel.findNode( newPoint, IFEDiscretisationModel1d2d.CLUSTER_TOLERANCE );
       if( node != null )
       {
         final IFE1D2DEdge[] nodeEdges = node.getLinkedEdges();
@@ -270,7 +266,7 @@ public class ElementGeometryBuilder
           for( final IFE1D2DElement edgeContainer : containers )
           {
             if( edgeContainer instanceof IElement1D )
-              return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString("ElementGeometryBuilder.0") ); //$NON-NLS-1$
+              return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "ElementGeometryBuilder.0" ) ); //$NON-NLS-1$
           }
         }
       }
