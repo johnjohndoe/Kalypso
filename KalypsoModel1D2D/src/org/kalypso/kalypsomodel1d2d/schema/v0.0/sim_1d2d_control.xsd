@@ -556,58 +556,32 @@
               </xs:restriction>
             </xs:simpleType>
           </xs:element>
-          <xs:element name="TBFACT" default="0.2">
+          <xs:element name="TBFACT" default="0.197" type="xs:double">
             <xs:annotation>
               <xs:documentation>
-
                 Faktor Smagorinsky-Ansatz [-]
 
-
-                Alfa Wert des
-                Smagorinsky Ansatzes
-                [-]
-
+                Alfa Wert des Smagorinsky Ansatzes [-]
               </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-              <xs:restriction base="xs:double">
-                <xs:minInclusive value="0.02" />
-              </xs:restriction>
-            </xs:simpleType>
           </xs:element>
-          <xs:element name="TBFACT_ESCUDIER" default="23.0">
+          <xs:element name="TBFACT_ESCUDIER" default="23.0" type="xs:double">
             <xs:annotation>
               <xs:documentation>
                 Parameter freie Scherschichtdicke
               </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-              <xs:restriction base="xs:double">
-                <xs:minInclusive value="0.02" />
-              </xs:restriction>
-            </xs:simpleType>
           </xs:element>
+
           <!-- FIXME: default value outside valid range? -->
-          <xs:element name="TBMIN" default="2">
+          <xs:element name="TBMIN" default="0.5" type="xs:double">
             <xs:annotation>
               <xs:documentation>
-
                 Min. Wirbelviskosität [m²/s]
-
-
-                Minimale
-                Wirbelviskosität beim
-                Smagorinsky-Ansatz
-                [m²/s]
-
+                
+                Minimale Wirbelviskosität beim Smagorinsky-Ansatz [m²/s]
               </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-              <xs:restriction base="xs:double">
-                <xs:minInclusive value="0.02" />
-                <xs:maxExclusive value="0.5" />
-              </xs:restriction>
-            </xs:simpleType>
           </xs:element>
           <xs:element name="_p_bottom" type="xs:double">
             <xs:annotation>
@@ -621,23 +595,16 @@
               <xs:documentation>
                 Breitengrad [°]
 
-                Breitengrad zur Ermittlung der
-                Corioliskraft [°]
-
+                Breitengrad zur Ermittlung derCorioliskraft [°]
               </xs:documentation>
             </xs:annotation>
           </xs:element>
           <xs:element name="ELEV" type="xs:double">
             <xs:annotation>
               <xs:documentation>
-
                 Anfangswasserspiegel [m]
-
-
-                Anfangswert des
-                Wasserstandes über
-                jeden Knoten [m]
-
+                
+                Anfangswert des Wasserstandes über jedem Knoten [m]
               </xs:documentation>
             </xs:annotation>
           </xs:element>
