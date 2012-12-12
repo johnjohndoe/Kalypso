@@ -806,9 +806,9 @@ public class Control1D2DConverter
       if( result == null || Double.isNaN( result.doubleValue() ) )
       {
         final SimpleDateFormat df = new SimpleDateFormat( ISimulation1D2DConstants.TIMESTEP_DISPLAY_FORMAT );
-        final String stepText = df.format( stepCal );
+        final String stepText = df.format( stepCal.getTime() );
         final String bcLabel = boundaryCondition.getName();
-        final String message = String.format( Messages.getString("Control1D2DConverter.0"), stepText, bcLabel ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "Control1D2DConverter.0" ), stepText, bcLabel ); //$NON-NLS-1$
         final GM_Object location = boundaryCondition.getPosition();
         final IGeoStatus error = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, message, location, null );
         throw new CoreException( error );
@@ -825,7 +825,7 @@ public class Control1D2DConverter
       catch( final Exception e )
       {
         final String bcLabel = boundaryCondition.getName();
-        final String message = String.format( Messages.getString("Control1D2DConverter.2"), bcLabel ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "Control1D2DConverter.2" ), bcLabel ); //$NON-NLS-1$
         final GM_Object location = boundaryCondition.getPosition();
         final IGeoStatus error = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, message, location, null );
 
