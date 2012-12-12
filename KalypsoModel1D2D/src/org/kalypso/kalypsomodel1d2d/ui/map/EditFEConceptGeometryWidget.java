@@ -172,6 +172,8 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     else
       m_editor = null;
 
+    m_warningRenderer.setTooltip( null );
+
     /* show tooltip after activation, directly clean after ESC */
     repaintMap();
   }
