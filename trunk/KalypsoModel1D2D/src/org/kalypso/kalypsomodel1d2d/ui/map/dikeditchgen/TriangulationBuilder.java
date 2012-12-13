@@ -224,7 +224,9 @@ public class TriangulationBuilder extends AbstractModelObject
     else if( m_noSteinerOnBoundary )
       args.add( "-Y" ); //$NON-NLS-1$
 
-    final GM_Triangle[] triangles = ConstraintDelaunayHelper.triangulateWithTriangle( m_boundaryGeom.getAllSurfaces(), m_breaklines == null ? null : m_breaklines.getAllCurves(), args.toArray( new String[args.size()] ) );
+    final GM_Polygon[] boundaries = m_boundaryGeom == null ? null : m_boundaryGeom.getAllSurfaces();
+    final GM_Curve[] breaklines = m_breaklines == null ? null : m_breaklines.getAllCurves();
+    final GM_Triangle[] triangles = ConstraintDelaunayHelper.triangulateWithTriangle( boundaries, breaklines, args.toArray( new String[args.size()] ) );
     if( triangles != null && triangles.length > 0 )
     {
       final GM_TriangulatedSurface surface = GeometryFactory.createGM_TriangulatedSurface( triangles, triangles[0].getCoordinateSystem() );
