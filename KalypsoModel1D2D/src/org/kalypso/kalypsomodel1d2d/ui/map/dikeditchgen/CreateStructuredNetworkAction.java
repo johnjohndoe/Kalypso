@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -60,8 +61,8 @@ public class CreateStructuredNetworkAction extends Action
     m_builder = builder;
     m_strategy = strategy;
 
-    setText( "Triangulieren" );
-    setToolTipText( "Trianguliert ein Netz anhand der gewählten Parameter" );
+    setText( Messages.getString("CreateStructuredNetworkAction.0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("CreateStructuredNetworkAction.1") ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.OK ) );
