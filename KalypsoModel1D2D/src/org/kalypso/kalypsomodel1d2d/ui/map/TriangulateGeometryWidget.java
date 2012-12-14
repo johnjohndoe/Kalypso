@@ -128,7 +128,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
   public TriangulateGeometryWidget( )
   {
-    super( "Elemente triangulieren", "Elemente triangulieren" );
+    super( Messages.getString("TriangulateGeometryWidget.9"), Messages.getString("TriangulateGeometryWidget.9") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
