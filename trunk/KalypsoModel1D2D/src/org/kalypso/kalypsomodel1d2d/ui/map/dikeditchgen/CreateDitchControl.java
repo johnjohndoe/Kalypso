@@ -32,6 +32,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IPropertyTypeFilter;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
@@ -95,7 +96,7 @@ public class CreateDitchControl extends Composite implements IUpdateable
     };
     m_boundaryThemeChooser = new ThemeAndPropertyChooserGroup( this, mapModell, boundaryThemeFilter, makeBoundaryPropertyDescriptors() );
     final Group boundaryThemeGroup = m_boundaryThemeChooser.createControl( body );
-    boundaryThemeGroup.setText( "Boundary theme" );
+    boundaryThemeGroup.setText( Messages.getString("CreateDitchControl.0") ); //$NON-NLS-1$
     toolkit.adapt( boundaryThemeGroup );
     boundaryThemeGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -123,7 +124,7 @@ public class CreateDitchControl extends Composite implements IUpdateable
 
     m_networkThemeChooser = new ThemeAndPropertyChooserGroup( this, mapModell, networkThemeFilter, makeNetworkPropertyDescriptors() );
     final Group networkThemeGroup = m_networkThemeChooser.createControl( body );
-    networkThemeGroup.setText( "Network theme" );
+    networkThemeGroup.setText( Messages.getString("CreateDitchControl.1") ); //$NON-NLS-1$
     toolkit.adapt( networkThemeGroup );
     networkThemeGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
   }
@@ -156,7 +157,7 @@ public class CreateDitchControl extends Composite implements IUpdateable
         return valueQName.equals( GM_Curve.CURVE_ELEMENT ) || valueQName.equals( GM_MultiCurve.MULTI_CURVE_ELEMENT );
       }
     };
-    m_curveGeometryPd = new PropertyDescriptor( "&Geometry", geomFilter, true );
+    m_curveGeometryPd = new PropertyDescriptor( Messages.getString("CreateDitchControl.2"), geomFilter, true ); //$NON-NLS-1$
     final IPropertyTypeFilter doubleFilter = new IPropertyTypeFilter()
     {
 
@@ -170,8 +171,8 @@ public class CreateDitchControl extends Composite implements IUpdateable
         return Double.class.equals( pt2.getValueClass() ) || Float.class.equals( pt2.getValueClass() );
       }
     };
-    m_startWidthPd = new PropertyDescriptor( "Width (&Start)", doubleFilter, true );
-    m_endWidthPd = new PropertyDescriptor( "Width (&End)", doubleFilter, true );
+    m_startWidthPd = new PropertyDescriptor( Messages.getString("CreateDitchControl.3"), doubleFilter, true ); //$NON-NLS-1$
+    m_endWidthPd = new PropertyDescriptor( Messages.getString("CreateDitchControl.4"), doubleFilter, true ); //$NON-NLS-1$
     final PropertyDescriptor[] pds = new PropertyDescriptor[] { m_curveGeometryPd, m_startWidthPd, m_endWidthPd };
     return pds;
   }
@@ -194,7 +195,7 @@ public class CreateDitchControl extends Composite implements IUpdateable
         return valueQName.equals( GM_AbstractSurface.SURFACE_ELEMENT ) || valueQName.equals( GM_MultiSurface.MULTI_SURFACE_ELEMENT );
       }
     };
-    m_polygonGeometryPd = new PropertyDescriptor( "&Geometry", geomFilter, true );
+    m_polygonGeometryPd = new PropertyDescriptor( Messages.getString("CreateDitchControl.5"), geomFilter, true ); //$NON-NLS-1$
     final PropertyDescriptor[] pds = new PropertyDescriptor[] { m_polygonGeometryPd };
     return pds;
   }

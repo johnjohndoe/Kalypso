@@ -45,6 +45,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.elevation.IElevationModel;
@@ -163,7 +164,7 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
 
               final String coordinateSystem = mesh.getCoordinateSystem();
               final List<GM_Triangle> triangles = new ArrayList<>( mesh.size() );
-              final SubMonitor monitor = SubMonitor.convert( pm, "Assigning Elevations", triangles.size() );
+              final SubMonitor monitor = SubMonitor.convert( pm, Messages.getString("CreateDitchStrategy.0"), triangles.size() ); //$NON-NLS-1$
               for( final GM_Triangle triangle : mesh )
               {
                 ProgressUtilities.worked( monitor, 1 );
@@ -190,7 +191,7 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
           }
         } );
         if( !result.isOK() )
-          StatusDialog.open( shell, result, "Assigning Elevations" );
+          StatusDialog.open( shell, result, Messages.getString("CreateDitchStrategy.0") ); //$NON-NLS-1$
       }
     };
     return tinAssignedListener;

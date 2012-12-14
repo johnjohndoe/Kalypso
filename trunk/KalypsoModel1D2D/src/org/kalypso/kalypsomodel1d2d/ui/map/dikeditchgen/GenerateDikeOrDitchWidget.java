@@ -45,6 +45,7 @@ import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.TriangulateGeometryComposite;
@@ -117,7 +118,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     if( mapPanel != null )
     {
       final Section section = toolkit.createSection( body, ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR );
-      section.setText( "Network options" );
+      section.setText( Messages.getString("GenerateDikeOrDitchWidget_0") ); //$NON-NLS-1$
       section.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
       final Composite sectionComposite = toolkit.createComposite( section, SWT.NONE );
@@ -156,7 +157,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
 
   private void reinit( )
   {
-    final String mode = "Graben oder Deich zeichnen";
+    final String mode = Messages.getString("GenerateDikeOrDitchWidget_1"); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_toolTipRenderer.setTooltip( mode );
     m_networkBuilder.reset();
