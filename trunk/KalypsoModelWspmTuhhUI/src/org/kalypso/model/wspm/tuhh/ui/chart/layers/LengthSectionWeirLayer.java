@@ -37,6 +37,9 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
   {
     final String title = super.getTitle();
 
+    if( title == null )
+      return null;
+
     final int index = title.indexOf( '(' ); //$NON-NLS-1$ // remove '(Oberkante)' from String
     if( index > 0 )
       return StringUtils.chomp( title.substring( 0, index - 1 ) );
@@ -45,7 +48,7 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
   }
 
   @Override
-  public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( valueData == null )

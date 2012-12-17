@@ -37,7 +37,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   }
 
   @Override
-  public void paint( final GC gc,final ChartImageInfo chartImageInfo,  final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( valueData == null )
@@ -97,8 +97,8 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final int bridgeWidthIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH );
 
     final String stationLabel = ComponentUtilities.getComponentLabel( tr.getComponent( stationIndex ) );
-    final String okLabel = Messages.getString("LengthSectionBridgeLayer_0") + ComponentUtilities.getComponentLabel( tr.getComponent( okIndex ) ); //$NON-NLS-1$
-    final String ukLabel = Messages.getString("LengthSectionBridgeLayer_1") + ComponentUtilities.getComponentLabel( tr.getComponent( ukIndex ) ); //$NON-NLS-1$
+    final String okLabel = Messages.getString( "LengthSectionBridgeLayer_0" ) + ComponentUtilities.getComponentLabel( tr.getComponent( okIndex ) ); //$NON-NLS-1$
+    final String ukLabel = Messages.getString( "LengthSectionBridgeLayer_1" ) + ComponentUtilities.getComponentLabel( tr.getComponent( ukIndex ) ); //$NON-NLS-1$
     final String widthLabel = ComponentUtilities.getComponentLabel( tr.getComponent( bridgeWidthIndex ) );
 
     final Object station = record.getValue( stationIndex );
@@ -121,6 +121,9 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   public String getTitle( )
   {
     final String title = super.getTitle();
+
+    if( title == null )
+      return null;
 
     final int index = title.indexOf( '(' ); //$NON-NLS-1$ // remove '(Oberkante)' from String
     if( index > 0 )
