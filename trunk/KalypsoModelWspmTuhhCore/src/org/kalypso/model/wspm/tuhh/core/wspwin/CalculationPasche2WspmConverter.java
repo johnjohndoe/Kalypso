@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -84,11 +85,11 @@ public class CalculationPasche2WspmConverter implements ICalculationWspmConverte
   @Override
   public void convert( final ICalculationContentBean calculation, final File profDir ) throws GMLSchemaException
   {
-    final CalculationContentBeanPasche contentBean = (CalculationContentBeanPasche) calculation;
+    final CalculationContentBeanPasche contentBean = (CalculationContentBeanPasche)calculation;
     final CalculationBean bean = contentBean.getCalculationBean();
 
     // create calculation
-    final TuhhWspmProject project = (TuhhWspmProject) m_reach.getWaterBody().getProject();
+    final TuhhWspmProject project = (TuhhWspmProject)m_reach.getWaterBody().getProject();
     final TuhhCalculation calc = project.createCalculation();
 
     calc.setName( m_baseName + bean.getName() );
@@ -105,9 +106,12 @@ public class CalculationPasche2WspmConverter implements ICalculationWspmConverte
     final ART_ANFANGS_WSP artAnfangswasserspiegel = contentBean.getArtAnfangswasserspiegel();
     final START_KONDITION_KIND type = findStartConditionType( artAnfangswasserspiegel );
 
-    final double startSlope = contentBean.getGefaelle().doubleValue();
-    final double startWsp = contentBean.getHoehe().doubleValue();
-    calc.setStartCondition( type, startWsp, startSlope );
+    final BigDecimal gefaelle = contentBean.getGefaelle();
+    final BigDecimal hoehe = contentBean.getHoehe();
+
+    final Double startWsp = hoehe == null ? null : hoehe.doubleValue();
+
+    calc.setStartCondition( type, startWsp, gefaelle );
 
     final TuhhCalculation.WSP_ITERATION_TYPE iterationType = findIterationType( contentBean );
 
@@ -127,10 +131,16 @@ public class CalculationPasche2WspmConverter implements ICalculationWspmConverte
     calc.setRunOffRef( runOffRef );
 
     // set q-Range. Remember: Q-Range in CalculationcontentBean is in dl/s
-    final double minQ = contentBean.getMin().doubleValue();
-    final double maxQ = contentBean.getMax().doubleValue();
-    final double stepQ = contentBean.getStep().doubleValue();
-    calc.setQRange( minQ / 100.0, maxQ / 100.0, stepQ / 100.0 );
+
+    final BigDecimal qMin = contentBean.getMin();
+    final BigDecimal qMax = contentBean.getMax();
+    final BigDecimal qStep = contentBean.getStep();
+
+    final Double qMinDbl = qMin == null ? null : qMin.doubleValue() / 100.0;
+    final Double qMaxDbl = qMax == null ? null : qMax.doubleValue() / 100.0;
+    final Double qStepDbl = qStep == null ? null : qStep.doubleValue() / 100.0;
+
+    calc.setQRange( qMinDbl, qMaxDbl, qStepDbl );
   }
 
   private MODE findCalcMode( final KIND calcKind )
