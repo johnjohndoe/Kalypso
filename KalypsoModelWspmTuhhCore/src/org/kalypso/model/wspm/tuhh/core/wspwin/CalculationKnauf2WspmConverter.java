@@ -85,11 +85,11 @@ public class CalculationKnauf2WspmConverter implements ICalculationWspmConverter
   @Override
   public void convert( final ICalculationContentBean calculation, final File profDir ) throws GMLSchemaException
   {
-    final CalculationContentBeanKnauf contentBean = (CalculationContentBeanKnauf) calculation;
+    final CalculationContentBeanKnauf contentBean = (CalculationContentBeanKnauf)calculation;
     final CalculationBean bean = contentBean.getCalculationBean();
 
     // create calculation
-    final TuhhWspmProject project = (TuhhWspmProject) m_reach.getWaterBody().getProject();
+    final TuhhWspmProject project = (TuhhWspmProject)m_reach.getWaterBody().getProject();
     final TuhhCalculation calc = project.createCalculation();
 
     calc.setName( m_baseName + bean.getName() );
@@ -104,9 +104,12 @@ public class CalculationKnauf2WspmConverter implements ICalculationWspmConverter
 
     final START_KONDITION_KIND type = findStartConditionType( contentBean );
 
-    final double startSlope = contentBean.getStationarySlope().doubleValue();
-    final double startWsp = contentBean.getStartWaterlevel().doubleValue();
-    calc.setStartCondition( type, startWsp, startSlope );
+    final BigDecimal stationarySlope = contentBean.getStationarySlope();
+
+    final BigDecimal startWaterlevel = contentBean.getStartWaterlevel();
+    final Double startWsp = startWaterlevel == null ? null : startWaterlevel.doubleValue();
+
+    calc.setStartCondition( type, startWsp, stationarySlope );
 
     final WSP_ITERATION_TYPE iterationType = WSP_ITERATION_TYPE.EXACT;
 
@@ -130,8 +133,12 @@ public class CalculationKnauf2WspmConverter implements ICalculationWspmConverter
     final BigDecimal qMin = contentBean.getQMin();
     final BigDecimal qMax = contentBean.getQMax();
     final BigDecimal qStep = contentBean.getQStep();
-    if( qMin != null && qMax != null && qStep != null )
-      calc.setQRange( qMin.doubleValue(), qMax.doubleValue(), qStep.doubleValue() );
+
+    final Double qMinDbl = qMin == null ? null : qMin.doubleValue();
+    final Double qMaxDbl = qMax == null ? null : qMax.doubleValue();
+    final Double qStepDbl = qStep == null ? null : qStep.doubleValue();
+
+    calc.setQRange( qMinDbl, qMaxDbl, qStepDbl );
   }
 
   private START_KONDITION_KIND findStartConditionType( final CalculationContentBeanKnauf contentBean )
