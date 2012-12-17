@@ -188,7 +188,8 @@ public class WspmTuhhPostProcessor
     {
       m_log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.21" ) ); //$NON-NLS-1$
       m_log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22" ) ); //$NON-NLS-1$
-      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22" ) ); //$NON-NLS-1$
+      // REMARK just return, no exception, else we get a ugly trace in the console.
+      return;
     }
 
     if( m_log.checkCanceled() )
