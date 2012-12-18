@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns0:gistableview xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <ns0:layer id="id" featurePath="hydrotopMember" linktype="gml" xlink:type="simple" xlink:href="../../.models/hydrotop.gml" xlink:actuate="onRequest">
+  <ns0:layer id="id" featurePath="hydrotopeMember" linktype="gml" xlink:type="simple" xlink:href="../../.models/hydrotop.gml" xlink:actuate="onRequest">
     <ns0:column width="100" name="description" format="" editable="true" alignment="16384" />
     <ns0:column width="100" name="name" format="" editable="true" alignment="16384" />
     <ns0:column width="95" name="area" format="" editable="true" alignment="16384" />
