@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="missing">
+    <Styles>
+
+      <AreaStyle role="fehlwert_area">
+        <Alpha>FF</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>FF2014</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke isVisible="false">
+          <Width>0</Width>
+          <LineColor>FF2014</LineColor>
+        </Stroke>
+      </AreaStyle>
+
+      <AreaStyle role="stuetzstelle_area">
+        <Alpha>FF</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>5BFF74</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke isVisible="false">
+          <Width>0</Width>
+          <LineColor>5BFF74</LineColor>
+        </Stroke>
+      </AreaStyle>
+
+      <PointStyle role="stuetzstelle_point_0">
+        <Width>6</Width>
+        <Height>6</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>000000</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>5BFF74</Color>
+        </FillColor>
+      </PointStyle>
+
+      <PointStyle role="stuetzstelle_singlepoint_0">
+        <Width>6</Width>
+        <Height>6</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>000000</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>5BFF74</Color>
+        </FillColor>
+      </PointStyle>
+
+      <PointStyle role="fehlwert_point_0">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>2</Width>
+          <LineColor>FF2014</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>FFFFFF</Color>
+        </FillColor>
+      </PointStyle>
+
+      <PointStyle role="fehlwert_singlepoint_0">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>2</Width>
+          <LineColor>FF2014</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>FFFFFF</Color>
+        </FillColor>
+      </PointStyle>
+    </Styles>
+
+    <Layers>
+      <Layer id="quality.barlayer" visible="false" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
+          <Parameters>
+            <Parameter name="fixedHeight" value="10" />
+
+            <Parameter name="content.quality" value="true" />
+
+            <Parameter name="styleFilter.fehlwert_area" value="org.kalypso.chart.layer.filter.stuetzstelle" />
+            <Parameter name="styleFilter.stuetzstelle_area" value="org.kalypso.chart.layer.filter.fehlwerte" />
+          </Parameters>
+        </Provider>
+        <Title>Fehlwerte</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#screenAxisYinverted" />
+        </MapperRefs>
+        <Styles>
+          <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#fehlwert_area</StyleReference>
+          <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#stuetzstelle_area</StyleReference>
+        </Styles>
+      </Layer>
+    </Layers>
+
+  </Chart>
+</ChartConfiguration>

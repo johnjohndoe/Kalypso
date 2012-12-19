@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="evaporation">
+    <Styles>
+      <AreaStyle role="e_area_0">
+        <Alpha>64</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>FF5A00</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke isVisible="false">
+          <Width>1</Width>
+          <LineColor>FF5A00</LineColor>
+        </Stroke>
+      </AreaStyle>
+      <AreaStyle role="e_area_1">
+        <Alpha>64</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>FF744A</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke isVisible="false">
+          <Width>1</Width>
+          <LineColor>FF744A</LineColor>
+        </Stroke>
+      </AreaStyle>
+      <AreaStyle role="e_area_2">
+        <Alpha>64</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>FF9F4A</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke isVisible="false">
+          <Width>1</Width>
+          <LineColor>FF9F4A</LineColor>
+        </Stroke>
+      </AreaStyle>
+    </Styles>
+    <Layers>
+      <Layer id="E">
+        <Provider epid="">
+          <Parameters>
+            <Parameter name="content.evaporation" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Verdunstung</Title>
+        <Layers>
+          <DerivedLayer id="quality.evaporation" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:quality#quality.barlayer"></LayerReference>
+          </DerivedLayer>
+        
+          <Layer id="Evaporation" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
+            <Title>Verdunstung</Title>
+            <Description />
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:evaporation:old#e_area_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:evaporation:old#e_area_1</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:evaporation:old#e_area_2</StyleReference>
+            </Styles>
+          </Layer>
+          <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:evaporation:old#E" />
+        </MapperRefs>
+      </Layer>
+    </Layers>
+    <Mappers>
+      <Axis id="E" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Verdunstung [mm]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>RIGHT</Position>
+        <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
+        <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" fixMinValue="false" />
+      </Axis>
+    </Mappers>
+  </Chart>
+</ChartConfiguration>

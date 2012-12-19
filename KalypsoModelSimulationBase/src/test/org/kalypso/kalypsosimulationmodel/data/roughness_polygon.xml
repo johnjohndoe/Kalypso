@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="WINDOWS-1252"?>
+<gml:FeatureCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:wbgml="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml" xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase">
+ <gml:featureMember>
+  <simBase:RoughnessPolygon gml:id="roughness_polygon1">
+   <simBase:polygonProperty>
+	     <gml:MultiPolygon 
+	      	xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+	       <gml:polygonMember>
+		    	<gml:Polygon srsName="EPSG:31467">
+			     	<gml:exterior>
+			      		<gml:LinearRing>
+			       		<gml:coordinates ts="," decimal="." cs=" ">0.0 0.0,0.0 1.0,1.0 1.0,1.0 0.0,0.0 0.0</gml:coordinates>
+			      		</gml:LinearRing>
+			     	</gml:exterior>
+		    	</gml:Polygon>
+	    	</gml:polygonMember>
+    	  </gml:MultiPolygon> 
+   </simBase:polygonProperty>
+   <simBase:roughnessStyle> roughness polygon1 </simBase:roughnessStyle>
+   <simBase:roughnessClassMember xlink:href="roughness_db.xml#roughness_cls1"/>
+  </simBase:RoughnessPolygon>
+ </gml:featureMember>
+</gml:FeatureCollection>
