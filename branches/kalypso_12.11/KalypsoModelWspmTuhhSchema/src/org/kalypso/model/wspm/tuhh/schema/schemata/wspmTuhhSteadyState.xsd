@@ -1,0 +1,506 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of Kalypso
+
+  Copyright (c) 2008 by
+
+  Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+
+  Kalypso is free software: you can redistribute it and/or modify it under the terms
+  of the GNU Lesser General Public License (LGPL) as published by the Free Software
+  Foundation, either version 3 of the License, or (at your option) any later version.
+
+  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with Kalypso. If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:wspmProf="org.kalypso.model.wspmprofile" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
+  <!-- Schema-Erweiterung für das stationäre WSPM der TU-HH -->
+
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="org.kalypso.model.wspm" />
+  <import namespace="org.kalypso.model.wspmcommon" />
+  <import namespace="org.kalypso.model.wspmrunoff" />
+  <import namespace="org.kalypso.model.wspmprofile" />
+
+  <!-- Schema-Erweiterung für das stationäre WSPM der TU-HH -->
+  <include schemaLocation="wspmTuhhQintervallResults.xsd" />
+
+  <!-- _________________________________________________________________________________________ ELEMENTS _________________________________________________________________________________________ -->
+  <element name="CalculationWspmTuhhSteadyState" type="tuhh:CalculationWspmTuhhSteadyStateType" substitutionGroup="wspm:AbstractCalculation">
+    <annotation>
+      <documentation>Calculation case - steady (TU-HH)</documentation>
+    </annotation>
+  </element>
+  <element name="CalculationReibConstWspmTuhhSteadyState" type="tuhh:CalculationReibConstWspmTuhhSteadyStateType" substitutionGroup="wspm:AbstractCalculation">
+    <annotation>
+      <documentation><![CDATA[Calculation case - steady (TU-HH)- constant XXXX???]]></documentation>
+    </annotation>
+  </element>
+  <!-- -->
+  <element name="StartCondition" type="tuhh:StartConditionType" substitutionGroup="gml:_Feature">
+    <annotation>
+      <documentation><![CDATA[Lower boundary condition (at 1. profile)]]></documentation>
+    </annotation>
+  </element>
+  <!-- -->
+  <element name="RunOffInterval" type="tuhh:RunOffIntervalType" substitutionGroup="gml:_Feature">
+    <annotation>
+      <documentation>discharge interval - steady (TU-HH)</documentation>
+    </annotation>
+  </element>
+  <!-- -->
+  <element name="WaterlevelParameter" type="tuhh:WaterlevelParameterType" substitutionGroup="gml:_Feature">
+    <annotation>
+      <documentation>Numerical parameters - steady (TU-HH)</documentation>
+    </annotation>
+  </element>
+  <!-- -->
+  <element name="ReachWspmTuhhSteadyState" type="tuhh:ReachWspmTuhhSteadyStateType" substitutionGroup="wspm:AbstractReach">
+    <annotation>
+      <documentation>
+					<![CDATA[ River string - steady (TU-HH) ]]>
+      </documentation>
+    </annotation>
+  </element>
+  <!-- -->
+  <!-- element name="influentReachSegmentWspmTuhhSteadyStateMember" type="tuhh:InfluentReachSegmentWspmTuhhSteadyStatePropertyType" substitutionGroup="wspm:reachSegmentMember"> <annotation> <documentation xml:lang="de"> <label>Zufluss-Strangsegmente</label> <tooltip>Zufluss-Strangsegmente</tooltip> <description>Zufluss-Strangsegmente</description> </documentation> <documentation xml:lang="en"> <label>Influent
+    string segments</label> <tooltip>Influent string segments</tooltip> <description>Influent
+    string segments</description> </documentation> </annotation> </element -->
+  <!-- TODO Überflüssig?, kann eventuell weg. -->
+  <!-- element name="InfluentReachSegmentWspmTuhhSteadyState" type="wspm:InfluentReachSegmentType" substitutionGroup="wspm:AbstractReachSegment"> <annotation> <documentation xml:lang="de"> <name>Zufluss-Strangsegment - stationär (TU-HH)</name> <label>huhu???influentReachSegmentWspmTuhhSteadyState</label> <tooltip>???tooltip</tooltip> <description>???description</description> </documentation> </annotation>
+    </element -->
+  <!-- -->
+  <element name="ProfileReachSegmentWspmTuhhSteadyState" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType" substitutionGroup="gml:_Feature">
+    <annotation>
+      <documentation><![CDATA[Profile string segment - steady (TU-HH)]]></documentation>
+    </annotation>
+  </element>
+  <!-- -->
+  <element name="SubReachDefinition" type="tuhh:subReachDefinitionType" substitutionGroup="gml:_Feature">
+    <annotation>
+      <documentation>Calculation segment</documentation>
+    </annotation>
+  </element>
+  <!-- -->
+  <element name="SpecialOptions" type="tuhh:specialOptionsType" substitutionGroup="gml:_Feature">
+    <annotation>
+      <documentation><![CDATA[Additional options (calculation of special structures)]]></documentation>
+    </annotation>
+  </element>
+  <!-- _________________________________________________________________________________________ TYPES _________________________________________________________________________________________ -->
+  <complexType name="CalculationWspmTuhhSteadyStateType">
+    <complexContent>
+      <extension base="wspm:AbstractCalculationType">
+        <sequence>
+          <element ref="tuhh:fliessgesetz" />
+          <element name="preferRoughnessClasses" type="boolean" default="false" minOccurs="0" />
+          <element name="preferVegetationClasses" type="boolean" default="false" minOccurs="0" />
+          <element name="mode" default="WATERLEVEL">
+            <simpleType>
+              <restriction base="string">
+                <enumeration value="WATERLEVEL" />
+                <enumeration value="BF_UNIFORM" />
+                <enumeration value="BF_NON_UNIFORM" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType" />
+          <element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType" />
+          <!-- TODO: not used at this moment -->
+          <!-- element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/ -->
+          <!-- element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/ -->
+          <element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType" />
+          <element name="startConditionMember" type="tuhh:StartConditionPropertyType" />
+          <!-- TODO force it to be one of the water body's runOffEvents? -->
+          <element name="runOffEventMember" type="runoff:RunOffEventLinkPropertyType" />
+          <element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType" />
+          <element name="waterLevelFixationMember" type="runoff:WaterlevelFixationLinkPropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CalculationReibConstWspmTuhhSteadyStateType">
+    <complexContent>
+      <extension base="wspm:AbstractCalculationType">
+        <sequence>
+          <element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType"></element>
+          <element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType"></element>
+          <element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType"></element>
+          <element ref="tuhh:bottomSlope"></element>
+          <element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType"></element>
+          <element name="calcPolynomesMember" type="tuhh:CalcPolynomesPropertyType"></element>
+          <element name="preferRoughnessClasses" type="boolean" default="false" minOccurs="0"/>
+          <element name="preferVegetationClasses" type="boolean" default="false" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="fliessgesetz" type="tuhh:fluidModelType" default="DARCY_WEISBACH_MIT_FORMEINFLUSS"></element>
+  <simpleType name="fluidModelType">
+    <restriction base="string">
+      <enumeration value="DARCY_WEISBACH_OHNE_FORMEINFLUSS" />
+      <enumeration value="DARCY_WEISBACH_MIT_FORMEINFLUSS" />
+      <enumeration value="MANNING_STRICKLER" />
+    </restriction>
+  </simpleType>
+  <!-- -->
+  <complexType name="StartConditionPropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="tuhh:StartCondition" />
+    </sequence>
+  </complexType>
+  <complexType name="StartConditionType">
+    <complexContent>
+      <extension base="wspmcommon:EmptyFeatureBaseType">
+        <sequence>
+          <element name="kind" default="CRITICAL_WATER_DEPTH">
+            <simpleType>
+              <restriction base="string">
+                <enumeration value="CRITICAL_WATER_DEPTH"></enumeration>
+                <enumeration value="WATERLEVEL"></enumeration>
+                <enumeration value="UNIFORM_BOTTOM_SLOPE"></enumeration>
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="waterlevel" type="double"></element>
+          <element ref="tuhh:bottomSlope" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="bottomSlope" type="decimal"></element>
+  <!-- -->
+  <complexType name="RunOffIntervalPropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="tuhh:RunOffInterval" />
+    </sequence>
+  </complexType>
+  <complexType name="RunOffIntervalType">
+    <complexContent>
+      <extension base="wspmcommon:EmptyFeatureBaseType">
+        <sequence>
+          <!-- TODO: Element Abflussintervall machen -->
+          <element name="minimalRunOff" type="double"></element>
+          <element name="runOffStep" type="double"></element>
+          <element name="maximalRunOff" type="double"></element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- -->
+  <complexType name="CalcPolynomesPropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="tuhh:CalcPolynomes" />
+    </sequence>
+  </complexType>
+  <element name="CalcPolynomes" type="tuhh:CalcPolynomesType" substitutionGroup="gml:_Feature">
+    <annotation>
+      <documentation>Polynome Calculation</documentation>
+    </annotation>
+  </element>
+  <complexType name="CalcPolynomesType">
+    <complexContent>
+      <extension base="wspmcommon:EmptyFeatureBaseType">
+        <sequence>
+          <element name="degree" default="4">
+            <simpleType>
+              <restriction base="int">
+                <enumeration value="2" />
+                <enumeration value="3" />
+                <enumeration value="4" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="trippleIt" type="boolean" default="false"></element>
+          <element name="trippleMode" default="bordvoll" nillable="false">
+            <simpleType>
+              <restriction base="string">
+                <enumeration value="bordvoll"></enumeration>
+                <enumeration value="slopeChange"></enumeration>
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="runoffSlope" default="02.0000">
+            <simpleType>
+              <restriction base="decimal">
+                <fractionDigits value="4" />
+                <minInclusive value="1.002" />
+                <maxExclusive value="100" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="areaSlope" default="02.0000">
+            <simpleType>
+              <restriction base="decimal">
+                <fractionDigits value="4" />
+                <minInclusive value="1.002" />
+                <maxExclusive value="100" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="alphaSlope" default="02.0000">
+            <simpleType>
+              <restriction base="decimal">
+                <fractionDigits value="4" />
+                <minInclusive value="1.002" />
+                <maxExclusive value="100" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="weightSplinePoint" default="1.0">
+            <simpleType>
+              <restriction base="decimal">
+                <fractionDigits value="4" />
+                <minInclusive value="1" />
+                <maxExclusive value="100" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="ignoreOutlier" type="boolean" default="false"></element>
+          <element name="alphaLimit" default="1.40">
+            <simpleType>
+              <restriction base="decimal">
+                <fractionDigits value="2" />
+                <minExclusive value="0.0" />
+              </restriction>
+            </simpleType>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- -->
+  <complexType name="WaterlevelParameterPropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="tuhh:WaterlevelParameter" />
+    </sequence>
+  </complexType>
+  <complexType name="WaterlevelParameterType">
+    <complexContent>
+      <extension base="wspmcommon:EmptyFeatureBaseType">
+        <sequence>
+          <element name="exeVersion" type="string" default="" />
+          <element name="wspIteration" default="SIMPLE">
+            <simpleType>
+              <restriction base="string">
+                <enumeration value="SIMPLE"></enumeration>
+                <enumeration value="EXACT"></enumeration>
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="verzoegerungsverlust" default="BJOERNSEN">
+            <simpleType>
+              <restriction base="string">
+                <enumeration value="DVWK"></enumeration>
+                <enumeration value="BJOERNSEN"></enumeration>
+                <enumeration value="DFG"></enumeration>
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="reibungsverlust" default="TRAPEZ_FORMULA">
+            <simpleType>
+              <restriction base="string">
+                <enumeration value="TRAPEZ_FORMULA"></enumeration>
+                <enumeration value="GEOMETRIC_FORMULA"></enumeration>
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="specialOptionsMember" type="tuhh:specialOptionsPropertyType"></element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- -->
+  <complexType name="ReachWspmTuhhSteadyStatePropertyType">
+    <sequence minOccurs="0" maxOccurs="0">
+      <element ref="tuhh:ReachWspmTuhhSteadyState" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+  <complexType name="ReachWspmTuhhSteadyStateType">
+    <annotation>
+      <appinfo xmlns:kapp="org.kalypso.appinfo">
+        <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty" kapp:property="tuhh:waterBodyLinkMember">
+        </kapp:functionProperty>
+      </appinfo>
+    </annotation>
+    <complexContent>
+      <extension base="wspm:AbstractReachType">
+        <sequence>
+          <element name="waterBodyLinkMember" type="wspm:WaterBodyLinkPropertyType" />
+          <element name="waterAxis" type="gml:LineStringPropertyType">
+            <annotation>
+              <appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
+            </annotation>
+          </element>
+          <element name="reachSegmentMember" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStatePropertyType" minOccurs="0" maxOccurs="unbounded" />
+          <element name="markerMember" type="tuhh:ProfileMarkerPropertyType" minOccurs="0" maxOccurs="unbounded" />
+          <element name="imageMember" type="wspmProf:imageFeaturePropertyType" minOccurs="0" maxOccurs="unbounded" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ProfileReachSegmentWspmTuhhSteadyStatePropertyType">
+    <sequence>
+      <element ref="tuhh:ProfileReachSegmentWspmTuhhSteadyState" />
+    </sequence>
+  </complexType>
+  <complexType name="ProfileReachSegmentWspmTuhhSteadyStateType">
+    <annotation>
+      <appinfo xmlns:kapp="org.kalypso.appinfo">
+        <kapp:functionProperty kapp:functionId="org.kalypso.gml.functionProperty.copyProperty" kapp:property="tuhh:station">
+          <kapp:parameter>
+            <!-- TODO -->
+            <kapp:name>xpath</kapp:name>
+            <kapp:value>tuhh:profileMember/wspmProf:Profile/wspmProf:station</kapp:value>
+          </kapp:parameter>
+          <kapp:parameter>
+            <kapp:name>copySet</kapp:name>
+            <kapp:value>false</kapp:value>
+          </kapp:parameter>
+        </kapp:functionProperty>
+        <kapp:functionProperty kapp:functionId="org.kalypso.gml.functionProperty.copyProperty" kapp:property="tuhh:profileLocation">
+          <kapp:parameter>
+            <!-- TODO -->
+            <kapp:name>xpath</kapp:name>
+            <kapp:value>tuhh:profileMember/wspmProf:Profile/wspmProf:profileLocation</kapp:value>
+          </kapp:parameter>
+          <kapp:parameter>
+            <kapp:name>copySet</kapp:name>
+            <kapp:value>true</kapp:value>
+          </kapp:parameter>
+        </kapp:functionProperty>
+        <kapp:functionProperty kapp:functionId="org.kalypso.gml.functionProperty.copyProperty" kapp:property="tuhh:profileThroughputLocation">
+          <kapp:parameter>
+            <!-- TODO -->
+            <kapp:name>xpath</kapp:name>
+            <kapp:value>
+              tuhh:profileMember/wspmProf:Profile/wspmProf:profileThroughputLocation
+            </kapp:value>
+          </kapp:parameter>
+          <kapp:parameter>
+            <kapp:name>copySet</kapp:name>
+            <kapp:value>true</kapp:value>
+          </kapp:parameter>
+        </kapp:functionProperty>
+      </appinfo>
+      <documentation>
+        The profileThroughputLocation is in reality retrieved from the
+        underlying profile.
+      </documentation>
+    </annotation>
+    <complexContent>
+      <extension base="wspmcommon:EmptyFeatureBaseType">
+        <sequence>
+          <element name="station" type="wspmcommon:stationDouble">
+            <annotation>
+              <appinfo>
+                This property is backuped by the
+                observation
+                (profileMember) itself.
+              </appinfo>
+            </annotation>
+          </element>
+          <element name="profileMember" type="wspm:ProfileLinkPropertyType"></element>
+          <element name="profileLocation" type="gml:LineStringPropertyType">
+            <annotation>
+              <appinfo>
+                This property is backed by
+                profileMember, more explicit
+                by the
+                referenced profile-observation.
+              </appinfo>
+            </annotation>
+          </element>
+          <element name="profileThroughputLocation" type="gml:LineStringPropertyType" minOccurs="0" maxOccurs="1">
+            <annotation>
+              <appinfo>
+                This property is backed by
+                profileMember, more explicit
+                by the
+                referenced profile-observation.
+              </appinfo>
+              <documentation xml:lang="de">
+                <label>Durchfluss</label>
+                <tooltip>Durchfluss</tooltip>
+                <description>Durchfluss</description>
+              </documentation>
+              <documentation xml:lang="en">
+                <label>Profile throughput location</label>
+                <tooltip>Profile throughput location</tooltip>
+                <description>
+                  Profile throughput location
+                </description>
+              </documentation>
+            </annotation>
+          </element>
+          <!-- Distances are commented out, because they are not yet (?) used by the tuhh steady-state flow model -->
+          <!-- <element name="distanceL" type="double"> <annotation> <documentation xml:lang="de"> <label>???distanceL</label> <tooltip>???tooltip</tooltip> <description>Abstand UW??? linkes Vorland</description> </documentation> </annotation> </element> <element name="distanceM" type="double"> <annotation> <documentation xml:lang="de"> <label>???distanceM</label> <tooltip>???tooltip</tooltip> <description>Abstand
+            UW??? Hauptöffnung</description> </documentation> </annotation> </element> <element
+            name="distanceR" type="double"> <annotation> <documentation xml:lang="de"> <label>???distanceR</label> <tooltip>???tooltip</tooltip> <description>Abstand UW??? rechtes Vorland</description> </documentation> </annotation> </element> -->
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- -->
+  <complexType name="subReachDefinitionPropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="tuhh:SubReachDefinition" />
+    </sequence>
+  </complexType>
+  <complexType name="subReachDefinitionType">
+    <complexContent>
+      <extension base="wspmcommon:EmptyFeatureBaseType">
+        <sequence>
+          <element name="startStation" type="wspmcommon:stationDouble"></element>
+          <element name="endStation" type="wspmcommon:stationDouble"></element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- -->
+  <complexType name="specialOptionsPropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="tuhh:SpecialOptions" />
+    </sequence>
+  </complexType>
+  <complexType name="specialOptionsType">
+    <complexContent>
+      <extension base="wspmcommon:EmptyFeatureBaseType">
+        <sequence>
+          <element name="doCalcBridges" type="boolean" default="true"></element>
+          <element name="doCalcBarrages" type="boolean" default="true"></element>
+          <element name="useExtremeRoughness" type="boolean" default="true"></element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- -->
+  <complexType name="ProfileMarkerPropertyType">
+    <sequence>
+      <element ref="tuhh:ProfileMarker" />
+    </sequence>
+  </complexType>
+  <element name="ProfileMarker" type="tuhh:ProfileMarkerType" substitutionGroup="gml:_Feature"></element>
+  <complexType name="ProfileMarkerType">
+    <annotation>
+      <appinfo xmlns:kapp="org.kalypso.appinfo">
+        <kapp:functionProperty kapp:functionId="org.kalypso.gmlschema.functionProperty.dontinvalidgeo" kapp:property="tuhh:location">
+        </kapp:functionProperty>
+      </appinfo>
+    </annotation>
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <!-- Reference to component dict? -->
+          <element name="type" type="string" />
+          <element name="location" type="gml:PointPropertyType" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+</schema>
