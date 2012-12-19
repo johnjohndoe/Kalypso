@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns0:gistableview xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <ns0:layer id="id" featurePath="sealingMember" linktype="gml" xlink:type="simple" xlink:href="../../.models/parameter.gml" xlink:actuate="onRequest">
+        <ns0:column width="174" name="description" format="" editable="false" alignment="16384"/>
+        <ns0:column width="100" name="name" format="" editable="false" alignment="16384"/>
+        <ns0:column width="100" name="m_vers" format="" editable="false" alignment="16384"/>
+    </ns0:layer>
+</ns0:gistableview>
+
