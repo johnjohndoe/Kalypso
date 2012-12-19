@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview typename="flood:FloodClipPolygon" style="SWT.NONE" xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:flood="org.kalypso.model.flood">
+  <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+  <gridLayout numColumns="3" />
+  <label property="gml:name" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="gml:name" style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+    <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+  </text>
+  <validatorlabel property="gml:name" visible="true" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+
+  <label property="gml:description" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalSpan="1" horizontalAlignment="SWT.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
+  </text>
+  <validatorlabel property="gml:description" visible="true" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+
+  <!-- REMARK: hidden for this moment, as 'positive' is never implemented. 'negative' is default and is what the user gets anyways. <label property="flood:type" visible="true" style="SWT.NONE"> <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" /> </label> <combo property="flood:type" tooltip="type" style="SWT.DROP_DOWN | SWT.READ_ONLY"> <gridData 
+    horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" /> </combo> <label visible="false" style="SWT.NONE"> <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" /> </label> <validatorlabel property="flood:type" visible="true" style="SWT.NONE"> <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" /> </validatorlabel> -->
+
+  <label property="flood:eventMember" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <extensioncontrol extension-id="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory" property="flood:eventMember" visible="true" style="SWT.BORDER" enabled="true">
+    <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    <param value="true" name="showSelectButtons" />
+  </extensioncontrol>
+  <validatorlabel property="flood:eventMember" visible="true" style="SWT.NONE">
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+</featureview>

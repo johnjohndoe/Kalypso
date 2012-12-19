@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Workflow URI="org.kalypso.model.flood.WF_KalypsoFlood" xmlns="http://www.renew.de/workflow/base" xmlns:con="http://www.renew.de/workflow/contexts" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" defaultTask="org.kalypso.model.flood.ManageWaterlevelData">
+  <Help>NONE</Help>
+  <Name>KalypsoFlood-Workflow</Name>
+
+  <TaskGroup URI="org.kalypso.model.flood.DataLoad" context="FloodMap">
+    <Task context="FloodMap" URI="org.kalypso.model.flood.ManageWaterlevelData" />
+    <Task context="CoverageTheme" URI="org.kalypso.model.flood.ManageDTMData" />
+  </TaskGroup>
+
+  <Task type="SYNCHRONOUS" context="FloodMap" URI="org.kalypso.model.flood.PolygonEditing" />
+  <Task context="FloodMap" URI="org.kalypso.model.flood.ProcessFloodModel" />
+
+  <TaskGroup URI="org.kalypso.model.flood.Postprocessing" context="FloodMap">
+    <Task context="FloodMap" URI="org.kalypso.model.flood.VisualizeDepthData" />
+    <Task URI="org.kalypso.model.flood.GenerateRiskModel" context="FloodMap" />
+  </TaskGroup>
+
+  <Perspectives>
+    <con:PerspectiveContext id="ContextFloodModelling" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+      <!-- perspectiveId="org.kalypso.flood.perspective.Perspective"> -->
+
+      <con:WorkbenchSiteContext id="MapContext" parent="ContextFloodModelling">
+        <con:ViewContext id="MapOutlineView" partId="org.kalypso.ui.views.outline" parent="MapContext" />
+        <con:ViewContext id="MapView" partId="org.kalypso.ui.views.mapView" parent="MapContext">
+
+          <con:ExtensionContext id="FloodMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+
+            <con:ExtensionContext id="CoverageTheme" parent="FloodMap" handlerFactoryId="kalypsoContextHandlerFactory">
+              <con:Parameter name="type" value="themeContext" />
+              <con:Parameter name="input" value="{http://www.opengis.net/gml}_Coverage" />
+            </con:ExtensionContext>
+            <con:Parameter name="type" value="mapViewInputContext" />
+            <con:Parameter name="input" value="maps/flood.gmt" />
+
+          </con:ExtensionContext>
+
+        </con:ViewContext>
+
+      </con:WorkbenchSiteContext>
+
+      <con:ViewContext id="FeatureSelectionView" partId="org.kalypso.featureview.views.FeatureView" parent="ContextFloodModelling" />
+
+    </con:PerspectiveContext>
+  </Perspectives>
+</Workflow>
