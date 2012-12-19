@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<featureview typename="tuhh:WPointsObservation" style="SWT.NONE" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:gml="http://www.opengis.net/gml" xmlns="featureview.template.kalypso.org" xmlns:om="http://www.opengis.net/om" xmlns:ogc="http://www.opengis.net/ogc">
+  <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+  <gridLayout numColumns="4" />
+
+  <label property="gml:name" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="gml:name" style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+    <gridData horizontalSpan="3" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+  </text>
+
+  <label property="gml:description" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalSpan="3" horizontalAlignment="SWT.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
+  </text>
+
+  <label property="tuhh:station" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="tuhh:station" style="SWT.BORDER">
+    <gridData horizontalSpan="3" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    <format>%.4f</format>
+  </text>
+
+  <label property="tuhh:slope" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="tuhh:slope" style="SWT.BORDER">
+    <gridData horizontalSpan="3" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    <format>%.5f</format>
+  </text>
+
+  <label property="tuhh:bankfullHeight" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="tuhh:bankfullHeight" style="SWT.BORDER">
+    <gridData horizontalSpan="3" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    <format>%.3f</format>
+  </text>
+
+  <tabFolder style="SWT.NONE">
+    <gridData horizontalSpan="4" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true" />
+    <tabItem>
+      <tabLabel>Abfluss</tabLabel>
+      <extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+        <param name="configuration" value="urn:kalypso:chart:configuration:QIntervallResult" />
+        <param name="chart" value="runoffChart" />
+        <param name="featureKeyName" value="theResultFeatureKey" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+        <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+      </extensioncontrol>
+    </tabItem>
+    
+    <tabItem>
+      <tabLabel>Fläche</tabLabel>
+      <extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+        <param name="configuration" value="urn:kalypso:chart:configuration:QIntervallResult" />
+        <param name="chart" value="areaChart" />
+        <param name="featureKeyName" value="theResultFeatureKey" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+        <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+      </extensioncontrol>
+    </tabItem>
+    
+    <tabItem>
+      <tabLabel>Alpha</tabLabel>
+      <extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+        <param name="configuration" value="urn:kalypso:chart:configuration:QIntervallResult" />
+        <param name="chart" value="alphaChart" />
+        <param name="featureKeyName" value="theResultFeatureKey" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+        <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+      </extensioncontrol>
+    </tabItem>
+
+    <tabItem>
+      <tabLabel>Abfluss Flussschlauch und Vorland</tabLabel>
+      <extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+        <param name="configuration" value="urn:kalypso:chart:configuration:QIntervallResult" />
+        <param name="chart" value="runoffChannelAndFloodplainChart" />
+        <param name="featureKeyName" value="theResultFeatureKey" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+        <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+      </extensioncontrol>
+    </tabItem>
+
+    <tabItem>
+      <tabLabel>Fläche Flussschlauch und Vorland</tabLabel>
+      <extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+        <param name="configuration" value="urn:kalypso:chart:configuration:QIntervallResult" />
+        <param name="chart" value="areaChannelAndFloodplainChart" />
+        <param name="featureKeyName" value="theResultFeatureKey" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+        <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+      </extensioncontrol>
+    </tabItem>
+    <tabItem>
+      <tabLabel>Breite Flussschlauch und Vorland</tabLabel>
+      <extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+        <param name="configuration" value="urn:kalypso:chart:configuration:QIntervallResult" />
+        <param name="chart" value="widthChannelAndFloodplainChart" />
+        <param name="featureKeyName" value="theResultFeatureKey" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+        <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+      </extensioncontrol>
+    </tabItem>
+
+    <tabItem>
+      <tabLabel>Tabelle</tabLabel>
+      <tupleResult property="tuhh:pointsMember" tooltip="Abflussereignis" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION">
+        <gridData verticalAlignment="SWT.FILL" horizontalSpan="4" horizontalAlignment="SWT.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+        <toolbar>
+          <menuContribution uri="org.kalypso.ui.tupleResult.menus.standardEdit" />
+        </toolbar>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" />
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.3g" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaRunoff" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffChannel" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.3g" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffFloodplain" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.3g" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#AreaChannel" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#AreaFloodplain" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Width" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#WidthChannel" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#WidthFloodplain" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+        <columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha" alignment="SWT.RIGHT" editable="false" width="100" displayFormat="%.2f" optional="true"/>
+      </tupleResult>
+    </tabItem>
+  </tabFolder>
+
+  <group style="SWT.V_SCROLL" text="Building-Parameter">
+    <visibleOperation>
+      <ogc:Not>
+        <ogc:PropertyIsNull>
+          <ogc:PropertyName>tuhh:buildingParameterMember</ogc:PropertyName>
+        </ogc:PropertyIsNull>
+      </ogc:Not>
+    </visibleOperation>
+    <gridData horizontalSpan="4" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true" heightHint="200">
+      <excludeOperation>
+        <ogc:PropertyIsNull>
+          <ogc:PropertyName>tuhh:buildingParameterMember</ogc:PropertyName>
+        </ogc:PropertyIsNull>
+      </excludeOperation>
+    </gridData>
+    <gridLayout numColumns="1" />
+    <tupleResult style="SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI" property="tuhh:buildingParameterMember">
+      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true" />
+      <toolbar>
+        <menuContribution uri="org.kalypso.ui.tupleResult.menus.standardReadOnly" />
+      </toolbar>
+    </tupleResult>
+  </group>
+</featureview>
