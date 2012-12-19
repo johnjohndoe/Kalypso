@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	typeID="org.kalypso.model1d2d">
+
+	<input id="rmaVersion" type="xs:string" description="RMA-Kalypso version string" />
+	<input id="control.r10" type="xs:anyURI" description="control.r10" />
+	<input id="model.2d" type="xs:anyURI" description="model.2d" />
+	<input id="bauwerke.txt" type="xs:anyURI" description="bauwerke.txt" />
+	<input id="wqusw.txt" type="xs:anyURI" description="wqusw.txt" />
+	<input id="wind.txt" type="xs:anyURI" description="wind.txt" />
+	<input id="windCoord.txt" type="xs:anyURI" description="windCoord.txt" />
+	<input id="workingDirectory" type="xs:string"
+		description="the working directory of the simulation" optional="true" />
+
+	<output id="results" type="xs:anyURI" description="2d-result directory" />
+</modelspec>

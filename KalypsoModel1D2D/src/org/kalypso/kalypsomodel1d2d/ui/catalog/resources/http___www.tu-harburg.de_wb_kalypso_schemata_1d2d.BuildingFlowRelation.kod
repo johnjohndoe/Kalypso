@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="buildingParameterChart">
+    <Description>Parameterschar der UW-OW Beziehung</Description>
+    <ChartInsets right="10" top="10" />
+    <Layers>
+      <Layer visible="true" id="parameterLayer">
+        <Provider epid="org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theFeatureKey" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelDownstream" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelUpstream" />
+            <Parameter name="classComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" />
+          </Parameters>
+        </Provider>
+        <Title>Parameterschar</Title>
+        <Description>Parameterschar</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="h_uw_Axis" />
+          <TargetAxisRef ref="h_ow_Axis" />
+        </MapperRefs>
+        <Styles>
+
+          <LineStyle role="okLine">
+            <Title>Ok line</Title>
+            <Width>1</Width>
+            <LineColor>00aaff</LineColor>
+            <LineJoin>ROUND</LineJoin>            
+          </LineStyle>
+
+          <PointStyle role="okPoint">
+            <Title>Ok point</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>555555</LineColor>
+            </Stroke>
+            <FillColor>
+              <Color>00ff00</Color>
+            </FillColor>
+          </PointStyle>
+          
+          <PointStyle role="okPointHover">
+            <Width>11</Width>
+            <Height>11</Height>
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor>
+              <Color>00ff00</Color>
+            </FillColor>
+          </PointStyle>          
+
+          <LineStyle role="crossLine">
+            <Title>Cross line</Title>
+            <Width>2</Width>
+            <LineColor>ffaa00</LineColor>
+            <LineJoin>ROUND</LineJoin>            
+          </LineStyle>
+
+          <PointStyle role="crossPoint">
+            <Title>Cross point</Title>
+            <Alpha>80</Alpha>
+            <Width>13</Width>
+            <Height>13</Height>
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor>
+              <Color>ffffff</Color>
+            </FillColor>
+          </PointStyle>
+          
+          <PointStyle role="crossPointHover">
+            <Width>12</Width>
+            <Height>12</Height>
+            <Stroke>
+              <Width>4</Width>
+              <LineColor>FF0000</LineColor>
+            </Stroke>
+            <FillColor>
+              <Color>ffffff</Color>
+            </FillColor>
+          </PointStyle>          
+        </Styles>
+
+      </Layer>
+    </Layers>
+    <Mappers>
+      <Axis id="h_uw_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Unterwasser [mNN]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>BOTTOM</Position>
+        <NumberRange>
+          <MinValue>0</MinValue>
+          <MaxValue>1</MaxValue>
+        </NumberRange>
+        <PreferredAdjustment range="96" before="2" after="2"/>
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+      <Axis id="h_ow_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Oberwasser [mNN]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <NumberRange>
+          <MinValue>0</MinValue>
+          <MaxValue>0</MaxValue>
+        </NumberRange>
+        <PreferredAdjustment range="96" before="2" after="2"/>
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+    </Mappers>
+    <Renderers>
+      <AxisRenderer id="NumberAxisRenderer">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          <Parameters>
+            <Parameter name="color" value="#000000" />
+            <Parameter name="inset_tick" value="1" />
+          </Parameters>
+        </Provider>
+      </AxisRenderer>
+    </Renderers>
+  </Chart>
+
+</ChartConfiguration>
