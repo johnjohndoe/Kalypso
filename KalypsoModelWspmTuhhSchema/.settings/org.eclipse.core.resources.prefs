@@ -1,0 +1,7 @@
+#Thu Apr 22 17:09:47 CEST 2010
+eclipse.preferences.version=1
+encoding//src/org/kalypso/model/wspm/tuhh/schema/dict=UTF-8
+encoding//src/org/kalypso/model/wspm/tuhh/schema/schemata/wspmTuhhQintervallResults.xsd=UTF-8
+encoding//src/org/kalypso/model/wspm/tuhh/schema/schemata/wspmTuhhSteadyState.xsd=UTF-8
+encoding//src/org/kalypso/model/wspm/tuhh/schema/simulation/resources/footerLenghSection.txt=UTF-8
+encoding//src/org/kalypso/model/wspm/tuhh/schema/simulation/resources/headerLenghSection.txt=UTF-8
