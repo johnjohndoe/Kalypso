@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<BusinessInfoDesign class="oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign" name="Business Information" id="D94CFF27-1A59-4CF0-7C42-9CCA08A13BBA">
-   <createdBy>thuel2</createdBy>
-   <createdTime>2011-05-17 14:48:41 UTC</createdTime>
-   <changedTime>2012-10-29 15:04:57 UTC</changedTime>
-   <ownerDesignName>pdb</ownerDesignName>
-   <shouldBeOpen>false</shouldBeOpen>
-</BusinessInfoDesign>

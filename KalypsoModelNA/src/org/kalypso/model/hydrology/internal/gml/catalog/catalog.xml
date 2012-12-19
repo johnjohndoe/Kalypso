@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-
-	<catalog:system systemId="urn:ogc:gml:featuretype:http___sourceforge.kalypso.org_schemata_hydrology_suds:Swale:uiproperties:default" uri="common.properties" />
-	<catalog:system systemId="urn:ogc:gml:featuretype:http___sourceforge.kalypso.org_schemata_hydrology_suds:SwaleInfiltrationDitch:uiproperties:default" uri="common.properties" />
-	<catalog:system systemId="urn:ogc:gml:featuretype:http___sourceforge.kalypso.org_schemata_hydrology_suds:GreenRoof:uiproperties:default" uri="common.properties" />
-
-</catalog:catalog>
-
