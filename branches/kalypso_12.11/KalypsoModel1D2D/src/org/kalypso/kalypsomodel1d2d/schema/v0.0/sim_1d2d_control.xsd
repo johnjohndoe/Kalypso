@@ -1,0 +1,1091 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:kapp="org.kalypso.appinfo" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+  targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <xs:import namespace="http://www.opengis.net/gml" />
+  <xs:import namespace="http://www.opengis.net/om" />
+  <xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
+  <xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" />
+
+  <!--
+    =================================================================
+    ControlModelGroup
+    ==================================================================
+  -->
+  <xs:element name="ControlModelGroup" type="c1d2d:ControlModelGroupType" substitutionGroup="simBase:_Model" />
+  <xs:complexType name="ControlModelGroupType">
+    <xs:complexContent>
+      <xs:extension base="simBase:AbstractModelType">
+        <xs:sequence>
+          <xs:element ref="c1d2d:controlModelCollection" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!--
+    =================================================================
+    controlModelCollection property
+    ==================================================================
+  -->
+  <xs:element name="controlModelCollection">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="c1d2d:ControlModelCollection" minOccurs="0" />
+      </xs:sequence>
+      <xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+    </xs:complexType>
+  </xs:element>
+  <!--
+    =================================================================
+    ControlModelCollectionType
+    ==================================================================
+  -->
+  <xs:element name="ControlModelCollection" type="c1d2d:ControlModelCollectionType" substitutionGroup="gml:_Feature" />
+  <xs:complexType name="ControlModelCollectionType">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractFeatureType">
+        <xs:sequence>
+          <xs:element name="activeModelID" type="c1d2d:ActiveModelIDType" />
+          <xs:element ref="c1d2d:controlModelMember" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!--
+    =================================================================
+    ActiveModelIDType
+    ==================================================================
+  -->
+  <xs:complexType name="ActiveModelIDType">
+    <xs:sequence>
+      <xs:element ref="c1d2d:ControlModel" minOccurs="0" maxOccurs="0" />
+    </xs:sequence>
+    <xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+  </xs:complexType>
+  <!--
+    =================================================================
+    ControlModelMemberPropertyType member or property
+    ===================================================================
+  -->
+  <xs:element name="controlModelMember" type="c1d2d:ControlModelMemberPropertyType" />
+  <xs:complexType name="ControlModelMemberPropertyType">
+    <xs:sequence>
+      <xs:element ref="c1d2d:ControlModel" minOccurs="0" />
+    </xs:sequence>
+    <xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+  </xs:complexType>
+  <!--
+    =================================================================
+
+    ==================================================================
+  -->
+  <xs:element name="ControlModel" type="c1d2d:ControlModelType" substitutionGroup="simBase:_Model">
+    <xs:annotation>
+      <xs:documentation>
+        Control parameters for
+        ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl#title;}
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ControlModelType">
+    <xs:annotation>
+      <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+        <kapp:functionProperty kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.ControlModelNamePropertyFunction" kapp:property="c1d2d:title" kapp:valueType="xs:string" kapp:isVirtual="true">
+        </kapp:functionProperty>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="simBase:AbstractModelType">
+        <xs:sequence>
+          <xs:element ref="wb1d2d:calculationUnit" />
+          <xs:element name="Version">
+            <xs:annotation>
+              <xs:documentation>
+                Version des Rechenkerns RMA·Kalypso
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:minLength value="1" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <!-- ControlDataBlock -->
+          <xs:element name="SWANCalculation" type="xs:boolean" default="false">
+            <xs:annotation>
+              <xs:documentation>
+                Calculation with SWAN
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SWANVersion">
+            <xs:annotation>
+              <xs:documentation>
+                Version des Rechenkerns SWAN·Kalypso
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:minLength value="1" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="SWANConstantBoundary" type="xs:boolean" default="false">
+            <xs:annotation>
+              <xs:documentation>
+                Set boundary conditions constant
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SWANBoundaryAlg" default="0">
+            <xs:annotation>
+              <xs:documentation>
+                General algorithm for handling the boundary conditions
+                of actual simulation.
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:enumeration value="0">
+                  <xs:annotation>
+                    <xs:documentation>
+											<![CDATA[Default JONSWAp]]>
+											<![CDATA[Default: JONswap; PEAK DSPR POWER)]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="1">
+                  <xs:annotation>
+                    <xs:documentation>
+                      PM
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="2">
+                  <xs:annotation>
+                    <xs:documentation>
+                      GAUS
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="3">
+                  <xs:annotation>
+                    <xs:documentation>
+                      BIN
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="SWANINITialValues" default="0">
+            <xs:annotation>
+              <xs:documentation>
+								<![CDATA[Initial Start Values ]]>
+								<![CDATA[Initial Start Values ]]>
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:enumeration value="0">
+                  <xs:annotation>
+                    <xs:documentation>
+											<![CDATA[00 Default(SWAN) ]]>
+                    </xs:documentation>
+                    <xs:documentation>
+											<![CDATA[00 Default(SWAN)]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="1">
+                  <xs:annotation>
+                    <xs:documentation>
+											<![CDATA[01 Zero(RMA)]]>
+                    </xs:documentation>
+                    <xs:documentation>
+											<![CDATA[01 Zero(RMA))]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="2">
+                  <xs:annotation>
+                    <xs:documentation>
+											<![CDATA[02 PAR  hs per dir dd]]>
+                    </xs:documentation>
+                    <xs:documentation>
+											<![CDATA[02 PAR  hs per dir dd]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="3">
+                  <xs:annotation>
+                    <xs:documentation>
+											<![CDATA[03 HOTSTART 'fname']]>
+                    </xs:documentation>
+                    <xs:documentation>
+											<![CDATA[03 HOTSTART 'fname']]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="SWANINITialValuesPar" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Manual definition of parameters for selected PAR mode in INIT values
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SWANConstantWind" type="xs:boolean" default="false">
+            <xs:annotation>
+              <xs:documentation>
+                Calculate with constant wind
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SWANCoordCart" type="xs:boolean" default="false">
+            <xs:annotation>
+              <xs:documentation>
+                Use Cartesian coordinates system
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SWANGEN3" type="xs:boolean" default="false">
+            <xs:annotation>
+              <xs:documentation>
+                Use Cartesian coordinates system
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SWANConstantWindPar" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Manual definition of wind mode input
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SWANAdditionalResultsPar" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Manual definition of additional output fields
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SWANInputCoordFile" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                File with specific coordinates for additional output of SWAN in text format
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SWANInputAdditionalCmds" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Additional configuration commands for SWAN in text format
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="VEGETA" type="xs:boolean" default="true">
+            <xs:annotation>
+              <xs:documentation>
+
+                Berücksichtigung Bewuchs
+
+
+                Berücksichtigung der
+                Bewuchsparameter bei der
+                Berechnung
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="BEIENT" type="xs:boolean" default="true">
+            <xs:annotation>
+              <xs:documentation>
+
+                Berücksichtigung des
+                Boussinesq-Beiwertes
+
+
+                Berücksichtigung des Boussinesq-
+                Beiwertes bei der
+                Berechnung
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="HASWINDDRAG" type="xs:boolean" default="false">
+            <xs:annotation>
+              <xs:documentation>
+
+                Berücksichtigung von Windschubspannungen
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CHI" type="xs:double" default="0.0005">
+            <xs:annotation>
+              <xs:documentation>
+
+                dichtebereinigter Windsogkoeffizient [-]
+
+
+                Windsogkoeffizient zur Berechnung der Oberflächenschubspannung
+                infolge Wind.
+                Dieser Wert ergibt multipliziert mit der Dichte der Luft den
+                eigentlichen Windsogkoeffizienten.
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+
+          <xs:element name="ICPU" type="xs:int" default="0">
+            <xs:annotation>
+              <xs:documentation>
+
+                Anzahl der Prozessoren
+
+
+                Anzahl der Prozessoren;
+                Wert 0: Front-Algorithmus;
+                Wert > 0 Verwendung der MKL
+                (für Wert >
+                0 ist rma10sk-Version
+                1.1.x und höher erforderlich)
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="BUFFSIZ" type="xs:int" default="20000000">
+            <xs:annotation>
+              <xs:documentation>
+
+                Speichergröße für Gleichungslöser
+
+
+                maximale
+                Speichergröße, die dem Gleichungslöser zur
+                Verfügung stehen kann
+                (default: 20.000.000)
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="MFW" type="xs:int" default="1500">
+            <xs:annotation>
+              <xs:documentation>
+
+                maximale Bandbreite der Lösungsmatrix
+
+
+                zulässige
+                Bandbreite der Lösungsmatrix; performant
+                bis 2500; (default:
+                1500)
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="PERCENT_CHECK" type="xs:boolean" default="false">
+            <xs:annotation>
+              <xs:documentation>
+
+                prozentuale Änderungen?
+
+
+                aktiviert: prozentuale
+                Änderungen als Kovergenzkriterien verwenden;
+                angegebene Grenzen
+                sind als
+                relative Änderungen (Prozent durch 100) zu verstehen
+                deaktiviert: absolute Änderungen als Konvergenzkriterien verwenden
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IDNOPT" default="-1">
+            <xs:annotation>
+              <xs:documentation>
+                Marsh Algorithmus
+
+                Art der gesonderten Behandlung
+                von
+                nur teilweise
+                Durchströmten
+                Elementen (Randelemente).
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:enumeration value="0">
+                  <xs:annotation>
+                    <xs:documentation>
+
+                      ohne Marsh
+
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="-1">
+                  <xs:annotation>
+                    <xs:documentation>
+											<![CDATA[Default Werte nutzen]]>
+											<![CDATA[Default Werte sind: Deaktivierungstiefe=1.5m; Übergangstiefe=0.67m; Porosität=0.04)]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="-2">
+                  <xs:annotation>
+                    <xs:documentation>
+
+                      Benutzerdefiniert
+
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="startsim" type="xs:dateTime">
+            <xs:annotation>
+              <xs:documentation>
+
+                Start der instationären Berechnung
+
+
+                Startdatum
+                und Zeit der
+                instationären Berechnung,
+                lediglich
+                zur Information
+                bei stationärer
+                Berechnung.
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <!--TODO: Nico will implement the options 5 and 6 later -->
+          <xs:element name="IEDSW" default="10">
+            <xs:annotation>
+              <xs:documentation>
+								<![CDATA[Wirbelviskositätsansatz]]>
+								<![CDATA[Wirbelviskositätsansatz]]>
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:enumeration value="0">
+                  <xs:annotation>
+                    <xs:documentation>
+											<![CDATA[00 const. eddy viscosity (RMA)]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="2">
+                  <xs:annotation>
+
+                    <xs:documentation>
+											<![CDATA[02 Smagorinsky approach (RMA)]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="10">
+                  <xs:annotation>
+
+                    <xs:documentation>
+											<![CDATA[10 const. eddy viscosity]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="11">
+                  <xs:annotation>
+
+                    <xs:documentation>
+											<![CDATA[11 bottom generated turbulence]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="12">
+                  <xs:annotation>
+
+                    <xs:documentation>
+											<![CDATA[12 Prandtl's mixing length (const.)]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="13">
+                  <xs:annotation>
+
+                    <xs:documentation>
+											<![CDATA[13 Smagorinsky approach]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="14">
+                  <xs:annotation>
+
+                    <xs:documentation>
+											<![CDATA[14 Smagorinsky approach w. bottom induced turb.]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="15">
+                  <xs:annotation>
+                    <xs:documentation>
+											<![CDATA[15 Prandtl'scher Mischungsweg u. sohlind. Turb.]]>
+                    </xs:documentation>
+
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="16">
+                  <xs:annotation>
+
+                    <xs:documentation>
+											<![CDATA[16 ave. of Prandtl and Smago w. bottom induced turbulence]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <!--
+                  <xs:enumeration value="-1"> <xs:annotation> <xs:documentation >
+                  Eingabedaten verwenden Elementtypenabhängig?
+                  </xs:documentation> </xs:annotation> </xs:enumeration>
+                -->
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="TBFACT" default="0.197" type="xs:double">
+            <xs:annotation>
+              <xs:documentation>
+                Faktor Smagorinsky-Ansatz [-]
+
+                Alfa Wert des Smagorinsky Ansatzes [-]
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="TBFACT_ESCUDIER" default="23.0" type="xs:double">
+            <xs:annotation>
+              <xs:documentation>
+                Parameter freie Scherschichtdicke
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+
+          <!-- FIXME: default value outside valid range? -->
+          <xs:element name="TBMIN" default="0.5" type="xs:double">
+            <xs:annotation>
+              <xs:documentation>
+                Min. Wirbelviskosität [m²/s]
+                
+                Minimale Wirbelviskosität beim Smagorinsky-Ansatz [m²/s]
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="_p_bottom" type="xs:double">
+            <xs:annotation>
+              <xs:documentation>
+                Modellparameter
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="OMEGA" type="xs:double">
+            <xs:annotation>
+              <xs:documentation>
+                Breitengrad [°]
+
+                Breitengrad zur Ermittlung derCorioliskraft [°]
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ELEV" type="xs:double">
+            <xs:annotation>
+              <xs:documentation>
+                Anfangswasserspiegel [m]
+                
+                Anfangswert des Wasserstandes über jedem Knoten [m]
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <!--C3 -->
+          <xs:element name="UNOM" type="xs:double" default="0.5">
+            <xs:annotation>
+              <xs:documentation>
+
+                Anfangsgeschwindigkeit [m/s]
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="UDIR">
+            <xs:annotation>
+              <xs:documentation>
+
+                Richtung der Anfangsgeschwindigkeit [°]
+
+
+                Fließrichtung im
+                Gegenuhrzeigersinn auf die
+                globale
+                x-Achse bezogen
+                [°]
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:double">
+                <xs:minInclusive value="0.0" />
+                <xs:maxInclusive value="360.0" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="HMIN" type="xs:double">
+            <xs:annotation>
+              <xs:documentation>
+
+                Min. Anfangswassertiefe [m]
+
+
+                Minimale Wassertiefe
+                bei
+                Simulationsstart [m]
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DSET" type="xs:double" default="0.09">
+            <xs:annotation>
+              <xs:documentation>
+
+                Trockenfalltiefe [m]
+
+
+                Wassertiefe ab welcher
+                Knoten
+                trocken fällt [m].
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DSETD" type="xs:double" default="0.1">
+            <xs:annotation>
+              <xs:documentation>
+
+                Wiederbenetzungstiefe [m]
+
+
+                Wassertiefe bei
+                welcher trockener
+                Knoten
+                wiederbenetzt wird [m].
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="_steady" type="xs:boolean" default="true">
+            <xs:annotation>
+              <xs:documentation>
+
+                Stationäre Berechnung
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="_unsteady" type="xs:boolean" default="false">
+            <xs:annotation>
+              <xs:documentation>
+
+                Instationäre Berechnung
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <!--C5 -->
+          <xs:element name="NITI" default="1">
+            <xs:annotation>
+              <xs:documentation>
+
+                Max. Anzahl Iterationsschritte
+                (stationär)
+
+
+                Maximale Anzahl der Iterationen für
+                stationäre
+                Berechnung
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:minInclusive value="1" />
+                <xs:maxInclusive value="100" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <!-- not needed - get it from timeseries count -1 -->
+          <!--
+            <xs:element name="NCYC" type="int"> <xs:annotation>
+            <xs:documentation > Anzahl der Zeitschritte (instationär)
+            </xs:documentation> </xs:annotation> </xs:element>
+          -->
+          <xs:element name="NITN" default="1">
+            <xs:annotation>
+              <xs:documentation>
+
+                Max. Anzahl Iterationsschritte
+                (instationär)
+
+
+                Maximale Anzahl der Iterationen für
+                instationäre
+                Berechnung.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:minInclusive value="1" />
+                <xs:maxInclusive value="500" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="CONV_1" type="xs:double" default="0.01">
+            <xs:annotation>
+              <xs:documentation>
+
+                Konvergenzschranke vx [m/s]
+
+
+                Maximale Änderung
+                der
+                Geschwindigkeit in x-Richtung
+                [m/s]
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CONV_2" type="xs:double" default="0.01">
+            <xs:annotation>
+              <xs:documentation>
+
+                Konvergenzschranke vy [m/s]
+
+
+                Maximale Änderung der
+                Geschwindigkeit
+                in y-Richtung
+                [m/s]
+
+                <xs:tooltip />
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CONV_3" type="xs:double" default="0.001">
+            <xs:annotation>
+              <xs:documentation>
+
+                Konvergenzschranke h [m]
+
+
+                Maximale Änderung der Wassertiefe
+                [m]
+
+                <xs:tooltip />
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IDRPT" default="0">
+            <xs:annotation>
+              <xs:documentation>
+
+                Gleichungsdeaktivierung
+
+
+                Deaktivierung von nicht
+                benötigten
+                Gleichungen
+                (konvergente
+                Freiheitsgrade)
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:enumeration value="0">
+                  <xs:annotation>
+                    <xs:documentation>
+
+                      Keine Deaktivierung
+
+
+                      Alle Gleichungen aktiv
+
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="1">
+                  <xs:annotation>
+                    <xs:documentation>
+
+                      Mögliche deaktivieren
+
+
+                      Gleichungsdeaktivierung
+                      nach
+                      Deaktivierungskriterium
+                      (konvergente
+                      Freiheitsgrade)
+
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="DRFACT" type="xs:double" default="0.05">
+            <xs:annotation>
+              <xs:documentation>
+
+                Deaktivierungskriterium [-]
+
+
+                Deaktivierungskriterium für
+                Gleichungen [-]
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <!--MP -->
+          <xs:element name="FIXEDMARSHBOTTOM" type="xs:boolean" default="false">
+            <xs:annotation>
+              <xs:documentation>
+
+                true: constant Marsh bottom topography
+                false: parallel shift coming from original topography
+
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+
+          <xs:element name="AC1" default="1.5">
+            <xs:annotation>
+              <xs:documentation>
+
+                Mächtigkeit Marsh-Layer [m]
+
+
+                Marsh Layer Mächtigkeit (aktiver Strömungsbereich
+                unter der Geländesohle)
+                [m]
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:double">
+                <xs:minExclusive value="0.00" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="AC2" default="0.67">
+            <xs:annotation>
+              <xs:documentation>
+                Marsh Übergangszone [m]
+
+                Mächtigkeit der Übergangszone zur sukzessiven Anpassung
+                zwischen freiem Abfluss und Marsh-Abfluss [m].
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:double">
+                <xs:minInclusive value="0.01" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="AC3" default="0.04">
+            <xs:annotation>
+              <xs:documentation>
+                Marsh-Porosität [-]
+
+                Porosität zur Ermittlung der virtuellen Fließtiefe
+                im Marsh-Bereich [-].
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:double">
+                <xs:minExclusive value="0.00" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="AC4" type="xs:double" default="0.00">
+            <xs:annotation>
+              <xs:documentation>
+                Absolute Marsh Sohlhöhe [mNN]
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="MARSHFRICTIONFACTOR" type="xs:double" default="20.0">
+            <xs:annotation>
+              <xs:documentation>
+                Marsh Friction Correction Factor [-]
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="MARSHFRICTIONDISTR" default="2">
+            <xs:annotation>
+              <xs:documentation>
+                                <![CDATA[Reibungsskalierung]]>
+                                <![CDATA[Reibungsskalierung]]>
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:enumeration value="1">
+                  <xs:annotation>
+                    <xs:documentation>
+                                            <![CDATA[linear steigender Fließwiderstand, ohne smoothing]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="2">
+                  <xs:annotation>
+                    <xs:documentation>
+                                            <![CDATA[linear steigener Fließwiderstand, trigonometrisch angepasst]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="3">
+                  <xs:annotation>
+                    <xs:documentation>
+                                            <![CDATA[quadratisch steigender Fließwiderstand, trigonometrisch angepasst]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <!--CV -->
+          <!--TODO: aus vorhandenen Lösungen auswählen... -->
+          <xs:element name="_restart" type="xs:boolean" default="false">
+            <xs:annotation>
+              <xs:documentation>
+                Restart
+
+                Angabe des Restart Zeitschrittes
+                (bei 0
+                wird eine
+                neue Berechnung
+                gestartet).
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="restartInfoMember" type="c1d2d:RestartInfoPropertyType" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>
+                Restart file paths
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IACCYC" type="xs:integer" default="1">
+            <xs:annotation>
+              <xs:documentation>
+                TODO: default 1??? does not match the
+                comment
+                below!
+                Restart step
+
+                Angabe des Restart Zeitschrittes
+                (bei 0 wird
+                eine
+                neue Berechnung
+                gestartet).
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="FNAM3" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Restart file
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="_steadyBC" default="0.5">
+            <xs:annotation>
+              <xs:documentation>
+                Relaxationsfaktor
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <!--
+                changed to string to allow more flexible expansion of
+                "Relaxation Factor"
+              -->
+              <xs:restriction base="xs:string">
+                <xs:minLength value="3" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="timestepsMember" type="c1d2d:TimestepsObservationPropertyType">
+            <xs:annotation>
+              <xs:documentation>
+                Zeitschritte
+
+                Time Steps Entries
+
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TimestepsObservationPropertyType">
+    <xs:sequence>
+      <xs:element ref="c1d2d:TimestepsObservation" minOccurs="0" />
+    </xs:sequence>
+    <!--
+      <xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+    -->
+  </xs:complexType>
+  <!--quasi Stationär Zeitschrittvorgabe -->
+  <xs:element name="TimestepsObservation" type="om:ObservationType" substitutionGroup="om:Observation">
+    <xs:annotation>
+      <xs:documentation>
+        Zeitschrittvorgabe
+
+        Zeitschrittvorgabe der quasi
+        stationären Berechnung
+
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:complexType name="RestartInfoPropertyType">
+    <xs:sequence>
+      <xs:element ref="c1d2d:RestartInfo" minOccurs="0" />
+    </xs:sequence>
+    <xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+  </xs:complexType>
+
+  <xs:element name="RestartInfo" type="c1d2d:RestartInfoType" substitutionGroup="gml:_Feature">
+  </xs:element>
+
+  <xs:complexType name="RestartInfoType">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractFeatureType">
+        <xs:sequence>
+          <xs:element name="calculationUnitID" type="xs:string" minOccurs="1" maxOccurs="1" />
+          <xs:element name="stepResultMetaID" type="xs:string" minOccurs="1" maxOccurs="1" />
+          <xs:element name="filePath" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+</xs:schema>
