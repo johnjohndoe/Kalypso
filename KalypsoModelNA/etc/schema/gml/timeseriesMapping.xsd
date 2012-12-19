@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping" xmlns:tmrrm="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesMapping" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+
+  <!-- Imports. -->
+  <import namespace="http://www.w3.org/1999/xlink" />
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="obslink.zml.kalypso.org" />
+
+  <!-- Root Element & Type -->
+  <element name="TimeseriesMappingCollection" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="timeseriesMappingMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element ref="tmrrm:TimeseriesMapping"/>
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="TimeseriesMapping" type="tmrrm:TimeseriesMappingType" substitutionGroup="gml:_Feature" />
+  <complexType name="TimeseriesMappingType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="comment" type="string" />
+          <element name="type" type="tmrrm:mappingType" />
+          <element name="lastModified" type="dateTime"/>
+          <element name="mappingMember" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence>
+                <element ref="tmrrm:MappingElement" />
+              </sequence>
+            </complexType>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="MappingElement" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="modelElementLink" minOccurs="1" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element ref="gml:_Feature" minOccurs="0" maxOccurs="0" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+            <element name="timeseriesLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="1" maxOccurs="1" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <simpleType name="mappingType">
+    <restriction base="string">
+      <enumeration value="gaugeMeasurement" />
+      <enumeration value="nodeInflow" />
+      <enumeration value="storageEvaporation" />
+    </restriction>
+  </simpleType>
+</schema>
