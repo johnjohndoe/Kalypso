@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Workflow URI="http___www.tu-harburg.de_wb_kalypso_risk__WF_KalypsoRisk" xmlns="http://www.renew.de/workflow/base" xmlns:con="http://www.renew.de/workflow/contexts" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" defaultTask="org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler">
+  <Help>KalypsoRisk-Workflow</Help>
+  <Name>KalypsoRisk-Workflow</Name>
+
+  <!-- TASK DEFINITIONS -->
+  <TaskGroup context="MainMap" URI="org.kalypso.risk.model.workflow.Preprocessing">
+    <Task context="ImportLanduseShapeDataWizard" URI="org.kalypso.risk.model.workflow.ImportLanduseShapeData" />
+    <Task context="ImportWaterdepthRasterWizard" URI="org.kalypso.risk.model.workflow.ImportWaterdepthRaster" />
+    <Task context="MainMap" URI="org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler" />
+    <Task context="MainMap" URI="org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler" />
+    <Task context="CalculationControlPanel" URI="org.kalypso.risk.model.workflow.CalculationControlPanel" />
+    <Task context="RiskZonesPanel" URI="org.kalypso.risk.model.workflow.RiskZonesPanel" />
+  </TaskGroup>
+  <TaskGroup context="MainMap" URI="org.kalypso.risk.model.workflow.Processing">
+    <Task type="SYNCHRONOUS" context="ImportWaterdepthRasterContext" URI="org.kalypso.risk.model.workflow.DamagePotentialCalculationHandler" />
+    <Task type="SYNCHRONOUS" context="ImportWaterdepthRasterContext" URI="org.kalypso.risk.model.workflow.RiskZonesCalculationHandler" />
+    <Task type="SYNCHRONOUS" context="ImportWaterdepthRasterContext" URI="org.kalypso.risk.model.workflow.StatisticsCalculationHandler" />
+  </TaskGroup>
+  <TaskGroup context="MainMap" URI="org.kalypso.risk.model.workflow.Postprocessing">
+    <Task context="RiskStatisticsView" URI="org.kalypso.risk.model.workflow.RiskShowResultStatisticHandler" />
+    <Task context="MainMap" URI="org.kalypso.risk.model.workflow.ExportSpecificDamageCoveragesWidgetHandler" />
+    <Task context="MainMap" URI="org.kalypso.risk.model.workflow.ExportRiskZoneCoveragesWidgetHandler" />
+  </TaskGroup>
+
+  <!-- PERSPECTIVE DEFINITIONS -->
+
+  <Perspectives>
+    <con:PerspectiveContext id="ContextRiskModelling" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+      <!-- perspectiveId="org.kalypso.risk.perspective.Perspective"> -->
+      <con:ViewContext id="FeatureView" partId="org.kalypso.ui.views.featuretemplateview" parent="ContextRiskModelling">
+        <con:ExtensionContext id="CalculationControlPanel" parent="FeatureView" handlerFactoryId="kalypsoContextHandlerFactory">
+          <con:Parameter name="type" value="featureViewInputContext" />
+          <con:Parameter name="input" value="templates/CalculationControlPanel.gft" />
+        </con:ExtensionContext>
+        <con:ExtensionContext id="RiskZonesPanel" parent="FeatureView" handlerFactoryId="kalypsoContextHandlerFactory">
+          <con:Parameter name="type" value="featureViewInputContext" />
+          <con:Parameter name="input" value="templates/RiskZonesPanel.gft" />
+        </con:ExtensionContext>
+      </con:ViewContext>
+
+      <con:ViewContext id="RiskStatisticsView" partId="org.kalypso.risk.views.RiskStatisticsResultView" parent="ContextRiskModelling">
+      </con:ViewContext>
+
+      <con:WorkbenchSiteContext id="MapContext" parent="ContextRiskModelling">
+        <con:ViewContext id="MapOutlineView" partId="org.kalypso.ui.views.outline" parent="MapContext" />
+        <con:ViewContext id="MapView" partId="org.kalypso.ui.views.mapView" parent="MapContext">
+          <con:ExtensionContext id="ImportLanduseShapeDataContext" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+            <con:WizardContext id="ImportLanduseShapeDataWizard" wizardId="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard" wizardType="NEW_WIZARD" parent="ImportLanduseShapeDataContext" />
+            <con:Parameter name="type" value="mapViewInputContext" />
+            <con:Parameter name="input" value="maps/MainMap.gmt" />
+          </con:ExtensionContext>
+          <con:ExtensionContext id="ImportWaterdepthRasterContext" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+            <con:WizardContext id="ImportWaterdepthRasterWizard" wizardId="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard" wizardType="NEW_WIZARD" parent="ImportWaterdepthRasterContext" />
+            <con:Parameter name="type" value="mapViewInputContext" />
+            <con:Parameter name="input" value="maps/MainMap.gmt" />
+          </con:ExtensionContext>
+          <con:ExtensionContext id="MainMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+            <con:Parameter name="type" value="mapViewInputContext" />
+            <con:Parameter name="input" value="maps/MainMap.gmt" />
+            <!-- <con:ExtensionContext id="CoveragesWidgetContext" parent="MainMap" handlerFactoryId="kalypsoContextHandlerFactory"> <con:Parameter name="type" value="themeContext" /> <con:Parameter name="input" value="{http://www.opengis.net/gml}_Coverage" /> </con:ExtensionContext> -->
+          </con:ExtensionContext>
+        </con:ViewContext>
+      </con:WorkbenchSiteContext>
+
+      <con:ViewContext id="FeatureSelectionView" partId="org.kalypso.featureview.views.FeatureView" parent="ContextRiskModelling" />
+    </con:PerspectiveContext>
+  </Perspectives>
+</Workflow>
