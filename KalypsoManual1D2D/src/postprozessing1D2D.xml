@@ -1,0 +1,915 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="Kalypso1D2DPostprozessing">
+  <title>Postprocessing</title>
+
+  <indexterm>
+    <primary>Postprocessing Kalypso1D2D</primary>
+  </indexterm>
+
+  <para>Nach dem Processing können die Ergebnisse im Postprocessing behandelt
+  werden. Dazu stehen fogende wesentliche Funktionen zur Verfügung:</para>
+
+  <orderedlist>
+    <listitem>
+      <para>Kartenansicht</para>
+    </listitem>
+
+    <listitem>
+      <para>Längsschnittansicht</para>
+    </listitem>
+
+    <listitem>
+      <para>Differenzenbildung</para>
+    </listitem>
+  </orderedlist>
+
+  <figure>
+    <title>Ansicht 'Aktivitäten' im Postprocessing</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="img/1D2D/postp_01_aktivitaetenansicht.png" />
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <section id="Kalypso1D2DKartenansicht">
+    <title>Kartenansicht</title>
+
+    <indexterm>
+      <primary>Kartenansicht in Kalypso1D2D</primary>
+    </indexterm>
+
+    <para>Bevor eine Karte mit Ergebnissen angezeigt wird, konfiguriert der
+    Benutzer die Ergebniskarte.</para>
+
+    <section id="Kalypso1D2DErgebniskarte_konfigurieren">
+      <title>Ergebniskarte konfigurieren</title>
+
+      <indexterm>
+        <primary>Ergebniskarte konfigurieren in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para>In der Ansicht 'Aktivitäten' muss der Baum <guimenuitem>
+      Postprocessing &gt; Kartenansicht </guimenuitem> geöffnet werden und
+      <guilabel>Ergebniskarte konfigurieren</guilabel> mit einem Doppelklick
+      aktiviert werden, um den zugehörigen Assistenten zu öffnen. Der
+      Assistent ermöglicht es Ergebnisse in die Kartenansicht hinzuzufügen. Im
+      Allgemeinen stehen folgende Ergebnisse zu Verfügung</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Stationäre/ instationäre Ergebnisse <itemizedlist>
+              <listitem>
+                <para>Geschwindigkeiten (als skalare Größe,
+                richtungsabhängig)</para>
+              </listitem>
+
+              <listitem>
+                <para>Geschwindigkeitsvektoren</para>
+              </listitem>
+
+              <listitem>
+                <para>Fließtiefen (Wasserstand minus Modellhöhe)</para>
+              </listitem>
+
+              <listitem>
+                <para>Wasserstände</para>
+              </listitem>
+            </itemizedlist></para>
+        </listitem>
+
+        <listitem>
+          <para>Modellhöhen</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Der Assistent ist in zwei Bereiche unterteilt:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Auf der linken Seite stellt eine Baumansicht die vorliegenden
+          Ergebnisse dar. Die oberste Ebene des Baumes besteht aus den
+          vorhandenen Teilmodellen. Diesen untergeordnet folgen die
+          berechneten Zeitschritte, welche wiederum die eigentlichen
+          Ergebnisse beinhalten.</para>
+
+          <para>Ausnahme bilden hierbei die Modellhöhen, da diese unabhängig
+          von einzelnen Berechnungen sind.</para>
+
+          <para>Durch Selektion eines Eintrages durch Setzen eines Häkchens
+          werden automatisch alle untergeordneten Elemente ebenfalls
+          selektiert.</para>
+        </listitem>
+      </itemizedlist>
+
+      <itemizedlist>
+        <listitem>
+          <para>Auf der rechten Seite des Assistenten werden Informationen
+          über die aktuell selektierten Einträge des Baumes dargestellt. Je
+          nach Typ des gerade im Baum selektierten Eintrages (Teilmodell-,
+          Zeitschritt- oder Ergebnis-Ebene) werden unterschiedliche
+          Informationen angezeigt.</para>
+
+          <para>Wurde ein Ergebnis selektiert, kann im Informationsfenster
+          spezifiziert werden, ob das Ergebnis anhand von Isoflächen oder
+          Isolinien angezeigt werden soll. Wenn ein Ergebnis in der Karte
+          dargestellt werden soll, muss das Ergebnis im Baum selektiert
+          sein.</para>
+
+          <para>Jedem Ergebnis wird automatisch eine Standard-Darstellung
+          (Style) zugewiesen, die mittles des Style-Managers individuell
+          verändert werden kann.</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure>
+        <title>Assistent zur Konfiguration der Ergebniskarte</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_02_Kartekonfig.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <figure>
+        <title>Anzeigen von Informationen im Assistenten</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_04_ergebnisskarte.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Es besteht die Möglichkeit verschiedene Styles zu erzeugen, zu
+      bearbeiten oder zu löschen.</para>
+
+      <para><table>
+          <title>Styles bearbeiten</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/postp_06_style.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Style auswählen</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/postp_07_style.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Ausgewählten Style bearbeiten oder neuen Style
+                erzeugen</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/postp_08_style.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Ausgewählten Style löschen</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></para>
+
+      <para>Wenn ein bereits verwendeter Style verändert wird, wirkt sich das
+      auch schon auf vorhandene Ergebnisdarstellungen in der Karte aus. Soll
+      ein neuer Style angelegt werden, kann ein bereits vorhandener Style
+      selektiert und im Style-Manager bearbeitet werden. Dort muss nun im Feld
+      'Style-Name' ein neuer Name eingegeben werden, unter dem der Style
+      abgespeichert werden soll.</para>
+
+      <para>Je nach Darstellungsform (Isolinien, Isoflächen) erscheint ein
+      unterschiedliches Fenster. Generell hat der Benutzer die Möglichkeit den
+      darzustellenden Wertebereich im oberen Bereich des Style-Managers
+      anzupassen.</para>
+
+      <figure>
+        <title>Style bearbeiten oder neu erstellen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_09_stylemanager.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Im unteren Bereich können die einzelnen Attribute für die Linien
+      bzw. Farbflächen geändert werden. Für die Farbflächendarstellung erfolgt
+      eine Interpolation dieser Attribute. Der Style Manager kann mit
+      <guibutton>OK</guibutton> beendet werden und der Assistent wird mit
+      <guibutton>Finish</guibutton> geschlossen.</para>
+    </section>
+
+    <section id="Kalypso1D2DErgebniskarte_anzeigen">
+      <title>Ergebniskarte anzeigen</title>
+
+      <indexterm>
+        <primary>Ergebniskarte anzeigen in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para>Um die Ergebnisse in einer Karte zu visualisieren, muss in der
+      Ansicht 'Aktivitäten' der Baum <guimenuitem> Postprocessing &gt;
+      Kartenansicht </guimenuitem> geöffnet werden. Die Karte wird geöffnet,
+      wenn <guimenuitem>Ergebniskarte anzeigen</guimenuitem> mit einem
+      Doppelklick aktiviert wird. In der Ansicht 'Gliederung' kann ausgewählt
+      werden, welche Werte beziehungsweise Objekte angezeigt werden
+      sollen.</para>
+
+      <figure>
+        <title>Ergebniskarte anzeigen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_02b_ergebnisskarte.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Im Postprocessing können auch sämtliche Kartenansichten aus dem
+      Preprocessing bis hin zu den importierten Grundlagenkarten angezeigt
+      werden. Werden diese nicht benötigt, können sie genau wie die
+      berechneten Ergebnisse in der Ansicht 'Gliederung' mittels Checkbox
+      deaktiviert werden. Des weiteren können die Ergebnis-Themen auch
+      komplett aus der Kartenansicht gelöscht werden.</para>
+
+      <figure>
+        <title>Daten aus dem Preprocessing im Postprocessing anzeigen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_05b_ergebnisskarte.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>In <guilabel>Ergebniskarte anzeigen</guilabel> können Werte aus
+      den TINs abgefragt werden.</para>
+
+      <table>
+        <title>Anzeigen von TIN Infos</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/1D2D/postp_20_info.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry>Der Benutzer kann sich die TIN Werte anzeigen lassen, in
+              dem er mit dem Mauszeiger über die Karte fährt.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>Der Benutzer wird nun aufgefordert das TIN-Thema in der Gliederung
+      auszuwählen, dessen Werte angezeigt werden sollen.</para>
+
+      <figure>
+        <title>Aufforderung ein TIN- Thema zu aktivieren</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_21_info.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Ausgewählt wird das TIN-Thema mittels Linksklick auf den
+      Schriftzug. Ein ausgewähltes Thema erscheint in der Ansicht 'Gliederung'
+      blau hinterlegt.</para>
+
+      <figure>
+        <title>Auswahl eines TIN-Themas</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_22_info.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Wenn der Mauszeiger nun über die Karte gefahren wird, wird an den
+      Stellen, an denen Ergebnisse vorhanden sind, die entsprechenden Werte
+      angezeigt.</para>
+
+      <figure>
+        <title>Anzeigen von Werten</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_23_info.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="Kalypso1D2DGanglinien">
+      <title>Ganglinien erstellen</title>
+
+      <indexterm>
+        <primary>Ganglinien erstellen in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para>Sowohl für eindimensionale als auch für zweidimensionale Modelle
+      (bzw. Berechnungseinheiten) können Ganglinien erstellt werden. In der
+      Ansicht 'Aktivitäten' muss der Baum <guimenuitem> Postprocessing &gt;
+      Kartenansicht </guimenuitem> geöffnet werden und <guimenuitem>Ganglinien
+      erstellen</guimenuitem> mit einem Doppelklick aktiviert werden. Es
+      öffnet sich die zugehörige Karten Werkzeugansicht.</para>
+
+      <figure>
+        <title>Karten Werkzeugansicht zum Erstellen von Ganglinien</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_gangl_kartenwAnsicht.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <table>
+        <title>Funktionen in der Karten Werkzeugansicht zum Erstellen und
+        Bearbeiten von Ganglinien</title>
+
+        <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <colspec colwidth="5*" />
+
+          <tbody>
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Gangl_hinzufg.png"
+                               valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Neue Ganglinie
+              hinzufügen</entry>
+
+              <entry align="left" valign="middle">Um ein neues Teilmodell
+              hinzuzufügen, für das Ganglinien erstellt werden sollen, muss
+              der Knopf betätigt werden. Es öffnet sich ein Assistent, aus dem
+              zunächst ein Teilmodell ausgewählt werden muss. (Siehe <xref
+              linkend="Kalypso1D2DGanglinien_hinzufuegen" /> )</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Gangl_loeschen.png"
+                               valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Vorhandene Ganglinie
+              löschen</entry>
+
+              <entry valign="middle">Wenn dieser Knopf betätigt wird, dann
+              wird das aktivierte Teilmodell inklusive der Ganglinien
+              gelöscht.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Gangl_berechn.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Ganglinie berechnen</entry>
+
+              <entry align="left" valign="middle">Wenn alle gewünschten
+              Ganglinienorte zum Teilmodell ausgewählt worden sind, dann kann
+              der Knopf betätigt werden und anhand der Berechnungsergebnisse
+              des Teilmodells werden die Ganglinien erzeugt.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Gangl_Ort+.png"
+                               valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Ganglinienort
+              hinzufügen</entry>
+
+              <entry align="left" valign="middle">Mit dieser Funktionalität
+              werden Ganglinienorte zum aktiven Teilmodell hinzugefügt. Der
+              Knopf muss zunächst aktiviert werden, dann können die
+              gewünschten Knoten in der Karte selektiert werden. Die
+              ausgewählten Ganglinienorte erscheinen in der Tabelle und in der
+              Karte wird der Knoten mit dem Symbol <inlinemediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/1D2D/postp_gangl_Ort.png" />
+                  </imageobject>
+                </inlinemediaobject> dargestellt.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Gangl_Ort_selek.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Ganglinienort
+              auswählen</entry>
+
+              <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+              wird, kann in der Karte ein Ganglinienort selektiert werden.
+              Dieser erscheint dann blau markiert in der Tabelle der Karten
+              Werkzeugansicht und kann editiert werden.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Gangl_Ort-.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Ganglinienort
+              löschen</entry>
+
+              <entry align="left" valign="middle">Nach Betätigung dieses
+              Knopfes muss in der Karte der zu löschende Ganglinienpunkt
+              selektiert werden. Es erscheint ein Assistent, wo noch einmal
+              bestätigt werden muss, dass der Ganglinienort wirklich gelöscht
+              werden soll.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Gangl_export.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Ganglinie
+              exportieren</entry>
+
+              <entry align="left" valign="middle"><emphasis> Diese
+              Funktionalität ist zur Zeit noch nicht implementiert
+              </emphasis></entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/1D2D/Icon_Gangl_Ort_zoom.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Verschiebt den
+              Kartenausschnitt auf den selektierten Ganglinienort.</entry>
+
+              <entry align="left" valign="middle">Diese Funktionalität ist
+              sozusagen das Gegenstück zu ''Ganglinienort auswählen''. Wenn
+              der Knopf betätigt wird, wird der Kartenausschnitt auf den
+              Ganglinienort verschoben, der in der Tabelle markiert
+              ist.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <section id="Kalypso1D2DGanglinien_hinzufuegen">
+        <title>Neue Ganglinie hinzufügen</title>
+
+        <indexterm>
+          <primary>Ganglinien hinzufügen in Kalypso 1D2D</primary>
+        </indexterm>
+
+        <para>Um ein neues Teilmodell hinzuzufügen, für das Ganglinien
+        erstellt werden sollen, muss der Knopf <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Icon_Gangl_hinzufg.png" />
+            </imageobject>
+          </inlinemediaobject> betätigt werden. Es öffnet sich der folgende
+        Assistent, aus dem zunächst ein Teilmodell ausgewählt werden muss. Mit
+        <guibutton>Finish</guibutton> wird der Assistent beendet und das
+        Teilmodell erscheint nun in dem Pull Down Menü der Karten
+        Werkzeugansicht.</para>
+
+        <figure>
+          <title>Assistent zum Hinzufügen einer neuen Ganglinie</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/postp_gangl_hinzufg.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <figure>
+          <title>Karten Werkzeugansicht einer neu erstellten Ganglinie</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/postp_gangl_neu.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para><emphasis role="bold"> Ganglinien für ein Teilmodell berechnen
+        </emphasis></para>
+
+        <para>Das Teilmodell ist nun zunächst leer. Im nächsten Schritt müssen
+        dem Modell Ganglinienorte hinzugefügt werden (siehe <xref
+        linkend="Kalypso1D2DGanglinien_editieren" /> ). Sobald alle
+        gewünschten Ganglinienorte in der Tabelle erscheinen, muss der Knopf
+        <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Icon_Gangl_berechn.png" />
+            </imageobject>
+          </inlinemediaobject> betätigt werden, damit die Berechnung der
+        Ganglinie gestartet wird. Mit einem Doppelklick auf den Reiter
+        ''Karten Werkzeugansicht'' wird dieser maximiert und das erstellte
+        Diagramm kann somit detaillierter betrachtet werden (siehe <xref
+        linkend="Kalypso1D2DGanglinien_Diagramm" /> ).</para>
+
+        <para><emphasis role="bold">Teilmodelle löschen</emphasis></para>
+
+        <para>Um ein Teilmodell wieder zu löschen, muss der Knopf
+        <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Icon_Gangl_loeschen.png" />
+            </imageobject>
+          </inlinemediaobject> gedrückt werden. Das aktive Teilmodell wird
+        dann mit allen Ganglinienorten gelöscht. Achtung! Das Löschen muss
+        nicht noch einmal bestätigt werden!</para>
+      </section>
+
+      <section id="Kalypso1D2DGanglinien_editieren">
+        <title>Ganglinie editieren</title>
+
+        <indexterm>
+          <primary>Ganglinien editieren in Kalypso 1D2D</primary>
+        </indexterm>
+
+        <para><emphasis role="bold"> Ganglinienort hinzufügen
+        </emphasis></para>
+
+        <para>Nachdem ein neues Teilmodell erstellt worden ist, müssen als
+        erstes Ganglinienorte ausgewählt werden, für die später eine Ganglinie
+        erstellt werden soll. Zunächst muss in der Karten Werkzeugansicht der
+        Knopf <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Icon_Gangl_Ort+.png" />
+            </imageobject>
+          </inlinemediaobject> betätigt werden. Anschließend können in der
+        Karte einzelne Knoten ausgewählt werden, die zu dem Teilmodell
+        gehören. Die zugehörigen Knoten werden mit einem roten Kästchen
+        umrandet, wenn der Mauszeiger drüber fährt. Mit der linken Maustaste
+        wird der Ganglinienort hinzugefügt und in der Karte mit dem Symbol
+        <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/postp_gangl_Ort.png" />
+            </imageobject>
+          </inlinemediaobject> dargestellt.</para>
+
+        <para>Sobald der Knoten selektiert worden ist, erscheint in der
+        Tabelle der Kartenwerkzeugansicht der Ganglinienpunkt. Alle
+        selektierten Knoten erhalten die selbe Bezeichnung. Es empfiehlt sich
+        daher für die Ganglinienorte verschiedene Namen zu wählen, wie z. B.
+        die Kilometrierung. In der nachfolgenden Abbildung ist die eben
+        beschriebene Vorgehensweise noch einmal beispielhaft
+        dargestellt.</para>
+
+        <figure>
+          <title>Hinzufügen eines neuen Ganglinienortes</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/postp_gangl_ort+.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para><emphasis role="bold"> Ganglinienort wählen/ Springe zu
+        Ganglinie </emphasis></para>
+
+        <para>Wie oben schon erwähnt wurde, werden zunächst alle erstellten
+        Ganglinienorte mit dem selben Namen erstellt. Die beiden Funktionen
+        ''Ganglinienort wählen'' und ''Springe zu Ganglinie'' stellen
+        sozusagen eine Verbindung zwischen der Tabelle und der Karte
+        her.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Ganglinienort wählen: Durch Betätigung des Knopfes
+            <inlinemediaobject>
+                <imageobject>
+                  <imagedata fileref="img/1D2D/Icon_Gangl_Ort_selek.png" />
+                </imageobject>
+              </inlinemediaobject> kann in der Karte ein zum Teilmodell
+            zugehöriger Ganglinienort selektiert werden, der dann in der
+            Tabelle der Karten Werkzeugansicht aktiv/ markiert wird.</para>
+          </listitem>
+
+          <listitem>
+            <para>Springe zu Ganglinie: Durch Betätigung des Knopfes
+            <inlinemediaobject>
+                <imageobject>
+                  <imagedata fileref="img/1D2D/Icon_Gangl_Ort_zoom.png" />
+                </imageobject>
+              </inlinemediaobject> wird der Ganglinienpunkt, der in der
+            Tabelle markiert ist, in der Karte herangezoomt.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para><emphasis role="bold"> Ganglinie exportieren </emphasis></para>
+
+        <note>
+          <para>Diese Funktionalität ist zur Zeit noch nicht
+          implementiert.</para>
+        </note>
+      </section>
+
+      <section id="Kalypso1D2DGanglinien_Diagramm">
+        <title>Diagramm</title>
+
+        <indexterm>
+          <primary>Diagramm der Ganglinien in Kalypso 1D2D</primary>
+        </indexterm>
+
+        <para>Nachdem der Knopf gedrückt worden ist, wird für jeden
+        Ganglinienort eine Ganglinie erstellt und sowohl im Diagramm als auch
+        in einer Tabelle dargestellt. Mit einem Doppelklick auf den Reiter
+        <guilabel>Karten Werkzeugansicht</guilabel> wird diese maximiert und
+        die Ansicht des Diagramms erleichtert. Mit einem weiteren Doppelklick
+        auf den Reiter wird die ursprüngliche Größe wieder hergestellt.</para>
+
+        <para>Zum Umgang mit dem Diagramm befindet sich eine ausführliche
+        Erläuterung in der <emphasis role="bold">Einführung</emphasis> des
+        Manuals <emphasis role="bold">Kalypso1D2D</emphasis> .</para>
+      </section>
+    </section>
+  </section>
+
+  <section id="Kalypso1D2DLaengsschnittansicht">
+    <title>Längsschnittansicht</title>
+
+    <indexterm>
+      <primary>Längsschnittansicht in Kalypso 1D2D</primary>
+    </indexterm>
+
+    <para>Sowohl für eindimensionale als auch für zweidimensionale Modelle
+    können Längsschnitte erstellt und angezeigt werden. Für zweidimensionale
+    Modellabschnitte muss zuvor eine Linien-shape-Datei importiert worden
+    sein. Die shape Datei muss die Kilometrierung und den Verlauf der
+    Gewässerachse enthalten.</para>
+
+    <para>Die Konfiguration des Längsschnittes ist nur für zweidimensionale
+    Modellbereiche erforderlich.</para>
+
+    <section id="Kalypso1D2DLaengsschnitt_konfigurieren">
+      <title>Längsschnitt konfigurieren</title>
+
+      <indexterm>
+        <primary>Längsschnitt konfigurieren in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para>Um einen Längsschnitt für ein zweidimensionales Modell zu
+      konfigurieren, muss in der Ansicht 'Aktivitäten' der Baum <guimenuitem>
+      Postprocessing &gt; Längsschnittansicht </guimenuitem> geöffnet werden
+      und <guilabel>Längsschnitt konfigurieren</guilabel> mit einem
+      Doppelklick aktiviert werden.</para>
+
+      <para>Im anschließenden Assistenten ist unter 'Gewässerachse' zunächst
+      die entsprechende Shape-Datei auszuwählen, welche die zu verwendende
+      Gewässerachse enthält. Unter 'Parameter' werden dann die entprechenden
+      Spalten der Shape-Datei ausgewählt. Generell sollte das Thema ein
+      Linienthema sein, welches aus mehreren Liniensegmenten bestehen kann.
+      Zunächst muss die Tabellenspalte selektiert werden, die die vorhandenen
+      Gewässer enthält (Gewässer-ID). Daraufhin wird die darunterliegende
+      Auswahlliste mit den vohandenen Gewässern gefüllt.</para>
+
+      <para>Für jedes Liniensegment muss ein Eintrag der Anfangsstation und
+      Endstation vorhanden sein. Durch Selektion der Tabellenspalten, welche
+      diese Informationen enthalten, werden die Werte ausgelesen.</para>
+
+      <para>Abschließend muss die Stützpunktweite des Längsschnitts angegeben
+      werden. Über den Knopf <guibutton>Next</guibutton> gelangt man zur
+      Fortsetzung des Assistenten.</para>
+
+      <figure>
+        <title>Längsschnitteinstellungen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_11_laengskonfig.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Im nächsten Assistenten muss der Benutzer auswählen, welches
+      Ergebnis im Längsschnitt angezeigt werden soll.</para>
+
+      <figure>
+        <title>Ergebnis für Längsschnitt auswählen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_12_laengskonfig.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Der Assistent wird mit <guilabel>Finish</guilabel> beendet.</para>
+
+      <para>In der Ergebnisansicht ändert sich zunächst nichts. Wie der
+      Längsschnitt visualisiert wird, wird im folgenden Abschnitt
+      erläutert.</para>
+    </section>
+
+    <section id="Kalypso1D2DLaengsschnitt_anzeigen">
+      <title>Längsschnitt anzeigen</title>
+
+      <indexterm>
+        <primary>Längsschnitt anzeigen in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para>Damit ein Längsschnitt angezeigt wird muss in der Ansicht
+      'Aktivitäten' der Baum <guimenuitem> Postprocessing &gt;
+      Längsschnittansicht </guimenuitem> geöffnet und <guilabel>Längsschnitt
+      anzeigen</guilabel> mit einem Doppelklick aktiviert werden.</para>
+
+      <para>Wenn es sich um ein zweidimensionales Modell handelt und im
+      vorherigen Schritt alles richtig gemacht wurde, steht der zuvor
+      konfigurierte Längsschnitt hier zur Auswahl.</para>
+
+      <para>Bei einer eindimensionalen Rechnung wird der Längsschnitt
+      automatisch erzeugt.</para>
+
+      <figure>
+        <title>Assistent zum Anzeigen eines Längsschnittes</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_13_laengsanz.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Der Assistent kann nun mit <guilabel>Finish</guilabel> beendet
+      werden. Der Längsschnitt wird automatisch in der Feature View angezeigt.
+      Die Ergebnisse werden grafisch als auch in einer Tabelle dargestellt.
+      Über die Reiter kann zwischen den verschiedenen Ansichten gewechselt
+      werden.</para>
+
+      <para>Zum Umgang mit dem Diagramm und der Tabelle befindet sich eine
+      ausführliche Erläuterung in der <emphasis
+      role="bold">Einführung</emphasis> des Manuals <emphasis
+      role="bold">Kalypso1D2D</emphasis> .</para>
+
+      <para>Wenn die Längsschnitte für einzelne Abschnitte erstellt worden
+      sind, können diese auch über die Tabelle zusammengesetzt werden. Dafür
+      muss man die Tabellen der einzelnen Abschnitte erst über den
+      Zwischenspeicher in ein anderes Programm kopieren (z. B. Excel) und kann
+      diese nach dem Zusammenfügen wieder in Kalypso einfügen. Bei den
+      Übergängen ist darauf zu achten, dass die Werte übereinstimmen, so dass
+      kein Sprung in dem Diagramm entsteht.</para>
+
+      <figure>
+        <title>Längsschnittansicht in Kalypso 1D2D</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Laengsschn_anzeigen.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+  </section>
+
+  <section id="Kalypso1D2DDifferenzenbildung">
+    <title>Differenzenbildung</title>
+
+    <indexterm>
+      <primary>Differenzenbildung in Kalypso 1D2D</primary>
+    </indexterm>
+
+    <para>In Kalypso1D2D können Differenzen gebildet werden. Diese Funktion
+    ist besonders gut geeignet um z. B. verschiedene Szenarien miteinander zu
+    vergleichen bzw. um Maximalwerte zu ermitteln. So können z. B.
+    Wasserstände von verschiedenen Hochwasserereignissen miteinander
+    verglichen werden.</para>
+
+    <section id="Kalypso1D2DDifferenzen_erzeugen">
+      <title>Differenzen erzeugen</title>
+
+      <indexterm>
+        <primary>Diffenrenzen erzeugen in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para>Um eine Differenz bilden zu können, muss in der Ansicht
+      'Aktivitäten' der Baum <guimenuitem> Postprocessing
+      &gt;Differenzenbildung </guimenuitem> geöffnet werden. Wenn
+      <guilabel>Differenzen erzeugen</guilabel> mit einem Doppelklick
+      aktiviert wird, öffnet sich der zugehörige Assistent für die
+      Differenzenbildung. Als erstes wird der Minuend ausgewählt. Anschließend
+      wird der Assistent mit <guibutton>Next</guibutton> fortgesetzt.</para>
+
+      <figure>
+        <title>Assistent zur Auswahl des Minuenden</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_15_minuend.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Nun muss der Subtrahend ausgewählt werden. Die Werte des
+      Subtrahenden werden von denen des Minuenden abgezogen und so eine
+      Differenz erstellt.</para>
+
+      <figure>
+        <title>Assistent zur Auswahl des Subtrahenden</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_16_subtrahent.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Anschließend ist noch der Ort auszuwählen, an dem die Differenz
+      abgelegt werden soll.</para>
+
+      <figure>
+        <title>Ziel auswählen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_17_diff.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Die Differenz wird als zusätzliches Ergebnis abgelegt und kann
+      über die Funktion <guilabel>Ergebniskarte konfigurieren</guilabel> in
+      die Karte geladen werden. Wenn nun in der Ansicht 'Aktivitäten' der Baum
+      <guimenuitem> Postprocessing &gt; Kartenansicht </guimenuitem> geöffnet
+      wird und <guimenuitem>Ergebniskarte konfigurieren</guimenuitem> mit
+      einem Doppelklick aktiviert wird, ist in dem Assistenten die neu
+      erzeugte Differenz zu sehen.</para>
+
+      <figure>
+        <title>Differnz in Ergebniskarte laden</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_18_diffanz.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Jetzt kann die Differenz in der Karte angezeigt werden (Siehe
+      <link linkend="???">1.2 Ergebniskarte anzeigen)</link> Die Differenz
+      kann in der Ansicht 'Gliederung' mittels Checkbox aktiviert
+      beziehungsweise deaktiviert werden.</para>
+
+      <figure>
+        <title>Anzeigen einer selbst erstellten Differenz in der Karte</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_19_diffanz.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+  </section>
+</chapter>
