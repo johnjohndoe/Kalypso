@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  
+	Provide schema elements to model flow relationships
+	
+	@author Patrice Congo
+	@author Gernot Belger
+-->
+
+
+<xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:include schemaLocation="simulation_model_base.xsd" />
+
+	<!-- =================================================================
+		FlowRelatioshipModel
+		================================================================== -->
+
+	<xs:element name="FlowRelationshipModel" type="simBase:FlowRelationshipModelType"
+		substitutionGroup="simBase:_Model" />
+
+	<xs:complexType name="FlowRelationshipModelType">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractModelType">
+				<xs:sequence>
+					<xs:element name="flowRelationshipMember" type="simBase:FlowRelationshipPropertyType" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<![CDATA[Die Fließparameter des Modells.]]>
+								<xs:label>Fließparameter</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="de">
+								<![CDATA[The model's flow relations.]]>
+								<xs:label>Flow Relations</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="FlowRelationshipPropertyType">
+		<xs:sequence>
+			<xs:element ref="simBase:_FlowRelationship" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="flowRelationshipModel" type="simBase:FlowRelationshipModelPropertyType" />
+	<xs:complexType name="FlowRelationshipModelPropertyType">
+		<xs:sequence>
+			<xs:element ref="simBase:FlowRelationshipModel" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+        <xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+
+	<!-- =================================================================
+		_FlowRelationship, AbstractFlowRelationshipType
+		================================================================== -->
+
+	<xs:element name="_FlowRelationship" type="simBase:AbstractFlowRelationshipType" abstract="true" substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation>Substitution head for all flow relationship elements</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="AbstractFlowRelationshipType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>Base type for all flow relationship types</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="position" type="gml:PointPropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	<!--  
+	Provide schema elements to model wind
+	-->
+
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+
+	<xs:include schemaLocation="simulation_model_base.xsd" />
+	<!--
+		<xs:import namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/> =================================================================
+		Wind Model
+		==================================================================
+	-->
+	<xs:element name="windModel" type="simBase:WindModelPropertyType" />
+
+	<xs:complexType name="WindModelPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Property type to defined wind model of a 1d 2d
+				static model
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="simBase:WindModel" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:element name="WindModel" type="simBase:WindModelType"
+		substitutionGroup="simBase:_Model">
+		<xs:annotation>
+			<xs:documentation>
+				Wind model.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="WindModelType">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractModelType">
+				<xs:sequence>
+					<xs:element ref="simBase:windDataModelSystem" minOccurs="0"
+						maxOccurs="unbounded">
+						<!--
+						type="simBase:windDataModelSystemPropertyType"
+						-->
+						<xs:annotation>
+							<xs:documentation xml:lang="de"> 
+								<![CDATA[Definitions des Windmodells.]]>
+								<xs:label>Windparameter</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<![CDATA[Defines a wind model type.]]>
+								<xs:label>Wind parameter</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!--
+		=================================================================
+		windDataModelSystem
+		==================================================================
+	-->
+	<xs:element name="windDataModelSystem" type="simBase:WindDataModelSystemPropertyType" />
+
+	<xs:complexType name="WindDataModelSystemPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="simBase:WindDataModelSystem" minOccurs="0"
+				maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						Defines a wind model element
+						for typical wind
+						model
+					</xs:documentation>
+					<!--
+						<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+						<kapp:functionProperty
+						kapp:functionId="org.kalypso.kalypsosimulationmodel.core.wind.geom.WindDataShapeGeometry"
+						kapp:property="simBase:geometry" kapp:isVirtual="true"
+						kapp:valueType="gml:LineString" /> </xs:appinfo>
+					-->
+				</xs:annotation>
+			</xs:element>
+
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!--
+		=================================================================
+		WindData Model System
+		==================================================================
+	-->
+	<xs:element name="WindDataModelSystem" type="simBase:WindDataModelSystemType" />
+
+	<xs:complexType name="WindDataModelSystemType">
+		<xs:annotation>
+			<xs:documentation>
+				Abstract wind data. which can hold a digital
+				wind
+				data model, which is just a cloud of points or a
+				triangulated
+				irregular network or some regular grid
+			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsosimulationmodel.core.wind.geom.WindDataShapeGeometry"
+					kapp:property="simBase:geometry" kapp:isVirtual="true"
+					kapp:valueType="gml:LineString" />
+			</xs:appinfo>
+			<!--
+			-->
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence minOccurs="0">
+					<xs:element name="CRS" type="xs:string" minOccurs="0"
+						maxOccurs="1" />
+					<xs:element name="originX" type="xs:double" minOccurs="1"
+						maxOccurs="1" />
+					<xs:element name="originY" type="xs:double" minOccurs="1"
+						maxOccurs="1" />
+					<xs:element name="columns" type="xs:int" minOccurs="1"
+						maxOccurs="1" />
+					<xs:element name="rows" type="xs:int" minOccurs="1"
+						maxOccurs="1" />
+					<xs:element name="cellXLen" type="xs:double" minOccurs="1"
+						maxOccurs="1" />
+					<xs:element name="cellYLen" type="xs:double" minOccurs="1"
+						maxOccurs="1" />
+					<xs:element ref="simBase:windDataModel" minOccurs="0"
+						maxOccurs="unbounded" />
+					<xs:element name="order" type="xs:int" minOccurs="0"
+						maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!--
+		================================================================= Wind
+		Data Model
+		===================================================================
+	-->
+	<xs:element name="_WindDataModel" type="simBase:AbstractWindDataModelType"
+		abstract="true" />
+	<xs:complexType name="AbstractWindDataModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				The Base type for all wind data model.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType" />
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="windDataModel" type="simBase:WindDataModelPropertyType" />
+
+	<xs:complexType name="WindDataModelPropertyType">
+		<xs:sequence>
+			<xs:element ref="simBase:_WindDataModel" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!--
+		===================================================================
+		Native wind data wrapper; the type is recognized by the the file
+		extension
+		=======================================================================
+	-->
+	<xs:element name="NativeWindDataModelWrapper" type="simBase:NativeWindDataModelWrapperType"
+		substitutionGroup="simBase:_WindDataModel" />
+	<xs:complexType name="NativeWindDataModelWrapperType">
+		<xs:annotation>
+			<xs:documentation>
+				Native wind data wrapper; the type is
+				recognized by
+				file extension
+			</xs:documentation>
+			<!--
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsosimulationmodel.core.wind.geom.WindDataShapeGeometry"
+					kapp:property="simBase:geometry" kapp:isVirtual="true"
+					kapp:valueType="gml:LineString" />
+			</xs:appinfo>
+			-->
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractWindDataModelType">
+				<xs:sequence>
+					<xs:element name="fileName" type="xs:string" minOccurs="0"
+						maxOccurs="1" />
+					<xs:element name="stepDateTime" type="xs:dateTime"
+						minOccurs="1" maxOccurs="1" />
+					<!--
+						<xs:element name="CRS" type="xs:string" minOccurs="0"
+						maxOccurs="1" /> <xs:element name="originX" type="xs:double"
+						minOccurs="1" maxOccurs="1" /> <xs:element name="originY"
+						type="xs:double" minOccurs="1" maxOccurs="1" /> <xs:element
+						name="columns" type="xs:int" minOccurs="1" maxOccurs="1" />
+						<xs:element name="rows" type="xs:int" minOccurs="1" maxOccurs="1"
+						/> <xs:element name="cellXLen" type="xs:double" minOccurs="1"
+						maxOccurs="1" /> <xs:element name="cellYLen" type="xs:double"
+						minOccurs="1" maxOccurs="1" />
+					-->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>
