@@ -1,0 +1,102 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="55D915E9-792F-1653-216C-07F9426EE3D6" directorySegmentName="seg_0" name="Point_Kind">
+   <createdBy>thuel</createdBy>
+   <createdTime>2011-06-07 11:15:44 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-06-07 11:15:44 UTC</changedTime>
+   <generatorID>12C0F141-2177-302D-AFF8-98BABD8B8515</generatorID>
+   <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+   <pkName>Point_Kind PK</pkName>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Column</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <columns>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Name" id="11D81CB8-FA7D-7FA6-F59A-C614C644210C">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-06-07 11:15:44 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-06-07 11:15:44 UTC</changedTime>
+         <comment>Quelle für Import: GAF, WPROF, ...</comment>
+         <generatorID>094DE204-AD0E-0F86-90D8-487B4A6E9B48</generatorID>
+         <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Label" id="1DBAA46C-3C8A-DCC7-1D49-BBF219B15B36">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-06-07 11:15:44 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-06-07 11:15:44 UTC</changedTime>
+         <generatorID>7A28396A-6AC8-3A47-35B1-46ED853B1EA2</generatorID>
+         <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+         <use>2</use>
+         <distinctType>BF2E0260-2A64-9538-0B5F-9BDD527B4E28</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>100</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Description" id="E3810089-5913-EA21-8595-19112F384E51">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-06-07 11:15:44 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-06-07 11:15:44 UTC</changedTime>
+         <generatorID>679B901F-E284-6330-E85B-40541E9115ED</generatorID>
+         <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>2</use>
+         <distinctType>B3BBFFC0-261E-2785-8C3A-A260662720FD</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>255</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+   </columns>
+   <indexes>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="C18EBAFC-B06B-4E8C-0755-F2DB05855C2F" name="Point_Kind PK">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-06-07 11:15:44 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-06-07 11:15:44 UTC</changedTime>
+         <generatorID>3B83C92D-63BD-5E8D-7032-9D1EDE4C2E10</generatorID>
+         <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+         <pk>true</pk>
+         <indexState>Primary Constraint</indexState>
+         <indexColumnUsage>
+            <colUsage columnID="11D81CB8-FA7D-7FA6-F59A-C614C644210C"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+   </indexes>
+</Table>

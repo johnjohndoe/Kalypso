@@ -1,0 +1,32 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<oracle.dbtools.crest.model.design.logical.LogicalDesign>
+   <object objectType="Entity" objectID="F3312B0B-F118-9941-3B08-AA935F40274A" name="Cross_Section" seqName="seg_0"/>
+   <object objectType="Entity" objectID="571070F4-44BA-7037-1A9D-B3093AF2D82D" name="Cross_Section_Part" seqName="seg_0"/>
+   <object objectType="Entity" objectID="18794233-1E27-1A4B-2C0E-3AE2F09C5AD0" name="Document" seqName="seg_0"/>
+   <object objectType="Entity" objectID="90F0EE48-08A3-D666-C1C5-A0D069D98D8E" name="Event" seqName="seg_0"/>
+   <object objectType="Entity" objectID="EF50D12F-3F34-A1B4-256A-E529C4318787" name="Info" seqName="seg_0"/>
+   <object objectType="Entity" objectID="480B6FE1-2108-B39A-1A5F-9991AC72C51E" name="Point" seqName="seg_0"/>
+   <object objectType="Entity" objectID="12C0F141-2177-302D-AFF8-98BABD8B8515" name="Point_Kind" seqName="seg_0"/>
+   <object objectType="Entity" objectID="75DA449F-5697-7E66-B60E-A394F96FCC5C" name="Right" seqName="seg_0"/>
+   <object objectType="Entity" objectID="F918C2D5-A991-197A-232D-DB50525D9467" name="Roughness" seqName="seg_0"/>
+   <object objectType="Entity" objectID="4DDF1425-19B6-FBE3-AE6E-5807076C47F7" name="State" seqName="seg_0"/>
+   <object objectType="Entity" objectID="1DE50233-CD52-E42D-C483-CEF073719382" name="User" seqName="seg_0"/>
+   <object objectType="Entity" objectID="9E6FBC38-EF9C-69E8-7421-463154D76AFA" name="Vegetation" seqName="seg_0"/>
+   <object objectType="Entity" objectID="C3AABE25-B981-74F0-CD96-10D4628FFB4F" name="Water_Body" seqName="seg_0"/>
+   <object objectType="Entity" objectID="B4965682-C105-A211-FEFA-970E12F1D1C8" name="Waterlevel_Fixation" seqName="seg_0"/>
+   <object objectType="Relation" objectID="47EB62A6-D621-1FA9-4AD3-DCF8458FA8FF" name="CS_Document" seqName="seg_0"/>
+   <object objectType="Relation" objectID="DFF91E42-28EC-B18B-A087-E3E472B1E533" name="CS_Part__Point" seqName="seg_0"/>
+   <object objectType="Relation" objectID="EABC83BF-E985-2856-B02E-5F1A8E2D43C6" name="CS__CS_Part" seqName="seg_0"/>
+   <object objectType="Relation" objectID="7F6B8DEE-781A-A999-DCF2-8ED9E0302F5B" name="Event__Waterlevel_Fixation" seqName="seg_0"/>
+   <object objectType="Relation" objectID="9B51D5FB-A9D2-CEC3-BA7F-CF2689C0A4EE" name="Point_Kind__Roughness" seqName="seg_0"/>
+   <object objectType="Relation" objectID="0E4F654F-097C-E536-BFE0-D5255BC7B8AB" name="Point_Kind__Vegetation" seqName="seg_0"/>
+   <object objectType="Relation" objectID="3207525A-2929-5519-E668-13612FB51C2F" name="Roughness__Point" seqName="seg_0"/>
+   <object objectType="Relation" objectID="ED036F90-3A0B-BCD4-7B25-5A62D7453B2F" name="State_Document" seqName="seg_0"/>
+   <object objectType="Relation" objectID="1DC4B004-B885-C12D-27AD-0E581302216D" name="State__CS" seqName="seg_0"/>
+   <object objectType="Relation" objectID="0800356E-5F53-A229-2810-9CD31BADDA13" name="User__Right" seqName="seg_0"/>
+   <object objectType="Relation" objectID="273DF26F-AB16-66A8-AED8-A49E0FBBFF09" name="Vegetation__Point" seqName="seg_0"/>
+   <object objectType="Relation" objectID="F4DBF7B7-F817-D2DB-A9EC-247FAB515183" name="WB_Document" seqName="seg_0"/>
+   <object objectType="Relation" objectID="0F32BF9B-46F9-4E46-AF6D-E77DE5ED02F0" name="Water_Body__CS" seqName="seg_0"/>
+   <object objectType="Relation" objectID="4DA29273-5536-7444-DBAB-DB3CD8690770" name="Water_Body__Event" seqName="seg_0"/>
+   <object objectType="Note" objectID="9E3FBDBF-A27F-C410-74D1-A122D0D7797C" name="Note_1" seqName="seg_0"/>
+</oracle.dbtools.crest.model.design.logical.LogicalDesign>

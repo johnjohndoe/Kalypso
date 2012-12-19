@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<DistinctType class="oracle.dbtools.crest.model.design.datatypes.DistinctType" name="Height" id="42097DC7-758D-D280-EB37-5F6D23BE7A65" directorySegmentName="seg_0">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-20 12:44:43 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-06-07 09:19:16 UTC</changedTime>
+   <comment>[m NN]</comment>
+   <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+   <predefined>false</predefined>
+   <logicalDataType>LOGDT019</logicalDataType>
+   <precision>8</precision>
+   <scale>4</scale>
+   <size>0</size>
+</DistinctType>
