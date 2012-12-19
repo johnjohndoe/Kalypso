@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="KalypsoModelConnector_1D2D_FM">
+	<input id="waterSurfaceTin" type="xs:anyURI" description="water surface TIN file" />
+	<input id="returnPeriod" type="xs:string" description="return period of the simulated event" />
+	<input id="floodModel" type="xs:anyURI" description="flood model GML file"/>
+	<input id="OPT_DeleteExistingRunoffEvents" type="xs:string" optional="true" description="Instruction either to delete existing events from flood model or to keep them; if ommited, events will not be deleted, i.e. default is 'false'" />
+	
+	<output id="floodModel" description="updated flood model GML file"/>
+</modelspec>
