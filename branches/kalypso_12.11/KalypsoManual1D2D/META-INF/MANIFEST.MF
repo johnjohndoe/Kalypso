@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoManual1d Plug-in
+Bundle-SymbolicName: org.kalypso.KalypsoManual1D2D;singleton:=true
+Bundle-Version: 12.11.0.qualifier
+Require-Bundle: org.eclipse.help
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
