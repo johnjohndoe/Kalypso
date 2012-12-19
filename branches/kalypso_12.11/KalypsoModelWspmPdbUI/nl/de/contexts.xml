@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contexts>
+	<context id="UserManual">
+		<topic label="KalypsoPDB - Online Anwenderhandbuch" href="http://kalypso.bjoernsen.de/manual/index.php/Contents/pdb/de" />
+	</context>
+</contexts>
