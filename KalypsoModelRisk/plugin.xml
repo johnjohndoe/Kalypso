@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<plugin>
+   <extension
+         id="org.kalypso.risk.project.KalypsoRiskProjectNature"
+         name="KalypsoRiskProjectNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.kalypso.risk.project.KalypsoRiskProjectNature">
+         </run>
+      </runtime>
+      <requires-nature
+            id="org.kalypso.afgui.ScenarioHandlingProjectNature">
+      </requires-nature>
+      <requires-nature
+            id="de.renew.workflow.connector.WorkflowProjectNature">
+      </requires-nature>
+   </extension>
+   <extension
+         point="de.renew.workflow.model.workflowSystem">
+      <workflowSystem
+            definition="etc/workflow.xml"
+            id="workflowKalypsoRisk"
+            name="Workflow Kalypso Risk">
+      </workflowSystem>
+   </extension>
+	<extension
+       point="org.eclipse.ui.newWizards">
+		<category
+            id="org.kalypso.risk.wizard.CreateProject"
+            name="%org.kalypso.risk.wizard.CreateProject"
+            parentCategory="org.kalypso.ui.newwizards.kalypso"/>
+		<wizard
+            canFinishEarly="false"
+	        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
+	        class="org.kalypso.risk.project.KalypsoRiskProjectWizard"
+	        descriptionImage="etc/RiskProjectLogo.gif"
+	        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+            hasPages="true"
+	        icon="icons/risk_project.gif"
+	        id="org.kalypso.risk.project.KalypsoRiskProjectWizard"
+	        name="%org.kalypso.risk.project.KalypsoRiskProjectWizard.name"
+            project="true">
+         <description>
+            %org.kalypso.risk.project.KalypsoRiskProjectWizard.description
+         </description>
+		</wizard>
+        <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
+            class="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
+	        descriptionImage="etc/RiskProjectLogo.gif"
+            finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+            hasPages="true"
+            icon="icons/risk_project.gif"
+            id="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
+            name="%org.kalypso.risk.project.KalypsoRiskDemoProjectWizard.name"
+            project="true">
+         <description>
+            %org.kalypso.risk.project.KalypsoRiskDemoProjectWizard.description
+         </description>
+		</wizard>
+        <!-- TODO remove both wizard from plugin.xml
+        	They cannot be used from the File-New menu, so this makes no sense.
+        	However, the wizards are invoked thorugh the eclipses-extension mechanism (from the handler)
+        	so the handlers have to be rewritten first (they should dirdctly instantiate those wozards).
+        -->
+		<wizard
+            class="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
+            icon="icons/risk_project.gif"
+            id="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
+            name="ImportLanduseShape"
+            project="false"/>
+  		<wizard
+	        class="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
+	        icon="icons/risk_project.gif"
+	        id="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
+	        name="ImportWaterlevelRaster"
+	        project="false">
+        </wizard>
+	</extension>
+ <extension
+       point="org.kalypso.contribs.java.urlCatalog">
+    <catalog
+          class="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
+          id="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog">
+    </catalog>
+ </extension>
+ <extension
+       point="org.kalypso.afgui.scenarioData">
+    <dataSet
+          id="org.kalypso.risk">
+       <scenarioDatum
+             classKey="org.kalypso.risk.model.schema.binding.IVectorDataModel"
+             id="org.kalypso.risk.model.schema.binding.IVectorDataModel"
+             modelPath="models/VectorDataModel.gml">
+       </scenarioDatum>
+       <scenarioDatum
+             classKey="org.kalypso.risk.model.schema.binding.IRasterDataModel"
+             id="org.kalypso.risk.model.schema.binding.IRasterDataModel"
+             modelPath="models/RasterDataModel.gml">
+       </scenarioDatum>
+       <scenarioDatum
+             classKey="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"
+             id="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"
+             modelPath="models/RasterizationControlModel.gml">
+       </scenarioDatum>
+    </dataSet>
+ </extension>
+ <extension
+       point="org.kalypso.deegree.functionProperty">
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
+          id="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
+          name="LanduseStylePropertyFunction">
+    </function>
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.LanduseClsOrdinalNumberPropertyFunction"
+          id="org.kalypso.risk.model.schema.propertyFunctions.LanduseClsOrdinalNumberPropertyFunction"
+          name="LanduseClsOrdinalNumberPropertyFunction">
+    </function>
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_DamageFunction"
+          id="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_DamageFunction"
+          name="PF_LandusePolygon_DamageFunction">
+    </function>
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_AssetValue"
+          id="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_AssetValue"
+          name="PF_LandusePolygon_AssetValue">
+    </function>
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_IsUrbanType"
+          id="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_IsUrbanType"
+          name="PF_LandusePolygon_IsUrbanType">
+    </function>
+ </extension>
+ 
+ <extension point="org.eclipse.ui.commands">
+    <category id="org.kalypso.risk.model.workflow" name="Risk workflow Commands" />
+    <command id="org.kalypso.risk.model.workflow.Preprocessing" name="%org.kalypso.risk.model.workflow.Preprocessing.name" description="%org.kalypso.risk.model.workflow.Preprocessing.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.ImportLanduseShapeData" name="%org.kalypso.risk.model.workflow.ImportLanduseShapeData.name" description="%org.kalypso.risk.model.workflow.ImportLanduseShapeData.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.ImportWaterdepthRaster" name="%org.kalypso.risk.model.workflow.ImportWaterdepthRaster.name" description="%org.kalypso.risk.model.workflow.ImportWaterdepthRaster.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler" name="%org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler.name" description="%org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler" name="%org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler.name" description="%org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.CalculationControlPanel" name="%org.kalypso.risk.model.workflow.CalculationControlPanel.name" description="%org.kalypso.risk.model.workflow.CalculationControlPanel.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.RiskZonesPanel" name="%org.kalypso.risk.model.workflow.RiskZonesPanel.name" description="%org.kalypso.risk.model.workflow.RiskZonesPanel.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.Processing" name="%org.kalypso.risk.model.workflow.Processing.name" description="%org.kalypso.risk.model.workflow.Processing.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.DamagePotentialCalculationHandler" name="%org.kalypso.risk.model.workflow.DamagePotentialCalculationHandler.name" description="%org.kalypso.risk.model.workflow.DamagePotentialCalculationHandler.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.RiskZonesCalculationHandler" name="%org.kalypso.risk.model.workflow.RiskZonesCalculationHandler.name" description="%org.kalypso.risk.model.workflow.RiskZonesCalculationHandler.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.StatisticsCalculationHandler" name="%org.kalypso.risk.model.workflow.StatisticsCalculationHandler.name" description="%org.kalypso.risk.model.workflow.StatisticsCalculationHandler.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.Postprocessing" name="%org.kalypso.risk.model.workflow.Postprocessing.name" description="%org.kalypso.risk.model.workflow.Postprocessing.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.RiskShowResultStatisticHandler" name="%org.kalypso.risk.model.workflow.RiskShowResultStatisticHandler.name" description="%org.kalypso.risk.model.workflow.RiskShowResultStatisticHandler.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.ExportSpecificDamageCoveragesWidgetHandler" name="%org.kalypso.risk.model.workflow.ExportSpecificDamageCoveragesWidgetHandler.name" description="%org.kalypso.risk.model.workflow.ExportSpecificDamageCoveragesWidgetHandler.description" categoryId="org.kalypso.risk.model.workflow"/>
+    <command id="org.kalypso.risk.model.workflow.ExportRiskZoneCoveragesWidgetHandler" name="%org.kalypso.risk.model.workflow.ExportRiskZoneCoveragesWidgetHandler.name" description="%org.kalypso.risk.model.workflow.ExportRiskZoneCoveragesWidgetHandler.description" categoryId="org.kalypso.risk.model.workflow"/>
+ </extension>
+ 
+ <extension point="org.eclipse.ui.commandImages">
+    <image commandId="org.kalypso.risk.model.workflow.Preprocessing" icon="icons/workflow/Preprocessing.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.ImportLanduseShapeData" icon="icons/workflow/ImportLanduseShapeData.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.ImportWaterdepthRaster" icon="icons/workflow/ImportWaterdepthRaster.gif"/>
+    <image commandId="org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler" icon="icons/workflow/WaterdepthCollectionsWidgetHandler.gif"/>
+    <image commandId="org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler" icon="icons/workflow/WaterdepthCoveragesWidgetHandler.gif"/>
+    <image commandId="org.kalypso.risk.model.workflow.CalculationControlPanel" icon="icons/workflow/CalculationControlPanel.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.RiskZonesPanel" icon="icons/workflow/RiskZonesPanel.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.Processing" icon="icons/workflow/Processing.gif"/>
+    <image commandId="org.kalypso.risk.model.workflow.DamagePotentialCalculationHandler" icon="icons/workflow/DamagePotentialCalculationHandler.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.RiskZonesCalculationHandler" icon="icons/workflow/RiskZonesCalculationHandler.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.StatisticsCalculationHandler" icon="icons/workflow/StatisticsCalculationHandler.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.Postprocessing" icon="icons/workflow/Postprocessing.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.RiskShowResultStatisticHandler" icon="icons/workflow/RiskShowResultStatisticHandler.png"/>
+    <image commandId="org.kalypso.risk.model.workflow.ExportSpecificDamageCoveragesWidgetHandler" icon="icons/workflow/ExportSpecificDamageCoveragesWidgetHandler.gif"/>
+    <image commandId="org.kalypso.risk.model.workflow.ExportRiskZoneCoveragesWidgetHandler" icon="icons/workflow/ExportRiskZoneCoveragesWidgetHandler.gif"/>
+ </extension>
+ 
+ <extension point="org.eclipse.ui.handlers">
+    <handler class="org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler" commandId="org.kalypso.risk.model.workflow.DamagePotentialCalculationHandler"/>
+    <handler class="org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler" commandId="org.kalypso.risk.model.workflow.RiskZonesCalculationHandler"/>
+    <handler class="org.kalypso.risk.model.simulation.statistics.StatisticAnalysisHandler" commandId="org.kalypso.risk.model.workflow.StatisticsCalculationHandler"/>
+    <handler class="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler" commandId="org.kalypso.risk.model.workflow.WaterdepthCoveragesWidgetHandler"/>
+    <handler class="org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler" commandId="org.kalypso.risk.model.workflow.ExportRiskZoneCoveragesWidgetHandler"/>
+    <handler class="org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler" commandId="org.kalypso.risk.model.workflow.WaterdepthCollectionsWidgetHandler"/>
+    <handler class="org.kalypso.risk.model.handlers.ExportSpecificDamageCoveragesWidgetHandler" commandId="org.kalypso.risk.model.workflow.ExportSpecificDamageCoveragesWidgetHandler"/>
+ </extension>
+ <extension
+       point="org.kalypso.core.themeInfo">
+    <themeInfo
+          class="org.kalypso.risk.plugin.RiskZonesThemeInfo"
+          id="org.kalypso.risk.plugin.RiskZonesThemeInfo">
+    </themeInfo>
+    <themeInfo
+          class="org.kalypso.risk.plugin.RasterizedLanduseThemeInfo"
+          id="org.kalypso.risk.plugin.RasterizedLanduseThemeInfo">
+    </themeInfo>
+    <themeInfo
+          class="org.kalypso.risk.plugin.DamagePotentialThemeInfo"
+          id="org.kalypso.risk.plugin.DamagePotentialThemeInfo">
+    </themeInfo>
+ </extension>
+   <extension
+                point="org.kalypso.deegree.functionProperty">
+                <function
+                    class="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription"
+                    id="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription"
+                    name="get name from inscription">
+                </function>
+            </extension>
+            <extension
+                point="org.kalypso.core.catalogContribution">
+                <catalogContribution
+                    class="org.kalypso.risk.model.schema.KalypsoRiskCatalogContribution"
+                    name="KalypsoRaiskCatalogContribution (Dictionaries)">
+                </catalogContribution>
+            </extension>
+            <extension
+                  point="org.eclipse.ui.views">
+               <view
+                     allowMultiple="false"
+                     category="org.kalypso.ui.kalypso"
+                     class="org.kalypso.risk.views.RiskStatisticsResultView"
+                     icon="icons/risk_project.gif"
+                     id="org.kalypso.risk.views.RiskStatisticsResultView"
+                     name="%org.kalypso.risk.views.RiskStatisticsResultView.name"
+                     restorable="false">
+               </view>
+            </extension>
+            <extension
+                  point="org.kalypso.simulation.core.simulation">
+               <simulation
+                     catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
+                     simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation"
+                     typeID="KalypsoRisk_SpecificDamageCalculation">
+               </simulation>
+               <simulation
+                     catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
+                     simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation"
+                     typeID="KalypsoRisk_RiskZonesCalculation">
+               </simulation>
+            </extension>
+            <extension
+                  point="org.kalypso.module.kalypsoModule">
+               <module
+                     class="org.kalypso.risk.extension.KalypsoRiskModule">
+               </module>
+            </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.kalypso.ui.preferences.KalypsoPreferencePage"
+            class="org.kalypso.risk.preferences.KalypsoRiskPreferencePage"
+            id="org.kalypso.risk.preferences.KalypsoRiskPreferencePage"
+            name="%org.kalypso.risk.preferences.KalypsoRiskPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.risk.model.schema.binding.AnnualCoverage"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel}AnnualCoverage">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.RasterDataModel"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel}RasterDataModel">
+      </feature>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.risk.model.schema.binding.AdministrationUnit"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}AdministrationUnit">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.AssetValueClass"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}AssetValueClass">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.DamageFunction"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}DamageFunction">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.LanduseClass"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}LanduseClass">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.RasterizationControlModel"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}RasterizationControlModel">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.RiskZoneDefinition"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}RiskZoneDefinition">
+      </feature>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.risk.model.schema.binding.LandusePolygon"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel}Polygon">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.LandusePolygonCollection"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel}PolygonCollection">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.VectorDataModel"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel}VectorDataModel">
+      </feature>
+   </extension>
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.risk.views.RiskStatisticsResultView">
+        <command commandId="org.kalypso.ui.tupleResult.selectAll" style="push"/>
+        <separator name="selection" visible="true"/>
+        <command commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand" style="push"/>
+      </menuContribution>
+   </extension>
+</plugin>
