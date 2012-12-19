@@ -1,0 +1,202 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="F3312B0B-F118-9941-3B08-AA935F40274A" directorySegmentName="seg_0" name="Cross_Section">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-17 15:19:20 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-07-13 13:25:47 UTC</changedTime>
+   <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+   <pkName>Cross_Sections PK</pkName>
+   <adequatelyNormalized>NO</adequatelyNormalized>
+   <expectedVolumes>0</expectedVolumes>
+   <fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+   <growthPercent>0</growthPercent>
+   <growthType>Year</growthType>
+   <maxVolumes>9999999</maxVolumes>
+   <minVolumes>0</minVolumes>
+   <normalForm>Third</normalForm>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Attribute</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <attributes>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="ID" id="33383B8A-2227-7303-6229-3D0BEEFB079C">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:13:32 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:13:49 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>20</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Name" id="E92CD055-82A8-18E7-8203-67C9E90FAAE4">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-17 15:33:05 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-23 13:05:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <use>2</use>
+         <distinctType>BEE5B220-1F69-A797-77BD-83EC8F92761B</distinctType>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>8</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Line" id="25B1603E-C7BC-9F7D-F195-85134187E7D7">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-17 16:15:39 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-19 09:26:23 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <structuredType>47E390DE-0671-C4B1-8428-0F45CBEE18F8</structuredType>
+         <use>3</use>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Station" id="C875A7D7-5999-AF25-93D5-17466E572BCC">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:04:07 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-19 13:06:00 UTC</changedTime>
+         <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <use>2</use>
+         <distinctType>72F78EA1-BFF2-06C3-B23C-A9FCA41237A5</distinctType>
+         <logicalDatatype>LOGDT020</logicalDatatype>
+         <dataTypePrecision>11</dataTypePrecision>
+         <dataTypeScale>3</dataTypeScale>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Creation_Date" id="5B8EA07F-5F4C-3DCB-DF7C-B6C7FB4AE985">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 11:48:43 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 08:22:52 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT015</logicalDatatype>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Editing_Date" id="462F630A-58DD-4310-95BE-FA83AE2EFB51">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:06:57 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 08:22:57 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT015</logicalDatatype>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Editing_User" id="E2D958FD-E7BC-9E7F-3CB9-4EB0520907B2">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 15:25:15 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-18 15:25:45 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <use>2</use>
+         <distinctType>35D7D61C-E71A-566D-F228-AA52140297FC</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Measurement_Date" id="873F039B-3CFA-ED3E-01DF-314D5666EBEA">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:07:10 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 08:23:02 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT015</logicalDatatype>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Description" id="C3E7CB12-53A8-E0C5-C3C9-0C2FBA12D8A1">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:16:49 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-20 12:04:20 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>2</use>
+         <distinctType>B3BBFFC0-261E-2785-8C3A-A260662720FD</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>255</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Water_Body" id="D77D0AC2-3AC9-AA9D-196F-F9D342E4D483">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 08:59:35 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:17:10 UTC</changedTime>
+         <generatorID>0F32BF9B-46F9-4E46-AF6D-E77DE5ED02F0</generatorID>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <referedAttribute>A33E5868-B530-9247-FB21-C8C8A2B2C89B</referedAttribute>
+         <use>1</use>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>20</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="State" id="3A6ADC11-CCD1-9210-5BE2-E0DDA4A9E1E0">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:16:42 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:17:07 UTC</changedTime>
+         <generatorID>1DC4B004-B885-C12D-27AD-0E581302216D</generatorID>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <referedAttribute>AF03C36A-B735-E7F5-A897-5BFD00389CB3</referedAttribute>
+         <use>1</use>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>20</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+      </Attribute>
+   </attributes>
+   <identifiers>
+      <identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="2D97BB36-FA64-B473-7718-4E724782EDC7" name="Cross_Section PK">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-17 15:33:10 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:26:58 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <pk>true</pk>
+         <usedAttributes>
+            <attributeRef>33383B8A-2227-7303-6229-3D0BEEFB079C</attributeRef>
+         </usedAttributes>
+      </identifier>
+      <identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="54004BA4-9071-BF97-A27F-975434B6C158" name="Cross_Section Name UK">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:14:24 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-06-07 11:11:31 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <usedAttributes>
+            <attributeRef>E92CD055-82A8-18E7-8203-67C9E90FAAE4</attributeRef>
+            <attributeRef>3A6ADC11-CCD1-9210-5BE2-E0DDA4A9E1E0</attributeRef>
+         </usedAttributes>
+      </identifier>
+   </identifiers>
+</Entity>

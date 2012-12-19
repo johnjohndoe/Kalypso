@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14.07.2011 11:52:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Event" table="EVENT">
+        <id name="id" type="big_decimal">
+            <column name="ID" precision="20" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="waterBody" class="WaterBody" fetch="select">
+            <column name="WATER_BODY" precision="20" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" length="100" not-null="true" unique="true" />
+        </property>
+        <property name="creationDate" type="serializable">
+            <column name="CREATION_DATE" not-null="true" />
+        </property>
+        <property name="editingDate" type="serializable">
+            <column name="EDITING_DATE" not-null="true" />
+        </property>
+        <property name="editingUser" type="string">
+            <column name="EDITING_USER" length="50" not-null="true" />
+        </property>
+        <property name="measurementDate" type="serializable">
+            <column name="MEASUREMENT_DATE" />
+        </property>
+        <property name="source" type="string">
+            <column name="SOURCE" />
+        </property>
+        <property name="type" type="string">
+            <column name="TYPE" length="50">
+                <comment>Art des Ereignisses: Messung, Simulation</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" />
+        </property>
+        <set name="waterlevelFixations" table="WATERLEVEL_FIXATION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EVENT" precision="20" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="WaterlevelFixation" />
+        </set>
+        
+         <many-to-one name="styleArray" class="StyleArray" fetch="select" lazy=true>
+            <column name="STYLE_ARRAY_ID" precision="20" scale="0" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

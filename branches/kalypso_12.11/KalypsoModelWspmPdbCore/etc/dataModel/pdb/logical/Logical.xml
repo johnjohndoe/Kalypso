@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="FD70491C-B17E-30A6-43A6-751DF568D7AE" mainViewID="918773D0-2D21-051D-0EA3-1BDAF84462B1">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-17 14:48:41 UTC</createdTime>
+   <changedTime>2012-10-29 15:04:57 UTC</changedTime>
+   <ownerDesignName>pdb</ownerDesignName>
+   <shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

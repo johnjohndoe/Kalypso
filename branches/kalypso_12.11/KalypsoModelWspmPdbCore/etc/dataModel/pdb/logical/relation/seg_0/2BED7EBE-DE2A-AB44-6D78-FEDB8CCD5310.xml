@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Event__CS_Part" id="2BED7EBE-DE2A-AB44-6D78-FEDB8CCD5310" directorySegmentName="seg_0">
+   <createdBy>thuel</createdBy>
+   <createdTime>2012-07-27 08:03:13 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2012-07-31 07:01:14 UTC</changedTime>
+   <ownerDesignName>pdb</ownerDesignName>
+   <identifying>false</identifying>
+   <optionalSource>false</optionalSource>
+   <optionalTarget>false</optionalTarget>
+   <sourceCardinality>1</sourceCardinality>
+   <sourceEntity>90F0EE48-08A3-D666-C1C5-A0D069D98D8E</sourceEntity>
+   <targetCardinalityString>*</targetCardinalityString>
+   <targetEntity>571070F4-44BA-7037-1A9D-B3093AF2D82D</targetEntity>
+   <transferable>true</transferable>
+</Relation>

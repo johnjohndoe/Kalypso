@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="updateScript" name="updateScript" schema="schema/updateScript.exsd"/>
+   <extension
+         point="org.kalypso.model.wspm.pdb.core.updateScript">
+      <script
+            comment="Postgis 0.0.1 -&gt; 0.0.2"
+            location="etc/scripts/update_V0.0.1_V0.0.2/postgis.sql"
+            targetVersion="0.0.2"
+            type="postgis">
+      </script>
+      <script
+            comment="Postgis 0.0.2 -&gt; 0.0.3"
+            location="etc/scripts/update_V0.0.2_V0.0.3/postgis.sql"
+            targetVersion="0.0.3"
+            type="postgis">
+      </script>
+      <script
+            comment="Postgis 0.0.3 -&gt; 0.0.4"
+            location="etc/scripts/update_V0.0.3_V0.0.4/postgis.sql"
+            targetVersion="0.0.4"
+            type="postgis">
+      </script>
+      <script
+            comment="Postgis 0.0.4 -&gt; 12.11.0"
+            location="etc/scripts/update_V0.0.4_V12.11.0/postgis.sql"
+            targetVersion="0.0.5"
+            type="postgis">
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePage004two005"/>
+      </script>
+      <script
+            comment="Oracle 0.0.1 -&gt; 0.0.2"
+            location="etc/scripts/update_V0.0.1_V0.0.2/oracle.sql"
+            targetVersion="0.0.2"
+            type="oracle">
+      </script>
+      <script
+            comment="Oracle 0.0.2 -&gt; 0.0.3"
+            location="etc/scripts/update_V0.0.2_V0.0.3/oracle.sql"
+            targetVersion="0.0.3"
+            type="oracle">
+      </script>
+      <script
+            comment="Oracle 0.0.3 -&gt; 0.0.4"
+            location="etc/scripts/update_V0.0.3_V0.0.4/oracle.sql"
+            targetVersion="0.0.4"
+            type="oracle">
+      </script>
+      <script
+            comment="Oracle 0.0.4 -&gt; 12.11.0"
+            location="etc/scripts/update_V0.0.4_V12.11.0/oracle.sql"
+            targetVersion="0.0.5"
+            type="oracle">
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePage004two005"/>
+      </script>
+      <script
+            comment="Oracle - Create DB"
+            location="etc/scripts/create/V12.11.0/oracle.sql"
+            targetVersion="0.0.0"
+            type="oracle">
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo"/>
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageExtent"/>
+      </script>
+      <script
+            comment="Postgis - Create DB"
+            location="etc/scripts/create/V12.11.0/postgis.sql"
+            targetVersion="0.0.0"
+            type="postgis">
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo"/>
+         <page class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageExtent"/>
+      </script>
+   </extension>
+
+</plugin>
