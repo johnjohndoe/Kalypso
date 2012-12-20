@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview typename="wb1d2d:WeirFlowRelation2D" style="SWT.NONE" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns="featureview.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
+
+  <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+  <gridLayout numColumns="2" />
+
+  <label property="gml:name" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="gml:name" style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+    <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+  </text>
+  <label property="gml:description" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalSpan="1" horizontalAlignment="SWT.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
+  </text>
+
+  <label property="wb1d2d:kind" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <combo property="wb1d2d:kind" enabled="false" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+    <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+  </combo>
+
+  <label property="wb1d2d:direction" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <spinner property="wb1d2d:direction" style="SWT.BORDER | SWT.HORIZONTAL">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+  </spinner>
+
+  <label property="wb1d2d:QSymmetry" visible="true" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <checkbox enabled="true" property="wb1d2d:QSymmetry" style="SWT.NONE">
+    <text>
+    </text>
+  </checkbox>
+
+  <tabFolder style="SWT.NONE">
+    <gridData verticalAlignment="SWT.FILL" horizontalSpan="4" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+    <tabItem>
+      <tabLabel>Diagramm</tabLabel>
+      <extensioncontrol property="wb1d2d:observation" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+        <gridData horizontalSpan="4" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true" />
+        <param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:BuildingFlowRelation2D:default" />
+        <param name="featureKeyName" value="theFeatureKey" />
+        <param name="commands" value="org.kalypso.chart.ui.commands.zoom_pan_maximize;org.kalypso.chart.ui.commands.pan;org.kalypso.model1d2d.removeBuildingParameter" />
+        <param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.RADIO" />
+      </extensioncontrol>
+    </tabItem>
+    <tabItem>
+      <tabLabel>Tabelle</tabLabel>
+      <!-- Using subcomposite instead of direct table, for better scrolling behaviour -->
+      <subcomposite property="wb1d2d:observation" style="SWT.NONE">
+        <gridData verticalAlignment="SWT.FILL" horizontalSpan="2" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+      </subcomposite>
+    </tabItem>
+  </tabFolder>
+
+</featureview>
