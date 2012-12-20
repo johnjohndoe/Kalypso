@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapv:gismapview name="%wsp.title" xmlns:mapv="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <mapv:extent top="1031.9629160488093" srs="EPSG:31467" right="1031.9272908366534" left="1000.0448207171313" bottom="983.2079359691279"/>
+    <mapv:translator id="commons.msgGetString">
+        <class>org.kalypso.model.flood:org.kalypso.model.flood.i18n.MapMessages</class>
+    </mapv:translator>
+    <mapv:layers>
+        <mapv:layer visible="true" name="%wsp.layer.waterlevel_customisation" id="ID_0" featurePath="polygonMember" linktype="gml" xlink:type="simple" xlink:href="../models/flood.gml" xlink:actuate="onRequest">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="extrapolationPolygonUserStyle" linktype="sld" xlink:type="simple" xlink:href="polygons.sld" xlink:actuate="onRequest"/>
+            <templ:style style="clipPolygonUserStyle" linktype="sld" xlink:type="simple" xlink:href="polygons.sld" xlink:actuate="onRequest"/>
+            <templ:style style="volumePolygonUserStyle" linktype="sld" xlink:type="simple" xlink:href="polygons.sld" xlink:actuate="onRequest"/>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+    </mapv:layers>
+</mapv:gismapview>
+
