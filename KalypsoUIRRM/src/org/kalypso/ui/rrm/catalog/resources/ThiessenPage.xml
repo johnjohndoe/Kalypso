@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Page xmlns="http://www.sourceforge.net/projects/kalypsobase/layout" xmlns:swt="http://www.sourceforge.net/projects/kalypsobase/swt">
+  <SashContainer id="top" weights="30 30 60" style="SWT.HORIZONTAL">
+    <!-- Links: Stationsliste -->
+    <GridContainer id="optionsGrid" marginWidth="0" marginHeight="0" verticalSpacing="0">
+      <Part id="thiessenWizardPart.1" style="SWT.NONE">
+        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+      </Part>
+    </GridContainer>
+
+    <!-- Mitte: Zeitreihen Tabelle -->
+    <GridContainer id="tableGrid" marginWidth="0" marginHeight="0" verticalSpacing="0">
+      <Part id="thiessenOptionsPart.1">
+        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+      </Part>
+      <Part id="gisTable.1" style="SWT.H_SCROLL | SWT.V_SCROLL">
+        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+      </Part>
+      <Part id="featureView.1">
+        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+      </Part>
+    </GridContainer>
+
+    <!-- Rechts: Karte -->
+    <Part id="gisMap.1" style="SWT.BORDER">
+      <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+    </Part>
+  </SashContainer>
+
+  <!-- <Controller type="selection" sourcePart="gisMap.1" targetPart="zmlNewDiagram.1" /> <Controller type="selection" sourcePart="gisMap.1" targetPart="zmlNewTable.1" /> -->
+  <Controller type="selection" sourcePart="gisMap.1" targetPart="gisTable.1" />
+  <Controller type="selection" sourcePart="gisTable.1" targetPart="gisMap.1" />
+</Page>
