@@ -58,10 +58,7 @@ class ContinuityLineEditValidator
     {
       final IFE1D2DElement[] elements = m_snapNode.getAdjacentElements();
       if( elements.length == 0 )
-        return Messages.getString("ContinuityLineEditValidator_0"); //$NON-NLS-1$
-
-      if( elements.length > 1 )
-        return Messages.getString("ContinuityLineEditValidator_1"); //$NON-NLS-1$
+        return Messages.getString( "ContinuityLineEditValidator_0" ); //$NON-NLS-1$
     }
 
     /* check for any conti line on node */
@@ -76,13 +73,13 @@ class ContinuityLineEditValidator
     else
     {
       if( touchedLine != null && !is2dNode( m_snapNode ) )
-        return Messages.getString("ContinuityLineEditValidator_2"); //$NON-NLS-1$
+        return Messages.getString( "ContinuityLineEditValidator_2" ); //$NON-NLS-1$
     }
 
     if( m_nodes.length > 0 )
     {
       if( !is2dNode( m_snapNode ) )
-        return Messages.getString("ContinuityLineEditValidator_3"); //$NON-NLS-1$
+        return Messages.getString( "ContinuityLineEditValidator_3" ); //$NON-NLS-1$
 
       /* last point: special handling, else double click to finish will not work; also prevents line with only one point */
       if( m_nodes.length > 1 && m_snapNode == m_nodes[m_nodes.length - 1] )
@@ -92,7 +89,7 @@ class ContinuityLineEditValidator
       for( final IFE1D2DNode node : m_nodes )
       {
         if( node == m_snapNode )
-          return Messages.getString("ContinuityLineEditValidator_4"); //$NON-NLS-1$
+          return Messages.getString( "ContinuityLineEditValidator_4" ); //$NON-NLS-1$
       }
 
       final ContinuityLine2DValidator validator2d = new ContinuityLine2DValidator( m_panel, ArrayUtils.add( m_nodes, m_snapNode ) );

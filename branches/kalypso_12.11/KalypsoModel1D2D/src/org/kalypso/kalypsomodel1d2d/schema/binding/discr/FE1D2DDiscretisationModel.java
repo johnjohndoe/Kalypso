@@ -691,10 +691,6 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   {
     Assert.throwIAEOnNullParam( node, "node" ); //$NON-NLS-1$
 
-    final IFE1D2DEdge[] linkedEdges = node.getLinkedEdges();
-    if( linkedEdges.length != 1 || linkedEdges[0].getLinkedElements().length != 1 || !(linkedEdges[0].getLinkedElements()[0] instanceof IElement1D) )
-      throw new IllegalStateException( "Can only create a 1D continuity line at the end of a 1D element" ); //$NON-NLS-1$
-
     try
     {
       final IContinuityLine1D line = (IContinuityLine1D)FeatureHelper.createFeatureForListProp( getLinesInternal(), IContinuityLine1D.QNAME, -1 );

@@ -85,6 +85,13 @@ public class ContinuityLine2DGeometryBuilder
       if( startNode != endNode )
       {
         final IFE1D2DNode[] path = calculatePath( startNode, endNode, monitor );
+        if( path == null )
+        {
+          /* one part of the conti line is not connected, the whole line is hence invalid. */
+          m_continuityNodes.clear();
+          return;
+        }
+
         addContinuityNodes( path );
       }
     }
@@ -115,7 +122,10 @@ public class ContinuityLine2DGeometryBuilder
       currentNode = findNextNode( currentNode, endNode, path, monitor );
 
       if( currentNode == null )
-        break;
+      {
+        // FIXME: check
+        return null;
+      }
 
       path.add( currentNode );
 
@@ -133,7 +143,7 @@ public class ContinuityLine2DGeometryBuilder
 
     // REMARK: using the best direction instead of search by distance yealds better results in pratice
 
-    IFE1D2DNode nearestNode = null;
+    // IFE1D2DNode nearestNode = null;
     IFE1D2DNode straightestNode = null;
     double shortestDistance = Double.MAX_VALUE;
     double smallestAngle = Double.MAX_VALUE;
@@ -161,7 +171,7 @@ public class ContinuityLine2DGeometryBuilder
       if( nodesDistance < shortestDistance )
       {
         shortestDistance = nodesDistance;
-        nearestNode = node;
+        // nearestNode = node;
       }
 
       if( nodesAngle < smallestAngle )
