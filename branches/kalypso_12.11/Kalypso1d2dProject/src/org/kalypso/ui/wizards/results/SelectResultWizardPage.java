@@ -46,7 +46,6 @@ import java.util.Collection;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -80,9 +79,8 @@ public class SelectResultWizardPage extends WizardPage
 {
   private final Collection<IAction> m_actions = new ArrayList<>();
 
+  // TODO: most use cases of result viewer only need the information about a result node, not creation of a theme. We should separate these concerns.
   private final IThemeConstructionFactory m_factory;
-
-  private final ViewerFilter m_filter;
 
   private IResultMeta m_resultRoot;
 
@@ -90,18 +88,35 @@ public class SelectResultWizardPage extends WizardPage
 
   private Object[] m_checkedElements = null;
 
-  private final ViewerComparator m_comparator;
+  private ViewerFilter m_filter;
 
-  public SelectResultWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final ViewerComparator comparator, final IThemeConstructionFactory factory )
+  private ViewerComparator m_comparator;
+
+  public SelectResultWizardPage( final String pageName, final String title, final IThemeConstructionFactory factory )
   {
-    super( pageName, title, titleImage );
+    super( pageName );
 
-    m_comparator = comparator;
+    setTitle( title );
 
     m_factory = factory;
-    m_filter = filter;
 
     setDescription( Messages.getString( "org.kalypso.ui.wizards.results.SelectResultWizardPage.0" ) ); //$NON-NLS-1$
+  }
+
+  public void setFilter( final ViewerFilter filter )
+  {
+    m_filter = filter;
+
+    if( m_treeViewer != null )
+      m_treeViewer.setFilters( new ViewerFilter[] { m_filter } );
+  }
+
+  public void setComparator( final ViewerComparator comparator )
+  {
+    m_comparator = comparator;
+
+    if( m_treeViewer != null )
+      m_treeViewer.setComparator( m_comparator );
   }
 
   /**
@@ -150,8 +165,12 @@ public class SelectResultWizardPage extends WizardPage
 
     m_treeViewer.setContentProvider( new WorkbenchContentProvider() );
     m_treeViewer.setLabelProvider( new WorkbenchLabelProvider() );
-    m_treeViewer.addFilter( m_filter );
+
+    if( m_filter != null )
+      m_treeViewer.setFilters( new ViewerFilter[] { m_filter } );
+
     m_treeViewer.setComparator( m_comparator );
+
     m_treeViewer.setInput( m_resultRoot );
 
     /* The next two lines are needed so that checking children of checked elements always works. */
@@ -250,6 +269,7 @@ public class SelectResultWizardPage extends WizardPage
     m_checkedElements = checkedElements;
   }
 
+  // TODO: not nice... currently use to refresh tree
   public CheckboxTreeViewer getTreeViewer( )
   {
     return m_treeViewer;

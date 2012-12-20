@@ -92,11 +92,10 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void addPages( )
   {
-    final NonMapDataResultViewerFilter resultFilter = new NonMapDataResultViewerFilter();
-    final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
-
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.2" ), null, resultFilter, resultComparator, themeConstructionFactory );//$NON-NLS-1$
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.2" ), themeConstructionFactory );//$NON-NLS-1$
+    selectResultWizardPage.setFilter( new NonMapDataResultViewerFilter() );
+    selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 

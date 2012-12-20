@@ -47,13 +47,10 @@ import org.eclipse.swt.widgets.Group;
  * Interface for creation of result themes
  * 
  * @author Thomas Jung
- * 
  */
 public interface IResultThemeConstructor
 {
+  Composite createControl( Group parent );
 
-  public Composite createControl( final Group parent );
-
-  public ResultAddLayerCommandData[] getThemeCommandData( );
-
+  ResultAddLayerCommandData[] getThemeCommandData( );
 }
