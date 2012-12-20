@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoOptimizePlugin
+Bundle-SymbolicName: org.kalypso.optimize;singleton:=true
+Bundle-Version: 12.11.0.qualifier
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
+Export-Package: org.kalypso.optimize,
+ org.kalypso.optimize.errorfunctions,
+ org.kalypso.optimize.transform,
+ org.kalypso.optimizer,
+ org.w3._2001.xmlschema
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.kalypso.core,
+ org.kalypso.simulation.core
