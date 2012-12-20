@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" xmlns:ns4="obstableview.template.kalypso.org" xmlns:ns3="obsdiagview.template.kalypso.org" xmlns:ns5="types.template.kalypso.org" xmlns:ns6="gismapview.template.kalypso.org">
-  <layer id="id" featurePath="CatchmentCollectionMember/catchmentMember" linktype="gml" ns1:type="simple" ns1:href=".models/modell.gml" ns1:actuate="onRequest">
-    <column name="name" editable="false" width="60" alignment="SWT.LEFT" format=""/>
-    <column name="description" editable="false" width="200" alignment="SWT.LEFT" format=""/>
-    <sort propertyName="name" inverse="false"/>
-  </layer>
-</gistableview>

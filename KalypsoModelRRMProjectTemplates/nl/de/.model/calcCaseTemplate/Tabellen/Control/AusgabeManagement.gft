@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="featureview.template.kalypso.org featureview.xsd">
-    <layer id="foo" featurePath="/" linktype="gml" xlink:href="../../.models/expertControl.gml"/>
-</featuretemplate>
