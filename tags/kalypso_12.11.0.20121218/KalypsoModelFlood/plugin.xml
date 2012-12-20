@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.model.flood.schema.UrlCatalogModelFlood"
+            id="org.kalypso.model.flood.schema.UrlCatalogModelFlood"/>
+   </extension>
+    <extension
+          point="org.kalypso.simulation.core.simulation">
+       <simulation
+            catalogClass="org.kalypso.model.flood.schema.UrlCatalogModelFlood"
+             simulationClass="org.kalypso.model.flood.core.SimulationKalypsoFlood"
+             typeID="KalypsoFloodSimulation">
+       </simulation>
+    </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.model.flood.ui.catalog.FloodModelCatalogContribution"
+            name="Flood Model Catalog"/>
+   </extension>
+   <extension
+         point="de.renew.workflow.model.workflowSystem">
+      <workflowSystem
+            definition="etc/workflow.xml"
+            id="org.kalypso.model.flood.workflow"
+            name="%org.kalypso.model.flood.workflow">
+      </workflowSystem>
+   </extension>
+   
+   <!-- Workflow -->
+   <extension point="org.eclipse.ui.commands">
+      <category id="org.kalypso.model.flood.workflow" name="Flood Workflow commands"/>
+      <command id="org.kalypso.model.flood.DataLoad" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.DataLoad.name" description="%org.kalypso.model.flood.DataLoad.description" />
+      <command id="org.kalypso.model.flood.ManageWaterlevelData" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.ManageWaterlevelData.name" description="%org.kalypso.model.flood.ManageWaterlevelData.description" />
+      <command id="org.kalypso.model.flood.ManageDTMData" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.ManageDTMData.name" description="%org.kalypso.model.flood.ManageDTMData.description" />
+      <command id="org.kalypso.model.flood.PolygonEditing" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.PolygonEditing.name" description="%org.kalypso.model.flood.PolygonEditing.description" />
+      <command id="org.kalypso.model.flood.ProcessFloodModel" categoryId="org.kalypso.model.flood.workflow"  name="%org.kalypso.model.flood.ProcessFloodModel.name" description="%org.kalypso.model.flood.ProcessFloodModel.description"/>
+      <command id="org.kalypso.model.flood.Postprocessing" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.Postprocessing.name" description="%org.kalypso.model.flood.Postprocessing.description"/>
+      <command id="org.kalypso.model.flood.VisualizeDepthData" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.VisualizeDepthData.name" description="%org.kalypso.model.flood.VisualizeDepthData.description"/>
+      <command id="org.kalypso.model.flood.GenerateRiskModel" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.GenerateRiskModel.name" description="%org.kalypso.model.flood.GenerateRiskModel.description"/>
+   </extension>
+   
+   <extension point="org.eclipse.ui.commandImages">
+   
+      <image commandId="org.kalypso.model.flood.DataLoad" icon="icons/workflow/DataLoad.gif"/>
+      <image commandId="org.kalypso.model.flood.ManageWaterlevelData" icon="icons/workflow/ManageWaterlevelData.gif"/>
+      <image commandId="org.kalypso.model.flood.ManageDTMData" icon="icons/workflow/ManageDTMData.gif"/>
+      <image commandId="org.kalypso.model.flood.PolygonEditing" icon="icons/workflow/PolygonEditing.gif"/>
+      <image commandId="org.kalypso.model.flood.ProcessFloodModel" icon="icons/workflow/ProcessFloodModel.gif"/>
+      <image commandId="org.kalypso.model.flood.Postprocessing" icon="icons/workflow/Postprocessing.png"/>
+      <image commandId="org.kalypso.model.flood.VisualizeDepthData" icon="icons/workflow/VisualizeDepthData.gif"/>
+      <image commandId="org.kalypso.model.flood.GenerateRiskModel" icon="icons/workflow/GenerateRiskModel.gif"/>
+   </extension>
+   
+   <extension point="org.eclipse.ui.handlers">
+
+      <!-- Handler for workflow.xml: non-existing commandId is ok here --> 
+      <handler commandId="org.kalypso.model.flood.ManageWaterlevelData">
+         <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.model.flood.ui.map.EventManagementWidget"/>
+         </class>
+      </handler>
+      <handler class="org.kalypso.model.flood.handlers.VisualizeGridDataHandler" commandId="org.kalypso.model.flood.ManageDTMData"/>
+      <handler class="org.kalypso.model.flood.handlers.PolygonEditingHandler" commandId="org.kalypso.model.flood.PolygonEditing"/>
+      <handler class="org.kalypso.model.flood.handlers.ProcessFloodModelHandler" commandId="org.kalypso.model.flood.ProcessFloodModel"/>
+      <handler class="org.kalypso.model.flood.handlers.VisualizeDepthDataHandler" commandId="org.kalypso.model.flood.VisualizeDepthData"/>
+      <handler class="org.kalypso.model.flood.handlers.GenerateRiskModelHandler" commandId="org.kalypso.model.flood.GenerateRiskModel"/>
+
+      <!-- Flood-Polygons -->
+      <handler
+            commandId="org.kalypso.model.flood.command.deleteFloodPolygon">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.DeleteFloodPolygonWidget">
+            </parameter>
+         </class>
+      </handler>
+      <handler
+            commandId="org.kalypso.model.flood.command.editFloodPolygon">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.EditFloodPolygonWidget">
+            </parameter>
+         </class>
+      </handler>
+      <handler
+            commandId="org.kalypso.model.flood.command.createExtrapolationPolygon">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.CreateFloodPolygonExtrapolationWidget">
+            </parameter>
+         </class>
+      </handler>
+      <handler
+            commandId="org.kalypso.model.flood.command.createClipPolygon">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.CreateFloodPolygonClipWidget">
+            </parameter>
+         </class>
+      </handler>
+      <handler
+            commandId="org.kalypso.model.flood.command.createVolumePolygon">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.CreateFloodPolygonVolumeWidget">
+            </parameter>
+         </class>
+      </handler>
+   </extension>
+   <extension
+         point="org.kalypso.afgui.scenarioData">
+      <dataSet
+            id="org.kalypso.model.flood.scenarioDataScope">
+         <scenarioDatum
+               classKey="org.kalypso.model.flood.binding.IFloodModel"
+               modelPath="models/flood.gml">
+         </scenarioDatum>
+      </dataSet>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition id="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+         <with variable="activeMapPanel">
+           <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.flood}AbstractFloodPolygon" />
+         </with>
+      </definition>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.model.flood.command.createExtrapolationPolygon"
+            name="%org.kalypso.model.flood.command.createExtrapolationPolygon" description="%org.kalypso.model.flood.command.createExtrapolationPolygon.description">
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.model.flood.command.createClipPolygon"
+            name="%org.kalypso.model.flood.command.createClipPolygon" description="%org.kalypso.model.flood.command.createClipPolygon.description">
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.model.flood.command.createVolumePolygon"
+            name="%org.kalypso.model.flood.command.createVolumePolygon" description="%org.kalypso.model.flood.command.createVolumePolygon.description">
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.model.flood.command.editFloodPolygon"
+            name="%org.kalypso.model.flood.command.editFloodPolygon" description="%org.kalypso.model.flood.command.editFloodPolygon.description">
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.model.flood.command.deleteFloodPolygon"
+            name="%org.kalypso.model.flood.command.deleteFloodPolygon" description="%org.kalypso.model.flood.command.deleteFloodPolygon.description">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+ 		<menuContribution
+              locationURI="toolbar:org.kalypso.ui.views.mapView?before=widgets">
+           <!-- Flood-Polygons -->
+           <command
+                 commandId="org.kalypso.model.flood.command.createExtrapolationPolygon"
+                 style="radio">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+                 </reference>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.kalypso.model.flood.command.createClipPolygon"
+                 style="radio">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+                 </reference>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.kalypso.model.flood.command.createVolumePolygon"
+                 style="radio">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+                 </reference>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.kalypso.model.flood.command.editFloodPolygon"
+                 style="radio">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+                 </reference>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.kalypso.model.flood.command.deleteFloodPolygon"
+                 style="radio">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+                 </reference>
+              </visibleWhen>
+           </command>
+        </menuContribution>
+	</extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.kalypso.model.flood.newwizard"
+            name="%org.kalypso.model.flood.newwizard"
+            parentCategory="org.kalypso.ui.newwizards.kalypso">
+      </category>
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.model.flood.newwizard"
+            class="org.kalypso.model.flood.ui.wizards.NewProjectWizard"
+            descriptionImage="icons/button_flood.gif"
+            finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+            hasPages="true"
+            icon="icons//button_flood.gif"
+            id="org.kalypso.model.flood.ui.wizards.NewProjectWizard"
+            name="%org.kalypso.model.flood.ui.wizards.NewProjectWizard"
+            project="true">
+         <description>
+            %org.kalypso.model.flood.ui.wizards.NewProjectWizard.description
+         </description>
+      </wizard>
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.model.flood.newwizard"
+            class="org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
+            descriptionImage="icons//button_flood.gif"
+            hasPages="true"
+            icon="icons//button_flood.gif"
+            id="org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
+            name="%org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
+            project="true">
+         <description>
+            %org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard.description
+         </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.functionExpression">
+      <function
+            class="org.kalypso.model.flood.ui.map.EventFilterExpression"
+            label="%org.kalypso.model.flood.ui.map.EventFilterExpression"
+            name="org.kalypso.model.flood.ui.map.EventFilterExpression">
+      </function>
+   </extension>
+   <extension
+         point="org.kalypso.core.gmlSourceProvider">
+      <provider
+            class="org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider"
+            id="org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider"
+            label="%org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider">
+         <category
+               id="org.kalypso.core.tin.waterlevel">
+         </category>
+      </provider>
+   </extension>
+     <extension
+         point="org.kalypso.module.kalypsoModule">
+      <module
+            class="org.kalypso.model.flood.extension.KalypsoModelFloodModule">
+      </module>
+   </extension>
+     <extension point="org.eclipse.ui.commandImages">
+        <!-- Flood-Polygons -->
+        <image commandId="org.kalypso.model.flood.command.deleteFloodPolygon" icon="icons/elcl16/delete_flood_polygon.gif"/>
+        <image commandId="org.kalypso.model.flood.command.editFloodPolygon" icon="icons/elcl16/edit_flood_polygon.gif"/>
+        <image commandId="org.kalypso.model.flood.command.createExtrapolationPolygon" icon="icons/elcl16/create_flood_polygon_extrapolation.gif"/>
+        <image commandId="org.kalypso.model.flood.command.createClipPolygon" icon="icons/elcl16/create_flood_polygon_clip.gif"/>
+        <image commandId="org.kalypso.model.flood.command.createVolumePolygon" icon="icons/elcl16/create_flood_polygon_volume.gif"/>
+     </extension>
+     <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.model.flood.binding.FloodClipPolygon"
+              qname="{org.kalypso.model.flood}FloodClipPolygon">
+        </feature>
+        <feature
+              class="org.kalypso.model.flood.binding.FloodExtrapolationPolygon"
+              qname="{org.kalypso.model.flood}FloodExtrapolationPolygon">
+        </feature>
+        <feature
+              class="org.kalypso.model.flood.binding.FloodVolumePolygon"
+              qname="{org.kalypso.model.flood}FloodVolumePolygon">
+        </feature>
+        <feature
+              class="org.kalypso.model.flood.binding.FloodModel"
+              qname="{org.kalypso.model.flood}FloodModel">
+        </feature>
+        <feature
+              class="org.kalypso.model.flood.binding.RunoffEvent"
+              qname="{org.kalypso.model.flood}RunoffEvent">
+        </feature>
+        <feature
+              class="org.kalypso.model.flood.binding.TinReference"
+              qname="{org.kalypso.model.flood}TinReference">
+        </feature>
+     </extension>
+</plugin>
