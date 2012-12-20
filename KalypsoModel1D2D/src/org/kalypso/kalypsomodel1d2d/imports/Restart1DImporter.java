@@ -101,7 +101,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * <p>
  * This result can then be used to pseudo-restart a 1d-instationary calculation.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class Restart1DImporter
@@ -141,7 +141,7 @@ public class Restart1DImporter
 
       /* Now really create the results.gml */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, null, null );
-      final INodeResultCollection nodeResults = (INodeResultCollection) resultWorkspace.getRootFeature().getAdapter( INodeResultCollection.class );
+      final INodeResultCollection nodeResults = (INodeResultCollection)resultWorkspace.getRootFeature().getAdapter( INodeResultCollection.class );
 
       final SortedMap<BigDecimal, GM_Point> profilesByStation = indexProfiles( wspmCalculation.getReach() );
       createNodeResults( vectorDocument, nodeResults, lengthSectionObs, lsComponentStation, lsComponentWaterlevel, lsComponentVelocity, lsComponentKennung, profilesByStation );
@@ -191,7 +191,7 @@ public class Restart1DImporter
     final IFile file = project.getFile( "modell.gml" ); //$NON-NLS-1$
     final URL modelURL = ResourceUtilities.createURL( file );
     final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
-    final TuhhWspmProject tuhhWspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
+    final TuhhWspmProject tuhhWspmProject = (TuhhWspmProject)modelWorkspace.getRootFeature();
 
     final IFeatureBindingCollection<TuhhCalculation> calculations = tuhhWspmProject.getCalculations();
     for( final TuhhCalculation tuhhCalculation : calculations )
@@ -219,7 +219,7 @@ public class Restart1DImporter
     {
       if( resultMeta instanceof ICalcUnitResultMeta )
       {
-        final ICalcUnitResultMeta calcUnitMeta = (ICalcUnitResultMeta) resultMeta;
+        final ICalcUnitResultMeta calcUnitMeta = (ICalcUnitResultMeta)resultMeta;
         if( calcUnitMeta.getName().equals( name ) )
           return calcUnitMeta;
       }
@@ -246,7 +246,7 @@ public class Restart1DImporter
     {
       if( resultMeta instanceof IStepResultMeta )
       {
-        final IStepResultMeta stepMeta = (IStepResultMeta) resultMeta;
+        final IStepResultMeta stepMeta = (IStepResultMeta)resultMeta;
         if( stepMeta.getName().equals( name ) )
           return stepMeta;
       }
@@ -273,7 +273,7 @@ public class Restart1DImporter
     {
       if( resultMeta instanceof IDocumentResultMeta )
       {
-        final IDocumentResultMeta docMeta = (IDocumentResultMeta) resultMeta;
+        final IDocumentResultMeta docMeta = (IDocumentResultMeta)resultMeta;
         if( docMeta.getDocumentType() == DOCUMENTTYPE.nodes )
           return docMeta;
       }
@@ -306,9 +306,9 @@ public class Restart1DImporter
     /* We also filter the interpolated profiles */
     for( final IRecord record : lsResult )
     {
-      final String type = (String) record.getValue( typeComp );
+      final String type = (String)record.getValue( typeComp );
       if( !"i".equals( type ) ) //$NON-NLS-1$
-        recordsByStation.put( (BigDecimal) record.getValue( stationComp ), record );
+        recordsByStation.put( (BigDecimal)record.getValue( stationComp ), record );
     }
 
     BigDecimal min = BigDecimal.valueOf( Double.MAX_VALUE );
@@ -322,18 +322,18 @@ public class Restart1DImporter
       final IRecord currentRecord = records[i];
       final IRecord nextRecord = i < lsSize - 1 ? records[i + 1] : null;
 
-      final BigDecimal prevStation = prevRecord == null ? null : (BigDecimal) prevRecord.getValue( stationComp );
-      final BigDecimal currentStation = (BigDecimal) currentRecord.getValue( stationComp );
-      final BigDecimal nextStation = nextRecord == null ? null : (BigDecimal) nextRecord.getValue( stationComp );
+      final BigDecimal prevStation = prevRecord == null ? null : (BigDecimal)prevRecord.getValue( stationComp );
+      final BigDecimal currentStation = (BigDecimal)currentRecord.getValue( stationComp );
+      final BigDecimal nextStation = nextRecord == null ? null : (BigDecimal)nextRecord.getValue( stationComp );
 
       final GM_Point prevPoint = prevStation == null ? null : profilesByStation.get( prevStation );
       final GM_Point currentPoint = profilesByStation.get( currentStation );
       final GM_Point nextPoint = nextStation == null ? null : profilesByStation.get( nextStation );
 
-      final BigDecimal prevWaterlevel = prevRecord == null ? null : (BigDecimal) prevRecord.getValue( waterlevelComp );
-      final BigDecimal currentWaterlevel = (BigDecimal) currentRecord.getValue( waterlevelComp );
-      final BigDecimal prevVelocity = prevRecord == null ? null : (BigDecimal) prevRecord.getValue( velocityComp );
-      final BigDecimal currentVelocity = (BigDecimal) currentRecord.getValue( velocityComp );
+      final BigDecimal prevWaterlevel = prevRecord == null ? null : (BigDecimal)prevRecord.getValue( waterlevelComp );
+      final BigDecimal currentWaterlevel = (BigDecimal)currentRecord.getValue( waterlevelComp );
+      final BigDecimal prevVelocity = prevRecord == null ? null : (BigDecimal)prevRecord.getValue( velocityComp );
+      final BigDecimal currentVelocity = (BigDecimal)currentRecord.getValue( velocityComp );
 
       /* Calculate midside node if possible */
       if( prevRecord != null )
@@ -400,5 +400,4 @@ public class Restart1DImporter
     vector2d.normalize();
     return vector2d;
   }
-
 }

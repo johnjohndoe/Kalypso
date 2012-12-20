@@ -57,7 +57,7 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
 {
   public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final Result1d2dMetaComparator comparator, final IThemeConstructionFactory factory, final IFolder scenarioFolder, final IScenarioDataProvider modelProvider )
   {
-    super( pageName, title, titleImage, filter, comparator, factory, null );
+    super( pageName, title, titleImage, filter, comparator, factory );
 
     addAction( new ImportRestartAction( this, scenarioFolder, modelProvider ) );
   }
@@ -66,8 +66,10 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
   public IWizardPage getNextPage( )
   {
     final IWizardPage nextPage = super.getNextPage();
+
     if( nextPage instanceof RestartSelectWizardPage2 )
-      ((RestartSelectWizardPage2) nextPage).initializeResults( getSelectedResults() );
+      ((RestartSelectWizardPage2)nextPage).initializeResults( getSelectedResults() );
+
     return nextPage;
   }
 

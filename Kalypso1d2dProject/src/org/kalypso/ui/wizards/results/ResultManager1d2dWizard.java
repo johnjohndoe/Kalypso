@@ -45,7 +45,9 @@ import org.kalypso.afgui.model.Util;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -57,7 +59,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * Wizard to manage result data for Kalypso 1D/2D.
  * allows to delete or reinterpret the existing results
- *
+ * 
  * @author Thomas Jung
  */
 public class ResultManager1d2dWizard extends Wizard
@@ -72,7 +74,7 @@ public class ResultManager1d2dWizard extends Wizard
 
   private final IScenarioDataProvider m_modelProvider;
 
-  private IGeoLog m_geoLog;
+  private final IGeoLog m_geoLog;
 
   public ResultManager1d2dWizard( final IKalypsoLayerModell mapModel, final JobExclusiveCommandTarget commandTarget, final IScenarioResultMeta resultModel, final IScenarioDataProvider modelProvider )
   {
@@ -83,6 +85,22 @@ public class ResultManager1d2dWizard extends Wizard
 
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.1" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
+
+    // FIXME: this log is never used and/or displayed to the user...!
+    m_geoLog = createLog();
+  }
+
+  private IGeoLog createLog( )
+  {
+    try
+    {
+      return new GeoLog( Kalypso1d2dProjectPlugin.getDefault().getLog() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   @Override
@@ -91,11 +109,11 @@ public class ResultManager1d2dWizard extends Wizard
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2" ), null, resultFilter, resultComparator, null, m_geoLog ); //$NON-NLS-1$
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2" ), null, resultFilter, resultComparator, null ); //$NON-NLS-1$
     selectResultWizardPage.setResultMeta( m_resultModel );
 
     selectResultWizardPage.addAction( new DeleteResultAction( selectResultWizardPage, m_commandTarget, m_modell ) );
-    selectResultWizardPage.addAction( new ReevaluateResultAction( selectResultWizardPage, m_commandTarget, m_modell, m_modelProvider ) );
+    selectResultWizardPage.addAction( new ReevaluateResultAction( selectResultWizardPage, m_commandTarget, m_modell, m_modelProvider, m_geoLog ) );
     selectResultWizardPage.addAction( new ImportResultAction( selectResultWizardPage, m_modelProvider ) );
 
     addPage( selectResultWizardPage );

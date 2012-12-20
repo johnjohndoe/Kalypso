@@ -104,12 +104,12 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     final NonTinDocumentResultViewerFilter resultFilter = new NonTinDocumentResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
-    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.4" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
-    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.5" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
+    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.4" ), null, resultFilter, comparator, null ); //$NON-NLS-1$
+    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.5" ), null, resultFilter, comparator, null ); //$NON-NLS-1$
 
     final DocumentResultViewerFilter resultFilter2 = new DocumentResultViewerFilter();
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6" ), null, resultFilter2, comparator, themeConstructionFactory, null ); //$NON-NLS-1$
+    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6" ), null, resultFilter2, comparator, themeConstructionFactory ); //$NON-NLS-1$
 
     selectMasterResultWizardPage.setResultMeta( m_resultModel );
     selectSlaveResultWizardPage.setResultMeta( m_resultModel );

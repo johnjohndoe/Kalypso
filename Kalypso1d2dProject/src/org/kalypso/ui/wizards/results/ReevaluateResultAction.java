@@ -77,12 +77,15 @@ public class ReevaluateResultAction extends Action
 
   private final IScenarioDataProvider m_modelProvider;
 
-  public ReevaluateResultAction( final SelectResultWizardPage page, final ICommandTarget commandTarget, final IKalypsoLayerModell modell, final IScenarioDataProvider modelProvider )
+  private final IGeoLog m_geoLog;
+
+  public ReevaluateResultAction( final SelectResultWizardPage page, final ICommandTarget commandTarget, final IKalypsoLayerModell modell, final IScenarioDataProvider modelProvider, final IGeoLog geoLog )
   {
     m_page = page;
     m_commandTarget = commandTarget;
     m_modell = modell;
     m_modelProvider = modelProvider;
+    m_geoLog = geoLog;
 
     setToolTipText( Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.7" ) ); //$NON-NLS-1$
 
@@ -111,8 +114,7 @@ public class ReevaluateResultAction extends Action
 
       final IContainer scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
 
-      final IGeoLog log = m_page.getLog();
-      final ICoreRunnableWithProgress calculationOperation = new ReevaluateResultOperation( selectedResults, scenarioFolder, m_commandTarget, m_modell, m_modelProvider, log );
+      final ICoreRunnableWithProgress calculationOperation = new ReevaluateResultOperation( selectedResults, scenarioFolder, m_commandTarget, m_modell, m_modelProvider, m_geoLog );
 
       final IWizard wizard = m_page.getWizard();
       final IWizardContainer container = wizard.getContainer();

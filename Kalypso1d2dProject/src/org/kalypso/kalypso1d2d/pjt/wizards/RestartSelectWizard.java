@@ -47,12 +47,9 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
@@ -79,7 +76,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 /**
  * @author Dejan Antanaskovic
  */
-public class RestartSelectWizard extends Wizard implements INewWizard
+public class RestartSelectWizard extends Wizard
 {
   private RestartSelectWizardPage1 m_restartSelectWizardPage1;
 
@@ -95,9 +92,9 @@ public class RestartSelectWizard extends Wizard implements INewWizard
 
   public RestartSelectWizard( final IControlModel1D2D controlModel )
   {
-    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final IHandlerService handlerService = (IHandlerService)PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     m_scenarioFolder = ScenarioHelper.getScenarioFolder();
     m_controlModel = controlModel;
     m_modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
@@ -113,9 +110,6 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     }
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
@@ -155,13 +149,13 @@ public class RestartSelectWizard extends Wizard implements INewWizard
       {
         if( calcUnitChild instanceof IStepResultMeta )
         {
-          final IStepResultMeta stepResult = (IStepResultMeta) calcUnitChild;
+          final IStepResultMeta stepResult = (IStepResultMeta)calcUnitChild;
           final IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
           for( final IResultMeta resultMeta : children )
           {
             if( resultMeta instanceof IDocumentResultMeta )
             {
-              final IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+              final IDocumentResultMeta docResult = (IDocumentResultMeta)resultMeta;
 
               if( docResult.getDocumentType().equals( IDocumentResultMeta.DOCUMENTTYPE.nodes ) )
               {
@@ -192,11 +186,11 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     {
       if( element instanceof StepResultMeta )
       {
-        final IStepResultMeta result = (IStepResultMeta) element;
+        final IStepResultMeta result = (IStepResultMeta)element;
         result.setRestart( true );
         final IRestartInfo restartInfo = m_controlModel.addRestartInfo();
-        restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta) result.getOwner()).getCalcUnit() );
-        restartInfo.setStepResultMetaID( result.getId());
+        restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta)result.getOwner()).getCalcUnit() );
+        restartInfo.setStepResultMetaID( result.getId() );
 
         // TODO: implement accessing zip file!
         final IFeatureBindingCollection<IResultMeta> children = result.getChildren();
@@ -205,7 +199,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
         {
           if( resultMeta instanceof IDocumentResultMeta )
           {
-            final IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+            final IDocumentResultMeta docResult = (IDocumentResultMeta)resultMeta;
             if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.nodes )
               restartInfo.setRestartFilePath( docResult.getFullPath().toPortableString() );
           }
@@ -218,7 +212,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
       // the user
 
       /* post empty command in order to make pool dirty. */
-      ((ICommandPoster) m_modelProvider).postCommand( IControlModelGroup.class.getName(), new EmptyCommand( "You are dirty now, pool!", false ) ); //$NON-NLS-1$
+      ((ICommandPoster)m_modelProvider).postCommand( IControlModelGroup.class.getName(), new EmptyCommand( "You are dirty now, pool!", false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -226,15 +220,5 @@ public class RestartSelectWizard extends Wizard implements INewWizard
       e.printStackTrace();
     }
     return true;
-  }
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-
   }
 }

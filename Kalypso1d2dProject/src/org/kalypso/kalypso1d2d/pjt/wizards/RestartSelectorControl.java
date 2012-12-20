@@ -42,7 +42,6 @@ package org.kalypso.kalypso1d2d.pjt.wizards;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -53,9 +52,9 @@ import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
+
 /**
  * @author Dejan Antanaskovic
- * 
  */
 public class RestartSelectorControl extends AbstractFeatureControl
 {
@@ -64,17 +63,6 @@ public class RestartSelectorControl extends AbstractFeatureControl
     super( feature, pt );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void addModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
@@ -83,44 +71,27 @@ public class RestartSelectorControl extends AbstractFeatureControl
 
     button.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final IControlModel1D2D controlModel = (IControlModel1D2D) getFeature().getAdapter( IControlModel1D2D.class );
+        final IControlModel1D2D controlModel = (IControlModel1D2D)getFeature().getAdapter( IControlModel1D2D.class );
         final RestartSelectWizard wizard = new RestartSelectWizard( controlModel );
         final WizardDialog wizardDialog = new WizardDialog( parent.getDisplay().getActiveShell(), wizard );
         wizardDialog.open();
       }
     } );
+
     return button;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
-   */
   @Override
   public boolean isValid( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void removeModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
-   */
   @Override
   public void updateControl( )
   {
   }
-
 }
