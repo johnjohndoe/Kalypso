@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="selection">
+    <Layers>
+      <Layer id="selectionLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlSelectionLayerProvider">
+          <Parameters>
+            <Parameter name="hideOnMultiSelect" value="false" />
+          </Parameters>
+        </Provider>
+        <Title>Selektion</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#screenAxisY" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="selectionStyle">
+            <Width>3</Width>
+            <LineColor>BAFFEC</LineColor>
+            <LineCap>ROUND</LineCap>
+            <LineJoin>MITER</LineJoin>
+            <MiterLimit>1</MiterLimit>
+          </LineStyle>
+          <AreaStyle role="selectionArea">
+            <Alpha>64</Alpha>
+            <Fill>
+              <ColorFill>
+                <Color>BAFFEC</Color>
+              </ColorFill>
+            </Fill>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>BAFFEC</LineColor>
+            </Stroke>
+          </AreaStyle>
+        </Styles>
+      </Layer>
+    </Layers>
+  </Chart>
+</ChartConfiguration>

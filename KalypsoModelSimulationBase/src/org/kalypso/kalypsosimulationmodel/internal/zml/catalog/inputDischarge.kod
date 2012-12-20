@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="inputDischarge">
+    <Styles>
+      <LineStyle role="q_line_0">
+        <Alpha>48</Alpha>
+        <Width>2</Width>
+        <LineColor>FF002E</LineColor>
+        <DashOffset>16</DashOffset>
+        <DashArray>12 7</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>MITER</LineJoin>
+        <MiterLimit>1</MiterLimit>
+      </LineStyle>
+      <PointStyle role="q_singlePoint_0">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>FF002E</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>FF002E</Color>
+        </FillColor>
+      </PointStyle>
+    </Styles>
+    <Layers>
+      <Layer id="HYDROLOGY_INPUT_GAUGE">
+        <Title>Pegel (Eingangsdaten)</Title>
+        <Layers>
+          <Layer id="gauge" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
+            <Title>Pegel (Eingangsdaten)</Title>
+            <Description />
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge:input#q_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge:input#q_singlePoint_0</StyleReference>
+            </Styles>
+          </Layer>
+          <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:discharge#Q" />
+        </MapperRefs>
+      </Layer>
+
+      <Layer id="HYDROLOGY_INPUT_INFLOW">
+        <Title>Zufluss (Eingangsdaten)</Title>
+        <Layers>
+          <Layer id="inflow" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
+            <Title>Zufluss (Eingangsdaten)</Title>
+            <Description />
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge:input#q_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge:input#q_singlePoint_0</StyleReference>
+            </Styles>
+          </Layer>
+          <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:discharge#Q" />
+        </MapperRefs>
+      </Layer>
+    </Layers>
+  </Chart>
+</ChartConfiguration>
