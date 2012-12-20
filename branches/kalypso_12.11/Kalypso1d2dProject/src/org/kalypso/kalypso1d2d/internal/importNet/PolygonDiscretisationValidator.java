@@ -44,7 +44,6 @@ import java.util.List;
 
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
@@ -122,7 +121,7 @@ public class PolygonDiscretisationValidator
     final Polygon polygon = item.getPolygon();
 
     if( polygon.intersects( line ) )
-      return Messages.getString("PolygonDiscretisationValidator_0"); //$NON-NLS-1$
+      return Messages.getString( "PolygonDiscretisationValidator_0" ); //$NON-NLS-1$
 
     return null;
   }
