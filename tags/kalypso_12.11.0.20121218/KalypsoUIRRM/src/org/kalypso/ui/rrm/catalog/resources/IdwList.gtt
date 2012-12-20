@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org" xmlns:th="org.kalypso.model.rcm.thiessen" xmlns:xlink="http://www.w3.org/1999/xlink" >
+  <layer id="id" featurePath="stationMember" linktype="gml" xlink:type="simple" xlink:href=".models/.thiessenStations.gml" xlink:actuate="onRequest">
+    <column name="idw:active" editable="true" width="25" alignment="SWT.CENTER" />
+    <column name="gml:description" editable="false" width="120" alignment="SWT.LEFT" label="Zeitreihe" />
+    <column name="gml:name" editable="false" width="120" alignment="SWT.LEFT" label="Station"/>
+  </layer>
+</gistableview>
