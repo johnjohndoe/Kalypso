@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="global">
+    <Styles>
+      <!-- Q (greenish) styles (line and point) -->
+      <LineStyle role="q_line_0">
+        <Width>2</Width>
+        <LineColor>33B933</LineColor>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <PointStyle role="q_singlePoint_0">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>33B933</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>33B933</Color>
+        </FillColor>
+      </PointStyle>
+      <LineStyle role="q_line_1">
+        <Width>2</Width>
+        <LineColor>D6ED34</LineColor>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <PointStyle role="q_singlePoint_1">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>D6ED34</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>D6ED34</Color>
+        </FillColor>
+      </PointStyle>
+      <LineStyle role="q_line_2">
+        <Width>2</Width>
+        <LineColor>008000</LineColor>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <PointStyle role="q_singlePoint_2">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>008000</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>008000</Color>
+        </FillColor>
+      </PointStyle>
+      <LineStyle role="q_line_3">
+        <Width>2</Width>
+        <LineColor>3D5208</LineColor>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <PointStyle role="q_singlePoint_3">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>3D5208</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>3D5208</Color>
+        </FillColor>
+      </PointStyle>
+      <LineStyle role="q_line_4">
+        <Width>2</Width>
+        <LineColor>879859</LineColor>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <PointStyle role="q_singlePoint_4">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>879859</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>879859</Color>
+        </FillColor>
+      </PointStyle>
+
+    </Styles>
+    <Layers>
+      <Layer id="Q">
+        <Provider epid="">
+          <Parameters>
+            <Parameter name="content.messwerte" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Abfluss</Title>
+        <Layers>
+          <DerivedLayer id="Fehlwert" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:discharge#Abfluss"></LayerReference>
+            <Parameters>
+              <Parameter name="content.fehlwert" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.fehlwerte" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#fehlwert_singlepoint_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#fehlwert_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
+          <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:discharge#Abfluss"></LayerReference>
+            <Parameters>
+              <Parameter name="content.stuetzstelle" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#stuetzstelle_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
+          <Layer id="Abfluss" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
+            <Title>Abfluss</Title>
+            <Description />
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_line_1</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_1</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_line_2</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_2</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_line_3</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_3</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_line_4</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:discharge#q_singlePoint_4</StyleReference>
+            </Styles>
+          </Layer>
+          <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:discharge#Q" />
+        </MapperRefs>
+      </Layer>
+    </Layers>
+    <Mappers>
+      <Axis id="Q" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Abfluss [m³]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <PreferredAdjustment before="5" range="80" after="15" />
+        <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.001" />
+      </Axis>
+    </Mappers>
+  </Chart>
+</ChartConfiguration>

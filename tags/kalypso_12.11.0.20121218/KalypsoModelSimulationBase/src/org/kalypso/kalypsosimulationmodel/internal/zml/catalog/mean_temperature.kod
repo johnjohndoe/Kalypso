@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="volume">
+    <Styles>
+      <LineStyle role="t_line_0">
+        <Width>2</Width>
+        <LineColor>FF002E</LineColor>
+      </LineStyle>
+      <PointStyle role="t_singlePoint_0">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>FF002E</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>FF002E</Color>
+        </FillColor>
+      </PointStyle>
+      <LineStyle role="t_line_1">
+        <Width>2</Width>
+        <LineColor>C1006D</LineColor>
+      </LineStyle>
+      <PointStyle role="t_singlePoint_1">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>C1006D</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>C1006D</Color>
+        </FillColor>
+      </PointStyle>
+      <LineStyle role="t_line_2">
+        <Width>2</Width>
+        <LineColor>A7002B</LineColor>
+      </LineStyle>
+      <PointStyle role="t_singlePoint_2">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>A7002B</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>A7002B</Color>
+        </FillColor>
+      </PointStyle>
+      <LineStyle role="t_line_3">
+        <Width>2</Width>
+        <LineColor>B70030</LineColor>
+      </LineStyle>
+      <PointStyle role="t_singlePoint_3">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>B70030</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>B70030</Color>
+        </FillColor>
+      </PointStyle>
+      <LineStyle role="t_line_4">
+        <Width>2</Width>
+        <LineColor>930030</LineColor>
+      </LineStyle>
+      <PointStyle role="t_singlePoint_4">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>930030</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>930030</Color>
+        </FillColor>
+      </PointStyle>
+    </Styles>
+    <Layers>
+      <Layer id="MEAN_TEMPERATURE">
+        <Title>Mittlere Temperature</Title>
+        <Layers>
+          <DerivedLayer id="Fehlwert" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:mean:temperature#temperature"></LayerReference>
+            <Parameters>
+              <Parameter name="content.fehlwert" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.fehlwerte" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#fehlwert_singlepoint_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#fehlwert_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
+          <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:simulation:base:diagramm:mean:temperature#temperature"></LayerReference>
+            <Parameters>
+              <Parameter name="content.stuetzstelle" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:quality#stuetzstelle_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
+          <Layer id="temperature" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
+            <Title>Mittlere Temperature</Title>
+            <Description />
+            <Styles>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:mean:temperature#t_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:mean:temperature#t_singlePoint_0</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:mean:temperature#t_line_1</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:mean:temperature#t_singlePoint_1</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:mean:temperature#t_line_2</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:mean:temperature#t_singlePoint_2</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:mean:temperature#t_line_3</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:mean:temperature#t_singlePoint_3</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:mean:temperature#t_line_4</StyleReference>
+              <StyleReference>urn:org:kalypso:simulation:base:diagramm:mean:temperature#t_singlePoint_4</StyleReference>
+            </Styles>
+          </Layer>
+
+          <LayerReference url="urn:org:kalypso:simulation:base:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:mean:temperature#MEAN_TEMPERATURE" />
+        </MapperRefs>
+      </Layer>
+    </Layers>
+    <Mappers>
+      <Axis id="MEAN_TEMPERATURE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Temperatur [°C]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>RIGHT</Position>
+        <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
+        <RendererRef url="urn:org:kalypso:simulation:base:diagramm:global#AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction minRange="0.1" />
+      </Axis>
+    </Mappers>
+  </Chart>
+</ChartConfiguration>
