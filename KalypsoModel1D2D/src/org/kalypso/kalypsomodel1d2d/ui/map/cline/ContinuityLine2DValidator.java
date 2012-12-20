@@ -48,8 +48,11 @@ class ContinuityLine2DValidator
   {
     try
     {
+      if( m_nodes == null )
+        return "Unable to build a connected continuity line";
+
       if( m_nodes.length < 2 )
-        return Messages.getString("ContinuityLine2DValidator_0"); //$NON-NLS-1$
+        return Messages.getString( "ContinuityLine2DValidator_0" ); //$NON-NLS-1$
 
       /* build geometry */
       final LineGeometryBuilder lineBuilder = CreateFEContinuityLineWidget.createLineBuilder( m_panel, m_nodes, null );
@@ -60,7 +63,7 @@ class ContinuityLine2DValidator
       /* self intersection */
       final LineString line = (LineString)JTSAdapter.export( curve );
       if( !line.isSimple() )
-        return Messages.getString("ContinuityLine2DValidator_1"); //$NON-NLS-1$
+        return Messages.getString( "ContinuityLine2DValidator_1" ); //$NON-NLS-1$
 
       // REMARK: 2d lines may intersect and touch!
 

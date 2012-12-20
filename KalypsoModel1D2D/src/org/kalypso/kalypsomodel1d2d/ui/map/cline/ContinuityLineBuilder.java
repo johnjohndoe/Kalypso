@@ -34,12 +34,23 @@ import org.kalypso.ogc.gml.map.IMapPanel;
  */
 class ContinuityLineBuilder
 {
-  private final List<IFE1D2DNode> m_nodes = new ArrayList<>();
+  private List<IFE1D2DNode> m_nodes = new ArrayList<>();
 
   public void addPath( final IFE1D2DNode[] path )
   {
+    /* invalid builder - do not accept new nodes */
+    if( m_nodes == null )
+      return;
+
     if( path == null )
       return;
+
+    if( path.length == 0 )
+    {
+      /* invalid path (probably not connected net), invalidate this builder */
+      m_nodes = null;
+      return;
+    }
 
     for( final IFE1D2DNode node : path )
       addNode( node );
@@ -54,6 +65,9 @@ class ContinuityLineBuilder
 
   public IFE1D2DNode[] getContinuityLine( )
   {
+    if( m_nodes == null )
+      return null;
+
     return m_nodes.toArray( new IFE1D2DNode[m_nodes.size()] );
   }
 
