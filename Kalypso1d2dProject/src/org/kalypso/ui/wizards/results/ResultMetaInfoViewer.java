@@ -66,11 +66,9 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
  * @author Thomas Jung
- *
  */
 public class ResultMetaInfoViewer extends Viewer
 {
-
   /*
    * fonts
    */
@@ -96,39 +94,26 @@ public class ResultMetaInfoViewer extends Viewer
     parent.getDisplay();
 
     m_factory = factory;
-
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.Viewer#getControl()
-   */
   @Override
   public Control getControl( )
   {
     return m_panel;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.Viewer#getInput()
-   */
   @Override
   public Object getInput( )
   {
     return m_input;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.Viewer#getSelection()
-   */
   @Override
   public ISelection getSelection( )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.Viewer#refresh()
-   */
   @Override
   public void refresh( )
   {
@@ -137,32 +122,33 @@ public class ResultMetaInfoViewer extends Viewer
     for( final Control control : children )
       control.dispose();
 
-        m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
-        m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
+    m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-        m_panel.setText( Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0" ) ); //$NON-NLS-1$
-        m_textPanel.setFont( "header", fTextHeader ); //$NON-NLS-1$
-        m_textPanel.setFont( "text", fTextNormal ); //$NON-NLS-1$
+    m_panel.setText( Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0" ) ); //$NON-NLS-1$
+    m_textPanel.setFont( "header", fTextHeader ); //$NON-NLS-1$
+    m_textPanel.setFont( "text", fTextNormal ); //$NON-NLS-1$
 
-        if( m_input instanceof IResultMeta )
-        {
-          final IResultMeta result = (IResultMeta) m_input;
+    if( m_input instanceof IResultMeta )
+    {
+      final IResultMeta result = (IResultMeta)m_input;
 
-          // special result data
-          if( m_factory != null )
-          {
-            final IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
-            final Composite buttonControl = createThemeCreator.createControl( m_panel );
-            if( buttonControl != null )
-              buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-          }
+      // special result data
+      if( m_factory != null )
+      {
+        final IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
+        final Composite buttonControl = createThemeCreator.createControl( m_panel );
+        if( buttonControl != null )
+          buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+      }
 
-          final String infoText = getInformationText( result );
-          m_textPanel.setText( infoText, true, false );
-        }
-        m_panel.layout( true );
+      final String infoText = getInformationText( result );
+      m_textPanel.setText( infoText, true, false );
+    }
+    m_panel.layout( true );
   }
 
+  // FIXME: move into a separate builder class, we need a much better abstraction here...
   public static String getInformationText( final IResultMeta result )
   {
     if( result == null )
@@ -231,7 +217,7 @@ public class ResultMetaInfoViewer extends Viewer
     IDocumentResultMeta docResult = null;
     if( result instanceof IDocumentResultMeta )
     {
-      docResult = (IDocumentResultMeta) result;
+      docResult = (IDocumentResultMeta)result;
 
       // get infos of the selected document
       // docName = docResult.getName();
@@ -256,7 +242,6 @@ public class ResultMetaInfoViewer extends Viewer
     /*
      * if( scenarioResult != null ) { buf.append( "<p>" ); buf.append( "<span color=\"header\" font=\"header\">" +
      * "Szenario: " + scenarioName + "</span>" ); buf.append( "</p>" );
-     *
      * buf.append( "<p>" ); buf.append( scenarioDescription ); buf.append( "</p>" ); }
      */
     // CalcUnit
@@ -367,9 +352,7 @@ public class ResultMetaInfoViewer extends Viewer
         {
           buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"minimaler Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
-
       }
-
     }
 
     buf.append( "</form>" ); //$NON-NLS-1$
@@ -377,31 +360,13 @@ public class ResultMetaInfoViewer extends Viewer
     return buf.toString();
   }
 
-  // /**
-  // * gets the ScenarioResultMeta as the papa of all results
-  // */
-  // private static IScenarioResultMeta getScenarioResultMeta( final IResultMeta result )
-  // {
-  // if( result instanceof IScenarioResultMeta )
-  // return (IScenarioResultMeta) result;
-  // else
-  // {
-  // final IResultMeta parent = result.getOwner();
-  // if( parent != null )
-  // {
-  // return getScenarioResultMeta( parent );
-  // }
-  // }
-  // return null;
-  // }
-
   /**
    * gets the StepResultMeta as the papa of all documents (except tin_terrain)
    */
   private static IStepResultMeta getStepResultMeta( final IResultMeta result )
   {
     if( result instanceof IStepResultMeta )
-      return (IStepResultMeta) result;
+      return (IStepResultMeta)result;
     else
     {
       final IResultMeta parent = result.getOwner();
@@ -413,9 +378,6 @@ public class ResultMetaInfoViewer extends Viewer
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.Viewer#setInput(java.lang.Object)
-   */
   @Override
   public void setInput( final Object input )
   {
@@ -424,13 +386,9 @@ public class ResultMetaInfoViewer extends Viewer
     refresh();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.Viewer#setSelection(org.eclipse.jface.viewers.ISelection, boolean)
-   */
   @Override
   public void setSelection( final ISelection selection, final boolean reveal )
   {
     throw new UnsupportedOperationException();
   }
-
 }
