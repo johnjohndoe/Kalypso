@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Style_Array__CS_Part_Type" id="D2D2A8C1-00B6-7ADC-D7D8-C15DFFAD945B" directorySegmentName="seg_0">
+   <createdBy>thuel</createdBy>
+   <createdTime>2012-07-26 16:06:01 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2012-07-27 08:18:44 UTC</changedTime>
+   <ownerDesignName>pdb_V0.0.5</ownerDesignName>
+   <identifying>false</identifying>
+   <optionalSource>true</optionalSource>
+   <optionalTarget>false</optionalTarget>
+   <sourceCardinality>1</sourceCardinality>
+   <sourceEntity>69309A60-0889-2ABA-C569-5D25A547396C</sourceEntity>
+   <targetCardinalityString>*</targetCardinalityString>
+   <targetEntity>D86BB0BD-F07D-AEB8-7DF2-38D55ED679DC</targetEntity>
+   <transferable>true</transferable>
+</Relation>

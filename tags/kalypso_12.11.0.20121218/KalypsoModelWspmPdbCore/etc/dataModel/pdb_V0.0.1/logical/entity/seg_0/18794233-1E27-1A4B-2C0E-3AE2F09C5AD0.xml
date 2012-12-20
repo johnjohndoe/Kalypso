@@ -1,0 +1,76 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="18794233-1E27-1A4B-2C0E-3AE2F09C5AD0" directorySegmentName="seg_0" name="Document">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-18 07:10:52 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-06-07 11:14:11 UTC</changedTime>
+   <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+   <pkName>Documents PK</pkName>
+   <adequatelyNormalized>NO</adequatelyNormalized>
+   <expectedVolumes>0</expectedVolumes>
+   <fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+   <growthPercent>0</growthPercent>
+   <growthType>Year</growthType>
+   <maxVolumes>9999999</maxVolumes>
+   <minVolumes>0</minVolumes>
+   <normalForm>Third</normalForm>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Attribute</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <attributes>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Name" id="941B3F7E-C2BF-ABB2-CC15-85B55659FD17">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:11:05 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-23 12:13:59 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT057</logicalDatatype>
+      </Attribute>
+   </attributes>
+   <identifiers>
+      <identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="46F514DE-62FA-A8DD-28A0-CE7FC74D0F4C" name="Document PK">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:11:09 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 08:57:09 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+         <pk>true</pk>
+         <usedAttributes>
+            <attributeRef>941B3F7E-C2BF-ABB2-CC15-85B55659FD17</attributeRef>
+         </usedAttributes>
+      </identifier>
+   </identifiers>
+</Entity>

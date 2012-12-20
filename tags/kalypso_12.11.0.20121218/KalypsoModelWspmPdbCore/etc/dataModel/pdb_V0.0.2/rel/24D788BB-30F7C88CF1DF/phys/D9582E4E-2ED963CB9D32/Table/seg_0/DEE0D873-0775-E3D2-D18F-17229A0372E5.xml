@@ -1,0 +1,35 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TableProxyOraclev10g" name="Info" id="DEE0D873-0775-E3D2-D18F-17229A0372E5" directorySegmentName="seg_0">
+   <createdBy>thuel</createdBy>
+   <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+   <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+   <logging>YES</logging>
+   <columnProxies>
+      <ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.ColumnProxyOraclev10g" name="Value" id="190E4D31-57E2-7F92-48E7-1CD3C16E01D8">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ColumnProxy>
+      <ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.ColumnProxyOraclev10g" name="Key" id="B00E34EB-3DB4-339C-A84E-4D776AE8F7A7">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ColumnProxy>
+   </columnProxies>
+   <primaryKeys>
+      <PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="Info PK" id="342792E4-D631-DF33-09AA-BB2A7ED2E2B2">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <indexSort>NO</indexSort>
+      </PrimaryKey>
+   </primaryKeys>
+</TableProxyOraclev10g>

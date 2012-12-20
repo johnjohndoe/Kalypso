@@ -1,0 +1,86 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TableProxyOraclev10g" name="Roughness" id="67C78D4B-9E64-08FD-3479-5F03DCCB39A0" directorySegmentName="seg_0">
+   <createdBy>thuel</createdBy>
+   <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+   <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+   <logging>YES</logging>
+   <columnProxies>
+      <ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.ColumnProxyOraclev10g" name="Validity" id="2D4BB015-8C49-826F-DE49-0A3C25F83207">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ColumnProxy>
+      <ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.ColumnProxyOraclev10g" name="Source" id="339CA897-BE2C-108A-220F-8DE386BA90B6">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ColumnProxy>
+      <ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.ColumnProxyOraclev10g" name="Point_Kind" id="3D5DB8FA-9F04-8524-2CB9-3B33833E3B56">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ColumnProxy>
+      <ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.ColumnProxyOraclev10g" name="Description" id="8452E120-BD7D-4108-87F0-7C91FD884B2B">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ColumnProxy>
+      <ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.ColumnProxyOraclev10g" name="K_Value" id="95831933-E0F8-730E-EAD6-373FA73E5418">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ColumnProxy>
+      <ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.ColumnProxyOraclev10g" name="Label" id="B057424A-992E-4095-82BF-AB67387F168E">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ColumnProxy>
+      <ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.ColumnProxyOraclev10g" name="Name" id="DD68ADF7-2464-F175-F7AE-1BF4B858FA79">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ColumnProxy>
+      <ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.ColumnProxyOraclev10g" name="Kst_Value" id="F70CB7FF-49DA-BF58-2FAE-BDA7367E6CBE">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ColumnProxy>
+   </columnProxies>
+   <foreignKeys>
+      <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="Point_Kind__Roughness" id="C71311CE-422E-12D6-FA3F-E3AFE4A47C4E">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+      </ForeignKey>
+   </foreignKeys>
+   <primaryKeys>
+      <PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="Roughness PK" id="4E5414C6-D526-BC4C-3DDA-EF8ABF91BAB4">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-07-14 09:31:21 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-14 09:31:21 UTC</changedTime>
+         <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+         <indexSort>NO</indexSort>
+      </PrimaryKey>
+   </primaryKeys>
+</TableProxyOraclev10g>
