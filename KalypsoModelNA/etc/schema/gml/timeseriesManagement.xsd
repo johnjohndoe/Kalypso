@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement" xmlns:tm="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema">
+
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="obslink.zml.kalypso.org" />
+
+  <element name="StationCollection" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="stationMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence minOccurs="1" maxOccurs="1">
+                  <element ref="tm:_Station" />
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="_Station" type="tm:AbstractStationType" abstract="true" substitutionGroup="gml:_Feature" />
+  <complexType name="AbstractStationType" abstract="true">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="comment" type="string" minOccurs="0" />
+          <element name="group" type="string" />
+
+          <!-- Gemarkung? -->
+          <element name="location" type="gml:PointPropertyType" />
+
+
+          <element name="timseriesMember" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence minOccurs="1" maxOccurs="1">
+                <element ref="tm:Timeseries" />
+              </sequence>
+            </complexType>
+          </element>
+
+
+
+          <!-- TODO: list of additional metadata -->
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="HydrologicalStation" substitutionGroup="tm:_Station">
+    <complexType>
+      <complexContent>
+        <extension base="tm:AbstractStationType">
+          <sequence>
+            <element name="gaugeZero" type="double" minOccurs="0" />
+
+            <!-- TODO: rating table -->
+            <!-- TODO: alarm levels ? -->
+
+            <!-- TODO: river, river id, river station -->
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="MeteorologicalStation" substitutionGroup="tm:_Station">
+    <complexType>
+      <complexContent>
+        <extension base="tm:AbstractStationType">
+          <sequence>
+            <element name="altitude" type="double" minOccurs="0" />
+
+            <!-- TODO: basin, ??? -->
+
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="Timeseries" substitutionGroup="gml:_Feature">
+    <complexType>
+      <annotation>
+        <appinfo xmlns:kapp="org.kalypso.appinfo">
+          <kapp:functionProperty kapp:functionId="org.kalypso.model.hydrology.timeseries.functionProperty.data.link" kapp:property="tm:data" />
+        </appinfo>
+      </annotation>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="quality" type="string" minOccurs="0" />
+
+            <!-- TODO: reference to type catalog -->
+            <element name="parameterType" type="string" />
+
+            <element name="data" type="obslink:TimeseriesLinkFeatureProperty" />
+
+            <!-- TODO: durchdenken -->
+            <element name="timestepAmount" type="int" />
+            <element name="timestepField" type="string" />
+
+             <!-- Betriebszeitraum -->
+            <element name="measurementStart" type="date" minOccurs="0" />
+            <element name="measurementEnd" type="date" minOccurs="0" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="StationClasses" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="classMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence minOccurs="1" maxOccurs="1">
+                  <element ref="tm:StationClass" />
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="StationClass" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="class" type="string" />
+            <element name="parameterType" type="string" minOccurs="1" maxOccurs="unbounded" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+</schema>
