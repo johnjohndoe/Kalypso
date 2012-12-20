@@ -66,9 +66,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
-import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
@@ -95,9 +92,7 @@ public class SelectResultWizardPage extends WizardPage
 
   private final ViewerComparator m_comparator;
 
-  protected IGeoLog m_geoLog;
-
-  public SelectResultWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final ViewerComparator comparator, final IThemeConstructionFactory factory, final IGeoLog geoLog )
+  public SelectResultWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final ViewerComparator comparator, final IThemeConstructionFactory factory )
   {
     super( pageName, title, titleImage );
 
@@ -105,8 +100,6 @@ public class SelectResultWizardPage extends WizardPage
 
     m_factory = factory;
     m_filter = filter;
-
-    m_geoLog = setOrCreateLog( geoLog );
 
     setDescription( Messages.getString( "org.kalypso.ui.wizards.results.SelectResultWizardPage.0" ) ); //$NON-NLS-1$
   }
@@ -119,22 +112,6 @@ public class SelectResultWizardPage extends WizardPage
     Assert.isTrue( m_treeViewer == null );
 
     m_actions.add( action );
-  }
-
-  private IGeoLog setOrCreateLog( final IGeoLog geoLog )
-  {
-    if( geoLog != null )
-      return geoLog;
-
-    try
-    {
-      return new GeoLog( Kalypso1d2dProjectPlugin.getDefault().getLog() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
   }
 
   public void setResultMeta( final IResultMeta resultRoot )
@@ -155,6 +132,7 @@ public class SelectResultWizardPage extends WizardPage
   {
     /* set a fixed size to the Wizard */
     // HACK!!
+    // FIXME: bad -> do this in a different way!
     final Object layoutData = parent.getLayoutData();
     if( layoutData instanceof GridData )
     {
@@ -275,10 +253,5 @@ public class SelectResultWizardPage extends WizardPage
   public CheckboxTreeViewer getTreeViewer( )
   {
     return m_treeViewer;
-  }
-
-  public IGeoLog getLog( )
-  {
-    return m_geoLog;
   }
 }

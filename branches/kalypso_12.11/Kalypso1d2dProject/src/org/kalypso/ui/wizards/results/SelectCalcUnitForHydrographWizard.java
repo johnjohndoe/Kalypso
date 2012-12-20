@@ -80,7 +80,6 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Thomas Jung
- *
  */
 public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbenchWizard
 {
@@ -99,30 +98,24 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.1" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
     final NonCalcUnitResultViewerFilter resultFilter = new NonCalcUnitResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" ), null, resultFilter, comparator, null ); //$NON-NLS-1$
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
     addPage( selectResultWizardPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
     /* collect all time step node results of the selected calc unit */
 
-    final SelectResultWizardPage page = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
+    final SelectResultWizardPage page = (SelectResultWizardPage)getPage( PAGE_SELECT_RESULTS_NAME );
     final IResultMeta[] results = page.getSelectedResults();
 
     // final List<IResultMeta> resultList = new LinkedList<IResultMeta>();
@@ -132,7 +125,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
       if( resultMeta instanceof ICalcUnitResultMeta )
       {
 
-        final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) resultMeta;
+        final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta)resultMeta;
         try
         {
           /* gml handling */
@@ -203,9 +196,9 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IHandlerService handlerService = (IHandlerService)workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     m_dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     m_scenarioFolder = ScenarioHelper.getScenarioFolder();
     try

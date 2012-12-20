@@ -69,7 +69,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Wizard to add result themes to the map.
- *
+ * 
  * @author Thomas Jung
  */
 public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
@@ -86,12 +86,9 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
 
   public AddResultThemeWizard( )
   {
-    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.1") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.1" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
@@ -99,7 +96,7 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
     final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
 
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.2"), null, resultFilter, resultComparator, themeConstructionFactory, null );//$NON-NLS-1$
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.2" ), null, resultFilter, resultComparator, themeConstructionFactory );//$NON-NLS-1$
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -121,9 +118,9 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IHandlerService handlerService = (IHandlerService)workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     try
     {
@@ -135,14 +132,14 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
     catch( final CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.3"), Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.4"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.3" ), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.4" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
   @Override
   public boolean performFinish( )
   {
-    final SelectResultWizardPage page = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
+    final SelectResultWizardPage page = (SelectResultWizardPage)getPage( PAGE_SELECT_RESULTS_NAME );
     final IResultMeta[] results = page.getSelectedResults();
     final IThemeConstructionFactory factory = page.getThemeFactory();
     final IKalypsoLayerModell modell = m_modell;
@@ -153,7 +150,7 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
       final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
       {
         @Override
-        @SuppressWarnings("synthetic-access")
+        @SuppressWarnings( "synthetic-access" )
         public IStatus execute( final IProgressMonitor monitor )
         {
           return MapUtils.addThemes( modell, m_commandTarget, results, factory, monitor );
@@ -162,11 +159,11 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.5"), Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.6"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.5" ), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return status.isOK();
     }
-    System.out.println( Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.7") ); //$NON-NLS-1$
+    System.out.println( Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.7" ) ); //$NON-NLS-1$
     return false;
 
   }

@@ -96,7 +96,7 @@ public class ConfigureLengthSectionWizard extends Wizard
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.4" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.4" ), null, resultFilter, comparator, null ); //$NON-NLS-1$
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 

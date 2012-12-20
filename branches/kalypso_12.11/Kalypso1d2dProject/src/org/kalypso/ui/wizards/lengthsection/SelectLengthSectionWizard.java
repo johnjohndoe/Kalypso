@@ -76,25 +76,19 @@ public class SelectLengthSectionWizard extends Wizard
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
     final LengthSectionViewerFilter resultFilter = new LengthSectionViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.2" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.2" ), null, resultFilter, comparator, null ); //$NON-NLS-1$
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
     addPage( selectResultWizardPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
