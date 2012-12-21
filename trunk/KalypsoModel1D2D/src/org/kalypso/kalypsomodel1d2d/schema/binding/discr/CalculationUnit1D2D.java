@@ -145,11 +145,10 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   {
     if( member == null )
       return false;
-
     return getVirtualMemberIDs().contains( member.getId() );
   }
 
-  // FIXME: only used to show number of 1d elements... all this hashnig just for that...
+  // FIXME: only used to show number of 1d elements... all this hashing just for that...
   @Override
   public List<IElement1D> getElements1D( )
   {
@@ -164,6 +163,10 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
 
   private void calculate1DElements( )
   {
+    if( m_virtualElements == null )
+    {
+      refreshVirtualElements();
+    }
     m_list1DElements = new ArrayList<>();
 
     getVirtualMemberIDs();
@@ -174,7 +177,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
     }
   }
 
-  // FIXME: only used to show number of 1d elements... all this hashnig just for that...
+  // FIXME: only used to show number of 1d elements... all this hashing just for that...
   @Override
   public List<IPolyElement> getElements2D( )
   {
@@ -189,6 +192,10 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
 
   private void calculate2DElements( )
   {
+    if( m_virtualElements == null )
+    {
+      refreshVirtualElements();
+    }
     m_list2DElements = new ArrayList<>();
 
     for( final IFENetItem element : m_virtualElements )

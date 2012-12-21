@@ -790,6 +790,13 @@
           typeID="org.kalypso.simulation.swan.preSWANKalypso">
     </simulation>
   </extension>
+  <extension point="org.kalypso.simulation.core.simulation">
+    <simulation simulationClass="org.kalypso.kalypsomodel1d2d.sim.TelemacKalypsoSimulation" typeID="org.kalypso.model1d2d.telemac" />
+    <simulation
+          simulationClass="org.kalypso.kalypsomodel1d2d.sim.PreTelemacKalypso"
+          typeID="org.kalypso.simulation.telemac.preTelemacKalypso">
+    </simulation>
+  </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
      <provider

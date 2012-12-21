@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import org.apache.commons.vfs2.FileObject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
 /**
@@ -53,4 +55,10 @@ public interface IKalypsoSimulationRunnerComposite
   IStatus getSimulationStatus( );
 
   String getCalculationTypeName( );
+  
+  IStatus cancelJob();
+  
+  FileObject getTempDir();
+  
+  IStatus runCalculation( final IProgressMonitor monitor );
 }

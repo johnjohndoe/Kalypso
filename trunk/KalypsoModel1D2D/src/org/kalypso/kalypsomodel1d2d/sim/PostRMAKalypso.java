@@ -124,7 +124,7 @@ public class PostRMAKalypso implements ISimulation
       else
         bean.userCalculatedSteps = resultManager.findCalculatedSteps();
 
-      resultManager.setStepsToProcess( bean.userCalculatedSteps, resultManager.getControlModel() );
+      resultManager.setStepsToProcess( bean.userCalculatedSteps );
 
       final ResultProcessingOperation processingOperation = new ResultProcessingOperation( resultManager, bean );
       IStatus resultStatus = processingOperation.execute( progressMonitor );

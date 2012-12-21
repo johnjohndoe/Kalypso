@@ -240,7 +240,7 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
       final Date[] calculatedSteps = m_resultManager.findCalculatedSteps();
       m_resultProcessViewer.setInput( calculatedSteps );
       m_selection = calculatedSteps;
-      m_resultManager.setStepsToProcess( m_selection, m_resultManager.getControlModel() );
+      m_resultManager.setStepsToProcess( m_selection );
     }
     catch( final IOException e )
     {
@@ -384,11 +384,9 @@ public class RMA10ResultPage extends WizardPage implements ISimulation1D2DConsta
 
     m_selection = dateList.toArray( new Date[dateList.size()] );
 
-    final IControlModel1D2D controlModel = m_resultManager.getControlModel();
-
     try
     {
-      m_resultManager.setStepsToProcess( m_selection, controlModel );
+      m_resultManager.setStepsToProcess( m_selection );
     }
     catch( final IOException e )
     {

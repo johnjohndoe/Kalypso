@@ -50,6 +50,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,6 +80,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.ICommandTarget;
@@ -116,9 +118,13 @@ public class ResultMeta1d2dHelper
 
   public static final String ORIGINAL_2D_FILE_NAME = "original.2d"; //$NON-NLS-1$
 
+  public static final String ORIGINAL_SLF_FILE_NAME = "original_res.slf"; //$NON-NLS-1$
+
   public static final String SWAN_RAW_DATA_META_NAME = "SWAN-Rohdaten"; //$NON-NLS-1$
 
   public static final String RMA_RAW_DATA_META_NAME = "RMA-Rohdaten"; //$NON-NLS-1$
+
+  public static final String TELEMAC_RAW_DATA_META_NAME = "Telemac-Rohdaten"; //$NON-NLS-1$
 
   public static final String TIME_STEP_PREFIX = "timestep-"; //$NON-NLS-1$
 
@@ -140,7 +146,8 @@ public class ResultMeta1d2dHelper
 
     final IPath fullResultPath = resultMeta.getFullPath();
     final IPath resultPath = resultMeta.getPath();
-
+    if( fullResultPath == null || resultPath == null )
+      return Status.OK_STATUS;
     for( int i = 0; i < resultPath.segmentCount(); i++ )
     {
       final IPath currentPath = fullResultPath.uptoSegment( fullResultPath.segmentCount() - i );
@@ -849,9 +856,11 @@ public class ResultMeta1d2dHelper
   /**
    * @return {@link IPath} to the saved Waves result file, resolved from given {@link IStepResultMeta} result
    */
-  public static IPath getSavedSWANRawResultData( final IStepResultMeta stepResultMeta )
+  public static IPath resolvePathFromResultDataByMetaName( final IStepResultMeta stepResultMeta, final String metaName )
   {
-    if( ResultMeta1d2dHelper.SWAN_RAW_DATA_META_NAME.equalsIgnoreCase( stepResultMeta.getName() ) )
+    if( metaName == null )
+      return null;
+    if( metaName.equalsIgnoreCase( stepResultMeta.getName() ) )
     {
       return stepResultMeta.getFullPath();
     }
@@ -861,7 +870,7 @@ public class ResultMeta1d2dHelper
       if( child instanceof IStepResultMeta )
       {
         final IStepResultMeta stepMeta = (IStepResultMeta)child;
-        if( ResultMeta1d2dHelper.SWAN_RAW_DATA_META_NAME.equalsIgnoreCase( stepMeta.getName() ) )
+        if( metaName.equalsIgnoreCase( stepMeta.getName() ) )
         {
           return stepMeta.getPath();
         }
@@ -869,7 +878,7 @@ public class ResultMeta1d2dHelper
       else if( child instanceof IDocumentResultMeta )
       {
         final IDocumentResultMeta stepMeta = (IDocumentResultMeta)child;
-        if( ResultMeta1d2dHelper.SWAN_RAW_DATA_META_NAME.equalsIgnoreCase( stepMeta.getName() ) )
+        if( metaName.equalsIgnoreCase( stepMeta.getName() ) )
         {
           return stepMeta.getPath();
         }
@@ -881,7 +890,7 @@ public class ResultMeta1d2dHelper
   /**
    * @return the {@link IPath} to the saved Waves result file, resolved in given {@link ICalcUnitResultMeta}
    */
-  public static IPath getSavedSWANRawResultData( final ICalcUnitResultMeta calcUnitMeta )
+  public static IPath getSavedPathFromResultData( final ICalcUnitResultMeta calcUnitMeta, final String metaName )
   {
     final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
     for( final IResultMeta child : children.toArray( new IResultMeta[children.size()] ) )
@@ -889,7 +898,7 @@ public class ResultMeta1d2dHelper
       if( child instanceof IStepResultMeta )
       {
         final IStepResultMeta stepMeta = (IStepResultMeta)child;
-        final IPath lRes = getSavedSWANRawResultData( stepMeta );
+        final IPath lRes = resolvePathFromResultDataByMetaName( stepMeta, metaName );
         if( lRes != null )
         {
           return lRes;
@@ -1022,4 +1031,38 @@ public class ResultMeta1d2dHelper
 
     return documents.toArray( new IDocumentResultMeta[documents.size()] );
   }
+  
+  public static void addToResultDB( final IStepResultMeta stepResultMeta, final Date stepDate, final File outputDir )
+  {
+    // TODO: retrieve time zone from central plugin preferences
+    final DateFormat dateFormatter = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.LONG );
+    dateFormatter.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+
+    if( ResultManager.STEADY_DATE.equals( stepDate ) )
+    {
+      stepResultMeta.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.93" ) ); //$NON-NLS-1$
+      stepResultMeta.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.94" ) ); //$NON-NLS-1$
+      stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.steady );
+      stepResultMeta.setStepTime( null );
+    }
+    else if( ResultManager.MAXI_DATE.equals( stepDate ) )
+    {
+      stepResultMeta.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.95" ) ); //$NON-NLS-1$
+      stepResultMeta.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.96" ) ); //$NON-NLS-1$
+      stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.maximum );
+      stepResultMeta.setStepTime( null );
+    }
+    else
+    {
+      // TODO: check for right time zone
+      final String dateString = dateFormatter.format( stepDate );
+      stepResultMeta.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.97", dateString ) ); //$NON-NLS-1$
+      stepResultMeta.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.98" ) + dateString ); //$NON-NLS-1$
+      stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.unsteady );
+      stepResultMeta.setStepTime( stepDate );
+    }
+
+    stepResultMeta.setPath( new Path( outputDir.getName() ) );
+  }
+  
 }

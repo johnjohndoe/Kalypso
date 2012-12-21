@@ -111,6 +111,13 @@
             </xs:simpleType>
           </xs:element>
           <!-- ControlDataBlock -->
+	      <xs:element name="TelemacCalculation" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>
+					Calculation with Telemac
+				</xs:documentation>
+			</xs:annotation>
+	      </xs:element>
           <xs:element name="SWANCalculation" type="xs:boolean" default="false">
             <xs:annotation>
               <xs:documentation>

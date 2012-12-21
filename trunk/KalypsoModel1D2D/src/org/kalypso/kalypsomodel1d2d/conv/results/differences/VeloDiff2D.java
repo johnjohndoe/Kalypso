@@ -204,11 +204,11 @@ public class VeloDiff2D
   private static void processResults( final FileObject result2dFile1, final FileObject result2dFile2, final List<ResultType> parameters, final File outputDir1, final File outputDir2 )
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final ProcessResult2DOperation job1 = new ProcessResult2DOperation( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
+    final ProcessResult2DOperation job1 = new ProcessResult2DOperation( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null, null );
     job1.execute( new NullProgressMonitor() );
 
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.16" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final ProcessResult2DOperation job2 = new ProcessResult2DOperation( result2dFile2, outputDir2, null, null, null, parameters, ResultManager.STEADY_DATE, null );
+    final ProcessResult2DOperation job2 = new ProcessResult2DOperation( result2dFile2, outputDir2, null, null, null, parameters, ResultManager.STEADY_DATE, null, null );
     job2.execute( new NullProgressMonitor() );
   }
 

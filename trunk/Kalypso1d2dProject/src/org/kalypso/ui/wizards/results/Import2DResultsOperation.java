@@ -234,7 +234,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
 
     final List<ResultType> parameter = null; // read all default parameters
 
-    final ProcessResult2DOperation operation = new ProcessResult2DOperation( inputFile, null, resultDir, flowModel, controlModel, discModel, parameter, stepDate, calcMeta, true );
+    final ProcessResult2DOperation operation = new ProcessResult2DOperation( inputFile, null, resultDir, flowModel, controlModel, discModel, parameter, stepDate, calcMeta, true, null );
     final IStatus fileStatus = operation.execute( monitor );
     m_stati.add( fileStatus );
   }

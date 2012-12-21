@@ -93,7 +93,7 @@ public class ModelDtmWizard extends Wizard
 
   private SurfaceIsolineWizardPage m_isolinePage;
 
-  // private SurfacePolygonWizardPage m_polygonPage;
+  private SurfacePolygonWizardPage m_polygonPage;
 
   private final IFile m_dtmFile;
 
@@ -143,11 +143,11 @@ public class ModelDtmWizard extends Wizard
 
     m_exportPage = new CreateModelTinWizardPage( "exportPage", m_dtmFile, m_discModel ); //$NON-NLS-1$
     m_isolinePage = new SurfaceIsolineWizardPage( "isolinePage", m_isoSymbolizer, m_exportPage ); //$NON-NLS-1$
-    // m_polygonPage = new SurfacePolygonWizardPage( "surfacePage", m_polySmybolizer, m_exportPage );
+    m_polygonPage = new SurfacePolygonWizardPage( "surfacePage", m_polySmybolizer, m_exportPage );
 
     addPage( m_exportPage );
     addPage( m_isolinePage );
-    // addPage( m_polygonPage );
+    addPage( m_polygonPage );
   }
 
   /**
@@ -271,7 +271,7 @@ public class ModelDtmWizard extends Wizard
       final String sldSource = ResourceUtilities.makeRelativ( mapFile, m_styleFile ).toString();
 
       final AddThemeCommand addThemeCommand = new AddThemeCommand( mapModell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.model.ModelDtmWizard.4" ), "gml", "", gmlSource ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      // addThemeCommand.addStyle( "tinPolyStyle", sldSource );
+      addThemeCommand.addStyle( "tinPolyStyle", sldSource );
       addThemeCommand.addStyle( "tinLineStyle", sldSource ); //$NON-NLS-1$
       addThemeCommand.addProperty( THEME_PROP_MODEL_DTM, "true" ); // any value != null //$NON-NLS-1$
       addThemeCommand.addProperty( IKalypsoTheme.PROPERTY_DELETEABLE, "true" ); // any value != null //$NON-NLS-1$

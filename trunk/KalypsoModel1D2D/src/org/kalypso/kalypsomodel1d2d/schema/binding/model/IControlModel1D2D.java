@@ -201,4 +201,6 @@ public interface IControlModel1D2D extends IControlModel
   public String getAdditionalSimParSWAN();
 
   public String getInputFileAdditionalCoordSWAN();
+
+  public boolean calculateTelemac();
 }

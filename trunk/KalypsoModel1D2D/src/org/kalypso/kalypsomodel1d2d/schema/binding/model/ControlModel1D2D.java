@@ -195,6 +195,8 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
 
   public final static QName WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANInputCoordFile" ); //$NON-NLS-1$
 
+  public final static QName WB1D2DCONTROL_F_MODEL_TELEMAC = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TelemacCalculation" ); //$NON-NLS-1$
+
   public final static QName WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANInputAdditionalCmds" ); //$NON-NLS-1$
 
   @Override
@@ -756,6 +758,16 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   public String getInputFileAdditionalCoordSWAN( )
   {
     return (String)getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#calculateTelemac()
+   */
+  @Override
+  public boolean calculateTelemac( )
+  {
+    final Boolean propertyValue = (Boolean)getProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_TELEMAC );
+    return propertyValue != null ? propertyValue : false;
   }
 
 }

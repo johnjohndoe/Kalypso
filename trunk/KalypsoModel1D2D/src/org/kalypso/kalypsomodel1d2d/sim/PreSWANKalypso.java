@@ -404,7 +404,7 @@ public class PreSWANKalypso implements ISimulation
       final ResultManager resultManager = new ResultManager( pFileObjPreResultsDir, pFileObjWorkingDir, m_discretisationModel, m_controlModel, m_flowRelationshipModel, m_scenarioMetaData, m_log );
 
       m_calculatedSteps = resultManager.findCalculatedSteps();
-      resultManager.setStepsToProcess( m_calculatedSteps, resultManager.getControlModel() );
+      resultManager.setStepsToProcess( m_calculatedSteps );
       if( m_controlModel.isUnsteadySelected() )
       {
         m_calculatedSteps = SWANAdditionalDataConverter.removeSteadyDates( m_calculatedSteps, null );
