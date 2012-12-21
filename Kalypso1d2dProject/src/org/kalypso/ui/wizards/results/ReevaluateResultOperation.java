@@ -122,7 +122,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
     }
     catch( FileSystemException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.9" ) ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "ReevaluateResultOperation.9" ) ); //$NON-NLS-1$
       m_geoLog.log( status );
       return status;
     }
@@ -134,7 +134,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.8" ) ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "ReevaluateResultOperation.8" ) ); //$NON-NLS-1$
       m_geoLog.log( status );
       stati.add( status );
     }
@@ -192,7 +192,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
     }
     catch( final CoreException | IOException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.9" ) ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "ReevaluateResultOperation.9" ) ); //$NON-NLS-1$
       m_geoLog.log( status );
       return status;
     }
