@@ -94,4 +94,6 @@ public interface Kalypso1D2DDictConstants
   public static final Object DICT_COMPONENT_AVERAGE_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageDepth"; //$NON-NLS-1$
 
   public static final Object DICT_COMPONENT_STEP_INFO_SWAN = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#StepInfoText"; //$NON-NLS-1$
+  
+  public static final Object DICT_COMPONENT_STEP_INFO_TELEMAC = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#StepInfoText"; //$NON-NLS-1$
 }

@@ -166,6 +166,8 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
   private final Map<IPolyElement, IFlowRelation2D> m_mapPolyElementsWithWeir = new HashMap<>();
 
+  private Set<String> m_calcUnitsIds = null;
+
   public Gml2RMA10SConv( final IFEDiscretisationModel1d2d discretisationModel1d2d, final IFlowRelationshipModel flowrelationModel, final ICalculationUnit calcUnit, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode, final IGeoLog log )
   {
     m_discretisationModel1d2d = (discretisationModel1d2d);
@@ -195,6 +197,16 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         }
       }
     }
+    
+    m_calcUnitsIds = new HashSet<>();
+    for( IFENetItem element: m_calculationUnit.getElements2D() )
+    {
+      m_calcUnitsIds.add( element.getId() );
+    }
+    for( IFENetItem element: m_calculationUnit.getElements1D() )
+    {
+      m_calcUnitsIds.add( element.getId() );
+    }
   }
 
   private boolean isCalcUnitElement( final IFENetItem element )
@@ -202,7 +214,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     if( m_calculationUnit == null )
       return true;
 
-    return m_calculationUnit.contains( element );
+    return m_calcUnitsIds.contains( element.getId() );
   }
 
   private IdMap createRoughnessIndex( final IRoughnessClsCollection roughnessModel )

@@ -94,14 +94,22 @@ public class TinResultWriter
 
   private final String m_crs;
 
+  private final String m_encoding;
+
   private final List<QNameAndString> m_props = new ArrayList<>();
 
   public TinResultWriter( final OutputStream os, final String crs, final QNameAndString[] props ) throws CoreException
+  {
+    this( os, crs, props, "UTF-8" );//$NON-NLS-1$
+  }
+
+  public TinResultWriter( final OutputStream os, final String crs, final QNameAndString[] props, final String encoding ) throws CoreException
   {
     m_crs = crs;
     if( props != null )
       m_props.addAll( Arrays.asList( props ) );
     initMarshaller( os );
+    m_encoding = encoding;
   }
 
   /**
@@ -172,6 +180,7 @@ public class TinResultWriter
       m_xmlStream.setLineSepUse( true );
       m_xmlStream.setIndent( true );
       m_xmlStream.setIndentAmount( 1 );
+      m_xmlStream.setEncoding( m_encoding );
 
       final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
       xmlReader.setContentHandler( m_xmlStream );

@@ -58,7 +58,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.results.SWANResultsReader;
+import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -400,7 +400,7 @@ public class Gml2SWANConv implements INativeIDProvider
         final GM_Position[] lAllPositionsOfTri = lTriangle.getExteriorRing();
         for( final GM_Position lGM_Position : lAllPositionsOfTri )
         {
-          final GM_Position lGM_PositionRounded = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lGM_Position.getX(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getY(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getZ(), SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
+          final GM_Position lGM_PositionRounded = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lGM_Position.getX(), NodeResultHelper.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getY(), NodeResultHelper.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getZ(), NodeResultHelper.INT_ROUND_SIGNIFICANT ) );
 
           // if( m_mapNodesActPositions.get( lGM_Position ) == null )
           if( m_mapNodesActPositions.get( lGM_PositionRounded ) == null )

@@ -89,6 +89,16 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * steps
  *
  *
+ * C KNOTENNUMMER (I10)
+ *        1
+ * C Stationsname (Nienstedten)
+ * Elbe Musterstation
+ * C Position (x,y) (2F15.3) (Koordinaten der l.o. met. Gitterzellenmitte)
+ *   3414976.000    5981376.000
+ * C Anzahl der met. Gitterzellen in x- und y-Richtung NNXMET, NNYMET
+ *           70             53        2500.000       2500.000
+ * C Modelldaten ------------------------------
+ * Datum_Zeit;WVm10;WRm10;
  *
  * @author ig
  *

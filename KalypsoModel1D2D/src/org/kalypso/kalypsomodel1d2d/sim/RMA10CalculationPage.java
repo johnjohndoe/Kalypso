@@ -80,7 +80,7 @@ public class RMA10CalculationPage extends WizardPage
 {
   private static final String SETTING_START_RESULT_PROCESSING = "startResultProcessing"; //$NON-NLS-1$
 
-  IStatus m_simulationStatusRMA;
+  IStatus m_simulationStatus;
 
   IStatus m_simulationStatusSWAN;
 
@@ -104,16 +104,19 @@ public class RMA10CalculationPage extends WizardPage
 
   private Group m_iterGroup;
 
-  protected RMAKalypsoSimulationRunner m_calculationRMARunner;
+  protected/* RMAKalypsoSimulationRunner */IKalypsoSimulationRunnerComposite m_calculationRunner;
 
-  protected SWANKalypsoSimulationRunner m_calculationSWANRunner;
+//  protected TelemacKalypsoSimulationRunner m_calculationTelemacRunner;
+
+  protected SWANKalypsoSimulationRunner m_calculationSecondaryRunner;
 
   private final ICalculationUnit calculationUnit;
+
+  private boolean m_isTelemacCalculation = false;
 
   protected RMA10CalculationPage( final String pageName, final IGeoLog geoLog, final IControlModel1D2D controlModel )
   {
     super( pageName );
-
     m_geoLog = geoLog;
     m_controlModel = controlModel;
     m_boolWithSWAN = m_controlModel.calculateSWAN();
@@ -214,12 +217,22 @@ public class RMA10CalculationPage extends WizardPage
       m_isCoupledSimulation = false;
       m_coupledSimulationCheck.setEnabled( false );
     }
+    try
+    {
+      if( m_controlModel.calculateTelemac() )
+      {
+        m_isTelemacCalculation = true;
+      }
+    }
+    catch( Exception e )
+    {
+    }
     updateIterationViewerGroup( null );
 
     setControl( composite );
   }
 
-  protected void updateIterationViewerGroup( final RMAKalypsoSimulationRunner calculation )
+  protected void updateIterationViewerGroup( final IKalypsoSimulationRunnerComposite calculation )
   {
     // remove old controls
     final Control[] children = m_iterGroup.getChildren();
@@ -268,7 +281,7 @@ public class RMA10CalculationPage extends WizardPage
           final Control[] newIterComps = new Control[2];
           newIterComps[0] = new IterationComposite( m_iterGroup, calculation, calculationUnit, SWT.NONE );
           newIterComps[0].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-          newIterComps[1] = new IterationComposite( m_iterGroup, m_calculationSWANRunner, calculationUnit, SWT.NONE );
+          newIterComps[1] = new IterationComposite( m_iterGroup, m_calculationSecondaryRunner, calculationUnit, SWT.NONE );
           newIterComps[1].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
         }
@@ -308,7 +321,6 @@ public class RMA10CalculationPage extends WizardPage
     setTitle( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0" ), calculationUnit.getName() ) ); //$NON-NLS-1$
 
     m_statusComp.setStatus( new Status( IStatus.INFO, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.12" ) ) ); //$NON-NLS-1$
-
     setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.13" ) ); //$NON-NLS-1$
 
     // default to local simulation
@@ -323,20 +335,33 @@ public class RMA10CalculationPage extends WizardPage
       if( m_isCoupledSimulation )
       {
         // TODO: test this situation with swan also coupled on rma
-        m_calculationRMARunner = new RMAKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
+        if( m_isTelemacCalculation )
+        {
+          m_calculationRunner = new TelemacKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
+        }
+        else
+        {
+          m_calculationRunner = new RMAKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
+        }
       }
       else
       {
-        m_calculationRMARunner = new RMAKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
+        if( m_isTelemacCalculation )
+        {
+          m_calculationRunner = new TelemacKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
+        }
+        else
+        {
+          m_calculationRunner = new RMAKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
+        }
       }
-
       if( m_boolWithSWAN )
       {
-        m_calculationSWANRunner = new SWANKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
+        m_calculationSecondaryRunner = new SWANKalypsoSimulationRunner( m_geoLog, m_controlModel, serviceEndpoint );
       }
       else
       {
-        m_calculationSWANRunner = null;
+        m_calculationSecondaryRunner = null;
       }
     }
     catch( final Exception e )
@@ -344,7 +369,7 @@ public class RMA10CalculationPage extends WizardPage
       e.printStackTrace();
     }
 
-    updateIterationViewerGroup( m_calculationRMARunner );
+    updateIterationViewerGroup( m_calculationRunner );
 
     final ICoreRunnableWithProgress calculationOperation = new ICoreRunnableWithProgress()
     {
@@ -355,14 +380,14 @@ public class RMA10CalculationPage extends WizardPage
         IStatus lStatusAll = Status.CANCEL_STATUS;
         try
         {
-          m_simulationStatusRMA = m_calculationRMARunner.runCalculation( monitor );
+          m_simulationStatus = m_calculationRunner.runCalculation( monitor );
           // called in this way to ensure the sequential processing of this two simulations
-          lStatusAll = m_simulationStatusRMA;
-          if( m_boolWithSWAN && !m_simulationStatusRMA.matches( IStatus.CANCEL ) && !m_simulationStatusRMA.matches( IStatus.ERROR ) )
+          lStatusAll = m_simulationStatus;
+          if( m_boolWithSWAN && !m_simulationStatus.matches( IStatus.CANCEL ) && !m_simulationStatus.matches( IStatus.ERROR ) )
           {
             try
             {
-              m_calculationSWANRunner.setRMACalculationOutputPath( m_calculationRMARunner.getTempDir().getURL().toURI() );
+              m_calculationSecondaryRunner.setRMACalculationOutputPath( m_calculationRunner.getTempDir().getURL().toURI() );
             }
             catch( final Exception e )
             {
@@ -370,7 +395,7 @@ public class RMA10CalculationPage extends WizardPage
             }
             monitor.beginTask( "", 100 ); //$NON-NLS-1$
             monitor.worked( 1 );
-            m_simulationStatusSWAN = m_calculationSWANRunner.runCalculation( monitor );
+            m_simulationStatusSWAN = m_calculationSecondaryRunner.runCalculation( monitor );
             lStatusAll = m_simulationStatusSWAN;
           }
         }
@@ -396,7 +421,7 @@ public class RMA10CalculationPage extends WizardPage
     else
       RunnableContextHelper.execute( container, true, true, calculationOperation );
 
-    if( m_simulationStatusRMA == null || m_simulationStatusRMA.matches( IStatus.CANCEL ) )
+    if( m_simulationStatus == null || m_simulationStatus.matches( IStatus.CANCEL ) )
     {
       /**
        * fixes the bug #242, in actual situation works only with local jobs and was tested only on windows machine.
@@ -404,8 +429,8 @@ public class RMA10CalculationPage extends WizardPage
        */
       if( container instanceof WizardDialog2 )
       {
-        final IStatus cancelDone = m_calculationRMARunner.cancelJob();
-        if( m_simulationStatusRMA.matches( IStatus.ERROR ) && !cancelDone.matches( IStatus.CANCEL ) )
+        IStatus cancelDone = m_calculationRunner.cancelJob();
+        if( m_simulationStatus.matches( IStatus.ERROR ) && !cancelDone.matches( IStatus.CANCEL ) )
         {
           setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.18" ), ERROR ); //$NON-NLS-1$
         }
@@ -420,9 +445,9 @@ public class RMA10CalculationPage extends WizardPage
       }
     }
 
-    else if( m_simulationStatusRMA.matches( IStatus.WARNING ) )
+    else if( m_simulationStatus.matches( IStatus.WARNING ) )
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.15" ), WARNING ); //$NON-NLS-1$
-    else if( m_simulationStatusRMA.matches( IStatus.ERROR ) )
+    else if( m_simulationStatus.matches( IStatus.ERROR ) )
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.16" ), ERROR ); //$NON-NLS-1$
     else
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.17" ) ); //$NON-NLS-1$
@@ -440,7 +465,7 @@ public class RMA10CalculationPage extends WizardPage
        */
       if( container instanceof WizardDialog2 )
       {
-        final IStatus cancelDone = m_calculationSWANRunner.cancelJob();
+        final IStatus cancelDone = m_calculationSecondaryRunner.cancelJob();
         if( m_simulationStatusSWAN.matches( IStatus.ERROR ) && !cancelDone.matches( IStatus.CANCEL ) )
         {
           setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.18" ), ERROR ); //$NON-NLS-1$
@@ -462,7 +487,7 @@ public class RMA10CalculationPage extends WizardPage
     else
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.17" ) ); //$NON-NLS-1$
 
-    m_statusComp.setStatus( m_simulationStatusRMA );
+    m_statusComp.setStatus( m_simulationStatus );
 
     if( !m_startResultProcessingCheck.isDisposed() )
       m_startResultProcessingCheck.setEnabled( false );
@@ -473,16 +498,16 @@ public class RMA10CalculationPage extends WizardPage
 
   public IStatus getSimulationStatus( )
   {
-    return m_calculationRMARunner != null ? m_calculationRMARunner.getSimulationStatus() : null;
+    return m_calculationRunner != null ? m_calculationRunner.getSimulationStatus() : null;
   }
 
   public FileObject getResultDirRMA( )
   {
-    return m_calculationRMARunner != null ? m_calculationRMARunner.getTempDir() : null;
+    return m_calculationRunner != null ? m_calculationRunner.getTempDir() : null;
   }
 
   public FileObject getResultDirSWAN( )
   {
-    return m_calculationSWANRunner != null ? m_calculationSWANRunner.getTempDir() : null;
+    return m_calculationSecondaryRunner != null ? m_calculationSecondaryRunner.getTempDir() : null;
   }
 }

@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -41,19 +41,34 @@
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.awt.Color;
+import java.io.File;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.TeschkeRelationConverter;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter.QNameAndString;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -65,6 +80,12 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.util.TupleResultIndex;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -133,6 +154,8 @@ public class NodeResultHelper
   public static final String SIZE_NORM_NODE_FUNC = "SIZE_NORM"; //$NON-NLS-1$
 
   public static final String VELOCITY = "velocity"; //$NON-NLS-1$
+
+  public static final int INT_ROUND_SIGNIFICANT = 3;
 
   /**
    * sets the mid-side node's water level and depth by interpolation between the corner nodes.
@@ -653,6 +676,120 @@ public class NodeResultHelper
 
     }
     return true;
+  }
+
+  public static Date[] getDatesFromObservation( IObservation<TupleResult> timeSteps )
+  {
+    List<Date> listDateSteps = new ArrayList<>();
+    final TupleResult result = timeSteps.getResult();
+    final IComponent[] components = result.getComponents();
+    final IComponent componentTime = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+
+    final TupleResultIndex index = new TupleResultIndex( result, componentTime );
+    final Iterator<IRecord> iterator = index.getIterator();
+    if( !iterator.hasNext() )
+    {
+      return null;
+//      final String errMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.35" );//$NON-NLS-1$
+//      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, errMsg ) );
+    }
+    while( iterator.hasNext() )
+    {
+      final IRecord record = iterator.next();
+      final TupleResult owner = record.getOwner();
+      final int indexTime = owner.indexOfComponent( componentTime );
+
+      final XMLGregorianCalendar cal = (XMLGregorianCalendar)record.getValue( indexTime );
+      listDateSteps.add( DateUtilities.toDate( cal ) );
+    }
+    return listDateSteps.toArray( new Date[listDateSteps.size()] );
+  }
+
+  public static String createOutDirName( final Date stepDate )
+  {
+    if( stepDate == ISimulation1D2DConstants.STEADY_DATE )
+      return ISimulation1D2DConstants.STEADY_PREFIX;
+
+    if( stepDate == ISimulation1D2DConstants.MAXI_DATE )
+      return ISimulation1D2DConstants.MAXI_PREFIX;
+
+    final SimpleDateFormat timeFormatter = new SimpleDateFormat( ResultMeta1d2dHelper.FULL_DATE_TIME_FORMAT_RESULT_STEP );
+    return ResultMeta1d2dHelper.TIME_STEP_PREFIX + timeFormatter.format( stepDate );
+  }
+
+  public static ITriangleEater createTinEater( final File tinResultFile, final ResultType parameter, final String crs ) throws CoreException
+  {
+    final List<QNameAndString> properties = new ArrayList<>();
+
+    switch( parameter )
+    {
+      case DEPTH:
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.33" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        break;
+
+      case VELOCITY:
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.37" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        break;
+
+      case VELOCITY_X:
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.41" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        break;
+
+      case VELOCITY_Y:
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.45" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        break;
+
+      case WATERLEVEL:
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "mNN" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.49" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        break;
+
+      case SHEARSTRESS:
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/m²" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.53" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        break;
+
+      case DIFFERENCE:
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "-" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.111" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        break;
+
+      case TERRAIN:
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.112" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        break;
+      case WAVEDIR:
+        break;
+      case WAVEHSIG:
+        break;
+      case WAVEPER:
+        break;
+    }
+
+    final QNameAndString[] props = properties.toArray( new QNameAndString[properties.size()] );
+    return new TriangulatedSurfaceDirectTriangleEater( tinResultFile, parameter, crs, props );
+  }
+
+  /**
+   * creating list of positions {@link GM_Position} from the given lists of {@link Double}
+   * 
+   * @return List<GM_Position>
+   */
+  public static List<GM_Position> createListOfPositions( final List< ? extends Number> pListX, final List< ? extends Number> pListY, final Number[] iparamShift )
+  {
+    final List<GM_Position> lListRes = new ArrayList<>();
+    final int lIntAmountCoordinates = pListX.size();
+
+    for( int i = 0; i < lIntAmountCoordinates; ++i )
+    {
+      lListRes.add( GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( pListX.get( i ).doubleValue() + iparamShift[0].doubleValue(), INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( pListY.get( i ).doubleValue()
+          + iparamShift[1].doubleValue(), INT_ROUND_SIGNIFICANT ) ) );
+    }
+    return lListRes;
   }
 
 }

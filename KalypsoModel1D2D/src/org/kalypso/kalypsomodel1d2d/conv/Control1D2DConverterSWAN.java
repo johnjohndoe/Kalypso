@@ -252,7 +252,7 @@ public class Control1D2DConverterSWAN
     {
       calculatedSteps = SWANAdditionalDataConverter.removeSteadyDates( calculatedSteps, null );
     }
-    m_resultManager.setStepsToProcess( calculatedSteps, m_resultManager.getControlModel() );
+    m_resultManager.setStepsToProcess( calculatedSteps );
 
     m_calculatedSteps = calculatedSteps;
     try

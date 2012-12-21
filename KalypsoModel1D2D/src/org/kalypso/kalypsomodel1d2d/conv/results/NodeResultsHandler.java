@@ -135,7 +135,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private final IFEDiscretisationModel1d2d m_discModel;
 
-  final private Map<String, Map<GM_Position, Double>> m_mapSWANResults;
+  final private Map<String, Map<GM_Position, Double>> m_mapWaveResults;
 
   private Map<GM_Position, Double> m_mapWAVEHsig = null;
 
@@ -160,7 +160,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     m_resultList = (FeatureList)m_resultWorkspace.getRootFeature().getProperty( INodeResultCollection.QNAME_PROP_NODERESULT_MEMBER );
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    m_mapSWANResults = mapSWANResults;
+    m_mapWaveResults = mapSWANResults;
   }
 
   @Override
@@ -1307,9 +1307,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       result.setCalcId( id );
       result.setLocation( easting, northing, elevation, m_crs );
       // if swan results found.
-      if( m_mapSWANResults != null )
+      if( m_mapWaveResults != null )
       {
-        final GM_Position lPositionKey = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( easting, SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( northing, SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
+        final GM_Position lPositionKey = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( easting, NodeResultHelper.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( northing, NodeResultHelper.INT_ROUND_SIGNIFICANT ) );
         try
         {
           result.setWaveDirection( m_mapWAVEDir.get( lPositionKey ) );
@@ -1349,25 +1349,25 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   @Override
   public void start( )
   {
-    if( m_mapSWANResults == null )
+    if( m_mapWaveResults == null )
     {
       return;
     }
-    final Set<String> lKeysSet = m_mapSWANResults.keySet();
+    final Set<String> lKeysSet = m_mapWaveResults.keySet();
     for( final Object element : lKeysSet )
     {
       final String strKey = (String)element;
       if( strKey.toLowerCase().contains( ISimulation1D2DConstants.SIM_SWAN_HSIG_OUT_PARAM.toLowerCase() ) )
       {
-        m_mapWAVEHsig = m_mapSWANResults.get( strKey );
+        m_mapWAVEHsig = m_mapWaveResults.get( strKey );
       }
       else if( strKey.toLowerCase().contains( ISimulation1D2DConstants.SIM_SWAN_DIRECTION_OUT_PARAM.toLowerCase() ) )
       {
-        m_mapWAVEDir = m_mapSWANResults.get( strKey );
+        m_mapWAVEDir = m_mapWaveResults.get( strKey );
       }
       else if( strKey.toLowerCase().contains( ISimulation1D2DConstants.SIM_SWAN_PERIOD_OUT_PARAM.toLowerCase() ) )
       {
-        m_mapWAVEPeriod = m_mapSWANResults.get( strKey );
+        m_mapWAVEPeriod = m_mapWaveResults.get( strKey );
       }
     }
   }
@@ -1534,5 +1534,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   @Override
   public void handleRoughness( final String id, final String label )
   {
+  }
+
+  public void createTrianglesByIds( int[] ids )
+  {
+    List< INodeResult > listActNodes = new ArrayList<>();
+    for( int j = 0; j < ids.length; j++ )
+    {   
+      listActNodes.add( m_nodeIndex.get( ids[ j ] ) );
+    }
+    m_triangleEater.add( listActNodes.toArray( new INodeResult[ listActNodes.size() ] ) );
   }
 }

@@ -111,7 +111,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
       final INodeResult lActNode = m_nodeIndex.get( lIntIndex );
       int lIntPos = -1;
       final GM_Position lGM_Position = lActNode.getPoint().getPosition();
-      GM_Position lGM_PositionRounded = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lGM_Position.getX(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getY(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getZ(), SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
+      GM_Position lGM_PositionRounded = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lGM_Position.getX(), NodeResultHelper.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getY(), NodeResultHelper.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getZ(), NodeResultHelper.INT_ROUND_SIGNIFICANT ) );
 
       try
       {
@@ -122,7 +122,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
         final IFE1D2DNode lNode = getResultNodeFromPoint( lActNode.getPoint() );
         try
         {
-          lGM_PositionRounded = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lNode.getPoint().getX(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lNode.getPoint().getY(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lNode.getPoint().getZ(), SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
+          lGM_PositionRounded = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lNode.getPoint().getX(), NodeResultHelper.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lNode.getPoint().getY(), NodeResultHelper.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lNode.getPoint().getZ(), NodeResultHelper.INT_ROUND_SIGNIFICANT ) );
           lIntPos = m_mapInitialPoints.get( lGM_PositionRounded );
         }
         catch( final Exception e1 )

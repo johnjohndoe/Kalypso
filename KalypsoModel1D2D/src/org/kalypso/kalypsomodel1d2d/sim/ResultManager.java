@@ -40,13 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -56,13 +61,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.zip.ZipException;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.impl.StandardFileSystemManager;
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -74,12 +80,14 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.SWANDataConverterHelper;
+import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -108,6 +116,8 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  */
 public class ResultManager implements ISimulation1D2DConstants
 {
+  private static FileSystemManagerWrapper m_vfsManager;
+
   private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
 
   private final List<ResultType> m_parameters = new ArrayList<>();
@@ -126,7 +136,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private File m_outputDir;
 
-  private final FileObject m_resultDirRMA;
+  private final FileObject m_resultDir;
 
   private FileObject m_resultDirSWAN;
 
@@ -136,6 +146,12 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private ICalcUnitResultMeta m_calcUnitMeta = null;
 
+  private Date[] m_allDates = null;
+
+  private Date[] m_datesToProcess;
+
+  private FileObject m_simulationResultFile = null;
+
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IScenarioDataProvider caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     // FIXME: avoid throwing exception in constructor; clients should provide the models, not the caseDataProvider
@@ -144,7 +160,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IFEDiscretisationModel1d2d discretisationModel1d2d, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowRelModel, final IScenarioResultMeta scenarioMetaData, final IGeoLog geoLog )
   {
-    m_resultDirRMA = fileObjectRMA;
+    m_resultDir = fileObjectRMA;
     m_resultDirSWAN = fileObjectSWAN;
 
     m_controlModel = controlModel;
@@ -157,7 +173,9 @@ public class ResultManager implements ISimulation1D2DConstants
     m_parameters.add( ResultType.DEPTH );
     m_parameters.add( ResultType.WATERLEVEL );
     m_parameters.add( ResultType.VELOCITY );
-    m_parameters.add( ResultType.TERRAIN );
+
+    if( m_calcUnitMeta == null )
+      m_calcUnitMeta = m_scenarioMeta.findCalcUnitMetaResult( m_controlModel.getCalculationUnit().getId() );
 
     if( controlModel == null )
       m_timeSteps = null;
@@ -182,48 +200,13 @@ public class ResultManager implements ISimulation1D2DConstants
 
     try
     {
+      m_vfsManager = VFSUtilities.getNewManager();
+
       m_outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + calcUnitMeta.getCalcUnit() ); //$NON-NLS-1$
 
-      /*
-       * compress and copy swan result file into temp directory, the whole folder will be moved into the project after
-       * successful finishing the complete result evaluation.
-       */
-      // FIXME: move this into s separate class
       if( m_resultDirSWAN != null )
       {
-        if( !m_resultDirSWAN.getName().getBaseName().endsWith( "zip" ) ) //$NON-NLS-1$
-        {
-          try
-          {
-            final FileObject swanResFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
-            final FileObject swanResShiftFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
-            final FileObject swanResOutTabFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "_out.tab" ); //$NON-NLS-1$
-            processSWANTabFile( swanResOutTabFile, swanResShiftFile );
-            final File zipOutput = new File( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip" ); //$NON-NLS-1$
-            final List<File> lListFilesToZip = new ArrayList<>();
-            lListFilesToZip.add( new File( swanResFile.getURL().toURI() ) );
-            lListFilesToZip.add( new File( swanResShiftFile.getURL().toURI() ) );
-            lListFilesToZip.add( new File( swanResOutTabFile.getURL().toURI() ) );
-            if( m_controlModel.getINITialValuesSWAN() == 3 )
-            {
-              final FileObject swanResHotFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_HOT_FILE );
-              lListFilesToZip.add( new File( swanResHotFile.getURL().toURI() ) );
-            }
-            ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[lListFilesToZip.size()] ), new File( m_resultDirSWAN.getURL().toURI() ) );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-          }
-        }
-        else
-        {
-          // swan mat file should be unpacked for using in within JMatIO-Reader, so we put the uncompressed version in
-          // to the working directory.
-          ZipUtilities.unzip( new File( m_resultDirSWAN.getURL().toURI() ), new File( m_outputDir.toURI() ) );
-          // FIXME: resource leak, manager never closed!
-          m_resultDirSWAN = VFSUtilities.getNewManager().resolveFile( m_outputDir.toURI().toURL().toExternalForm() );
-        }
+        prepareSWANResults();
       }
 
       if( m_stepsToProcess == null )
@@ -234,13 +217,23 @@ public class ResultManager implements ISimulation1D2DConstants
 
       progress.setWorkRemaining( existing2dFiles.length );
 
-      final IStatus[] fileStati = new IStatus[existing2dFiles.length];
+      IStatus[] fileStati = new IStatus[existing2dFiles.length];
 
-      for( int i = 0; i < fileStati.length; i++ )
+      if( m_controlModel.calculateTelemac() )
       {
-        final FileObject file = existing2dFiles[i];
-        fileStati[i] = processResultFile( file, m_resultDirSWAN, m_controlModel, m_flowModel, m_discModel, calcUnitMeta, progress.newChild( 1 ), doFullEvaluate );
+        fileStati = new IStatus[1];
+        fileStati[0] = processTelemacResultFile( calcUnitMeta, progress.newChild( 1 ), doFullEvaluate );
       }
+      else
+      {
+        for( int i = 0; i < fileStati.length; i++ )
+        {
+          final FileObject file = existing2dFiles[i];
+          fileStati[i] = processResultFile( file, calcUnitMeta, progress.newChild( 1 ), doFullEvaluate );
+        }
+      }
+
+//      return new Status( IStatus.OK, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.7" ), null ); //$NON-NLS-1$
 
       final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "", null ); //$NON-NLS-1$
       if( multiStatus.isOK() )
@@ -261,6 +254,10 @@ public class ResultManager implements ISimulation1D2DConstants
     {
       return new Status( IStatus.CANCEL, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.12" ), e ); //$NON-NLS-1$
     }
+    catch( final FileSystemException e )
+    {
+      return new Status( IStatus.CANCEL, KalypsoModel1D2DPlugin.PLUGIN_ID, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.12" ), e ); //$NON-NLS-1$
+    }
     catch( final CoreException e )
     {
       return e.getStatus();
@@ -271,16 +268,18 @@ public class ResultManager implements ISimulation1D2DConstants
     }
     finally
     {
-      if( m_resultDirRMA != null )
+      if( m_resultDir != null )
       {
         try
         {
-          m_resultDirRMA.close();
+          m_resultDir.close();
 
-          // FIXME: dubios, closing the global available file system... TODO: check...
-          // ... and why is the swan dir not also closed... ??
-          final StandardFileSystemManager fileSystemManager = (StandardFileSystemManager)m_resultDirRMA.getFileSystem().getFileSystemManager();
-          fileSystemManager.close();
+          if( m_resultDirSWAN != null )
+          {
+            m_resultDirSWAN.close();
+          }
+
+          m_vfsManager.close();
         }
         catch( final IOException e )
         {
@@ -288,6 +287,89 @@ public class ResultManager implements ISimulation1D2DConstants
         }
       }
     }
+  }
+
+  /*
+   * compress and copy swan result file into temp directory, the whole folder will be moved into the project after
+   * successful finishing the complete result evaluation.
+   */
+  private void prepareSWANResults( ) throws ZipException, IOException, URISyntaxException, FileSystemException, MalformedURLException
+  {
+    if( !m_resultDirSWAN.getName().getBaseName().endsWith( "zip" ) ) //$NON-NLS-1$
+    {
+      try
+      {
+        final FileObject swanResFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
+        final FileObject swanResShiftFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
+        final FileObject swanResOutTabFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "_out.tab" ); //$NON-NLS-1$
+        processSWANTabFile( swanResOutTabFile, swanResShiftFile );
+        final File zipOutput = new File( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip" ); //$NON-NLS-1$
+        final List<File> lListFilesToZip = new ArrayList<>();
+        lListFilesToZip.add( new File( swanResFile.getURL().toURI() ) );
+        lListFilesToZip.add( new File( swanResShiftFile.getURL().toURI() ) );
+        lListFilesToZip.add( new File( swanResOutTabFile.getURL().toURI() ) );
+        if( m_controlModel.getINITialValuesSWAN() == 3 )
+        {
+          final FileObject swanResHotFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_HOT_FILE );
+          lListFilesToZip.add( new File( swanResHotFile.getURL().toURI() ) );
+        }
+        ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[lListFilesToZip.size()] ), new File( m_resultDirSWAN.getURL().toURI() ) );
+        swanResFile.close();
+        swanResShiftFile.close();
+        swanResOutTabFile.close();
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+    else
+    {
+      // swan mat file should be unpacked for using in within JMatIO-Reader, so we put the uncompressed version in
+      // to the working directory.
+      ZipUtilities.unzip( new File( m_resultDirSWAN.getURL().toURI() ), new File( m_outputDir.toURI() ) );
+      m_resultDirSWAN = m_vfsManager.resolveFile( m_outputDir.toURI().toURL().toExternalForm() );
+    }
+  }
+
+  private IStatus processTelemacResultFile( final ICalcUnitResultMeta calcUnitMeta, final SubMonitor monitor, final boolean doFullEvaluate ) throws CoreException
+  {
+    try
+    {
+      if( m_allDates == null )
+      {
+        findCalculatedStepsForTelemac();
+      }
+      final String filename = m_simulationResultFile.getName().getBaseName();
+
+      String resultFileName = FileUtilities.nameWithoutExtension( filename );
+
+      if( m_resultDirSWAN == null )
+      {
+        final IPath lPath = ResultMeta1d2dHelper.getSavedPathFromResultData( calcUnitMeta, ResultMeta1d2dHelper.SWAN_RAW_DATA_META_NAME );
+
+        try
+        {
+          m_resultDirSWAN = m_simulationResultFile.getParent().getParent().resolveFile( lPath.toOSString() );
+        }
+        catch( final Exception e )
+        {
+          m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.15" ), resultFileName ); //$NON-NLS-1$
+        }
+      }
+
+      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.14" ), resultFileName ); //$NON-NLS-1$
+
+      final ProcessResultTelemacOperation processResultsJob = new ProcessResultTelemacOperation( m_simulationResultFile, m_outputDir, m_resultDirSWAN, m_flowModel, m_controlModel, m_discModel, m_parameters, m_datesToProcess, calcUnitMeta, doFullEvaluate );
+      final IStatus result = processResultsJob.execute( monitor );
+      return result;
+
+    }
+    finally
+    {
+      ProgressUtilities.done( monitor );
+    }
+
   }
 
   private void processSWANTabFile( final FileObject swanResOutTabFile, final FileObject swanResShiftFile )
@@ -309,11 +391,11 @@ public class ResultManager implements ISimulation1D2DConstants
       // int lIntLinesCounter = 0;
       final OutputStream lOutStream = swanResOutTabFile.getContent().getOutputStream();
       final DataInputStream lInDataStream = new DataInputStream( swanResOutTabFileBackUp.getContent().getInputStream() );
-
+      BufferedReader streamReader = new BufferedReader( new InputStreamReader( lInDataStream ) );
       final Formatter lFormatter = new Formatter( lOutStream, Charset.defaultCharset().name(), Locale.US );
       while( lInDataStream.available() != 0 )
       {
-        final String lStrTmpLine = lInDataStream.readLine().trim();
+        final String lStrTmpLine = streamReader.readLine().trim();
         // ++lIntLinesCounter;
         if( lStrTmpLine.startsWith( "%" ) ) { //$NON-NLS-1$
           lFormatter.format( "%s\n", lStrTmpLine ); //$NON-NLS-1$
@@ -354,17 +436,14 @@ public class ResultManager implements ISimulation1D2DConstants
     return;
   }
 
-  private IStatus processResultFile( final FileObject file, final FileObject fileResSWAN, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final ICalcUnitResultMeta calcUnitResultMeta, final IProgressMonitor monitor, final boolean doFullEvaluate ) throws CoreException
+  private IStatus processResultFile( final FileObject file, final ICalcUnitResultMeta calcUnitResultMeta, final IProgressMonitor monitor, final boolean doFullEvaluate ) throws CoreException
   {
     try
     {
       final String filename = file.getName().getBaseName();
 
-      FileObject lFileObjectSWANResult = fileResSWAN;
-
       if( ISimulation1D2DConstants.MODEL_2D.equals( filename ) )
         return Status.OK_STATUS;
-
       Date stepDate = null;
       String resultFileName = FileUtilities.nameWithoutExtension( filename );
 
@@ -372,24 +451,26 @@ public class ResultManager implements ISimulation1D2DConstants
       if( filename != null && filename.endsWith( ".2d.zip" ) ) //$NON-NLS-1$
       {
         resultFileName = filename;
-        if( file.toString().startsWith( STEADY_PREFIX ) ) //$NON-NLS-1$
+        if( file.toString().startsWith( STEADY_PREFIX ) )
           stepDate = STEADY_DATE;
-        else if( file.toString().startsWith( MAXI_PREFIX ) ) //$NON-NLS-1$
+        else if( file.toString().startsWith( MAXI_PREFIX ) )
           stepDate = MAXI_DATE;
         else
           stepDate = ResultMeta1d2dHelper.resolveDateFromResultStep( file );
 
-        if( lFileObjectSWANResult == null )
+        if( m_resultDirSWAN == null )
         {
-          final IPath lPath = ResultMeta1d2dHelper.getSavedSWANRawResultData( calcUnitResultMeta );
-
-          try
+          final IPath lPath = ResultMeta1d2dHelper.getSavedPathFromResultData( calcUnitResultMeta, ResultMeta1d2dHelper.SWAN_RAW_DATA_META_NAME );
+          if( lPath != null && lPath.toFile().exists() )
           {
-            lFileObjectSWANResult = file.getParent().getParent().resolveFile( lPath.toOSString() );
-          }
-          catch( final Exception e )
-          {
-            m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.15" ), resultFileName ); //$NON-NLS-1$
+            try
+            {
+              m_resultDirSWAN = file.getParent().getParent().resolveFile( lPath.toOSString() );
+            }
+            catch( final Exception e )
+            {
+              m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.15" ), resultFileName ); //$NON-NLS-1$
+            }
           }
         }
       }
@@ -402,61 +483,21 @@ public class ResultManager implements ISimulation1D2DConstants
       m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.14" ), resultFileName ); //$NON-NLS-1$
 
       // start a job for each unknown 2d file.
-      final String outDirName = createOutDirName( stepDate );
+      final String outDirName = NodeResultHelper.createOutDirName( stepDate );
 
       final File resultOutputDir = new File( m_outputDir, outDirName );
       resultOutputDir.mkdirs();
-
-      // FIXME: terrain is a special case and should be handled spearately at this point or even outside the loop over the steps
-      // Instead we could read the model.2d (which must always exist) as terrain.
-      // reason 1: Terrain is not evaluated when 'full evaluation' is not checked.
-      // Reason 2: special case produces lots of bad code!
-
-      final ProcessResult2DOperation processResultsJob = new ProcessResult2DOperation( file, lFileObjectSWANResult, resultOutputDir, flowModel, controlModel, discModel, m_parameters, stepDate, calcUnitResultMeta, doFullEvaluate );
+      final ProcessResult2DOperation processResultsJob = new ProcessResult2DOperation( file, m_resultDirSWAN, resultOutputDir, m_flowModel, m_controlModel, m_discModel, m_parameters, stepDate, calcUnitResultMeta, doFullEvaluate, m_geoLog );
       final IStatus result = processResultsJob.execute( monitor );
 
       m_minMaxCatcher.addNodeResultMinMaxCatcher( processResultsJob.getMinMaxData() );
 
       // TODO: set this status as step result status?
-
-      // only process terrain once for all steps
-      m_parameters.remove( ResultType.TERRAIN );
-
       return result;
     }
     finally
     {
       ProgressUtilities.done( monitor );
-    }
-  }
-
-  public static String createOutDirName( final Date stepDate )
-  {
-    if( stepDate == STEADY_DATE )
-      return STEADY_PREFIX;
-
-    if( stepDate == MAXI_DATE )
-      return MAXI_PREFIX;
-
-    final SimpleDateFormat timeFormatter = new SimpleDateFormat( ResultMeta1d2dHelper.FULL_DATE_TIME_FORMAT_RESULT_STEP );
-    return ResultMeta1d2dHelper.TIME_STEP_PREFIX + timeFormatter.format( stepDate );
-  }
-
-  private FileObject findSwanResultFile( final FileObject result2DFile, final FileObject resSWANfile, final ICalcUnitResultMeta calcUnitResultMeta )
-  {
-    if( resSWANfile != null )
-      return resSWANfile;
-
-    final IPath lPath = ResultMeta1d2dHelper.getSavedSWANRawResultData( calcUnitResultMeta );
-
-    try
-    {
-      return result2DFile.getParent().getParent().resolveFile( lPath.toOSString() );
-    }
-    catch( final Exception e )
-    {
-      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.15" ), result2DFile.getName().getBaseName() ); //$NON-NLS-1$
-      return null;
     }
   }
 
@@ -481,7 +522,8 @@ public class ResultManager implements ISimulation1D2DConstants
     final int step = Integer.parseInt( name.substring( 1 ) );
 
     final IComponent componentTime = ComponentUtilities.findComponentByID( m_timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar)m_timeSteps.get( step ).getValue( componentTime );
+    int indexTime = m_timeSteps.indexOfComponent( componentTime );
+    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar)m_timeSteps.get( step ).getValue( indexTime );
     return DateUtilities.toDate( stepCal );
   }
 
@@ -508,9 +550,13 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public Date[] findCalculatedSteps( ) throws IOException
   {
+    if( m_controlModel.calculateTelemac() )
+    {
+      return findCalculatedStepsForTelemac();
+    }
     final Set<Date> dates = new TreeSet<>();
 
-    final FileObject[] existing2dFiles = find2dFiles( m_resultDirRMA );
+    final FileObject[] existing2dFiles = find2dFiles( m_resultDir );
 
     if( existing2dFiles != null )
     {
@@ -523,6 +569,17 @@ public class ResultManager implements ISimulation1D2DConstants
     }
 
     return dates.toArray( new Date[dates.size()] );
+  }
+
+  private Date[] findCalculatedStepsForTelemac( )
+  {
+    int size = m_controlModel.getTimeSteps().getResult().size();
+    if( size < 2 )
+    {
+      return new Date[] {};
+    }
+    m_allDates = Arrays.copyOfRange( NodeResultHelper.getDatesFromObservation( m_controlModel.getTimeSteps() ), 1, size - 1 );
+    return m_allDates;
   }
 
   public IControlModel1D2D getControlModel( )
@@ -550,11 +607,12 @@ public class ResultManager implements ISimulation1D2DConstants
     return m_geoLog;
   }
 
-  public void setStepsToProcess( final Date[] dates, final IControlModel1D2D controlModel ) throws IOException
+  public void setStepsToProcess( final Date[] dates ) throws IOException
   {
+    m_datesToProcess = dates;
     final List<FileObject> fileList = new ArrayList<>();
     if( m_mapDateFile == null )
-      fillStepMap( controlModel );
+      fillStepMap();
 
     for( final Date date : dates )
     {
@@ -566,20 +624,73 @@ public class ResultManager implements ISimulation1D2DConstants
     m_stepsToProcess = fileList.toArray( new FileObject[fileList.size()] );
   }
 
-  private void fillStepMap( final IControlModel1D2D controlModel ) throws IOException
+  private void fillStepMap( ) throws IOException
   {
     m_mapDateFile = new HashMap<>();
-    final FileObject[] existing2dFiles = find2dFiles( m_resultDirRMA );
-
-    for( final FileObject file : existing2dFiles )
+    if( m_controlModel.calculateTelemac() && m_resultDir != null )
     {
-      final Date fileDate = getStepMapDate( file, controlModel );
-      if( fileDate != null )
-        m_mapDateFile.put( fileDate, file );
+      m_simulationResultFile = findTelemacResultFile( m_resultDir );
+      for( int i = 0; i < m_controlModel.getTimeSteps().getResult().size(); ++i )
+      {
+        final Date fileDate = getDateOfTimeStepNr( i );
+        if( fileDate != null )
+          m_mapDateFile.put( fileDate, m_simulationResultFile );
+      }
+    }
+    else
+    {
+      final FileObject[] existing2dFiles = find2dFiles( m_resultDir );
+
+      for( final FileObject file : existing2dFiles )
+      {
+        final Date fileDate = getStepMapDate( file );
+        if( fileDate != null )
+          m_mapDateFile.put( fileDate, file );
+      }
     }
   }
 
-  private Date getStepMapDate( final FileObject file, final IControlModel1D2D controlModel )
+  private FileObject findTelemacResultFile( final FileObject resultDir )
+  {
+    if( resultDir == null )
+      return null;
+
+    FileObject[] children = null;
+    try
+    {
+      children = resultDir.getChildren();
+    }
+    catch( FileSystemException e )
+    {
+      e.printStackTrace();
+    }
+    for( final FileObject child : children )
+    {
+      final FileName childName = child.getName();
+      final String baseName = childName.getBaseName();
+      if( FilenameUtils.wildcardMatch( baseName, "*res*.slf*" ) ) //$NON-NLS-1$ 
+      {
+        return child;
+      }
+    }
+
+    final IPath path = ResultMeta1d2dHelper.getSavedPathFromResultData( m_calcUnitMeta, ResultMeta1d2dHelper.TELEMAC_RAW_DATA_META_NAME );
+    if( path != null )
+    {
+      try
+      {
+        return resultDir.getParent().resolveFile( path.toOSString() );
+      }
+      catch( final Exception e )
+      {
+        m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.15" ), resultDir.getName().getBaseName() ); //$NON-NLS-1$
+        return null;
+      }
+    }
+    return null;
+  }
+
+  private Date getStepMapDate( final FileObject file )
   {
     final String baseName = file.getName().getBaseName();
     if( baseName.equals( "steady.2d" ) ) //$NON-NLS-1$
@@ -600,11 +711,18 @@ public class ResultManager implements ISimulation1D2DConstants
     final String string = sequence.toString();
     final int step = Integer.parseInt( string );
 
-    final IObservation<TupleResult> obs = controlModel.getTimeSteps();
+    return getDateOfTimeStepNr( step );
+
+  }
+
+  private Date getDateOfTimeStepNr( int step )
+  {
+    final IObservation<TupleResult> obs = m_controlModel.getTimeSteps();
     final TupleResult timeSteps = obs.getResult();
 
     final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar)timeSteps.get( step ).getValue( componentTime );
+    int indexTime = timeSteps.indexOfComponent( componentTime );
+    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar)timeSteps.get( step ).getValue( indexTime );
     return DateUtilities.toDate( stepCal );
   }
 

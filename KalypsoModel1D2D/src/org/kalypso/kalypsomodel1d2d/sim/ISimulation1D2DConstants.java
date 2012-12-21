@@ -51,6 +51,8 @@ public interface ISimulation1D2DConstants
 
   String OUTPUT_ITR_SWAN = "PRINT"; //$NON-NLS-1$
 
+  String OUTPUT_ITR_TELEMAC = "sortie*"; //$NON-NLS-1$
+
   String MODEL_2D = "model.2d"; //$NON-NLS-1$
 
   String OUTPUT_DIR_NAME = "./"; //$NON-NLS-1$

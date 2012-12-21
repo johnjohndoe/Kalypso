@@ -36,7 +36,10 @@
           <!-- zu verwendender Rechenkern -->
           <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
           <gridLayout numColumns="4" />
-          <label visible="true" style="SWT.NONE" property="c1d2d:Version">
+		  <checkbox enabled="true" property="c1d2d:TelemacCalculation" style="SWT.NONE">
+            <gridData horizontalSpan="4" horizontalAlignment="SWT.BEGINNING" />
+          </checkbox>
+          <label visible="true" style="SWT.NONE" property="c1d2d:Version"> 
             <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
           </label>
           <text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:Version" enabled="false">
