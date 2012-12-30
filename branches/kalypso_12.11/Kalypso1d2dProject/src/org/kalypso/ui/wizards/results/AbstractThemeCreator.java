@@ -45,30 +45,18 @@ import org.eclipse.swt.widgets.Group;
 
 /**
  * @author Thomas jung
- * 
  */
 public abstract class AbstractThemeCreator implements IResultThemeConstructor
 {
-
-  /**
-   * @see org.kalypso.ui.wizards.results.IResultThemeCreator#createControl(org.eclipse.swt.widgets.Group,
-   *      org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta)
-   */
   @Override
-  public Composite createControl( Group parent )
+  public Composite createControl( final Group parent )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.ui.wizards.results.IResultThemeCreator#createThemeCommand(org.kalypso.ogc.gml.GisTemplateMapModell,
-   *      java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-   *      java.lang.String, java.lang.String)
-   */
   @Override
   public ResultAddLayerCommandData[] getThemeCommandData( )
   {
     return null;
   }
-
 }

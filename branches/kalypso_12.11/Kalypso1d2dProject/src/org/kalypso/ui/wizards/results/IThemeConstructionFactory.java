@@ -44,7 +44,6 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
  * @author Thomas Jung
- * 
  */
 public interface IThemeConstructionFactory
 {

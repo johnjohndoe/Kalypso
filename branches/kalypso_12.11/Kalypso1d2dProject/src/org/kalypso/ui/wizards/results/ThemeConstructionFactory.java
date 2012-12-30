@@ -50,13 +50,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DO
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Factory for creating theme constructors
- *
+ * 
  * @author Thomas Jung
- *
  */
 public class ThemeConstructionFactory implements IThemeConstructionFactory
 {
@@ -73,86 +71,58 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
   public IResultThemeConstructor createThemeConstructor( final IResultMeta resultMeta )
   {
     // check if already present in map, if yes, return the already existing element
-
     if( m_creatorMap.containsKey( resultMeta ) )
-    {
       return m_creatorMap.get( resultMeta );
-    }
-    else
+
+    final IResultThemeConstructor constructor = doCreateConstructor( resultMeta );
+    m_creatorMap.put( resultMeta, constructor );
+    return constructor;
+  }
+
+  private IResultThemeConstructor doCreateConstructor( final IResultMeta resultMeta )
+  {
     // creates new instances for each IResultMeta type, adds it to the HashMap and returns it
     if( resultMeta instanceof IScenarioResultMeta )
+      return new ScenarioResultThemeCreator();
+
+    // StepResults
+    if( resultMeta instanceof ICalcUnitResultMeta )
     {
-      final IScenarioResultMeta scenarioResult = (IScenarioResultMeta) resultMeta;
-      final ScenarioResultThemeCreator scenarioResultThemeCreator = new ScenarioResultThemeCreator();
-      m_creatorMap.put( scenarioResult, scenarioResultThemeCreator );
-      return scenarioResultThemeCreator;
+      /* TODO: manage cascading themes, if whole step is selected */
+      return new CalcUnitResultThemeCreator();
     }
 
     // StepResults
-    else if( resultMeta instanceof ICalcUnitResultMeta )
+    if( resultMeta instanceof IStepResultMeta )
     {
-      final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) resultMeta;
-
-      final CalcUnitResultThemeCreator calcUnitResultThemeCreator = new CalcUnitResultThemeCreator();
-
-      final IFeatureBindingCollection<IResultMeta> children = calcUnitResult.getChildren();
-      for( final IResultMeta child : children )
-      {
-        final ThemeConstructionFactory factory = new ThemeConstructionFactory( m_scenarioFolder );
-        factory.createThemeConstructor( child );
-      }
-
       /* TODO: manage cascading themes, if whole step is selected */
-
-      // right now, don't put the step result into the map, just its children (documents)
-      // m_creatorMap.put( calcUnitResult, calcUnitResultThemeCreator );
-      return calcUnitResultThemeCreator;
-    }
-
-    // StepResults
-    else if( resultMeta instanceof IStepResultMeta )
-    {
-      final IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
-
-      final StepResultThemeCreator stepResultThemeCreator = new StepResultThemeCreator();
-
-      final IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
-      for( final IResultMeta child : children )
-      {
-        final ThemeConstructionFactory factory = new ThemeConstructionFactory( m_scenarioFolder );
-        factory.createThemeConstructor( child );
-      }
-
-      /* TODO: manage cascading themes, if whole step is selected */
-
-      // right now, don't put the step result into the map, just its children (documents)
-      // m_creatorMap.put( stepResult, stepResultThemeCreator );
-      return stepResultThemeCreator;
-
+      return new StepResultThemeCreator();
     }
 
     // DocumentResults
-    else if( resultMeta instanceof IDocumentResultMeta )
+    if( resultMeta instanceof IDocumentResultMeta )
     {
-      final IDocumentResultMeta documentResult = (IDocumentResultMeta) resultMeta;
+      final IDocumentResultMeta documentResult = (IDocumentResultMeta)resultMeta;
       final DOCUMENTTYPE documentType = documentResult.getDocumentType();
 
-      if( documentType == DOCUMENTTYPE.tinTerrain || documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinWsp
-          || documentType == DOCUMENTTYPE.tinShearStress || documentType == DOCUMENTTYPE.tinDifference )
+      switch( documentType )
       {
-        final TinResultThemeCreator tinResultThemeCreator = new TinResultThemeCreator( documentResult, m_scenarioFolder );
-        m_creatorMap.put( documentResult, tinResultThemeCreator );
-        return tinResultThemeCreator;
-      }
-      else if( documentType == DOCUMENTTYPE.nodes )
-      {
-        final NodeResultThemeCreator nodeResultThemeCreator = new NodeResultThemeCreator( documentResult, m_scenarioFolder );
-        m_creatorMap.put( documentResult, nodeResultThemeCreator );
-        return nodeResultThemeCreator;
+        case tinTerrain:
+        case tinDepth:
+        case tinVelo:
+        case tinWsp:
+        case tinShearStress:
+        case tinDifference:
+          return new TinResultThemeCreator( documentResult, m_scenarioFolder );
+
+        case nodes:
+          return new NodeResultThemeCreator( documentResult, m_scenarioFolder );
+
+        default:
+          return null;
       }
     }
 
     return null;
   }
-
 }

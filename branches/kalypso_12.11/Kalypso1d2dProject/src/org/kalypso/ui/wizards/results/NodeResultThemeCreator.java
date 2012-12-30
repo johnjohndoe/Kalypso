@@ -54,9 +54,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
+import org.kalypso.kalypsomodel1d2d.project.Scenario1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -65,11 +65,9 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 /**
  * @author Thomas Jung
  * @author ilya
- *
  */
 public class NodeResultThemeCreator extends AbstractThemeCreator
 {
-
   private final IDocumentResultMeta m_documentResult;
 
   private final IFolder m_scenarioFolder;
@@ -107,38 +105,39 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     buttonComp.setLayout( new GridLayout( 4, false ) );
 
     final Label nodeLabel = new Label( buttonComp, SWT.FLAT );
-    nodeLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.NodeResultThemeCreator.0") ); //$NON-NLS-1$
+    nodeLabel.setText( Messages.getString( "org.kalypso.ui.wizards.results.NodeResultThemeCreator.0" ) ); //$NON-NLS-1$
 
     /* create control with selection buttons, style combo-boxes, edit button and delete button */
-    m_resultLayerCommandData[ 0 ].setDocumentResult( m_documentResult );
+    m_resultLayerCommandData[0].setDocumentResult( m_documentResult );
     m_nodeStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, NodeResultHelper.NODE_TYPE, m_minValue, m_maxValue, m_resultLayerCommandData[0] );
 
     return buttonComp;
   }
 
-  public void updateThemeCommandData( )
+  private void updateThemeCommandData( )
   {
     /* get infos about calc unit */
     final IResultMeta calcUnitMeta = m_documentResult.getOwner().getOwner();
     final IResultMeta timeStepMeta = m_documentResult.getOwner();
 
-    final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
-    final String resFolder = resultsFolder.getFullPath().toPortableString();
-
     final String featurePath = "nodeResultMember"; //$NON-NLS-1$
-    final IPath sourcePath = new Path( ".." ).append( m_documentResult.getFullPath() ); //$NON-NLS-1$
-    final String source = sourcePath.toPortableString();
+
+    final String source = TinResultThemeCreator.buildSourePath( m_documentResult, m_scenarioFolder );
+
     final String style = "Node Results Style"; //$NON-NLS-1$
-    String styleLocation = null;
     final String type = NodeResultHelper.NODE_TYPE;
     final String resultType = "gml"; //$NON-NLS-1$
 
+    final String defaultStyleFileName = ResultMeta1d2dHelper.getDefaultStyleFileName( type, m_documentResult.getDocumentType().name() );
+
     // check, if there is a style already chosen, if not create one from default template
+    String styleLocation = null;
     if( m_nodeStyleComp == null )
-    {
-      styleLocation = getStyle( resFolder, type );
-    }
-    final String lStyleFileName = ( new File( styleLocation == null? ResultMeta1d2dHelper.getDefaultStyleFileName( type, m_documentResult.getDocumentType().name() ): styleLocation ) ).getName();
+      styleLocation = getStyle( type, defaultStyleFileName );
+
+    final String lStyleFileName = (new File( styleLocation == null ? defaultStyleFileName : styleLocation )).getName();
+
+    // FIXME: better name!
     final String themeName = ResultMeta1d2dHelper.getNodeResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta, ResultMeta1d2dHelper.resolveResultTypeFromSldFileName( lStyleFileName, type ) );
 
     if( m_resultLayerCommandData[0] != null )
@@ -148,42 +147,36 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
 
     m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
     m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
-
   }
 
-  private String getStyle( final String resFolder, final String type )
+  private String getStyle( final String type, final String defaultStyleFileName )
   {
+    final Scenario1D2D scenario = new Scenario1D2D( m_scenarioFolder );
+    final IFolder resultsFolder = scenario.getResultsFolder();
+    final String resFolder = resultsFolder.getFullPath().toPortableString();
 
-    final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
+    final IFolder stylesFolder = scenario.getStylesFolder();
+    final String defaultPath = stylesFolder.getFullPath().toPortableString();
     final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
 
     /* default location depending on type */
-    final IFolder stylesFolder = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder );
     final IFolder sldFolder = stylesFolder.getFolder( type );
 
-    final String sldFileName = ResultMeta1d2dHelper.getDefaultStyleFileName( type, m_documentResult.getDocumentType().name() );
+    final String sldFileName = defaultStyleFileName;
     final IPath stylePath = new Path( ".." ).append( relativePathTo ).append( type ).append( sldFileName ); //$NON-NLS-1$
     final String styleLocation = stylePath.toPortableString();
 
+    /* create sld file if it does not already exist */
     final IFile styleFile = sldFolder.getFile( sldFileName );
-
     if( !ResultSldHelper.allDefaultNodeStylesExist( sldFolder ) )
-    {
       ResultSldHelper.processStyle( styleFile, sldFolder, type, m_minValue, m_maxValue );
-    }
 
     return styleLocation;
   }
 
-  /**
-   * @see org.kalypso.ui.wizards.results.IResultThemeCreator#createThemeCommandData(org.kalypso.template.gismapview.Gismapview)
-   */
   @Override
   public ResultAddLayerCommandData[] getThemeCommandData( )
   {
-    if( m_resultLayerCommandData != null )
-      return m_resultLayerCommandData;
-    else
-      return null;
+    return m_resultLayerCommandData;
   }
 }

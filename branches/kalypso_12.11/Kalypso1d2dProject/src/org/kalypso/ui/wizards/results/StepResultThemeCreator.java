@@ -42,7 +42,6 @@ package org.kalypso.ui.wizards.results;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class StepResultThemeCreator extends AbstractThemeCreator
 {
