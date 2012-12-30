@@ -107,11 +107,10 @@ public class ResultManager1d2dWizard extends Wizard
   public void addPages( )
   {
     final String title = Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2" ); //$NON-NLS-1$
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, m_resultModel );
 
     selectResultWizardPage.setFilter( new DocumentResultViewerFilter() );
     selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
-    selectResultWizardPage.setResultMeta( m_resultModel );
 
     selectResultWizardPage.addAction( new DeleteResultAction( selectResultWizardPage, m_commandTarget, m_modell ) );
     selectResultWizardPage.addAction( new ReevaluateResultAction( selectResultWizardPage, m_commandTarget, m_modell, m_modelProvider, m_geoLog ) );

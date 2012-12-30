@@ -82,11 +82,14 @@ public class ImportRestartAction extends Action
 
   private final IScenarioDataProvider m_modelProvider;
 
-  public ImportRestartAction( final RestartSelectWizardPage1 page, final IFolder scenarioFolder, final IScenarioDataProvider modelProvider )
+  private final IScenarioResultMeta m_resultModel;
+
+  public ImportRestartAction( final RestartSelectWizardPage1 page, final IFolder scenarioFolder, final IScenarioDataProvider modelProvider, final IScenarioResultMeta resultModel )
   {
     m_page = page;
     m_scenarioFolder = scenarioFolder;
     m_modelProvider = modelProvider;
+    m_resultModel = resultModel;
 
     setText( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.0" ) ); //$NON-NLS-1$
   }
@@ -96,7 +99,6 @@ public class ImportRestartAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
     final IWizard outerWizard = m_page.getWizard();
-    final RestartSelectWizardPage1 page = m_page;
 
     // Open Import Wizard
     final ImportWspmRestartWizard importWizard = new ImportWspmRestartWizard();
@@ -113,8 +115,10 @@ public class ImportRestartAction extends Action
       return;
 
     final TreeViewer treeViewer = m_page.getTreeViewer();
-    final IFolder scenarioFolder = m_scenarioFolder;
     final IScenarioDataProvider modelProvider = m_modelProvider;
+
+    final Restart1DImporter restart1DImporter = new Restart1DImporter( m_resultModel, m_scenarioFolder );
+
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       @Override
@@ -125,7 +129,6 @@ public class ImportRestartAction extends Action
           final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.3" ), 100 ); //$NON-NLS-1$
 
           final IFile lengthSectionFile = importWizard.getLengthSection();
-          final Restart1DImporter restart1DImporter = new Restart1DImporter( (IScenarioResultMeta)page.getResultRoot(), scenarioFolder );
           restart1DImporter.doImport( lengthSectionFile, IWspmDictionaryConstants.LS_COMPONENT_STATION, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY, IWspmDictionaryConstants.LS_COMPONENT_TYPE, progress.newChild( 80 ) );
 
           final IScenarioDataProvider szenarioDataProvider = modelProvider;
