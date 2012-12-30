@@ -93,10 +93,10 @@ public class ConfigureLengthSectionWizard extends Wizard
     final ConfigureLengthSectionWizardPage lengthSectionPage = new ConfigureLengthSectionWizardPage( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.3" ), m_data ); //$NON-NLS-1$
 
     // select time step page
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.4" ), null ); //$NON-NLS-1$
+    final String title = Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.4" ); //$NON-NLS-1$
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title );
     selectResultWizardPage.setFilter( new DocumentResultViewerFilter() );
     selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
-
     selectResultWizardPage.setResultMeta( m_resultModel );
 
     addPage( lengthSectionPage );

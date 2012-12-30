@@ -104,16 +104,20 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     final NonTinDocumentResultViewerFilter resultFilter = new NonTinDocumentResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
-    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.4" ), null ); //$NON-NLS-1$
+    final String titleMaster = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.4" ); //$NON-NLS-1$
+    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, titleMaster );
     selectMasterResultWizardPage.setFilter( resultFilter );
     selectMasterResultWizardPage.setComparator( comparator );
 
-    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.5" ), null ); //$NON-NLS-1$
+    final String titleSlave = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.5" ); //$NON-NLS-1$
+    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, titleSlave );
     selectSlaveResultWizardPage.setFilter( resultFilter );
     selectSlaveResultWizardPage.setComparator( comparator );
 
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6" ), themeConstructionFactory ); //$NON-NLS-1$
+    final String titleDestination = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6" ); //$NON-NLS-1$
+    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, titleDestination );
+    selectDestinationResultWizardPage.setFactory( themeConstructionFactory );
     selectDestinationResultWizardPage.setFilter( new DocumentResultViewerFilter() );
     selectDestinationResultWizardPage.setComparator( comparator );
 
@@ -230,7 +234,6 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     }
 
     return !status.matches( IStatus.ERROR );
-
   }
 
   public IFile getSelection( )

@@ -54,20 +54,15 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
  * @author Thomas Jung
- *
- * Adapter class that defines the label and images for the result view.
- *
+ *         Adapter class that defines the label and images for the result view.
  */
 public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
 {
-  /**
-   * @see org.eclipse.ui.model.WorkbenchAdapter#getChildren(java.lang.Object)
-   */
   @Override
   public Object[] getChildren( final Object object )
   {
     if( object instanceof IResultMeta )
-      return ((IResultMeta) object).getChildren().toArray();
+      return ((IResultMeta)object).getChildren().toArray();
 
     return super.getChildren( object );
   }
@@ -76,7 +71,7 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
   public Object getParent( final Object object )
   {
     if( object instanceof IResultMeta )
-      return ((IResultMeta) object).getOwner();
+      return ((IResultMeta)object).getOwner();
 
     return super.getParent( object );
   }
@@ -85,39 +80,33 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
   public String getLabel( final Object object )
   {
     if( object instanceof IResultMeta )
-      return ((IResultMeta) object).getName();
+      return ((IResultMeta)object).getName();
 
     return super.getLabel( object );
   }
 
-  /**
-   * @see org.eclipse.ui.model.WorkbenchAdapter#getImageDescriptor(java.lang.Object)
-   */
   @Override
   public ImageDescriptor getImageDescriptor( final Object object )
   {
     if( object instanceof IScenarioResultMeta )
       return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_SCENARIO );
-    else if( object instanceof ICalcUnitResultMeta )
-      return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_CALC_UNIT );
-    else if( object instanceof IStepResultMeta )
-    {
-      /* separate icons for separate types */
-      return getStepResultImage( object );
-    }
-    else if( object instanceof IDocumentResultMeta )
-    {
-      /* separate icons for separate types */
-      return getDocumentResultImage( object );
-    }
-    else
-      return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_ERROR );
 
+    if( object instanceof ICalcUnitResultMeta )
+      return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_CALC_UNIT );
+
+    if( object instanceof IStepResultMeta )
+      return getStepResultImage( object );
+
+    if( object instanceof IDocumentResultMeta )
+      return getDocumentResultImage( object );
+
+    return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_ERROR );
   }
 
+  /* separate icons for separate types */
   private ImageDescriptor getDocumentResultImage( final Object object )
   {
-    final DOCUMENTTYPE documentType = ((IDocumentResultMeta) object).getDocumentType();
+    final DOCUMENTTYPE documentType = ((IDocumentResultMeta)object).getDocumentType();
     switch( documentType )
     {
       case nodes:
@@ -155,9 +144,10 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
     }
   }
 
+  /* separate icons for separate types */
   private ImageDescriptor getStepResultImage( final Object object )
   {
-    final STEPTYPE stepType = ((IStepResultMeta) object).getStepType();
+    final STEPTYPE stepType = ((IStepResultMeta)object).getStepType();
     switch( stepType )
     {
       case steady:

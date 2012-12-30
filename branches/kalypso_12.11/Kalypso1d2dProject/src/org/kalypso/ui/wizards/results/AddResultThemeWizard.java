@@ -82,7 +82,7 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
 
   private ICommandTarget m_commandTarget;
 
-  private IFolder m_scenarioFolder;
+  private ThemeConstructionFactory m_themeConstructionFactory;
 
   public AddResultThemeWizard( )
   {
@@ -92,8 +92,11 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void addPages( )
   {
-    final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.2" ), themeConstructionFactory );//$NON-NLS-1$
+    final String title = Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.2" ); //$NON-NLS-1$
+
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title );
+
+    selectResultWizardPage.setFactory( m_themeConstructionFactory );
     selectResultWizardPage.setFilter( new NonMapDataResultViewerFilter() );
     selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
 
@@ -123,7 +126,8 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
     final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     try
     {
-      m_scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
+      final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
+      m_themeConstructionFactory = new ThemeConstructionFactory( scenarioFolder );
 
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
       m_resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName() );
@@ -140,30 +144,28 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
   {
     final SelectResultWizardPage page = (SelectResultWizardPage)getPage( PAGE_SELECT_RESULTS_NAME );
     final IResultMeta[] results = page.getSelectedResults();
-    final IThemeConstructionFactory factory = page.getThemeFactory();
     final IKalypsoLayerModell modell = m_modell;
 
-    if( modell != null )
+    if( modell == null )
     {
-
-      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-      {
-        @Override
-        @SuppressWarnings( "synthetic-access" )
-        public IStatus execute( final IProgressMonitor monitor )
-        {
-          return MapUtils.addThemes( modell, m_commandTarget, results, factory, monitor );
-        }
-      };
-
-      final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.5" ), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      return status.isOK();
+      System.out.println( "No map template available." ); //$NON-NLS-1$
+      return false;
     }
-    System.out.println( Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.7" ) ); //$NON-NLS-1$
-    return false;
 
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      @Override
+      @SuppressWarnings( "synthetic-access" )
+      public IStatus execute( final IProgressMonitor monitor )
+      {
+        return MapUtils.addThemes( modell, m_commandTarget, results, m_themeConstructionFactory, monitor );
+      }
+    };
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+    ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.5" ), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    return status.isOK();
   }
 }
