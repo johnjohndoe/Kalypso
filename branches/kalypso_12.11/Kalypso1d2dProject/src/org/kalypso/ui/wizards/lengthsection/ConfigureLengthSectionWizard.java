@@ -55,6 +55,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
+import org.kalypso.ui.wizards.results.SelectResultData;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 
@@ -95,7 +96,9 @@ public class ConfigureLengthSectionWizard extends Wizard
     // select time step page
     final String title = Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.4" ); //$NON-NLS-1$
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, m_resultModel );
+    final SelectResultData data = new SelectResultData( m_resultModel );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
+
     selectResultWizardPage.setFilter( new DocumentResultViewerFilter() );
     selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
 

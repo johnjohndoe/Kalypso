@@ -43,28 +43,36 @@ package org.kalypso.ui.wizards.results;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.kalypso.contribs.eclipse.jface.action.ActionButton;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
@@ -77,12 +85,14 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public class SelectResultWizardPage extends WizardPage
 {
+  private final ToolBarManager m_toolbarManager = new ToolBarManager( SWT.SHADOW_OUT );
+
   private final Collection<IAction> m_actions = new ArrayList<>();
+
+  private final SelectResultData m_data;
 
   // TODO: most use cases of result viewer only need the information about a result node, not creation of a theme. We should separate these concerns.
   private IThemeConstructionFactory m_factory;
-
-  private final IResultMeta m_currentScenarioResult;
 
   private CheckboxTreeViewer m_treeViewer;
 
@@ -92,15 +102,28 @@ public class SelectResultWizardPage extends WizardPage
 
   private ViewerComparator m_comparator;
 
-  public SelectResultWizardPage( final String pageName, final String title, final IScenarioResultMeta currentScenarioResult )
+  private DatabindingWizardPage m_binding;
+
+  public SelectResultWizardPage( final String pageName, final String title, final SelectResultData data )
   {
     super( pageName );
 
-    m_currentScenarioResult = currentScenarioResult;
+    m_data = data;
 
     setTitle( title );
 
     setDescription( Messages.getString( "org.kalypso.ui.wizards.results.SelectResultWizardPage.0" ) ); //$NON-NLS-1$
+  }
+
+  @Override
+  public void dispose( )
+  {
+    if( m_binding != null )
+      m_binding.dispose();
+
+    m_toolbarManager.dispose();
+
+    super.dispose();
   }
 
   public void setFactory( final IThemeConstructionFactory factory )
@@ -137,6 +160,8 @@ public class SelectResultWizardPage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
+    m_binding = new DatabindingWizardPage( this, null );
+
     /* set a fixed size to the Wizard */
     // HACK!!
     // FIXME: bad -> do this in a different way!
@@ -150,31 +175,16 @@ public class SelectResultWizardPage extends WizardPage
     }
 
     final Composite panel = new Composite( parent, SWT.NONE );
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
+    setControl( panel );
 
-    m_treeViewer = new CheckboxTreeViewer( panel, SWT.BORDER );
-    m_treeViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( true ).applyTo( panel );
 
-    m_treeViewer.setContentProvider( new ResultMetaContentProvider() );
-    m_treeViewer.setLabelProvider( new WorkbenchLabelProvider() );
-
-    if( m_filter != null )
-      m_treeViewer.setFilters( new ViewerFilter[] { m_filter } );
-
-    m_treeViewer.setComparator( m_comparator );
-
-    m_treeViewer.setInput( m_currentScenarioResult );
-
-    /* The next two lines are needed so that checking children of checked elements always works. */
-    // FIXME: only, because getParent on the content provider does not work correctly, we should fix that
-    m_treeViewer.expandAll();
-    m_treeViewer.collapseAll();
+    /* tree panel */
+    createTreeControls( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Info View for one result */
     final ResultMetaInfoViewer resultViewer = new ResultMetaInfoViewer( panel, SWT.NONE, m_factory );
     resultViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    createToolbar( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     // TODO: allow user to set an individually name of the difference result
 
@@ -183,10 +193,12 @@ public class SelectResultWizardPage extends WizardPage
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleSelectionChanged( (IStructuredSelection)event.getSelection(), resultViewer );
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+        resultViewer.setInput( selection.getFirstElement() );
       }
     } );
 
+    // FIXME: use checkstate provider and delegate behavior to various strategies that also validate the current check state
     m_treeViewer.addCheckStateListener( new ICheckStateListener()
     {
       @Override
@@ -210,24 +222,80 @@ public class SelectResultWizardPage extends WizardPage
       }
       m_treeViewer.setCheckedElements( m_checkedElements );
     }
-
-    setControl( panel );
   }
 
-  private Control createToolbar( final Composite parent )
+  private Control createTreeControls( final Composite parent )
   {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new RowLayout() );
+    final Composite treePanel = new Composite( parent, SWT.NONE );
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( treePanel );
 
-    for( final IAction action : m_actions )
-      ActionButton.createButton( null, panel, action );
+    if( !m_actions.isEmpty() )
+      createToolbar( treePanel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    createTree( treePanel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    if( m_data.getShowOptions() )
+      createFilterControls( treePanel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    return treePanel;
+  }
+
+  private Control createFilterControls( final Composite parent )
+  {
+    final Group panel = new Group( parent, SWT.NONE );
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
+
+    panel.setText( "Filter" );
+
+    final Label label = new Label( panel, SWT.NONE );
+    label.setText( "Show" );
+
+    final ComboViewer combo = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
+    combo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    combo.setContentProvider( new ArrayContentProvider() );
+    combo.setLabelProvider( new LabelProvider() );
+    combo.setInput( SelectResultData.ShowType.values() );
+
+    /* binding */
+    final IViewerObservableValue targetSelection = ViewersObservables.observeSinglePostSelection( combo );
+    final IObservableValue modelSelection = BeansObservables.observeValue( m_data, SelectResultData.PROPERTY_SHOW_ALL );
+    m_binding.bindValue( targetSelection, modelSelection );
 
     return panel;
   }
 
-  protected void handleSelectionChanged( final IStructuredSelection selection, final ResultMetaInfoViewer resultViewer )
+  private Control createTree( final Composite parent )
   {
-    resultViewer.setInput( selection.getFirstElement() );
+    m_treeViewer = new CheckboxTreeViewer( parent, SWT.BORDER );
+
+    m_treeViewer.setContentProvider( new ResultMetaContentProvider() );
+    m_treeViewer.setLabelProvider( new WorkbenchLabelProvider() );
+
+    if( m_filter != null )
+      m_treeViewer.setFilters( new ViewerFilter[] { m_filter } );
+
+    m_treeViewer.setComparator( m_comparator );
+
+    /* binding */
+    final IObservableValue targetInput = ViewersObservables.observeInput( m_treeViewer );
+    final IObservableValue modelInput = BeansObservables.observeValue( m_data, SelectResultData.PROPERTY_RESULT_ROOT );
+    m_binding.bindValue( targetInput, modelInput );
+
+    /* The next two lines are needed so that checking children of checked elements always works. */
+    // FIXME: only, because getParent on the content provider does not work correctly, we should fix that
+    m_treeViewer.expandAll();
+    m_treeViewer.collapseAll();
+
+    return m_treeViewer.getControl();
+  }
+
+  private Control createToolbar( final Composite parent )
+  {
+    for( final IAction action : m_actions )
+      m_toolbarManager.add( action );
+
+    return m_toolbarManager.createControl( parent );
   }
 
   public IResultMeta[] getSelectedResults( )

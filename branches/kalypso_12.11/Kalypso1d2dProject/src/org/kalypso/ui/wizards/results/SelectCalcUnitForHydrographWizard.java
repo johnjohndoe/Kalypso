@@ -103,7 +103,8 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
   {
     final String title = Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" );
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, m_resultModel );
+    final SelectResultData data = new SelectResultData( m_resultModel );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
 
     selectResultWizardPage.setFilter( new NonCalcUnitResultViewerFilter() );
     selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
@@ -181,7 +182,6 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
       // refresh workspace
       /* update resource folder */
       gmlResultFile.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
-
     }
     finally
     {

@@ -41,7 +41,7 @@
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
 import org.eclipse.jface.wizard.IWizardPage;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.ui.wizards.results.SelectResultData;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 
 /**
@@ -49,9 +49,9 @@ import org.kalypso.ui.wizards.results.SelectResultWizardPage;
  */
 public class RestartSelectWizardPage1 extends SelectResultWizardPage
 {
-  public RestartSelectWizardPage1( final String pageName, final String title, final IScenarioResultMeta resultModel )
+  public RestartSelectWizardPage1( final String pageName, final String title, final SelectResultData data )
   {
-    super( pageName, title, resultModel );
+    super( pageName, title, data );
   }
 
   @Override
