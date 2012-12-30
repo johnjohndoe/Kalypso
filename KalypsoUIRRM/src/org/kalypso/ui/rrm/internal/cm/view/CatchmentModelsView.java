@@ -46,6 +46,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.handlers.CollapseAllHandler;
+import org.eclipse.ui.handlers.ExpandAllHandler;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.model.hydrology.binding.cm.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.timeseriesMappings.ITimeseriesMappingCollection;
@@ -65,6 +69,10 @@ public class CatchmentModelsView extends ViewPart
 
   private TreeViewer m_treeViewer;
 
+  private CollapseAllHandler m_collapseHandler;
+
+  private ExpandAllHandler m_expandHandler;
+
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -74,7 +82,27 @@ public class CatchmentModelsView extends ViewPart
 
     createTree( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    getSite().setSelectionProvider( m_treeViewer );
+    final IWorkbenchPartSite site = getSite();
+
+    site.setSelectionProvider( m_treeViewer );
+
+    /* register tree handlers */
+    final IHandlerService handlerService = (IHandlerService)getSite().getService( IHandlerService.class );
+
+    m_collapseHandler = new CollapseAllHandler( m_treeViewer );
+    m_expandHandler = new ExpandAllHandler( m_treeViewer );
+
+    handlerService.activateHandler( CollapseAllHandler.COMMAND_ID, m_collapseHandler );
+    handlerService.activateHandler( ExpandAllHandler.COMMAND_ID, m_expandHandler );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    m_collapseHandler.dispose();
+    m_expandHandler.dispose();
+
+    super.dispose();
   }
 
   private Control createTree( final Composite panel )

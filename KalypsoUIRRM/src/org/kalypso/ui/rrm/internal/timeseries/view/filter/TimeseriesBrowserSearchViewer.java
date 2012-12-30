@@ -51,12 +51,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.CollapseAllTreeItemsAction;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.ExpandAllTreeItemsAction;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.results.view.base.IHydrologyResultReference;
 import org.kalypso.ui.rrm.internal.results.view.tree.filter.IRrmDiagramFilterControl;
-import org.kalypso.ui.rrm.internal.timeseries.view.actions.CollapseAllTreeItemsAction;
-import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExpandAllTreeItemsAction;
 
 /**
  * @author Dirk Kuch
@@ -104,7 +104,6 @@ public class TimeseriesBrowserSearchViewer extends Composite implements IRrmDiag
     final ImageHyperlink lnkCollapseAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new CollapseAllTreeItemsAction( viewer ) );
     lnkCollapseAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) ); //$NON-NLS-1$
     lnkCollapseAll.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
-
   }
 
   public void doClean( )

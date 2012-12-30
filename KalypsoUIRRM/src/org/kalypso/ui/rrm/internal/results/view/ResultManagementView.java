@@ -60,6 +60,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.handlers.CollapseAllHandler;
+import org.eclipse.ui.handlers.ExpandAllHandler;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
@@ -94,6 +97,10 @@ public class ResultManagementView extends ViewPart
 
   private TreeNodeModel m_model;
 
+  private CollapseAllHandler m_collapseHandler;
+
+  private ExpandAllHandler m_expandHandler;
+
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -104,6 +111,24 @@ public class ResultManagementView extends ViewPart
 
     createResultTreeView( body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createSearchControls( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    /* register tree handlers */
+    final IHandlerService handlerService = (IHandlerService)getSite().getService( IHandlerService.class );
+
+    m_collapseHandler = new CollapseAllHandler( m_treeViewer );
+    m_expandHandler = new ExpandAllHandler( m_treeViewer );
+
+    handlerService.activateHandler( CollapseAllHandler.COMMAND_ID, m_collapseHandler );
+    handlerService.activateHandler( ExpandAllHandler.COMMAND_ID, m_expandHandler );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    m_collapseHandler.dispose();
+    m_expandHandler.dispose();
+
+    super.dispose();
   }
 
   public TreeViewerSelectionStack getSelectionStack( )

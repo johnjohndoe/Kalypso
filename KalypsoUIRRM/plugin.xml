@@ -327,18 +327,12 @@
                  commandId="org.kalypso.ui.rrm.internal.view.clear.selection.stack"
                  style="push">
            </command>
-           <command
-                 commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items"
-                 style="push">
-           </command>
-           <command
-                 commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items"
-                 style="push">
-           </command>
+           <command commandId="org.eclipse.ui.navigate.expandAll" style="push"/>
+           <command commandId="org.eclipse.ui.navigate.collapseAll" style="push"/>
         </menuContribution>
         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView">
-           <command commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items" style="push"/>
-           <command commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items" style="push"/>
+           <command commandId="org.eclipse.ui.navigate.expandAll" style="push"/>
+           <command commandId="org.eclipse.ui.navigate.collapseAll" style="push"/>
         </menuContribution>
         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.ui.rrm.internal.results.view.ResultManagementView">
            <command
@@ -346,9 +340,10 @@
                  style="push">
            </command>
            <!-- Removed because it is too dangerous: thousands of nodes may open which takes verrrry long.
-           <command commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items" style="push"/>
+           <command commandId="org.eclipse.ui.navigate.expandAll" style="push"/>
            -->
-           <command commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items" style="push"/>
+           <command commandId="org.eclipse.ui.navigate.collapseAll" style="push"/>
+           
         </menuContribution>
    </extension>
    <extension point="org.kalypso.ui.importWizards">
@@ -542,22 +537,6 @@
                   name="%org.kalypso.model.rrm.resultView.name">
             </command>
             <command
-                  id="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items"
-                  name="%command.name.6">
-            </command>
-            <command
-                  id="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items"
-                  name="%command.name.7">
-            </command>
-            <command
-                  id="org.kalypso.ui.rrm.internal.result.view.expand.tree.items"
-                  name="%command.name.8">
-            </command>
-            <command
-                  id="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items"
-                  name="%command.name.9">
-            </command>
-            <command
                   id="org.kalypso.ui.rrm.internal.view.clear.selection.stack"
                   name="%command.name.10">
             </command>
@@ -590,12 +569,6 @@
             <image commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" icon="icons/simulations/refreshSimulations.gif"/>
             <image commandId="org.kalypso.model.rrm.resultView" icon="icons/resultview/resultView.png"/>
             
-            
-            
-            <image commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items" icon="icons/timeseries/expandall.gif"/>
-            <image commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items" icon="icons/timeseries/collapseall.gif"/>
-            <image commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items" icon="icons/timeseries/expandall.gif"/>
-            <image commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items" icon="icons/timeseries/collapseall.gif"/>
             <image commandId="org.kalypso.ui.rrm.internal.view.clear.selection.stack" icon="icons/resultview/resetSelectionStack.png"/>
    </extension>
 
@@ -636,22 +609,6 @@
 	             </with>
          	</and>
          </enabledWhen>
-      </handler>
-      <handler
-            class="org.kalypso.ui.rrm.internal.timeseries.view.actions.ExpandAllTreeItemsHandler"
-            commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items">
-      </handler>
-      <handler
-            class="org.kalypso.ui.rrm.internal.timeseries.view.actions.CollapseAllTreeItemsHandler"
-            commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items">
-      </handler>
-      <handler
-            class="org.kalypso.ui.rrm.internal.results.view.actions.ExpandAllTreeItemsHandler"
-            commandId="org.kalypso.ui.rrm.internal.result.view.expand.tree.items">
-      </handler>
-      <handler
-            class="org.kalypso.ui.rrm.internal.results.view.actions.CollapseAllTreeItemsHandler"
-            commandId="org.kalypso.ui.rrm.internal.result.view.collapse.tree.items">
       </handler>
       <handler
             class="org.kalypso.ui.rrm.internal.timeseries.view.actions.ResetSelectionStackHandler"
