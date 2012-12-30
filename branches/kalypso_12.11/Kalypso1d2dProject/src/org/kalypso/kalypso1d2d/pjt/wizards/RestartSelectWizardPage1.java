@@ -40,22 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
-
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dejan Antanaskovic
  */
 public class RestartSelectWizardPage1 extends SelectResultWizardPage
 {
-  public RestartSelectWizardPage1( final String pageName, final String title, final IFolder scenarioFolder, final IScenarioDataProvider modelProvider )
+  public RestartSelectWizardPage1( final String pageName, final String title, final IScenarioResultMeta resultModel )
   {
-    super( pageName, title );
-
-    addAction( new ImportRestartAction( this, scenarioFolder, modelProvider ) );
+    super( pageName, title, resultModel );
   }
 
   @Override

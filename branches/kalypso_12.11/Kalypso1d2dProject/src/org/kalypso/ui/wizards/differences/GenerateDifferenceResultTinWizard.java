@@ -105,25 +105,21 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
     final String titleMaster = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.4" ); //$NON-NLS-1$
-    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, titleMaster );
+    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, titleMaster, m_resultModel );
     selectMasterResultWizardPage.setFilter( resultFilter );
     selectMasterResultWizardPage.setComparator( comparator );
 
     final String titleSlave = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.5" ); //$NON-NLS-1$
-    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, titleSlave );
+    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, titleSlave, m_resultModel );
     selectSlaveResultWizardPage.setFilter( resultFilter );
     selectSlaveResultWizardPage.setComparator( comparator );
 
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
     final String titleDestination = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6" ); //$NON-NLS-1$
-    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, titleDestination );
+    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, titleDestination, m_resultModel );
     selectDestinationResultWizardPage.setFactory( themeConstructionFactory );
     selectDestinationResultWizardPage.setFilter( new DocumentResultViewerFilter() );
     selectDestinationResultWizardPage.setComparator( comparator );
-
-    selectMasterResultWizardPage.setResultMeta( m_resultModel );
-    selectSlaveResultWizardPage.setResultMeta( m_resultModel );
-    selectDestinationResultWizardPage.setResultMeta( m_resultModel );
 
     addPage( selectMasterResultWizardPage );
     addPage( selectSlaveResultWizardPage );

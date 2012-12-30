@@ -80,11 +80,10 @@ public class SelectLengthSectionWizard extends Wizard
   public void addPages( )
   {
     final String title = Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.2" ); //$NON-NLS-1$
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title );
+
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, m_resultModel );
     selectResultWizardPage.setFilter( new LengthSectionViewerFilter() );
     selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
-
-    selectResultWizardPage.setResultMeta( m_resultModel );
 
     addPage( selectResultWizardPage );
   }

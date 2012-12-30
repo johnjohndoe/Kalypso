@@ -116,10 +116,12 @@ public class RestartSelectWizard extends Wizard
     setWindowTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.0" ) ); //$NON-NLS-1$
 
     final String title1 = Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.8" ); //$NON-NLS-1$ 
-    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage1", title1, m_scenarioFolder, m_modelProvider ); //$NON-NLS-1$
+    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage1", title1, m_resultModel ); //$NON-NLS-1$
+
+    m_restartSelectWizardPage1.addAction( new ImportRestartAction( m_restartSelectWizardPage1, m_scenarioFolder, m_modelProvider, m_resultModel ) );
+
     m_restartSelectWizardPage1.setFilter( new DocumentResultViewerFilter() );
     m_restartSelectWizardPage1.setComparator( new Result1d2dMetaComparator() );
-    m_restartSelectWizardPage1.setResultMeta( m_resultModel );
 
     addPage( m_restartSelectWizardPage1 );
 

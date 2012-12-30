@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
@@ -81,7 +82,7 @@ public class SelectResultWizardPage extends WizardPage
   // TODO: most use cases of result viewer only need the information about a result node, not creation of a theme. We should separate these concerns.
   private IThemeConstructionFactory m_factory;
 
-  private IResultMeta m_resultRoot;
+  private final IResultMeta m_currentScenarioResult;
 
   private CheckboxTreeViewer m_treeViewer;
 
@@ -91,9 +92,11 @@ public class SelectResultWizardPage extends WizardPage
 
   private ViewerComparator m_comparator;
 
-  public SelectResultWizardPage( final String pageName, final String title )
+  public SelectResultWizardPage( final String pageName, final String title, final IScenarioResultMeta currentScenarioResult )
   {
     super( pageName );
+
+    m_currentScenarioResult = currentScenarioResult;
 
     setTitle( title );
 
@@ -124,24 +127,11 @@ public class SelectResultWizardPage extends WizardPage
   /**
    * Adds an action to the toolbar. Must be called before {@link #createControl(Composite)} is called.
    */
-  protected final void addAction( final IAction action )
+  public final void addAction( final IAction action )
   {
     Assert.isTrue( m_treeViewer == null );
 
     m_actions.add( action );
-  }
-
-  public void setResultMeta( final IResultMeta resultRoot )
-  {
-    m_resultRoot = resultRoot;
-
-    if( m_treeViewer != null )
-      m_treeViewer.setInput( resultRoot );
-  }
-
-  public IResultMeta getResultRoot( )
-  {
-    return m_resultRoot;
   }
 
   @Override
@@ -173,7 +163,7 @@ public class SelectResultWizardPage extends WizardPage
 
     m_treeViewer.setComparator( m_comparator );
 
-    m_treeViewer.setInput( m_resultRoot );
+    m_treeViewer.setInput( m_currentScenarioResult );
 
     /* The next two lines are needed so that checking children of checked elements always works. */
     // FIXME: only, because getParent on the content provider does not work correctly, we should fix that

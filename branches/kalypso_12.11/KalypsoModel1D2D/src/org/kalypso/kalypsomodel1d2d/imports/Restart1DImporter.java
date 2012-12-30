@@ -97,10 +97,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * Imports the results of a wspm water level calculation as stationary result into the result database of 1d2d.
- * <p>
+ * Imports the results of a wspm water level calculation as stationary result into the result database of 1d2d.<br/>
  * This result can then be used to pseudo-restart a 1d-instationary calculation.
- * </p>
  * 
  * @author Gernot Belger
  */

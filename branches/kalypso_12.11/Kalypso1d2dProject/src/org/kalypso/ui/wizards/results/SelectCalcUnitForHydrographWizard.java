@@ -103,12 +103,10 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
   {
     final String title = Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" );
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, m_resultModel );
 
     selectResultWizardPage.setFilter( new NonCalcUnitResultViewerFilter() );
     selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
-
-    selectResultWizardPage.setResultMeta( m_resultModel );
 
     addPage( selectResultWizardPage );
   }
