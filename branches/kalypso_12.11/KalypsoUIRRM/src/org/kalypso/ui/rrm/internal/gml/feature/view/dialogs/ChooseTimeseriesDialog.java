@@ -70,6 +70,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTrayDialog;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.CollapseAllTreeItemsAction;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.ExpandAllTreeItemsAction;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.binding.timeseries.IStationCollection;
@@ -79,8 +81,6 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.StationsByStationsStrategy;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CleanSearchPanelAction;
-import org.kalypso.ui.rrm.internal.timeseries.view.actions.CollapseAllTreeItemsAction;
-import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExpandAllTreeItemsAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesChartComposite;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.timeseries.view.filter.TimeseriesBrowserSearchViewer;
@@ -269,15 +269,15 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
         if( !(selection instanceof IStructuredSelection) )
           return null;
 
-        final IStructuredSelection structured = (IStructuredSelection) selection;
+        final IStructuredSelection structured = (IStructuredSelection)selection;
         final Object element = structured.getFirstElement();
         if( !(element instanceof TreeNode) )
           return null;
 
-        final TreeNode node = (TreeNode) element;
+        final TreeNode node = (TreeNode)element;
         final Object adapter = node.getAdapter( ITimeseries.class );
         if( adapter instanceof ITimeseries )
-          return (ITimeseries) adapter;
+          return (ITimeseries)adapter;
 
         return null;
       }

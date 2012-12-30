@@ -10,8 +10,3 @@ parameterType_WIND_VELOCITY.png
  - license: Free for commercial use (Include link to authors website)
  - Authors website: http://www.icons-land.com/
  
- collapseall.gif
-  - eclipse icon
-  
- expandall.gif
-  - eclipse icon
