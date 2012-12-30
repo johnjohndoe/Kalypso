@@ -71,6 +71,8 @@ import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.CollapseAllTreeItemsAction;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.ExpandAllTreeItemsAction;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.status.StatusComposite;
@@ -88,7 +90,7 @@ public class ConnectionContentControl extends Composite
 {
   private static final String TOOLBAR_URI = "toolbar:org.kalypso.model.wspm.pdb.ui.content"; //$NON-NLS-1$
 
-  private static final IStatus STATUS_UPDATE = new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("ConnectionContentControl_0") ); //$NON-NLS-1$
+  private static final IStatus STATUS_UPDATE = new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "ConnectionContentControl_0" ) ); //$NON-NLS-1$
 
   private final IJobChangeListener m_refreshJobListener = new JobChangeAdapter()
   {
@@ -270,8 +272,8 @@ public class ConnectionContentControl extends Composite
   private void createActions( )
   {
     m_manager.add( new RefreshAction( this ) );
-    m_manager.add( new ExpandAllAction( this ) );
-    m_manager.add( new CollapseAllAction( this ) );
+    m_manager.add( new ExpandAllTreeItemsAction( m_waterViewer ) );
+    m_manager.add( new CollapseAllTreeItemsAction( m_waterViewer ) );
     m_manager.add( new Separator() );
 
     if( m_serviceLocator != null )

@@ -99,8 +99,10 @@ public class CatchmentModelsView extends ViewPart
   @Override
   public void dispose( )
   {
-    m_collapseHandler.dispose();
-    m_expandHandler.dispose();
+    if( m_collapseHandler != null )
+      m_collapseHandler.dispose();
+    if( m_expandHandler != null )
+      m_expandHandler.dispose();
 
     super.dispose();
   }
