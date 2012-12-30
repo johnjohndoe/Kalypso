@@ -61,7 +61,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.CollapseAllHandler;
-import org.eclipse.ui.handlers.ExpandAllHandler;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
@@ -99,8 +98,6 @@ public class ResultManagementView extends ViewPart
 
   private CollapseAllHandler m_collapseHandler;
 
-  private ExpandAllHandler m_expandHandler;
-
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -114,19 +111,15 @@ public class ResultManagementView extends ViewPart
 
     /* register tree handlers */
     final IHandlerService handlerService = (IHandlerService)getSite().getService( IHandlerService.class );
-
     m_collapseHandler = new CollapseAllHandler( m_treeViewer );
-    m_expandHandler = new ExpandAllHandler( m_treeViewer );
-
     handlerService.activateHandler( CollapseAllHandler.COMMAND_ID, m_collapseHandler );
-    handlerService.activateHandler( ExpandAllHandler.COMMAND_ID, m_expandHandler );
   }
 
   @Override
   public void dispose( )
   {
-    m_collapseHandler.dispose();
-    m_expandHandler.dispose();
+    if( m_collapseHandler != null )
+      m_collapseHandler.dispose();
 
     super.dispose();
   }
