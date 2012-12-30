@@ -23,7 +23,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -58,19 +58,19 @@ public class SelectResultData extends AbstractModelObject
 
   public static final String PROPERTY_RESULT_ROOT = "resultRoot"; //$NON-NLS-1$
 
-  private final IResultMeta m_currentScenarioResult;
+  private final IScenarioResultMeta m_currentScenarioResult;
 
   private boolean m_showOptions = false;
 
   private Object m_resultRoot;
 
-  public SelectResultData( final IResultMeta currentScenarioResult )
+  public SelectResultData( final IScenarioResultMeta currentScenarioResult )
   {
     m_currentScenarioResult = currentScenarioResult;
     m_resultRoot = m_currentScenarioResult;
   }
 
-  public IResultMeta getCurrentScenarioResult( )
+  public IScenarioResultMeta getCurrentScenarioResult( )
   {
     return m_currentScenarioResult;
   }

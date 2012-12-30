@@ -77,6 +77,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.tree.CollapseAllTreeItemsActio
 import org.kalypso.contribs.eclipse.jface.viewers.tree.ExpandAllTreeItemsAction;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.ITreeViewerProvider;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
@@ -267,9 +268,11 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
 
   private Control createTree( final Composite parent )
   {
+    final IScenarioResultMeta currentScenarioResult = m_data.getCurrentScenarioResult();
+
     m_treeViewer = new CheckboxTreeViewer( parent, SWT.BORDER );
 
-    m_treeViewer.setContentProvider( new ResultMetaContentProvider() );
+    m_treeViewer.setContentProvider( new ResultMetaContentProvider( currentScenarioResult ) );
     m_treeViewer.setLabelProvider( WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider() );
     m_treeViewer.setComparator( new Result1d2dMetaComparator() );
 
