@@ -41,9 +41,14 @@
 package org.kalypso.ui.wizards.results;
 
 import java.math.BigDecimal;
+import java.net.URL;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -52,9 +57,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
+import org.kalypso.kalypsomodel1d2d.project.Scenario1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -62,7 +69,6 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
  * @author Thomas Jung
- *
  */
 public class TinResultThemeCreator extends AbstractThemeCreator
 {
@@ -90,10 +96,6 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
   private static final String UNIT_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getLocalPart() ); //$NON-NLS-1$
 
-  // private static final String DATE_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}",
-  // Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getNamespaceURI(),
-  // Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getLocalPart() );
-
   private final String THEME_INFO_ID = String.format( "%s?geometry=%s&format=%s: %s %s", TIN_INFO_ID, Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_TIN, LABEL_PROPERTY_FORMAT, "%.2f", UNIT_PROPERTY_FORMAT ); //$NON-NLS-1$ //$NON-NLS-2$
 
   public TinResultThemeCreator( final IDocumentResultMeta documentResult, final IFolder scenarioFolder )
@@ -117,8 +119,8 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
     // selection button
     final Button lineButton = new Button( buttonComp, SWT.CHECK );
-    lineButton.setText( Messages.getString("org.kalypso.ui.wizards.results.TinResultThemeCreator.5") ); //$NON-NLS-1$
-    lineButton.setToolTipText( Messages.getString("org.kalypso.ui.wizards.results.TinResultThemeCreator.6") ); //$NON-NLS-1$
+    lineButton.setText( Messages.getString( "org.kalypso.ui.wizards.results.TinResultThemeCreator.5" ) ); //$NON-NLS-1$
+    lineButton.setToolTipText( Messages.getString( "org.kalypso.ui.wizards.results.TinResultThemeCreator.6" ) ); //$NON-NLS-1$
     lineButton.setSelection( m_lineButtonChecked );
     m_resultLayerCommandData[0].setSelected( m_lineButtonChecked );
 
@@ -127,8 +129,8 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
     // selection button
     final Button polyButton = new Button( buttonComp, SWT.CHECK );
-    polyButton.setText( Messages.getString("org.kalypso.ui.wizards.results.TinResultThemeCreator.8") ); //$NON-NLS-1$
-    polyButton.setToolTipText( Messages.getString("org.kalypso.ui.wizards.results.TinResultThemeCreator.9") ); //$NON-NLS-1$
+    polyButton.setText( Messages.getString( "org.kalypso.ui.wizards.results.TinResultThemeCreator.8" ) ); //$NON-NLS-1$
+    polyButton.setToolTipText( Messages.getString( "org.kalypso.ui.wizards.results.TinResultThemeCreator.9" ) ); //$NON-NLS-1$
     polyButton.setSelection( m_polyButtonChecked );
     m_resultLayerCommandData[1].setSelected( m_lineButtonChecked );
 
@@ -143,7 +145,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     // selection buttons
     lineButton.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -157,7 +159,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
     polyButton.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -181,32 +183,24 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     final IResultMeta calcUnitMeta = m_documentResult.getOwner().getOwner();
     final IResultMeta timeStepMeta = m_documentResult.getOwner();
 
-    final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
-    final String resFolder = resultsFolder.getFullPath().toPortableString();
-    // FIXME: PLATFORM DEPENDECY! Always use IPath/IResource-API to manipuate pathes
-    final String source = "../" + m_documentResult.getFullPath().toPortableString(); //$NON-NLS-1$
-
-    String style = null;
-    String themeName = null;
-    String styleLocation = null;
+    final String source = buildSourePath( m_documentResult, m_scenarioFolder );
 
     final String resultType = "gml"; //$NON-NLS-1$
     final String featurePath = ""; //$NON-NLS-1$
 
-    String type = null;
-
     /* Iso-Areas */
     if( m_polyButtonChecked == true )
     {
-      type = "Polygon"; //$NON-NLS-1$
-      style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
-      themeName = ResultMeta1d2dHelper.getIsoareaResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
+      final String type = "Polygon"; //$NON-NLS-1$
+      final String style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
+
+      // FIXME: better name!
+      final String themeName = ResultMeta1d2dHelper.getIsoareaResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
 
       // check, if there is a style already chosen, if not create one from default tamplate
+      String styleLocation = null;
       if( m_polyStyleComp == null )
-      {
-        styleLocation = getStyle( resFolder, type );
-      }
+        styleLocation = getStyle( type );
 
       /* create the commands */
       if( m_resultLayerCommandData[1] != null )
@@ -224,14 +218,14 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     /* Iso-Lines */
     if( m_lineButtonChecked == true )
     {
-      type = "Line"; //$NON-NLS-1$
-      style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
-      themeName = ResultMeta1d2dHelper.getIsolineResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
+      final String type = "Line"; //$NON-NLS-1$
+      final String style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
+      final String themeName = ResultMeta1d2dHelper.getIsolineResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
 
+      String styleLocation = null;
       if( m_lineStyleComp == null )
-      {
-        styleLocation = getStyle( resFolder, type );
-      }
+        styleLocation = getStyle( type );
+
       /* create the commands */
       if( m_resultLayerCommandData[0] != null )
         m_resultLayerCommandData[0].setValues( themeName, resultType, featurePath, source, style, styleLocation, type );
@@ -246,54 +240,75 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     }
   }
 
-  private String getStyle( final String resFolder, final String type )
+  static String buildSourePath( final IDocumentResultMeta documentResult, final IFolder scenarioFolder )
   {
-    final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
+    final URL resultsLocation = documentResult.getWorkspace().getContext();
+    final IFile resultsFile = ResourceUtilities.findFileFromURL( resultsLocation );
+    final IContainer documentScenarioFolder = resultsFile.getParent().getParent();
+
+    final IPath documentPath = documentResult.getFullPath();
+
+    if( documentScenarioFolder.equals( scenarioFolder ) )
+    {
+      /* document is part of current scenario, make relative path to scenario map file */
+      final IPath scenarioRelativePath = Path.fromPortableString( ".." ).append( documentPath );
+      return scenarioRelativePath.toPortableString();
+    }
+
+    final IFile documentDataFile = documentScenarioFolder.getFile( documentPath );
+    final IProject documentProject = documentScenarioFolder.getProject();
+
+    if( documentProject.equals( scenarioFolder.getProject() ) )
+    {
+      /* document is in the same project, but in another scenario: make project relative path */
+      final IPath projectRelativePath = documentDataFile.getProjectRelativePath();
+      return String.format( "%s/%s", UrlResolver.PROJECT_PROTOCOLL, projectRelativePath.toPortableString() ); //$NON-NLS-1$
+    }
+
+    /* outside of the current project: make absolute path */
+    return ResourceUtilities.createQuietURL( documentDataFile ).toExternalForm();
+  }
+
+  private String getStyle( final String type )
+  {
+    final Scenario1D2D scenario = new Scenario1D2D( m_scenarioFolder );
+    final IFolder resultsFolder = scenario.getResultsFolder();
+    final String resFolder = resultsFolder.getFullPath().toPortableString();
+
+    final IFolder stylesFolder = scenario.getStylesFolder();
+    final String defaultPath = stylesFolder.getFullPath().toPortableString();
     final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
 
     /* default location depending on type */
-    final IFolder stylesFolder = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder );
     final IFolder sldFolder = stylesFolder.getFolder( type );
 
     final String sldFileName = "default" + type + m_documentResult.getDocumentType().name() + "Style.sld"; //$NON-NLS-1$ //$NON-NLS-2$
-    final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final IPath stylePath = new Path( ".." ).append( relativePathTo ).append( type ).append( sldFileName ); //$NON-NLS-1$
+    final String styleLocation = stylePath.toPortableString();
 
+    /* create sld file if it does not already exist */
     final IFile styleFile = sldFolder.getFile( sldFileName );
-
     if( styleFile.exists() == false )
-    {
       ResultSldHelper.processStyle( styleFile, sldFolder, type, m_minValue, m_maxValue );
-    }
 
     return styleLocation;
   }
 
-  /**
-   * @see org.kalypso.ui.wizards.results.IResultThemeCreator#createThemeCommandData(org.kalypso.template.gismapview.Gismapview)
-   */
   @Override
   public ResultAddLayerCommandData[] getThemeCommandData( )
   {
-    if( m_resultLayerCommandData != null )
-    {
-      if( m_resultLayerCommandData[0].isSelected() == true && m_resultLayerCommandData[1].isSelected() == true )
-        return m_resultLayerCommandData;
-      else if( m_resultLayerCommandData[0].isSelected() == true && m_resultLayerCommandData[1].isSelected() == false )
-      {
-        final ResultAddLayerCommandData data[] = new ResultAddLayerCommandData[1];
-        data[0] = m_resultLayerCommandData[0];
-        return data;
-      }
-      else if( m_resultLayerCommandData[0].isSelected() == false && m_resultLayerCommandData[1].isSelected() == true )
-      {
-        final ResultAddLayerCommandData data[] = new ResultAddLayerCommandData[1];
-        data[0] = m_resultLayerCommandData[1];
-        return data;
-      }
-      else
-        return null;
-    }
-    else
+    if( m_resultLayerCommandData == null )
       return null;
+
+    if( m_resultLayerCommandData[0].isSelected() == true && m_resultLayerCommandData[1].isSelected() == true )
+      return m_resultLayerCommandData;
+
+    if( m_resultLayerCommandData[0].isSelected() == true && m_resultLayerCommandData[1].isSelected() == false )
+      return new ResultAddLayerCommandData[] { m_resultLayerCommandData[0] };
+
+    if( m_resultLayerCommandData[0].isSelected() == false && m_resultLayerCommandData[1].isSelected() == true )
+      return new ResultAddLayerCommandData[] { m_resultLayerCommandData[1] };
+
+    return null;
   }
 }
