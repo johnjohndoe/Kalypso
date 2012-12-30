@@ -16,9 +16,7 @@ public class ResultMetaAdapterFactory implements IAdapterFactory
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( adaptableObject instanceof IResultMeta )
-    {
       return m_resultMetaAdapter;
-    }
 
     return null;
   }

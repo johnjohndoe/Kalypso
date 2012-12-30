@@ -106,7 +106,8 @@ public class ResultManager1d2dWizard extends Wizard
   @Override
   public void addPages( )
   {
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2" ), null ); //$NON-NLS-1$
+    final String title = Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2" ); //$NON-NLS-1$
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title );
 
     selectResultWizardPage.setFilter( new DocumentResultViewerFilter() );
     selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );

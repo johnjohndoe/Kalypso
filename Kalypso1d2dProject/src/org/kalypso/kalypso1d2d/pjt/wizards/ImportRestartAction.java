@@ -71,7 +71,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Imports some external restart data into this model.
- *
+ * 
  * @author Gernot Belger
  */
 public class ImportRestartAction extends Action
@@ -125,7 +125,7 @@ public class ImportRestartAction extends Action
           final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.3" ), 100 ); //$NON-NLS-1$
 
           final IFile lengthSectionFile = importWizard.getLengthSection();
-          final Restart1DImporter restart1DImporter = new Restart1DImporter( (IScenarioResultMeta) page.getResultRoot(), scenarioFolder );
+          final Restart1DImporter restart1DImporter = new Restart1DImporter( (IScenarioResultMeta)page.getResultRoot(), scenarioFolder );
           restart1DImporter.doImport( lengthSectionFile, IWspmDictionaryConstants.LS_COMPONENT_STATION, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY, IWspmDictionaryConstants.LS_COMPONENT_TYPE, progress.newChild( 80 ) );
 
           final IScenarioDataProvider szenarioDataProvider = modelProvider;

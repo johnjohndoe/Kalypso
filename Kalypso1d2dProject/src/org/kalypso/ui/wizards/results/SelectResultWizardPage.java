@@ -61,7 +61,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
@@ -80,7 +79,7 @@ public class SelectResultWizardPage extends WizardPage
   private final Collection<IAction> m_actions = new ArrayList<>();
 
   // TODO: most use cases of result viewer only need the information about a result node, not creation of a theme. We should separate these concerns.
-  private final IThemeConstructionFactory m_factory;
+  private IThemeConstructionFactory m_factory;
 
   private IResultMeta m_resultRoot;
 
@@ -92,15 +91,18 @@ public class SelectResultWizardPage extends WizardPage
 
   private ViewerComparator m_comparator;
 
-  public SelectResultWizardPage( final String pageName, final String title, final IThemeConstructionFactory factory )
+  public SelectResultWizardPage( final String pageName, final String title )
   {
     super( pageName );
 
     setTitle( title );
 
-    m_factory = factory;
-
     setDescription( Messages.getString( "org.kalypso.ui.wizards.results.SelectResultWizardPage.0" ) ); //$NON-NLS-1$
+  }
+
+  public void setFactory( final IThemeConstructionFactory factory )
+  {
+    m_factory = factory;
   }
 
   public void setFilter( final ViewerFilter filter )
@@ -163,7 +165,7 @@ public class SelectResultWizardPage extends WizardPage
     m_treeViewer = new CheckboxTreeViewer( panel, SWT.BORDER );
     m_treeViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_treeViewer.setContentProvider( new WorkbenchContentProvider() );
+    m_treeViewer.setContentProvider( new ResultMetaContentProvider() );
     m_treeViewer.setLabelProvider( new WorkbenchLabelProvider() );
 
     if( m_filter != null )
@@ -251,11 +253,6 @@ public class SelectResultWizardPage extends WizardPage
   {
     m_treeViewer.setSubtreeChecked( resultMeta, isChecked );
     getContainer().updateButtons();
-  }
-
-  public IThemeConstructionFactory getThemeFactory( )
-  {
-    return m_factory;
   }
 
   /**
