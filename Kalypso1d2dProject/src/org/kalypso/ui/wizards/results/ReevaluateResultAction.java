@@ -43,7 +43,7 @@ package org.kalypso.ui.wizards.results;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Event;
@@ -99,8 +99,9 @@ public class ReevaluateResultAction extends Action
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     reevaluateResults( shell );
+
     /* handle tree */
-    final CheckboxTreeViewer treeViewer = m_page.getTreeViewer();
+    final TreeViewer treeViewer = m_page.getTreeViewer();
     ViewerUtilities.refresh( treeViewer, true );
   }
 

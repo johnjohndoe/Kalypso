@@ -107,7 +107,6 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
 
     selectResultWizardPage.setFilter( new NonCalcUnitResultViewerFilter() );
-    selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
 
     addPage( selectResultWizardPage );
   }

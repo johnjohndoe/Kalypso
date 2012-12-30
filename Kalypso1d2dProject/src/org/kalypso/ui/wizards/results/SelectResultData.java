@@ -20,8 +20,12 @@ package org.kalypso.ui.wizards.results;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * @author Gernot
@@ -83,6 +87,8 @@ public class SelectResultData extends AbstractModelObject
 
     m_resultRoot = resultRoot;
 
+    // FIXME: reset checked elements
+
     firePropertyChange( PROPERTY_RESULT_ROOT, oldRoot, resultRoot );
     firePropertyChange( PROPERTY_SHOW_ALL, oldType, getShowAllType() );
   }
@@ -114,9 +120,11 @@ public class SelectResultData extends AbstractModelObject
         return m_currentScenarioResult;
 
       case project:
+        final IScenario currentScenario = KalypsoAFGUIFrameworkPlugin.getDataProvider().getScenario();
+        return currentScenario.getProject();
+
       case all:
-        // FIXME: support other types!
-        return m_currentScenarioResult;
+        return ResourcesPlugin.getWorkspace().getRoot();
 
       default:
         throw new IllegalArgumentException();

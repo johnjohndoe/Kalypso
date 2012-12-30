@@ -67,40 +67,28 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 
   public static Kalypso1D2DProjectNature getNature( final IProject project ) throws CoreException
   {
-    return (Kalypso1D2DProjectNature) project.getNature( ID );
+    return (Kalypso1D2DProjectNature)project.getNature( ID );
   }
 
   private IProject m_project;
 
-  /**
-   * @see org.eclipse.core.resources.IProjectNature#configure()
-   */
   @Override
   public void configure( )
   {
   }
 
-  /**
-   * @see org.eclipse.core.resources.IProjectNature#deconfigure()
-   */
   @Override
   public void deconfigure( )
   {
     // does nothing by default
   }
 
-  /**
-   * @see org.eclipse.core.resources.IProjectNature#getProject()
-   */
   @Override
   public IProject getProject( )
   {
     return m_project;
   }
 
-  /**
-   * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
-   */
   @Override
   public void setProject( final IProject project )
   {

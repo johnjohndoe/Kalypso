@@ -51,7 +51,6 @@ import de.renew.workflow.connector.cases.IModel;
 
 /**
  * @author Thomas Jung
- *
  */
 public interface IResultMeta extends IModel
 {

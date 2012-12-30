@@ -51,9 +51,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 
 /**
  * @author Thomas Jung
- * 
  */
-public class Result1d2dMetaComparator extends ViewerComparator
+class Result1d2dMetaComparator extends ViewerComparator
 {
   private static final int CALC_UNIT_RESULT_HIERARCHY = 10;
 
@@ -83,11 +82,8 @@ public class Result1d2dMetaComparator extends ViewerComparator
 
   private static final int LOG_DOCUMENT_RESULT_HIERARCHY = 80;
 
-  /**
-   * @see org.eclipse.jface.viewers.ViewerComparator#category(java.lang.Object)
-   */
   @Override
-  public int category( Object element )
+  public int category( final Object element )
   {
     /* here, we return the hierarchy of the several element categories */
 
@@ -99,8 +95,8 @@ public class Result1d2dMetaComparator extends ViewerComparator
 
     else if( element instanceof IDocumentResultMeta )
     {
-      IDocumentResultMeta docResult = (IDocumentResultMeta) element;
-      DOCUMENTTYPE documentType = docResult.getDocumentType();
+      final IDocumentResultMeta docResult = (IDocumentResultMeta)element;
+      final DOCUMENTTYPE documentType = docResult.getDocumentType();
       switch( documentType )
       {
         case tinWsp:
@@ -148,17 +144,13 @@ public class Result1d2dMetaComparator extends ViewerComparator
     return 0;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
-  public int compare( Viewer viewer, Object e1, Object e2 )
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
     if( e1 instanceof IStepResultMeta && e2 instanceof IStepResultMeta )
     {
-      final IStepResultMeta stepResult1 = (IStepResultMeta) e1;
-      final IStepResultMeta stepResult2 = (IStepResultMeta) e2;
+      final IStepResultMeta stepResult1 = (IStepResultMeta)e1;
+      final IStepResultMeta stepResult2 = (IStepResultMeta)e2;
 
       /* sorting according the step time */
 
@@ -176,7 +168,6 @@ public class Result1d2dMetaComparator extends ViewerComparator
         return -1;
       else
         return 0;
-
     }
 
     return super.compare( viewer, e1, e2 );

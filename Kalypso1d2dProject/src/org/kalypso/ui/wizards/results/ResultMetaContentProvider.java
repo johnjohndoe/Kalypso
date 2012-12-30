@@ -18,7 +18,11 @@
  */
 package org.kalypso.ui.wizards.results;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
+import org.kalypso.afgui.views.ScenarioContentProvider;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * REMARK: it is sufficient to extent from {@link BaseWorkbenchContentProvider}, as the {@link org.eclipse.ui.model.WorkbenchContentProvider} only adds support for resource changes, and we can assume,
@@ -28,15 +32,32 @@ import org.eclipse.ui.model.BaseWorkbenchContentProvider;
  */
 class ResultMetaContentProvider extends BaseWorkbenchContentProvider
 {
+  private final ScenarioContentProvider m_scenarioContentProvider = new ScenarioContentProvider( false );
+
   @Override
   public Object[] getChildren( final Object parentElement )
   {
+    if( parentElement instanceof IProject )
+      return m_scenarioContentProvider.getChildren( parentElement );
+
+    if( parentElement instanceof IScenario )
+    {
+      // FIXME: add results..
+      return m_scenarioContentProvider.getChildren( parentElement );
+    }
+
     return super.getChildren( parentElement );
   }
 
   @Override
   public Object getParent( final Object element )
   {
+    if( element instanceof IProject )
+      return m_scenarioContentProvider.getParent( element );
+    if( element instanceof IScenario )
+      return m_scenarioContentProvider.getParent( element );
+
+    // TODO: get scenario for root result element
     return super.getParent( element );
   }
 }

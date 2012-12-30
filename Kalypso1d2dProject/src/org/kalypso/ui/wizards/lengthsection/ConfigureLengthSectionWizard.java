@@ -54,7 +54,6 @@ import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHand
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultData;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
@@ -100,7 +99,6 @@ public class ConfigureLengthSectionWizard extends Wizard
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
 
     selectResultWizardPage.setFilter( new DocumentResultViewerFilter() );
-    selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
 
     addPage( lengthSectionPage );
     addPage( selectResultWizardPage );
