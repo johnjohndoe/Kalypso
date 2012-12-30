@@ -18,7 +18,6 @@
  */
 package org.kalypso.kalypsomodel1d2d.project;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Path;
@@ -31,20 +30,46 @@ import org.eclipse.core.runtime.Path;
  */
 public class Scenario1D2D
 {
+  private static final String FOLDER_RESULTS = "results"; //$NON-NLS-1$
+
+  private static final String FOLDER_MAPS = "maps"; //$NON-NLS-1$
+
+  private static final String FOLDER_STYLES = "styles"; //$NON-NLS-1$
+
   private static final String FOLDER_MODELS = "models"; //$NON-NLS-1$
 
   private static final String FILE_RESULT_META = "scenarioResultMeta.gml"; //$NON-NLS-1$
 
-  private final IContainer m_scenarioFolder;
+  private final IFolder m_scenarioFolder;
 
-  public Scenario1D2D( final IContainer scenarioFolder )
+  public Scenario1D2D( final IFolder scenarioFolder )
   {
     m_scenarioFolder = scenarioFolder;
+  }
+
+  public Project1D2D getProject( )
+  {
+    return new Project1D2D( m_scenarioFolder.getProject() );
   }
 
   public IFolder getModelsFolder( )
   {
     return m_scenarioFolder.getFolder( new Path( FOLDER_MODELS ) );
+  }
+
+  public IFolder getStylesFolder( )
+  {
+    return m_scenarioFolder.getFolder( FOLDER_STYLES );
+  }
+
+  public IFolder getMapsFolder( )
+  {
+    return m_scenarioFolder.getFolder( FOLDER_MAPS );
+  }
+
+  public IFolder getResultsFolder( )
+  {
+    return m_scenarioFolder.getFolder( FOLDER_RESULTS );
   }
 
   public IFile getResultMetaFile( )

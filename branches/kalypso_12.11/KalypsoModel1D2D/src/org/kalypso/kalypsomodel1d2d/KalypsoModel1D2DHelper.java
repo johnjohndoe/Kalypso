@@ -46,12 +46,13 @@ import org.eclipse.core.resources.IFolder;
  * Collection of central helper functions converning 1d2d stuff.
  * 
  * @author Gernot Belger
- * 
+ * @deprecated Use {@link org.kalypso.kalypsomodel1d2d.project.Scenario1D2D} to access scenario relative resources.
  */
+@Deprecated
 public class KalypsoModel1D2DHelper
 {
   public static final Double DOUBLE_IGNORE_VALUE = -9999.;
-  
+
   private KalypsoModel1D2DHelper( )
   {
     throw new UnsupportedOperationException( "Helper class, do not instantiate." ); //$NON-NLS-1$
@@ -73,14 +74,8 @@ public class KalypsoModel1D2DHelper
     return scenarioFolder.getFolder( "styles" ); //$NON-NLS-1$
   }
 
-  public static IFolder getMapsFolder( final IFolder scenarioFolder )
-  {
-    return scenarioFolder.getFolder( "maps" ); //$NON-NLS-1$
-  }
-
   public static IFolder getResultsFolder( final IFolder scenarioFolder )
   {
     return scenarioFolder.getFolder( "results" ); //$NON-NLS-1$
   }
-
 }
