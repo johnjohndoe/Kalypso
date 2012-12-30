@@ -204,9 +204,9 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
       @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        final IResultMeta resultMeta = (IResultMeta)event.getElement();
+        final Object element = event.getElement();
         final boolean isChecked = event.getChecked();
-        handleCheckStateChanged( resultMeta, isChecked );
+        handleCheckStateChanged( element, isChecked );
       }
     } );
 
@@ -309,15 +309,20 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
   public IResultMeta[] getSelectedResults( )
   {
     final Object[] checkedElements = m_treeViewer.getCheckedElements();
-    final IResultMeta[] resultArray = new IResultMeta[checkedElements.length];
-    for( int i = 0; i < checkedElements.length; i++ )
-      resultArray[i] = (IResultMeta)checkedElements[i];
-    return resultArray;
+
+    final Collection<IResultMeta> results = new ArrayList<>( checkedElements.length );
+    for( final Object checkedElement : checkedElements )
+    {
+      if( checkedElement instanceof IResultMeta )
+        results.add( (IResultMeta)checkedElement );
+    }
+
+    return results.toArray( new IResultMeta[results.size()] );
   }
 
-  protected void handleCheckStateChanged( final IResultMeta resultMeta, final boolean isChecked )
+  protected void handleCheckStateChanged( final Object element, final boolean isChecked )
   {
-    m_treeViewer.setSubtreeChecked( resultMeta, isChecked );
+    m_treeViewer.setSubtreeChecked( element, isChecked );
     getContainer().updateButtons();
   }
 
