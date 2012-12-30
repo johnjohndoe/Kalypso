@@ -18,9 +18,28 @@
  */
 package org.kalypso.ui.wizards.results;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.views.ScenarioContentProvider;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -34,6 +53,26 @@ class ResultMetaContentProvider extends BaseWorkbenchContentProvider
 {
   private final ScenarioContentProvider m_scenarioContentProvider = new ScenarioContentProvider( false );
 
+  private final IScenarioResultMeta m_currentScenarioResult;
+
+  private final ScenarioResultLoader m_resultLoader = new ScenarioResultLoader();
+
+  private final LoadingCache<IScenario, IScenarioResultMeta> m_resultCache = CacheBuilder.newBuilder().weakValues().maximumSize( 100 ).removalListener( m_resultLoader ).build( m_resultLoader );
+
+  public ResultMetaContentProvider( final IScenarioResultMeta currentScenarioResult )
+  {
+    m_currentScenarioResult = currentScenarioResult;
+  }
+
+  @Override
+  public void dispose( )
+  {
+    m_resultCache.invalidateAll();
+    m_resultCache.cleanUp();
+
+    super.dispose();
+  }
+
   @Override
   public Object[] getChildren( final Object parentElement )
   {
@@ -41,12 +80,52 @@ class ResultMetaContentProvider extends BaseWorkbenchContentProvider
       return m_scenarioContentProvider.getChildren( parentElement );
 
     if( parentElement instanceof IScenario )
-    {
-      // FIXME: add results..
-      return m_scenarioContentProvider.getChildren( parentElement );
-    }
+      return getScenarioChildren( (IScenario)parentElement );
 
     return super.getChildren( parentElement );
+  }
+
+  private Object[] getScenarioChildren( final IScenario scenario )
+  {
+    final Object[] childScenarios = m_scenarioContentProvider.getChildren( scenario );
+    final Object[] childResults = getScenarioResults( scenario );
+
+    /* combine into single array */
+    final Collection<Object> children = new ArrayList<>( childScenarios.length + childResults.length );
+    children.addAll( Arrays.asList( childScenarios ) );
+    children.addAll( Arrays.asList( childResults ) );
+    return children.toArray( new Object[children.size()] );
+  }
+
+  private Object[] getScenarioResults( final IScenario scenario )
+  {
+    /* use already loaded results for current scenario */
+    final IScenario currentScenario = KalypsoAFGUIFrameworkPlugin.getDataProvider().getScenario();
+    if( scenario.equals( currentScenario ) )
+      return m_currentScenarioResult.getChildren().toArray();
+
+    /* fetch from scenario */
+    final IScenarioResultMeta scenarioResult = loadScenarioResults( scenario );
+    if( scenarioResult == null )
+    {
+      // REMARK: protect against corrupt projects
+      return ArrayUtils.EMPTY_OBJECT_ARRAY;
+    }
+
+    return scenarioResult.getChildren().toArray();
+  }
+
+  private IScenarioResultMeta loadScenarioResults( final IScenario scenario )
+  {
+    try
+    {
+      return m_resultCache.get( scenario );
+    }
+    catch( final ExecutionException | UncheckedExecutionException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   @Override
@@ -54,10 +133,38 @@ class ResultMetaContentProvider extends BaseWorkbenchContentProvider
   {
     if( element instanceof IProject )
       return m_scenarioContentProvider.getParent( element );
+
     if( element instanceof IScenario )
       return m_scenarioContentProvider.getParent( element );
 
-    // TODO: get scenario for root result element
-    return super.getParent( element );
+    final Object parent = super.getParent( element );
+    if( parent instanceof IScenarioResultMeta )
+      return scenarioResultParent( (IScenarioResultMeta)parent );
+
+    return parent;
+  }
+
+  private Object scenarioResultParent( final IScenarioResultMeta scenarioResult )
+  {
+    if( scenarioResult.equals( m_currentScenarioResult ) )
+      return KalypsoAFGUIFrameworkPlugin.getDataProvider().getScenario();
+
+    /* determine parent scenario via the underlying file */
+    final GMLWorkspace workspace = scenarioResult.getWorkspace();
+    final URL gmlLocation = workspace.getContext();
+    final IFile gmlFile = ResourceUtilities.findFileFromURL( gmlLocation );
+    if( gmlFile == null )
+      return null;
+
+    try
+    {
+      final IContainer scenarioFolder = gmlFile.getParent().getParent();
+      return ScenarioHelper.findScenario( scenarioFolder );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }
