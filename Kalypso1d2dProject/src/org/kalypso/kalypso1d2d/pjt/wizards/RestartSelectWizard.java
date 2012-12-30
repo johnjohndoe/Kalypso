@@ -68,6 +68,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
+import org.kalypso.ui.wizards.results.SelectResultData;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -115,8 +116,10 @@ public class RestartSelectWizard extends Wizard
   {
     setWindowTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.0" ) ); //$NON-NLS-1$
 
-    final String title1 = Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.8" ); //$NON-NLS-1$ 
-    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage1", title1, m_resultModel ); //$NON-NLS-1$
+    final String title1 = Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.8" ); //$NON-NLS-1$
+
+    final SelectResultData data = new SelectResultData( m_resultModel );
+    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage1", title1, data ); //$NON-NLS-1$
 
     m_restartSelectWizardPage1.addAction( new ImportRestartAction( m_restartSelectWizardPage1, m_scenarioFolder, m_modelProvider, m_resultModel ) );
 

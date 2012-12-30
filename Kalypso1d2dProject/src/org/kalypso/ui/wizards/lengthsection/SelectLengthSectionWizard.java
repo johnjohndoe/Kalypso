@@ -55,6 +55,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
+import org.kalypso.ui.wizards.results.SelectResultData;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 
 /**
@@ -81,7 +82,9 @@ public class SelectLengthSectionWizard extends Wizard
   {
     final String title = Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.2" ); //$NON-NLS-1$
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, m_resultModel );
+    final SelectResultData data = new SelectResultData( m_resultModel );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
+
     selectResultWizardPage.setFilter( new LengthSectionViewerFilter() );
     selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
 

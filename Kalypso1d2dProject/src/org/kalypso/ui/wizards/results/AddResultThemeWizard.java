@@ -94,7 +94,9 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
   {
     final String title = Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.2" ); //$NON-NLS-1$
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, m_resultModel );
+    final SelectResultData data = new SelectResultData( m_resultModel );
+    // FIXME data.setShowOptions( true );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
 
     selectResultWizardPage.setFactory( m_themeConstructionFactory );
     selectResultWizardPage.setFilter( new NonMapDataResultViewerFilter() );

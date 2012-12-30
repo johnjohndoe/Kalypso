@@ -26,7 +26,7 @@ import org.eclipse.ui.model.BaseWorkbenchContentProvider;
  * 
  * @author Gernot Belger
  */
-public class ResultMetaContentProvider extends BaseWorkbenchContentProvider
+class ResultMetaContentProvider extends BaseWorkbenchContentProvider
 {
   @Override
   public Object[] getChildren( final Object parentElement )
