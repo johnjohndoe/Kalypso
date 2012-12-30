@@ -46,7 +46,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
@@ -82,7 +82,7 @@ public class ImportResultAction extends Action
 
     m_modelProvider = modelProvider;
 
-    setToolTipText( Messages.getString("ImportResultAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "ImportResultAction_0" ) ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.IMPORT_EXTERNAL_RESULT ) );
@@ -107,7 +107,7 @@ public class ImportResultAction extends Action
     new StatusDialog( shell, status, wizard.getWindowTitle() ).open();
 
     /* handle tree */
-    final CheckboxTreeViewer treeViewer = m_page.getTreeViewer();
+    final TreeViewer treeViewer = m_page.getTreeViewer();
     ViewerUtilities.refresh( treeViewer, true );
   }
 

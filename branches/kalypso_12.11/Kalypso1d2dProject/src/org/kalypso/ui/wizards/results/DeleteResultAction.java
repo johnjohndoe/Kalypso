@@ -42,7 +42,7 @@ package org.kalypso.ui.wizards.results;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommandTarget;
@@ -85,17 +85,17 @@ public class DeleteResultAction extends Action
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     // FIXME: show real list of selected element -> if none selected, show user what to do
-    if( !MessageDialog.openConfirm( shell, m_page.getWizard().getWindowTitle(), Messages.getString("DeleteResultAction.0") ) ) //$NON-NLS-1$
+    if( !MessageDialog.openConfirm( shell, m_page.getWizard().getWindowTitle(), Messages.getString( "DeleteResultAction.0" ) ) ) //$NON-NLS-1$
       return;
 
-    final CheckboxTreeViewer treeViewer = m_page.getTreeViewer();
+    final TreeViewer treeViewer = m_page.getTreeViewer();
     final IResultMeta[] selectedResults = m_page.getSelectedResults();
     for( final IResultMeta resultMeta : selectedResults )
     {
       if( resultMeta instanceof IStepResultMeta )
       {
         /* handle result meta entries */
-        final IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
+        final IStepResultMeta stepResult = (IStepResultMeta)resultMeta;
         ResultMeta1d2dHelper.removeResult( stepResult );
 
         /* handle map themes */

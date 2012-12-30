@@ -55,9 +55,6 @@ public class Kalypso1d2dModule extends AbstractKalypsoModule
     return ID;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.AbstractKalypsoModule#getNewProjectWizard()
-   */
   @Override
   protected INewProjectWizardProvider getNewProjectWizard( )
   {
@@ -90,27 +87,18 @@ public class Kalypso1d2dModule extends AbstractKalypsoModule
     return new SzenarioProjectOpenAction( ID );
   }
 
-  /**
-   * @see org.kalypso.module.IKalypsoModule#acceptProject(org.eclipse.core.resources.IProject)
-   */
   @Override
   public boolean acceptProject( final IProject project ) throws CoreException
   {
     return Kalypso1D2DProjectNature.isOfThisNature( project );
   }
 
-  /**
-   * @see org.kalypso.module.IKalypsoModule#getNewProjectCategoryId()
-   */
   @Override
   public String getNewProjectCategoryId( )
   {
     return Kalypso1D2DNewProjectWizard.CATEGORY_ID;
   }
 
-  /**
-   * @see org.kalypso.module.IKalypsoModule#getSetAsBaseScenarioHandler()
-   */
   @Override
   public ISetAsBaseScenarioHandler getSetAsBaseScenarioHandler( )
   {

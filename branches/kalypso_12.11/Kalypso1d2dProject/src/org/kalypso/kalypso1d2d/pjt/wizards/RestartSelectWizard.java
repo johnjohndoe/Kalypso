@@ -67,7 +67,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultData;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -124,7 +123,6 @@ public class RestartSelectWizard extends Wizard
     m_restartSelectWizardPage1.addAction( new ImportRestartAction( m_restartSelectWizardPage1, m_scenarioFolder, m_modelProvider, m_resultModel ) );
 
     m_restartSelectWizardPage1.setFilter( new DocumentResultViewerFilter() );
-    m_restartSelectWizardPage1.setComparator( new Result1d2dMetaComparator() );
 
     addPage( m_restartSelectWizardPage1 );
 

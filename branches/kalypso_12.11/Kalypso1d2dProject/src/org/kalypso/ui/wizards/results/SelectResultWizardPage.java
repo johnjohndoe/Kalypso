@@ -47,6 +47,7 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -61,7 +62,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -72,6 +73,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.CollapseAllTreeItemsAction;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.ExpandAllTreeItemsAction;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.ITreeViewerProvider;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
@@ -83,9 +87,9 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  * 
  * @author Thomas Jung
  */
-public class SelectResultWizardPage extends WizardPage
+public class SelectResultWizardPage extends WizardPage implements ITreeViewerProvider
 {
-  private final ToolBarManager m_toolbarManager = new ToolBarManager( SWT.SHADOW_OUT );
+  private final ToolBarManager m_toolbarManager = new ToolBarManager( SWT.FLAT );
 
   private final Collection<IAction> m_actions = new ArrayList<>();
 
@@ -100,8 +104,6 @@ public class SelectResultWizardPage extends WizardPage
 
   private ViewerFilter m_filter;
 
-  private ViewerComparator m_comparator;
-
   private DatabindingWizardPage m_binding;
 
   public SelectResultWizardPage( final String pageName, final String title, final SelectResultData data )
@@ -111,8 +113,12 @@ public class SelectResultWizardPage extends WizardPage
     m_data = data;
 
     setTitle( title );
-
     setDescription( Messages.getString( "org.kalypso.ui.wizards.results.SelectResultWizardPage.0" ) ); //$NON-NLS-1$
+
+    addAction( new CollapseAllTreeItemsAction( this ) );
+    addAction( new ExpandAllTreeItemsAction( this ) );
+    // separator
+    addAction( null );
   }
 
   @Override
@@ -128,23 +134,16 @@ public class SelectResultWizardPage extends WizardPage
 
   public void setFactory( final IThemeConstructionFactory factory )
   {
+    Assert.isTrue( m_treeViewer == null );
+
     m_factory = factory;
   }
 
   public void setFilter( final ViewerFilter filter )
   {
+    Assert.isTrue( m_treeViewer == null );
+
     m_filter = filter;
-
-    if( m_treeViewer != null )
-      m_treeViewer.setFilters( new ViewerFilter[] { m_filter } );
-  }
-
-  public void setComparator( final ViewerComparator comparator )
-  {
-    m_comparator = comparator;
-
-    if( m_treeViewer != null )
-      m_treeViewer.setComparator( m_comparator );
   }
 
   /**
@@ -229,13 +228,14 @@ public class SelectResultWizardPage extends WizardPage
     final Composite treePanel = new Composite( parent, SWT.NONE );
     GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( treePanel );
 
-    if( !m_actions.isEmpty() )
-      createToolbar( treePanel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    createToolbar( treePanel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     createTree( treePanel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     if( m_data.getShowOptions() )
       createFilterControls( treePanel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    m_treeViewer.getControl().setFocus();
 
     return treePanel;
   }
@@ -270,12 +270,12 @@ public class SelectResultWizardPage extends WizardPage
     m_treeViewer = new CheckboxTreeViewer( parent, SWT.BORDER );
 
     m_treeViewer.setContentProvider( new ResultMetaContentProvider() );
-    m_treeViewer.setLabelProvider( new WorkbenchLabelProvider() );
+    m_treeViewer.setLabelProvider( WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider() );
+    m_treeViewer.setComparator( new Result1d2dMetaComparator() );
 
+    m_treeViewer.addFilter( new Result1d2dMetaFilter() );
     if( m_filter != null )
-      m_treeViewer.setFilters( new ViewerFilter[] { m_filter } );
-
-    m_treeViewer.setComparator( m_comparator );
+      m_treeViewer.addFilter( m_filter );
 
     /* binding */
     final IObservableValue targetInput = ViewersObservables.observeInput( m_treeViewer );
@@ -293,7 +293,12 @@ public class SelectResultWizardPage extends WizardPage
   private Control createToolbar( final Composite parent )
   {
     for( final IAction action : m_actions )
-      m_toolbarManager.add( action );
+    {
+      if( action == null )
+        m_toolbarManager.add( new Separator( "xxx" ) );
+      else
+        m_toolbarManager.add( action );
+    }
 
     return m_toolbarManager.createControl( parent );
   }
@@ -324,8 +329,9 @@ public class SelectResultWizardPage extends WizardPage
     m_checkedElements = checkedElements;
   }
 
-  // TODO: not nice... currently use to refresh tree
-  public CheckboxTreeViewer getTreeViewer( )
+  // TODO: not nice... currently used to refresh tree
+  @Override
+  public TreeViewer getTreeViewer( )
   {
     return m_treeViewer;
   }

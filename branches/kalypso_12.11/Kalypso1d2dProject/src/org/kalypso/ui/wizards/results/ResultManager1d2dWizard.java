@@ -112,7 +112,6 @@ public class ResultManager1d2dWizard extends Wizard
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
 
     selectResultWizardPage.setFilter( new DocumentResultViewerFilter() );
-    selectResultWizardPage.setComparator( new Result1d2dMetaComparator() );
 
     selectResultWizardPage.addAction( new DeleteResultAction( selectResultWizardPage, m_commandTarget, m_modell ) );
     selectResultWizardPage.addAction( new ReevaluateResultAction( selectResultWizardPage, m_commandTarget, m_modell, m_modelProvider, m_geoLog ) );
