@@ -41,12 +41,9 @@
 package org.kalypso.ui.wizards.results;
 
 import java.math.BigDecimal;
-import java.net.URL;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.SWT;
@@ -57,8 +54,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.project.Scenario1D2D;
@@ -175,8 +170,6 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
   private void updateThemeCommandData( )
   {
-    final String source = buildSourePath( m_documentResult, m_scenarioFolder );
-
     final String featurePath = ""; //$NON-NLS-1$
 
     /* Iso-Areas */
@@ -196,7 +189,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
       {
         final String style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
 
-        m_resultLayerCommandData[1] = new ResultAddLayerCommandData( featurePath, source, style, styleLocation, m_scenarioFolder, type, m_documentResult );
+        m_resultLayerCommandData[1] = new ResultAddLayerCommandData( featurePath, style, styleLocation, m_scenarioFolder, type, m_documentResult );
         m_resultLayerCommandData[1].setSelected( true );
 
         m_resultLayerCommandData[1].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
@@ -221,7 +214,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
       {
         final String style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
 
-        m_resultLayerCommandData[0] = new ResultAddLayerCommandData( featurePath, source, style, styleLocation, m_scenarioFolder, type, m_documentResult );
+        m_resultLayerCommandData[0] = new ResultAddLayerCommandData( featurePath, style, styleLocation, m_scenarioFolder, type, m_documentResult );
         m_resultLayerCommandData[0].setSelected( true );
 
         m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
@@ -230,35 +223,6 @@ public class TinResultThemeCreator extends AbstractThemeCreator
       }
 
     }
-  }
-
-  static String buildSourePath( final IDocumentResultMeta documentResult, final IFolder scenarioFolder )
-  {
-    final URL resultsLocation = documentResult.getWorkspace().getContext();
-    final IFile resultsFile = ResourceUtilities.findFileFromURL( resultsLocation );
-    final IContainer documentScenarioFolder = resultsFile.getParent().getParent();
-
-    final IPath documentPath = documentResult.getFullPath();
-
-    if( documentScenarioFolder.equals( scenarioFolder ) )
-    {
-      /* document is part of current scenario, make relative path to scenario map file */
-      final IPath scenarioRelativePath = Path.fromPortableString( ".." ).append( documentPath );
-      return scenarioRelativePath.toPortableString();
-    }
-
-    final IFile documentDataFile = documentScenarioFolder.getFile( documentPath );
-    final IProject documentProject = documentScenarioFolder.getProject();
-
-    if( documentProject.equals( scenarioFolder.getProject() ) )
-    {
-      /* document is in the same project, but in another scenario: make project relative path */
-      final IPath projectRelativePath = documentDataFile.getProjectRelativePath();
-      return String.format( "%s/%s", UrlResolver.PROJECT_PROTOCOLL, projectRelativePath.toPortableString() ); //$NON-NLS-1$
-    }
-
-    /* outside of the current project: make absolute path */
-    return ResourceUtilities.createQuietURL( documentDataFile ).toExternalForm();
   }
 
   private String getStyle( final String type )

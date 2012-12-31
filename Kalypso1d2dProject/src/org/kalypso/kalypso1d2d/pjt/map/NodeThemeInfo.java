@@ -66,6 +66,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
     m_propertyLabel = NodeResultHelper.translateNodeParameterType( m_actPropQname );
 
+    // FIXME: does not work correctly for external themes -> before fixing, ask Ilya what exactly this code is supposed to do
     try
     {
       final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
@@ -81,7 +82,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
   {
     final String propertyNameFromTheme = getPropertyNameFromTheme( theme );
 
-    if( NodeResultHelper.VELO_TYPE.equals( propertyNameFromTheme ) )
+    if( NodeResultHelper.VELO_TYPE.toLowerCase().equals( propertyNameFromTheme ) )
       return new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, NodeResultHelper.VELOCITY );
 
     if( StringUtils.isBlank( propertyNameFromTheme ) )
