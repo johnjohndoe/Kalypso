@@ -145,7 +145,7 @@ public class NodeResultHelper
 
   public static final String VELOCITY = "velocity"; //$NON-NLS-1$
 
-  private static final String STR_NODE_PARAMETER_UNKNOWN = "<unknown>";
+  private static final String STR_NODE_PARAMETER_UNKNOWN = "<unknown>"; //$NON-NLS-1$
 
   /**
    * sets the mid-side node's water level and depth by interpolation between the corner nodes.

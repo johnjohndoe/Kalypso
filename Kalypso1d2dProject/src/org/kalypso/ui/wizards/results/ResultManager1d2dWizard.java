@@ -111,7 +111,7 @@ public class ResultManager1d2dWizard extends Wizard
     final SelectResultData data = new SelectResultData( m_resultModel );
 
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
-    selectResultWizardPage.setDescription( "Selektieren Sie die zu bearbeitenden Ergebnisse und wählen Sie ein Werkzeug aus der Werkzeugleiste." );
+    selectResultWizardPage.setDescription( Messages.getString("ResultManager1d2dWizard.0") ); //$NON-NLS-1$
 
     selectResultWizardPage.setFilter( new DocumentResultViewerFilter() );
 
