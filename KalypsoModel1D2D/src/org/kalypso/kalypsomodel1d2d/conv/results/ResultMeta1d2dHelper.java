@@ -61,7 +61,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -69,6 +68,7 @@ import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.core.resources.IFolder;
@@ -112,8 +112,6 @@ public class ResultMeta1d2dHelper
 
   public static final String FULL_DATE_TIME_FORMAT_RESULT_STEP = "dd.MM.yyyy_HH_mm_ss_SSS_z"; //$NON-NLS-1$
 
-  public static final String STR_THEME_NAME_SEPARATOR = ", "; //$NON-NLS-1$
-
   public static final String ORIGINAL_2D_FILE_NAME = "original.2d"; //$NON-NLS-1$
 
   public static final String SWAN_RAW_DATA_META_NAME = "SWAN-Rohdaten"; //$NON-NLS-1$
@@ -121,6 +119,10 @@ public class ResultMeta1d2dHelper
   public static final String RMA_RAW_DATA_META_NAME = "RMA-Rohdaten"; //$NON-NLS-1$
 
   public static final String TIME_STEP_PREFIX = "timestep-"; //$NON-NLS-1$
+
+  public static final String STR_THEME_NAME_ISOAREA = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.11" ); //$NON-NLS-1$
+
+  public static final String STR_THEME_NAME_ISOLINE = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.8" ); //$NON-NLS-1$
 
   /**
    * removes the specified resultMeta file
@@ -305,7 +307,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * removes the specified result meta entry and all of its children. Files will be removed, too.
-   *
+   * 
    * @param resultMeta
    *          the result entry
    */
@@ -316,7 +318,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * removes the specified result meta entry and all of its children. Files will be removed, too.
-   *
+   * 
    * @param resultMeta
    *          the result entry
    * @param includeOriginal
@@ -339,7 +341,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * adds a specified {@link IDocumentResultMeta} to the specified {@link IResultMeta}
-   *
+   * 
    * @param resultMeta
    *          result meta to which the document result is added to
    * @param name
@@ -378,7 +380,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * adds a specified {@link IDocumentResultMeta} to the specified {@link IResultMeta}
-   *
+   * 
    * @param resultMeta
    *          result meta to which the document result is added to
    * @param name
@@ -626,25 +628,15 @@ public class ResultMeta1d2dHelper
       {
         final IDocumentResultMeta docResult = (IDocumentResultMeta)stepChild;
 
-        // nodes:
-        // final String resultNameNode = getNodeResultLayerName( docResult, stepResult, calcUnitMeta, "*" );
-        // tins:
-        // final String resultNameIso = getIsolineResultLayerName( docResult, stepResult, calcUnitMeta );
-        // final String resultNameIsoOld = getIsolineResultLayerNameOld( docResult, calcUnitMeta );
-        // final String resultNameArea = getIsoareaResultLayerName( docResult, stepResult, calcUnitMeta );
-
         for( final IKalypsoTheme kalypsoTheme : allThemes )
         {
           if( kalypsoTheme instanceof IKalypsoFeatureTheme )
           {
-            // UARGHH. We should implement some other method to recognize the right theme
             final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)kalypsoTheme;
-            final String kftName = kft.getName().getKey().toLowerCase();
 
-            // if( kftName.equals( resultNameNode ) || kftName.equals( resultNameIso ) || kftName.equals(
-            // resultNameIsoOld ) || kftName.equals( resultNameArea ) )
-            if( kftName != null && kftName.contains( docResult.getName().trim().toLowerCase() ) && kftName.contains( calcUnitMeta.getName().trim().toLowerCase() )
-                && (kftName.contains( stepResult.getName().trim().toLowerCase() ) || kftName.contains( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.10" ) )) ) //$NON-NLS-1$
+            final boolean shouldDelete = isResultTheme( kft, docResult, stepResult, calcUnitMeta );
+
+            if( shouldDelete )
             {
               final RemoveThemeCommand removeThemeCommand = new RemoveThemeCommand( modell, kft );
               commandTarget.postCommand( removeThemeCommand, null );
@@ -655,35 +647,19 @@ public class ResultMeta1d2dHelper
     }
   }
 
-  public static String getNodeResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta, final String strType )
+  private static boolean isResultTheme( final IKalypsoFeatureTheme kft, final IDocumentResultMeta docResult, final IStepResultMeta stepResult, final IResultMeta calcUnitMeta )
   {
-    return docResult.getName() + STR_THEME_NAME_SEPARATOR + strType + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR
-        + stepResult.getProperty( IStepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
-  }
+    // FIXME: instead add properties to this theme when added (gml-id's of document meta)
 
-  public static String getIsolineResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta )
-  {
-    return docResult.getName()
-        + STR_THEME_NAME_SEPARATOR
-        + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.8" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$
-  }
+    // FIXME: UARGHH. We should implement some other method to recognize the right theme
+    final String kftName = kft.getName().getKey().toLowerCase();
 
-  // /**
-  // * old theme name
-  // *
-  // * @deprecated old projects use this theme name.
-  // */
-  // @Deprecated
-  // private static String getIsolineResultLayerNameOld( IResultMeta docResult, IResultMeta calcUnitMeta )
-  // {
-  //    return docResult.getName() + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.10" ) + calcUnitMeta.getName(); //$NON-NLS-1$
-  // }
+    if( kftName == null )
+      return false;
 
-  public static String getIsoareaResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta )
-  {
-    return docResult.getName()
-        + STR_THEME_NAME_SEPARATOR
-        + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.11" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$
+    // TODO: why only check for isolines, not isoearea's as well?
+    return kftName.contains( docResult.getName().trim().toLowerCase() ) && kftName.contains( calcUnitMeta.getName().trim().toLowerCase() )
+        && (kftName.contains( stepResult.getName().trim().toLowerCase() ) || kftName.contains( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.8" ) ));
   }
 
   public static Date resolveDateFromResultStep( final FileObject pFileResult )
@@ -710,7 +686,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * parse the given {@link URL} for the standard(Kalypso-RMA-Results) time step pattern
-   *
+   * 
    * @return Date from given {@link URL}, if there is no matching pattern return null
    */
   public static Date interpreteDateFromURL( final URL url )
@@ -752,7 +728,7 @@ public class ResultMeta1d2dHelper
   /**
    * parse the time string from the "2d" result file with according format, interprets the date given in Kalypso-RMA
    * format, checks the need for additional day in case of leap year
-   *
+   * 
    * @return {@link Date} interpreted from given line, in case of invalid format or bad string - null
    */
   public static Date interpreteRMA10TimeLine( final String line )
@@ -900,43 +876,19 @@ public class ResultMeta1d2dHelper
   }
 
   /**
-   * @return {@link String} the node results layer name based on old name and specified style file and result type
-   */
-  public static String getNodeResultLayerName( final String oldThemeName, final String sldFileName, final String strType )
-  {
-    int iCount = 0;
-    String lNewName = ""; //$NON-NLS-1$
-    final StringTokenizer lStrTokenizer = new StringTokenizer( oldThemeName.trim(), STR_THEME_NAME_SEPARATOR.trim() );
-    while( lStrTokenizer.hasMoreTokens() )
-    {
-      if( iCount++ != 1 )
-      {
-        lNewName += (lStrTokenizer.nextToken());
-      }
-      else
-      {
-        lNewName += (resolveResultTypeFromSldFileName( sldFileName, strType ));
-        lStrTokenizer.nextToken();
-      }
-      if( lStrTokenizer.hasMoreTokens() )
-      {
-        lNewName += STR_THEME_NAME_SEPARATOR.trim();
-      }
-    }
-    return lNewName;
-  }
-
-  /**
    * finds the substring with the name of result type from given {@link String}layer name
    */
   public static String resolveResultTypeFromSldFileName( final String sldFileName, final String strType )
   {
-    if( sldFileName == null || "".equals( sldFileName ) || strType == null || "".equals( strType ) ) { //$NON-NLS-1$ //$NON-NLS-2$
-      return ""; //$NON-NLS-1$
-    }
+    if( StringUtils.isBlank( strType ) )
+      return StringUtils.EMPTY;
+
+    if( StringUtils.isBlank( sldFileName ) )
+      return StringUtils.EMPTY;
+
     final int beginIndex = sldFileName.toLowerCase().indexOf( strType.toLowerCase() ) + strType.length();
     final int endIndex = sldFileName.toLowerCase().indexOf( "style" ); //$NON-NLS-1$
-    return sldFileName.substring( beginIndex, endIndex );
+    return sldFileName.substring( beginIndex, endIndex ).toLowerCase();
   }
 
   /**

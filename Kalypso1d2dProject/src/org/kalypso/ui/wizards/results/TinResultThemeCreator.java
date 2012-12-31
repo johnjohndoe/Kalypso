@@ -60,11 +60,10 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
+import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.project.Scenario1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -176,26 +175,14 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
   private void updateThemeCommandData( )
   {
-    /* get infos about calc unit */
-
-    // TODO: this is dangerous, because the data need not to be stored in the document result level.
-    // use a more general approach instead.
-    final IResultMeta calcUnitMeta = m_documentResult.getOwner().getOwner();
-    final IResultMeta timeStepMeta = m_documentResult.getOwner();
-
     final String source = buildSourePath( m_documentResult, m_scenarioFolder );
 
-    final String resultType = "gml"; //$NON-NLS-1$
     final String featurePath = ""; //$NON-NLS-1$
 
     /* Iso-Areas */
     if( m_polyButtonChecked == true )
     {
-      final String type = "Polygon"; //$NON-NLS-1$
-      final String style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
-
-      // FIXME: better name!
-      final String themeName = ResultMeta1d2dHelper.getIsoareaResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
+      final String type = NodeResultHelper.POLYGON_TYPE;
 
       // check, if there is a style already chosen, if not create one from default tamplate
       String styleLocation = null;
@@ -204,23 +191,24 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
       /* create the commands */
       if( m_resultLayerCommandData[1] != null )
-        m_resultLayerCommandData[1].setValues( themeName, resultType, featurePath, source, style, styleLocation, type );
+        m_resultLayerCommandData[1].setValues( styleLocation );
       else
       {
-        m_resultLayerCommandData[1] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, m_scenarioFolder, type );
-        m_resultLayerCommandData[1].setSelected( true );
-      }
+        final String style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
 
-      m_resultLayerCommandData[1].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
-      m_resultLayerCommandData[1].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
+        m_resultLayerCommandData[1] = new ResultAddLayerCommandData( featurePath, source, style, styleLocation, m_scenarioFolder, type, m_documentResult );
+        m_resultLayerCommandData[1].setSelected( true );
+
+        m_resultLayerCommandData[1].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
+        m_resultLayerCommandData[1].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
+        m_resultLayerCommandData[1].setProperty( ResultAddLayerCommandData.PROPERTY_RESULT_TYPE, type );
+      }
     }
 
     /* Iso-Lines */
     if( m_lineButtonChecked == true )
     {
       final String type = "Line"; //$NON-NLS-1$
-      final String style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
-      final String themeName = ResultMeta1d2dHelper.getIsolineResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
 
       String styleLocation = null;
       if( m_lineStyleComp == null )
@@ -228,15 +216,19 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
       /* create the commands */
       if( m_resultLayerCommandData[0] != null )
-        m_resultLayerCommandData[0].setValues( themeName, resultType, featurePath, source, style, styleLocation, type );
+        m_resultLayerCommandData[0].setValues( styleLocation );
       else
       {
-        m_resultLayerCommandData[0] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, m_scenarioFolder, type );
+        final String style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
+
+        m_resultLayerCommandData[0] = new ResultAddLayerCommandData( featurePath, source, style, styleLocation, m_scenarioFolder, type, m_documentResult );
         m_resultLayerCommandData[0].setSelected( true );
+
+        m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
+        m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
+        m_resultLayerCommandData[0].setProperty( ResultAddLayerCommandData.PROPERTY_RESULT_TYPE, type );
       }
 
-      m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
-      m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
     }
   }
 

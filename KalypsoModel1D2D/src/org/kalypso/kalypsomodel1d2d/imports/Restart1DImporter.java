@@ -363,7 +363,7 @@ public class Restart1DImporter
 
   private void createNodeResult( final INodeResultCollection nodeResults, final String name, final String desc, final GM_Point location, final BigDecimal waterlevel, final Vector2d vector, final boolean isMidside )
   {
-    final INodeResult nodeResult = nodeResults.getNodeResults().addNew( INodeResult.QNAME, INodeResult.class );
+    final INodeResult nodeResult = nodeResults.getNodeResults().addNew( INodeResult.FEATURE_NODE_RESULT, INodeResult.class );
     nodeResult.setName( name );
     nodeResult.setDescription( desc );
     // nodeResult.setCalcId( -1 );
