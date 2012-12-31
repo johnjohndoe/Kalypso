@@ -98,6 +98,7 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
     data.setShowOptions( true );
 
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
+    selectResultWizardPage.setDescription( Messages.getString( "org.kalypso.ui.wizards.results.SelectResultWizardPage.0" ) ); //$NON-NLS-1$
 
     selectResultWizardPage.setFactory( m_themeConstructionFactory );
     selectResultWizardPage.setFilter( new NonMapDataResultViewerFilter() );

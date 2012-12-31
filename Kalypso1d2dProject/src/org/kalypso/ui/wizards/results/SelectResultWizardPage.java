@@ -76,7 +76,6 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.CollapseAllTreeItemsAction;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.ExpandAllTreeItemsAction;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.ITreeViewerProvider;
-import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
@@ -114,7 +113,6 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
     m_data = data;
 
     setTitle( title );
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.results.SelectResultWizardPage.0" ) ); //$NON-NLS-1$
 
     addAction( new CollapseAllTreeItemsAction( this ) );
     addAction( new ExpandAllTreeItemsAction( this ) );
