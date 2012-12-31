@@ -8,11 +8,12 @@ import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
@@ -22,6 +23,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.wizards.results.ResultAddLayerCommandData;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -35,21 +37,11 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 public class NodeThemeInfo implements IKalypsoThemeInfo
 {
-  public NodeThemeInfo( )
-  {
-  }
-
-  public final static String PROP_NS_PREFIX = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults"; //$NON-NLS-1$
-
   private IKalypsoFeatureTheme m_theme;
 
   private QName m_actPropQname;
 
   private final double m_grabDistance = 50;
-
-  private String m_propertyNameFromTheme;
-
-  private boolean m_boolResolveNodesFromDiscrModel;
 
   private IFEDiscretisationModel1d2d m_discretisationModel = null;
 
@@ -57,63 +49,66 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
   private FeatureList m_featureList = null;
 
-  // private static List<String> m_listSWANProps = new ArrayList< String >( Arrays.asList( new String[]{
-  // ResultSldHelper.WAVE_HSIG_TYPE, ResultSldHelper.WAVE_DIRECTION_TYPE, ResultSldHelper.WAVE_PERIOD_TYPE } ) );
+  private String m_propertyLabel;
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
-   */
   @Override
   public void init( final IKalypsoTheme theme, final Properties props )
   {
     Assert.isLegal( theme instanceof IKalypsoFeatureTheme );
 
-    m_theme = (IKalypsoFeatureTheme) theme;
+    m_theme = (IKalypsoFeatureTheme)theme;
 
     m_workspace = m_theme.getWorkspace();
 
     m_featureList = m_theme.getFeatureList();
 
-    m_propertyNameFromTheme = getPropertyNameFromTheme( theme );
-    if( NodeResultHelper.VELO_TYPE.equals( m_propertyNameFromTheme ) )
-    {
-      m_actPropQname = new QName( PROP_NS_PREFIX, NodeResultHelper.VELOCITY );
-    }
-    else
-    {
-      m_actPropQname = "".equals( m_propertyNameFromTheme ) ? null : new QName( PROP_NS_PREFIX, m_propertyNameFromTheme.toLowerCase() ); //$NON-NLS-1$
-    }
-    // if( m_listSWANProps.contains( m_propertyNameFromTheme ) )
-    {
-      m_boolResolveNodesFromDiscrModel = true;
-      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+    m_actPropQname = determinePropertyType( theme );
 
-      try
-      {
-        m_discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
-      }
-      catch( final CoreException e )
-      {
-        return;
-      }
+    m_propertyLabel = NodeResultHelper.translateNodeParameterType( m_actPropQname );
+
+    try
+    {
+      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+      m_discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
     }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  private QName determinePropertyType( final IKalypsoTheme theme )
+  {
+    final String propertyNameFromTheme = getPropertyNameFromTheme( theme );
+
+    if( NodeResultHelper.VELO_TYPE.equals( propertyNameFromTheme ) )
+      return new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, NodeResultHelper.VELOCITY );
+
+    if( StringUtils.isBlank( propertyNameFromTheme ) )
+      return null;
+
+    return new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, propertyNameFromTheme.toLowerCase() );
   }
 
   private String getPropertyNameFromTheme( final IKalypsoTheme theme )
   {
-    final StringTokenizer lTokenizer = new StringTokenizer( theme.getLabel(), ResultMeta1d2dHelper.STR_THEME_NAME_SEPARATOR.trim() );
+    /* the theme has a property with the property name */
+    final String propertyName = theme.getProperty( ResultAddLayerCommandData.PROPERTY_RESULT_NODE_PARAMETER_TYPE, null );
+    if( !StringUtils.isBlank( propertyName ) )
+      return propertyName;
+
+    /* backwards compatibility: formerly the property name was parsed from the theme name :-( */
+    // TODO: should be removed in future versions
+    final StringTokenizer lTokenizer = new StringTokenizer( theme.getLabel(), "," ); //$NON-NLS-1$
     if( lTokenizer.countTokens() > 2 )
     {
       lTokenizer.nextToken();
-      return lTokenizer.nextToken();
+      return lTokenizer.nextToken().trim();
     }
-    return ""; //$NON-NLS-1$
+
+    return null; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
@@ -121,11 +116,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     appendQuickInfo( formatter, pos );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
-   */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   @Override
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
@@ -134,56 +125,46 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     if( m_featureList == null )
       return;
 
-    Object nodeObject = null;
-    if( m_boolResolveNodesFromDiscrModel )
-    {
-      if( m_discretisationModel == null )
-      {
-        return;
-      }
-      nodeObject = m_discretisationModel.find2DElement( GeometryFactory.createGM_Point( pos, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ), 0.01 );
-    }
-    else
-    {
-      nodeObject = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( pos, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
-    }
+    if( m_discretisationModel == null )
+      return;
+
+    if( m_actPropQname == null )
+      return;
+
+    final Object nodeObject = m_discretisationModel.find2DElement( GeometryFactory.createGM_Point( pos, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ), 0.01 );
     if( nodeObject == null )
       return;
 
+    /* Search for the first feature which provides a value */
+    final Object value = getInterpolatedValue( nodeObject, pos );
+
+    if( value instanceof Double && !Double.isNaN( (Double)value ) )
     {
-      /* Search for the first feature which provides a value */
-      // final Feature feature = FeatureHelper.getFeature( workspace, nodeObject );
-
-      final Object value = getInterpolatedValue( nodeObject, pos );
-      // Object value = feature.getProperty( m_actPropQname );
-
-      if( value instanceof Double && !Double.isNaN( (Double) value ) )
+      formatter.format( "%s: %.3f", m_propertyLabel, value ); //$NON-NLS-1$
+      return;
+    }
+    else
+    {
+      if( value != null && value instanceof List< ? > )
       {
-        formatter.format( "%s: %.3f", m_propertyNameFromTheme, value ); //$NON-NLS-1$
-        return;
-      }
-      else
-      {
-        if( value != null && value instanceof List< ? > )
-        {
-          final List<Double> vector = (List<Double>) value;
-          if( vector.size() != 2 )
-            return;
+        final List<Double> vector = (List<Double>)value;
+        if( vector.size() != 2 )
+          return;
 
-          final double vx = vector.get( 0 );
-          final double vy = vector.get( 1 );
+        final double vx = vector.get( 0 );
+        final double vy = vector.get( 1 );
 
-          formatter.format( "%s: %.2fm/s, %.2f°", m_propertyNameFromTheme, Math.sqrt( vx * vx + vy * vy ), GeometryUtilities.directionFromVector( vx, vy ) ); //$NON-NLS-1$
-        }
+        formatter.format( "%s: %.2fm/s, %.2f°", m_propertyLabel, Math.sqrt( vx * vx + vy * vy ), GeometryUtilities.directionFromVector( vx, vy ) ); //$NON-NLS-1$
       }
     }
   }
 
+  // FIXME: chaos code; needs heavy cleanup...
   private Object getInterpolatedValue( final Object nodeObject, final GM_Position pos )
   {
     if( nodeObject instanceof IPolyElement )
     {
-      final IPolyElement lPolyEl = (IPolyElement) nodeObject;
+      final IPolyElement lPolyEl = (IPolyElement)nodeObject;
 
       final IFE1D2DNode[] nodes = lPolyEl.getNodes();
       if( nodes.length > 5 )
@@ -202,27 +183,28 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
         Object value = nodeRes.getProperty( m_actPropQname );
         if( value == null )
           continue;
-        if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( m_propertyNameFromTheme ) )
+
+        if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( m_actPropQname.getLocalPart() ) )
         {
           final List<Double> vector = new ArrayList<>();
-          vector.add( Math.cos( (Double) value * (2 * Math.PI) / 360 ) );
-          vector.add( Math.sin( (Double) value * (2 * Math.PI) / 360 ) );
+          vector.add( Math.cos( (Double)value * (2 * Math.PI) / 360 ) );
+          vector.add( Math.sin( (Double)value * (2 * Math.PI) / 360 ) );
           value = vector;
         }
 
-        final INodeResult nodeResAdapter = (INodeResult) nodeRes.getAdapter( INodeResult.class );
+        final INodeResult nodeResAdapter = (INodeResult)nodeRes.getAdapter( INodeResult.class );
         if( value instanceof Double )
         {
-          lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double) value ) );
+          lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double)value ) );
         }
         else if( value instanceof List< ? > )
         {
-          final List< ? > vector = (List< ? >) value;
+          final List< ? > vector = (List< ? >)value;
           if( vector.size() != 2 )
             continue;
 
-          lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double) vector.get( 0 ) ) );
-          lListPositionWithValues2.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double) vector.get( 1 ) ) );
+          lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double)vector.get( 0 ) ) );
+          lListPositionWithValues2.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double)vector.get( 1 ) ) );
         }
       }
       if( lListPositionWithValues.size() < 3 )
@@ -308,22 +290,20 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
   private Object getValueFromTrianglesAtPosition( final GM_Position pos, final GM_Triangle lTri, final GM_Triangle lTri2 )
   {
-    if( lTri != null && lTri.contains( pos ) )
-    {
-      if( lTri2 != null )
-      {
-        final List<Double> lListRes = new ArrayList<>();
-        lListRes.add( lTri.getValue( pos ) );
-        lListRes.add( lTri2.getValue( pos ) );
-        if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( m_propertyNameFromTheme ) )
-        {
-          return GeometryUtilities.directionFromVector( lListRes.get( 0 ), lListRes.get( 1 ) );
-        }
-        return lListRes;
-      }
+    if( lTri == null || !lTri.contains( pos ) )
+      return null;
+
+    if( lTri2 == null )
       return lTri.getValue( pos );
-    }
-    return null;
+
+    final List<Double> lListRes = new ArrayList<>();
+    lListRes.add( lTri.getValue( pos ) );
+    lListRes.add( lTri2.getValue( pos ) );
+
+    if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( m_actPropQname.getLocalPart() ) )
+      return GeometryUtilities.directionFromVector( lListRes.get( 0 ), lListRes.get( 1 ) );
+
+    return lListRes;
   }
 
   private Object getNodePropertyAtPos( final GM_Position pos )
@@ -332,5 +312,4 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     final Feature feature = FeatureHelper.getFeature( m_workspace, nodeRes );
     return feature == null ? null : feature.getProperty( m_actPropQname );
   }
-
 }

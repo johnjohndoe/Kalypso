@@ -228,8 +228,7 @@ public class VeloDiff2D
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
 
     final Feature rootFeature = workspace.getRootFeature();
-    final GM_TriangulatedSurface surface = (GM_TriangulatedSurface)rootFeature.getProperty( new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "triangulatedSurfaceMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    return surface;
+    return (GM_TriangulatedSurface)rootFeature.getProperty( new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "triangulatedSurfaceMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

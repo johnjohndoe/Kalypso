@@ -68,6 +68,7 @@ import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.test.NodeResultsHandler2DTest;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.ProcessResult2DOperation;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -214,8 +215,7 @@ public class VeloDiff2DTest
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
 
     final Feature rootFeature = workspace.getRootFeature();
-    final GM_TriangulatedSurface surface = (GM_TriangulatedSurface)rootFeature.getProperty( new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "triangulatedSurfaceMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    return surface;
+    return (GM_TriangulatedSurface)rootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ) ); //$NON-NLS-1$ 
   }
 }

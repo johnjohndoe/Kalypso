@@ -48,6 +48,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
+import org.apache.commons.lang3.StringUtils;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.conv.TeschkeRelationConverter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -108,11 +115,15 @@ public class NodeResultHelper
 
   public static final String VELO_TYPE = "Velo"; //$NON-NLS-1$
 
+  /***/
+  // FIXME: convert these three types to an enumeration
   public static final String POLYGON_TYPE = "Polygon"; //$NON-NLS-1$
 
   public static final String LINE_TYPE = "Line"; //$NON-NLS-1$
 
   public static final String NODE_TYPE = "Node"; //$NON-NLS-1$
+
+  /***/
 
   private static Map<String, Map<String, Map<String, Object>>> m_styleSettings = new HashMap<>();
 
@@ -133,6 +144,8 @@ public class NodeResultHelper
   public static final String SIZE_NORM_NODE_FUNC = "SIZE_NORM"; //$NON-NLS-1$
 
   public static final String VELOCITY = "velocity"; //$NON-NLS-1$
+
+  private static final String STR_NODE_PARAMETER_UNKNOWN = "<unknown>";
 
   /**
    * sets the mid-side node's water level and depth by interpolation between the corner nodes.
@@ -655,4 +668,31 @@ public class NodeResultHelper
     return true;
   }
 
+  public static String translateNodeParameterType( final String nodeParameterType )
+  {
+    if( StringUtils.isBlank( nodeParameterType ) )
+      return STR_NODE_PARAMETER_UNKNOWN;
+
+    final String namespaceURI = INodeResult.FEATURE_NODE_RESULT.getNamespaceURI();
+    final QName propertyName = new QName( namespaceURI, nodeParameterType );
+    return translateNodeParameterType( propertyName );
+  }
+
+  public static String translateNodeParameterType( final QName propertyName )
+  {
+    if( propertyName == null )
+      return STR_NODE_PARAMETER_UNKNOWN;
+
+    if( propertyName.getLocalPart().equals( NodeResultHelper.VELO_TYPE.toLowerCase() ) )
+      return translateNodeParameterType( new QName( propertyName.getNamespaceURI(), NodeResultHelper.VELOCITY ) );
+
+    final IGMLSchema schema = GMLSchemaUtilities.getSchemaQuiet( propertyName.getNamespaceURI() );
+    final IFeatureType nodeResultType = schema.getFeatureType( INodeResult.FEATURE_NODE_RESULT );
+
+    final IPropertyType property = nodeResultType.getProperty( propertyName );
+    if( property == null )
+      return STR_NODE_PARAMETER_UNKNOWN;
+
+    return property.getAnnotation().getLabel();
+  }
 }

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
-import java.io.File;
 import java.math.BigDecimal;
 
 import org.eclipse.core.resources.IFile;
@@ -59,7 +58,6 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.project.Scenario1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -72,7 +70,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
 
   private final IFolder m_scenarioFolder;
 
-  private final ResultAddLayerCommandData[] m_resultLayerCommandData = new ResultAddLayerCommandData[1];
+  private final ResultAddLayerCommandData m_resultLayerCommandData;
 
   private static final String LABEL_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getLocalPart() ); //$NON-NLS-1$
 
@@ -81,8 +79,6 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   private static final String UNIT_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getLocalPart() ); //$NON-NLS-1$
 
   private final String THEME_INFO_ID = String.format( "%s?geometry=%s&format=%s: %s %s", NODE_INFO_ID, Kalypso1D2DSchemaConstants.NODE_RESULT, LABEL_PROPERTY_FORMAT, "%.2f", UNIT_PROPERTY_FORMAT ); //$NON-NLS-1$ //$NON-NLS-2$
-
-  private ResultStyleComposite m_nodeStyleComp;
 
   private final BigDecimal m_minValue;
 
@@ -95,58 +91,46 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     m_maxValue = m_documentResult.getMaxValue();
     m_scenarioFolder = scenarioFolder;
 
-    updateThemeCommandData();
+    m_resultLayerCommandData = updateThemeCommandData();
   }
 
   @Override
   public Composite createControl( final Group parent )
   {
-    final Composite buttonComp = new Composite( parent, SWT.NONE );
-    buttonComp.setLayout( new GridLayout( 4, false ) );
+    final Composite panel = new Composite( parent, SWT.NONE );
+    panel.setLayout( new GridLayout( 4, false ) );
 
-    final Label nodeLabel = new Label( buttonComp, SWT.FLAT );
+    final Label nodeLabel = new Label( panel, SWT.FLAT );
     nodeLabel.setText( Messages.getString( "org.kalypso.ui.wizards.results.NodeResultThemeCreator.0" ) ); //$NON-NLS-1$
 
     /* create control with selection buttons, style combo-boxes, edit button and delete button */
-    m_resultLayerCommandData[0].setDocumentResult( m_documentResult );
-    m_nodeStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, NodeResultHelper.NODE_TYPE, m_minValue, m_maxValue, m_resultLayerCommandData[0] );
+    final ResultStyleComposite nodeStyleComp = new ResultStyleComposite( panel, m_scenarioFolder, NodeResultHelper.NODE_TYPE, m_minValue, m_maxValue, m_resultLayerCommandData );
+    nodeStyleComp.getClass();
 
-    return buttonComp;
+    return panel;
   }
 
-  private void updateThemeCommandData( )
+  private ResultAddLayerCommandData updateThemeCommandData( )
   {
-    /* get infos about calc unit */
-    final IResultMeta calcUnitMeta = m_documentResult.getOwner().getOwner();
-    final IResultMeta timeStepMeta = m_documentResult.getOwner();
-
     final String featurePath = "nodeResultMember"; //$NON-NLS-1$
 
     final String source = TinResultThemeCreator.buildSourePath( m_documentResult, m_scenarioFolder );
 
     final String style = "Node Results Style"; //$NON-NLS-1$
     final String type = NodeResultHelper.NODE_TYPE;
-    final String resultType = "gml"; //$NON-NLS-1$
 
     final String defaultStyleFileName = ResultMeta1d2dHelper.getDefaultStyleFileName( type, m_documentResult.getDocumentType().name() );
 
     // check, if there is a style already chosen, if not create one from default template
-    String styleLocation = null;
-    if( m_nodeStyleComp == null )
-      styleLocation = getStyle( type, defaultStyleFileName );
+    final String styleLocation = getStyle( type, defaultStyleFileName );
 
-    final String lStyleFileName = (new File( styleLocation == null ? defaultStyleFileName : styleLocation )).getName();
+    final ResultAddLayerCommandData resultLayerCommandData = new ResultAddLayerCommandData( featurePath, source, style, styleLocation, m_scenarioFolder, type, m_documentResult );
 
-    // FIXME: better name!
-    final String themeName = ResultMeta1d2dHelper.getNodeResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta, ResultMeta1d2dHelper.resolveResultTypeFromSldFileName( lStyleFileName, type ) );
+    resultLayerCommandData.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
+    resultLayerCommandData.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
+    resultLayerCommandData.setProperty( ResultAddLayerCommandData.PROPERTY_RESULT_TYPE, type );
 
-    if( m_resultLayerCommandData[0] != null )
-      m_resultLayerCommandData[0].setValues( themeName, resultType, featurePath, source, style, styleLocation, type );
-    else
-      m_resultLayerCommandData[0] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, m_scenarioFolder, type );
-
-    m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
-    m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
+    return resultLayerCommandData;
   }
 
   private String getStyle( final String type, final String defaultStyleFileName )
@@ -177,6 +161,6 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   @Override
   public ResultAddLayerCommandData[] getThemeCommandData( )
   {
-    return m_resultLayerCommandData;
+    return new ResultAddLayerCommandData[] { m_resultLayerCommandData };
   }
 }

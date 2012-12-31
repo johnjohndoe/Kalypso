@@ -50,74 +50,73 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * @author jung
- * 
+ * @author Thomas Jung
  */
 public interface INodeResult extends Feature
 {
-  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" ); //$NON-NLS-1$
+  QName FEATURE_NODE_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" ); //$NON-NLS-1$
 
-  public abstract void setCalcId( final int id );
+  void setCalcId( int id );
 
-  public abstract void setLocation( final double x, final double y, final double z, final String crs );
+  void setLocation( double x, double y, double z, String crs );
 
-  public abstract void setResultValues( final double vx, final double vy, final double virtualDepth, final double waterlevel );
+  void setResultValues( double vx, double vy, double virtualDepth, double waterlevel );
 
-  public abstract void setMidSide( final boolean isMidSide );
+  void setMidSide( boolean isMidSide );
 
-  public abstract GM_Point getPoint( );
+  GM_Point getPoint( );
 
-  public abstract void setWaterlevel( final double waterlevel );
+  void setWaterlevel( double waterlevel );
 
-  public abstract void setDepth( final double depth );
+  void setDepth( double depth );
 
-  public abstract void setVirtualDepth( final double virtualDepth );
+  void setVirtualDepth( double virtualDepth );
 
   public double getDepth( );
 
   public double getVirtualDepth( );
 
   public double getWaterlevel( );
-  
-  public abstract void setWaveHsig( final double hsig );
-  
-  public abstract void setWavePeriod( final double period );
-  
-  public abstract void setWaveDirection( final double direction );
-  
+
+  void setWaveHsig( double hsig );
+
+  void setWavePeriod( double period );
+
+  void setWaveDirection( double direction );
+
   public double getWaveHsig( );
-  
+
   public double getWavePeriod( );
-  
+
   public double getWaveDirection( );
 
   public boolean isWet( );
 
-  public abstract void setVelocity( List<Double> velocity );
+  void setVelocity( List<Double> velocity );
 
   /**
    * returns a velocity value even if depth > 0, else (0.0,0.0)
    */
-  public abstract List<Double> getVelocity( );
+  List<Double> getVelocity( );
 
   /**
    * could return a velocity value even if depth < 0
    */
-  public abstract List<Double> getVirtualVelocity( );
+  List<Double> getVirtualVelocity( );
 
-  public abstract double getAbsoluteVelocity( );
+  double getAbsoluteVelocity( );
 
-  public abstract void addLambda( final double lambda );
+  void addLambda( double lambda );
 
-  public abstract double getAveragedLambda( );
+  double getAveragedLambda( );
 
-  public abstract void setDry( final int dry );
+  void setDry( int dry );
 
   public int getDry( );
 
-  public abstract Double getDischarge( );
+  Double getDischarge( );
 
-  public abstract void setDischarge( final double discharge );
+  void setDischarge( double discharge );
 
   List<ArcResult> getArcs( );
 
@@ -130,35 +129,34 @@ public interface INodeResult extends Feature
   void setAssigned( boolean assign );
 
   // setter-methods for time dependent variables at unsteady restart
-  public abstract void setTimeDerivativeValues( final double vxWRTt, final double vyWRTt, final double virtDepWRTt );
+  void setTimeDerivativeValues( double vxWRTt, double vyWRTt, double virtDepWRTt );
 
-  public abstract void setResultPrevStepValues( final double vxPrevStep, final double vyPrevStep, final double virtDepPrevStep );
+  void setResultPrevStepValues( double vxPrevStep, double vyPrevStep, double virtDepPrevStep );
 
-  public abstract void setTimeDerivativeValuesPrevStep( final double vxWRTtPrevStep, final double vyWRTtPrevStep, final double virtDepWRTtPrevStep );
+  void setTimeDerivativeValuesPrevStep( double vxWRTtPrevStep, double vyWRTtPrevStep, double virtDepWRTtPrevStep );
 
-  public abstract void setVirtDepPrevStep( final double virtDepthPrevStep );
+  void setVirtDepPrevStep( double virtDepthPrevStep );
 
-  public abstract void setVirtDepOverTime( final double virtDepOverTime );
+  void setVirtDepOverTime( double virtDepOverTime );
 
-  public abstract void setVirtDepOverTimePrevStep( final double virtDepOverTimePrevStep );
+  void setVirtDepOverTimePrevStep( double virtDepOverTimePrevStep );
 
-  public abstract void setVelPrevStep( List<Double> velPrevStep );
+  void setVelPrevStep( List<Double> velPrevStep );
 
-  public abstract void setVelOverTime( List<Double> velOverTime );
+  void setVelOverTime( List<Double> velOverTime );
 
-  public abstract void setVelOverTimePrevStep( List<Double> velOverTimePrevStep );
+  void setVelOverTimePrevStep( List<Double> velOverTimePrevStep );
 
   // getter-methods for time dependent variables at unsteady restart
-  public double getVirtDepPrevStep( );
+  double getVirtDepPrevStep( );
 
-  public double getVirtDepOverTime( );
+  double getVirtDepOverTime( );
 
-  public double getVirtDepOverTimePrevStep( );
+  double getVirtDepOverTimePrevStep( );
 
-  public List<Double> getVelPrevStep( );
+  List<Double> getVelPrevStep( );
 
-  public List<Double> getVelOverTime( );
+  List<Double> getVelOverTime( );
 
-  public List<Double> getVelOverTimePrevStep( );
-
+  List<Double> getVelOverTimePrevStep( );
 }
