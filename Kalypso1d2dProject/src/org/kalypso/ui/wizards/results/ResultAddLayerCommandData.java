@@ -197,7 +197,7 @@ public class ResultAddLayerCommandData
     {
       final String styleFilename = m_sldFile.getName();
 
-      // FIXME: mega ugly and also not translated at all
+      // FIXME: mega ugly
       final String typeNameFromSldFileName = ResultMeta1d2dHelper.resolveResultTypeFromSldFileName( styleFilename, type );
       return Pair.of( type, typeNameFromSldFileName );
     }
