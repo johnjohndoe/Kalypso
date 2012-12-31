@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 
 import de.renew.workflow.connector.cases.IScenario;
@@ -34,9 +35,9 @@ public class SelectResultData extends AbstractModelObject
 {
   public enum ShowType
   {
-    current( "current scenario only" ),
-    project( "all scenarios of the current project" ),
-    all( "all projects and scenarios" );
+    current( Messages.getString("SelectResultData_0") ), //$NON-NLS-1$
+    project( Messages.getString("SelectResultData_1") ), //$NON-NLS-1$
+    all( Messages.getString("SelectResultData_2") ); //$NON-NLS-1$
 
     private final String m_label;
 

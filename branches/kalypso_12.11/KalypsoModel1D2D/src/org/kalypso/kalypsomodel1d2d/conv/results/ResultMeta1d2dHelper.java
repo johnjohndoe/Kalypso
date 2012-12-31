@@ -661,7 +661,7 @@ public class ResultMeta1d2dHelper
 
     // TODO: why only check for isolines, not isoearea's as well?
     return kftName.contains( docResult.getName().trim().toLowerCase() ) && kftName.contains( calcUnitMeta.getName().trim().toLowerCase() )
-        && (kftName.contains( stepResult.getName().trim().toLowerCase() ) || kftName.contains( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.8" ) ));
+        && (kftName.contains( stepResult.getName().trim().toLowerCase() ) || kftName.contains( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.8" ) )); //$NON-NLS-1$
   }
 
   public static Date resolveDateFromResultStep( final FileObject pFileResult )

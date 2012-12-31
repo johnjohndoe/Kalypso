@@ -76,6 +76,7 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.CollapseAllTreeItemsAction;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.ExpandAllTreeItemsAction;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.ITreeViewerProvider;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
@@ -244,10 +245,10 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
     final Group panel = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
 
-    panel.setText( "Filter" );
+    panel.setText( Messages.getString("SelectResultWizardPage_0") ); //$NON-NLS-1$
 
     final Label label = new Label( panel, SWT.NONE );
-    label.setText( "Show" );
+    label.setText( Messages.getString("SelectResultWizardPage_1") ); //$NON-NLS-1$
 
     final ComboViewer combo = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
     combo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -296,7 +297,7 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
     for( final IAction action : m_actions )
     {
       if( action == null )
-        m_toolbarManager.add( new Separator( "xxx" ) );
+        m_toolbarManager.add( new Separator() );
       else
         m_toolbarManager.add( action );
     }

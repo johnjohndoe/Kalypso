@@ -265,7 +265,7 @@ public class ResultAddLayerCommandData
 
     /* build name parts */
     final Collection<String> components = new ArrayList<>( 5 );
-    components.add( String.format( "%s (%s)", documentName, format ) );
+    components.add( String.format( "%s (%s)", documentName, format ) ); //$NON-NLS-1$
 
     if( timeStepMeta != null )
       components.add( timeStepMeta.getName() );
@@ -295,7 +295,7 @@ public class ResultAddLayerCommandData
     if( documentScenarioFolder == null )
     {
       /* document is part of current scenario, make relative path to scenario map file */
-      final IPath scenarioRelativePath = Path.fromPortableString( ".." ).append( documentPath );
+      final IPath scenarioRelativePath = Path.fromPortableString( ".." ).append( documentPath ); //$NON-NLS-1$
       return scenarioRelativePath.toPortableString();
     }
 

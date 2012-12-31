@@ -101,7 +101,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
   @Override
   public void addPages( )
   {
-    final String title = Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" );
+    final String title = Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" ); //$NON-NLS-1$
 
     final SelectResultData data = new SelectResultData( m_resultModel );
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
