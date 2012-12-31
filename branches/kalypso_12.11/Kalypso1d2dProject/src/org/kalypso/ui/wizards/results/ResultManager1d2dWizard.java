@@ -109,7 +109,9 @@ public class ResultManager1d2dWizard extends Wizard
     final String title = Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2" ); //$NON-NLS-1$
 
     final SelectResultData data = new SelectResultData( m_resultModel );
+
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
+    selectResultWizardPage.setDescription( "Selektieren Sie die zu bearbeitenden Ergebnisse und wählen Sie ein Werkzeug aus der Werkzeugleiste." );
 
     selectResultWizardPage.setFilter( new DocumentResultViewerFilter() );
 
