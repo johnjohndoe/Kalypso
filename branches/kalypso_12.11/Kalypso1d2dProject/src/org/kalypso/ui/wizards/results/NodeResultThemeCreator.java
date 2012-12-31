@@ -114,8 +114,6 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   {
     final String featurePath = "nodeResultMember"; //$NON-NLS-1$
 
-    final String source = TinResultThemeCreator.buildSourePath( m_documentResult, m_scenarioFolder );
-
     final String style = "Node Results Style"; //$NON-NLS-1$
     final String type = NodeResultHelper.NODE_TYPE;
 
@@ -124,7 +122,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     // check, if there is a style already chosen, if not create one from default template
     final String styleLocation = getStyle( type, defaultStyleFileName );
 
-    final ResultAddLayerCommandData resultLayerCommandData = new ResultAddLayerCommandData( featurePath, source, style, styleLocation, m_scenarioFolder, type, m_documentResult );
+    final ResultAddLayerCommandData resultLayerCommandData = new ResultAddLayerCommandData( featurePath, style, styleLocation, m_scenarioFolder, type, m_documentResult );
 
     resultLayerCommandData.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
     resultLayerCommandData.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );

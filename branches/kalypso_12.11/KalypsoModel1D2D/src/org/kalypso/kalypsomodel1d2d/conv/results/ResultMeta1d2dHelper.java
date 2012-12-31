@@ -649,7 +649,9 @@ public class ResultMeta1d2dHelper
 
   private static boolean isResultTheme( final IKalypsoFeatureTheme kft, final IDocumentResultMeta docResult, final IStepResultMeta stepResult, final IResultMeta calcUnitMeta )
   {
-    // FIXME: instead add properties to this theme when added (gml-id's of document meta)
+    // FIXME: kft.getProperty( ResultAddLayerCommandData.PROPERTY_XXX, Boolean.FALSE.toString() );
+
+    // FIXME: instead add properties to this theme when added (gml-id's of document meta, project name and uri of scenario)
 
     // FIXME: UARGHH. We should implement some other method to recognize the right theme
     final String kftName = kft.getName().getKey().toLowerCase();
