@@ -18,24 +18,20 @@
  */
 package org.kalypso.ui.wizards.results;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.views.ScenarioContentProvider;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
+import org.kalypso.kalypsomodel1d2d.project.Scenario1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
@@ -149,17 +145,13 @@ class ResultMetaContentProvider extends BaseWorkbenchContentProvider
     if( scenarioResult.equals( m_currentScenarioResult ) )
       return KalypsoAFGUIFrameworkPlugin.getDataProvider().getScenario();
 
-    /* determine parent scenario via the underlying file */
-    final GMLWorkspace workspace = scenarioResult.getWorkspace();
-    final URL gmlLocation = workspace.getContext();
-    final IFile gmlFile = ResourceUtilities.findFileFromURL( gmlLocation );
-    if( gmlFile == null )
+    final Scenario1D2D scenario = ResultMeta1d2dHelper.findScenarioLocation( scenarioResult );
+    if( scenario == null )
       return null;
 
     try
     {
-      final IContainer scenarioFolder = gmlFile.getParent().getParent();
-      return ScenarioHelper.findScenario( scenarioFolder );
+      return scenario.loadScenario();
     }
     catch( final CoreException e )
     {

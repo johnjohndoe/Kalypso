@@ -71,6 +71,7 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -92,6 +93,7 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.project.Scenario1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
@@ -104,6 +106,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 public class ResultMeta1d2dHelper
@@ -975,5 +978,22 @@ public class ResultMeta1d2dHelper
     }
 
     return documents.toArray( new IDocumentResultMeta[documents.size()] );
+  }
+
+  /**
+   * Finds the (real) scneario location (aka scenario folder) for a given result.<br/>
+   * The result may not be part of the currently active scenario.
+   */
+  public static Scenario1D2D findScenarioLocation( final IResultMeta result )
+  {
+    /* determine parent scenario via the underlying file */
+    final GMLWorkspace workspace = result.getWorkspace();
+    final URL gmlLocation = workspace.getContext();
+    final IFile gmlFile = ResourceUtilities.findFileFromURL( gmlLocation );
+    if( gmlFile == null )
+      return null;
+
+    final IFolder container = (IFolder)gmlFile.getParent().getParent();
+    return new Scenario1D2D( container );
   }
 }
