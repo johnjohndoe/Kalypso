@@ -63,6 +63,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.MathOperator;
+import org.kalypso.kalypsomodel1d2d.project.Scenario1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
@@ -176,43 +177,58 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
     return tinFolder.getFile( uniqueFileName );
   }
 
-  private GM_TriangulatedSurface getSurfaceData( final IDocumentResultMeta docResult )
+  /* get the result data */
+  private GM_TriangulatedSurface getSurfaceData( final IDocumentResultMeta docResult ) throws Exception
   {
-    /* get the result data */
     final DOCUMENTTYPE documentType = docResult.getDocumentType();
-
-    if( documentType == DOCUMENTTYPE.tinWsp || documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinShearStress
-        || documentType == DOCUMENTTYPE.tinTerrain )
+    switch( documentType )
     {
-      try
-      {
-        final IPath docPath = docResult.getFullPath();
-        if( docPath == null )
-          return null;
+      case tinWsp:
+      case tinDepth:
+      case tinVelo:
+      case tinShearStress:
+      case tinTerrain:
+      case tinDifference:
+        return loadSurfaceDataFromTinResult( docResult );
 
-        final IFolder scenarioFolder = m_data.getScenarioFolder();
-        final URL scenarioURL = ResourceUtilities.createURL( scenarioFolder );
-        final URL surfaceURL = UrlUtilities.resolveWithZip( scenarioURL, docPath.toPortableString() );
-
-        final GMLWorkspace w = GmlSerializer.createGMLWorkspace( surfaceURL, null );
-
-        final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-        w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-
-        final GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryPropertyValue();
-
-        if( geometryProperty instanceof GM_TriangulatedSurface )
-        {
-          return (GM_TriangulatedSurface)geometryProperty;
-        }
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-      return null;
+      case coreDataZip:
+      case hydrograph:
+      case lengthSection:
+      case log:
+      case nodes:
+      default:
+        return null;
     }
+  }
+
+  private GM_TriangulatedSurface loadSurfaceDataFromTinResult( final IDocumentResultMeta docResult ) throws Exception
+  {
+    final IPath docPath = docResult.getFullPath();
+    if( docPath == null )
+      return null;
+
+    // REMARK: the difference input may be part of another scenario (not the current one), so we resolve it's
+    // location ni a general way.
+    final Scenario1D2D scenarioLocation = ResultMeta1d2dHelper.findScenarioLocation( docResult );
+    if( scenarioLocation == null )
+      return null;
+
+    final IFolder scenarioFolder = scenarioLocation.getScenarioFolder();
+
+    final URL scenarioURL = ResourceUtilities.createURL( scenarioFolder );
+    final URL surfaceURL = UrlUtilities.resolveWithZip( scenarioURL, docPath.toPortableString() );
+
+    final GMLWorkspace w = GmlSerializer.createGMLWorkspace( surfaceURL, null );
+
+    final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+
+    final GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryPropertyValue();
+
+    if( geometryProperty instanceof GM_TriangulatedSurface )
+      return (GM_TriangulatedSurface)geometryProperty;
+
     return null;
   }
 }

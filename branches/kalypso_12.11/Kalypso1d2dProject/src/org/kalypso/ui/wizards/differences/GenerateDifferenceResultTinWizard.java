@@ -104,34 +104,37 @@ public class GenerateDifferenceResultTinWizard extends Wizard
   @Override
   public void addPages( )
   {
-    /* master */
     final NonTinDocumentResultViewerFilter resultFilter = new NonTinDocumentResultViewerFilter();
 
-    final String titleMaster = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.4" ); //$NON-NLS-1$
+    /* master */
     final SelectResultData masterData = new SelectResultData( m_resultModel );
-    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, titleMaster, masterData );
+    masterData.setShowOptions( true );
 
-    selectMasterResultWizardPage.setFilter( resultFilter );
+    final String titleMaster = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.4" ); //$NON-NLS-1$
+    final SelectResultWizardPage masterPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, titleMaster, masterData );
+
+    masterPage.setFilter( resultFilter );
 
     /* slave */
-    final String titleSlave = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.5" ); //$NON-NLS-1$
     final SelectResultData slaveData = new SelectResultData( m_resultModel );
-    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, titleSlave, slaveData );
+    slaveData.setShowOptions( true );
 
-    selectSlaveResultWizardPage.setFilter( resultFilter );
+    final String titleSlave = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.5" ); //$NON-NLS-1$
+    final SelectResultWizardPage slavePage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, titleSlave, slaveData );
+
+    slavePage.setFilter( resultFilter );
 
     /* destination */
-    final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final String titleDestination = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6" ); //$NON-NLS-1$
-
     final SelectResultData destinationData = new SelectResultData( m_resultModel );
+
+    final String titleDestination = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6" ); //$NON-NLS-1$
     final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, titleDestination, destinationData );
 
-    selectDestinationResultWizardPage.setFactory( themeConstructionFactory );
+    selectDestinationResultWizardPage.setFactory( new ThemeConstructionFactory( m_scenarioFolder ) );
     selectDestinationResultWizardPage.setFilter( new DocumentResultViewerFilter() );
 
-    addPage( selectMasterResultWizardPage );
-    addPage( selectSlaveResultWizardPage );
+    addPage( masterPage );
+    addPage( slavePage );
     addPage( selectDestinationResultWizardPage );
   }
 
