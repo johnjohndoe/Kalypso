@@ -180,11 +180,11 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
 
     // TODO: name is not ideal, but works for most cases
     final String parameterLabel = masterResult.getName();
-    printer.format( "Differenzen (%s)%n", parameterLabel );
+    printer.format( Messages.getString("GenerateDifferenceResultTinOperation.0"), parameterLabel ); //$NON-NLS-1$
 
-    printer.format( "\t%s%n", formatResultLabel( masterResult ) );
-    printer.format( "\t\t%s%n", m_data.getOperator().toString() );
-    printer.format( "\t%s%n", formatResultLabel( slaveResult ) );
+    printer.format( "\t%s%n", formatResultLabel( masterResult ) ); //$NON-NLS-1$
+    printer.format( "\t\t%s%n", m_data.getOperator().toString() ); //$NON-NLS-1$
+    printer.format( "\t%s%n", formatResultLabel( slaveResult ) ); //$NON-NLS-1$
 
     Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.32" ); //$NON-NLS-1$
 
@@ -231,7 +231,7 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
 
     /* generate unique name for difference file */
     final String prefix = "tin"; //$NON-NLS-1$
-    final String suffix = String.format( "_%s.gmlz", ResultType.DIFFERENCE.name() );
+    final String suffix = String.format( "_%s.gmlz", ResultType.DIFFERENCE.name() ); //$NON-NLS-1$
 
     // check, if file already exists and get the unique name */
     final File tinDir = tinFolder.getLocation().toFile();

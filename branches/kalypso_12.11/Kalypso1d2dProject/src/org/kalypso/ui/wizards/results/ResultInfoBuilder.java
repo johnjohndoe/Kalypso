@@ -132,13 +132,13 @@ public class ResultInfoBuilder
     printProject( scenarioFolder.getProject(), printer );
 
     final String name = scenarioFolder.getName();
-    printer.format( "<p><b>%s:</b> %s</p>%n", "Szenario", name ); //$NON-NLS-1$
+    printer.format( "<p><b>%s:</b> %s</p>%n", Messages.getString("ResultInfoBuilder.0"), name ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void printProject( final IProject project, final PrintWriter printer )
   {
     final String projectName = project.getName();
-    printer.format( "<p><b>%s:</b> %s</p>%n", "Projekt", projectName ); //$NON-NLS-1$
+    printer.format( "<p><b>%s:</b> %s</p>%n", Messages.getString("ResultInfoBuilder.1"), projectName ); //$NON-NLS-1$ //$NON-NLS-2$
 
     try
     {
@@ -153,7 +153,7 @@ public class ResultInfoBuilder
   private void printCalcUnitResult( final ICalcUnitResultMeta result, final PrintWriter printer )
   {
     final String name = htmlString( result.getName() );
-    printer.format( "<p><b>%s:</b> %s</p>%n", "Teilmodell", name ); //$NON-NLS-1$
+    printer.format( "<p><b>%s:</b> %s</p>%n", Messages.getString("ResultInfoBuilder.2"), name ); //$NON-NLS-1$ //$NON-NLS-2$
 
     printDescription( result.getDescription(), printer );
 
@@ -163,10 +163,10 @@ public class ResultInfoBuilder
     final String calcStart = calcStartTime == null ? "-" : m_dateFormat.format( calcStartTime ); //$NON-NLS-1$
     final String calcEnd = calcEndTime == null ? "-" : m_dateFormat.format( calcEndTime ); //$NON-NLS-1$
 
-    printer.format( "<li style='text' bindent='0' indent='10' value=''><b>%s</b></li>%n", "Datum der Berechnung", calcStart ); //$NON-NLS-1$ 
+    printer.format( "<li style='text' bindent='0' indent='10' value=''><b>%s</b></li>%n", Messages.getString("ResultInfoBuilder.3"), calcStart ); //$NON-NLS-1$ //$NON-NLS-2$ 
 
-    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", "Beginn", calcStart ); //$NON-NLS-1$ 
-    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", "Ende", calcEnd ); //$NON-NLS-1$ 
+    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", Messages.getString("ResultInfoBuilder.4"), calcStart ); //$NON-NLS-1$ //$NON-NLS-2$ 
+    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", Messages.getString("ResultInfoBuilder.5"), calcEnd ); //$NON-NLS-1$ //$NON-NLS-2$ 
 
     printer.println( "<br/>" ); //$NON-NLS-1$
     printer.println();
@@ -176,7 +176,7 @@ public class ResultInfoBuilder
   {
     final String stepLabel = formatStepLabel( result );
 
-    printer.format( "<p><b>%s:</b></p>%n", "Zeitschritt" ); //$NON-NLS-1$
+    printer.format( "<p><b>%s:</b></p>%n", Messages.getString("ResultInfoBuilder.6") ); //$NON-NLS-1$ //$NON-NLS-2$
     printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", stepLabel ); //$NON-NLS-1$ 
 
     printer.println( "<br/>" ); //$NON-NLS-1$
@@ -193,17 +193,17 @@ public class ResultInfoBuilder
 
   private void printDocumentResult( final IDocumentResultMeta result, final PrintWriter printer )
   {
-    printer.format( "<p><b>%s:</b></p>%n", "Ergebnis" ); //$NON-NLS-1$
+    printer.format( "<p><b>%s:</b></p>%n", Messages.getString("ResultInfoBuilder.7") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     printDescription( result.getDescription(), printer );
 
     final String docType = result.getDocumentType().toString();
-    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", "Datenart", docType ); //$NON-NLS-1$
+    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", Messages.getString("ResultInfoBuilder.8"), docType ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final String valueRangeHtml = formatValueRanges( result );
     if( !StringUtils.isBlank( valueRangeHtml ) )
     {
-      printer.format( "<li style='text' bindent='10' indent='150' value='%s:'></li>%n", "Wertebereich", docType ); //$NON-NLS-1$
+      printer.format( "<li style='text' bindent='10' indent='150' value='%s:'></li>%n", Messages.getString("ResultInfoBuilder.9"), docType ); //$NON-NLS-1$ //$NON-NLS-2$
       printer.println( valueRangeHtml );
     }
   }
@@ -252,17 +252,17 @@ public class ResultInfoBuilder
     if( docMin == null && docMax == null )
       return;
 
-    final String minText = docMin == null ? "?" : docMin.toString();
-    final String maxText = docMax == null ? "?" : docMax.toString();
+    final String minText = docMin == null ? "?" : docMin.toString(); //$NON-NLS-1$
+    final String maxText = docMax == null ? "?" : docMax.toString(); //$NON-NLS-1$
     printer.format( "<li style='text' bindent='20' indent='150' value='%s'>%s - %s</li>%n", label, minText, maxText ); //$NON-NLS-1$
   }
 
   // FIXME: move to helper
   private static String htmlString( final String text )
   {
-    final String result = StringUtils.replace( text, "\"", "&quot;" );
+    final String result = StringUtils.replace( text, "\"", "&quot;" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    return StringUtils.replace( result, "'", "&apos;" );
+    return StringUtils.replace( result, "'", "&apos;" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -272,6 +272,6 @@ public class ResultInfoBuilder
   private static String htmlStringBreaklines( final String text )
   {
     final String htmlText = htmlString( text );
-    return StringUtils.replace( htmlText, "\n", "<br/>" );
+    return StringUtils.replace( htmlText, "\n", "<br/>" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }
