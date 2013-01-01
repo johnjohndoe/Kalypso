@@ -27,6 +27,7 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
@@ -78,8 +79,13 @@ public class ResultInfoBuilder
       printProject( (IProject)element, printer );
     else if( element instanceof IScenario )
     {
-      final IFolder scenarioFolder = ((IScenario)element).getFolder();
+      final IScenario scenario = (IScenario)element;
+      final IFolder scenarioFolder = scenario.getFolder();
       printScenario( scenarioFolder, printer );
+
+      final String description = htmlString( scenario.getDescription() );
+      if( !StringUtils.isBlank( description ) )
+        printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", description ); //$NON-NLS-1$ 
     }
     else if( (element instanceof IResultMeta) )
       printChain( (IResultMeta)element, printer );
@@ -137,6 +143,17 @@ public class ResultInfoBuilder
   {
     final String projectName = project.getName();
     printer.format( "<p><b>%s:</b> %s</p>%n", "Projekt", projectName ); //$NON-NLS-1$
+
+    try
+    {
+      final String description = htmlString( project.getDescription().getComment() );
+      if( !StringUtils.isBlank( description ) )
+        printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", description ); //$NON-NLS-1$ 
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   private void printCalcUnitResult( final ICalcUnitResultMeta result, final PrintWriter printer )
