@@ -46,32 +46,39 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 
 /**
- * filter for hiding the non-georeference-able data in the {@link AddResultThemeWizard}. <br>
- * <br>
- * non-georeference-able data are logs, coreDataZip, length-sections and for the moment the fem-terrain-tin.
+ * Filter for hiding the non-georeference-able data in the {@link AddResultThemeWizard}. <br>
  * 
  * @author Thomas Jung
- * 
  */
 public class NonTinDocumentResultViewerFilter extends ViewerFilter
 {
-  /**
-   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
-  public boolean select( Viewer viewer, Object parent, Object element )
+  public boolean select( final Viewer viewer, final Object parent, final Object element )
   {
-    if( element instanceof IDocumentResultMeta )
+    if( !(element instanceof IDocumentResultMeta) )
+      return true;
+
+    final IDocumentResultMeta docResult = (IDocumentResultMeta)element;
+    final DOCUMENTTYPE documentType = docResult.getDocumentType();
+
+    switch( documentType )
     {
-      IDocumentResultMeta docResult = (IDocumentResultMeta) element;
-      DOCUMENTTYPE documentType = docResult.getDocumentType();
-      if( documentType == DOCUMENTTYPE.log || documentType == DOCUMENTTYPE.lengthSection || documentType == DOCUMENTTYPE.coreDataZip || documentType == DOCUMENTTYPE.nodes )
+      case coreDataZip:
+      case hydrograph:
+      case lengthSection:
+      case log:
+      case nodes:
         return false;
-      else
+
+      case tinDepth:
+      case tinDifference:
+      case tinShearStress:
+      case tinTerrain:
+      case tinVelo:
+      case tinWsp:
         return true;
     }
-    else
-      return true;
+
+    return true;
   }
 }
