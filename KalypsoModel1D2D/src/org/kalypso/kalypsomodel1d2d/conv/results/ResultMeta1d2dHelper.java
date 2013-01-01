@@ -69,10 +69,12 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -995,5 +997,51 @@ public class ResultMeta1d2dHelper
 
     final IFolder container = (IFolder)gmlFile.getParent().getParent();
     return new Scenario1D2D( container );
+  }
+
+  /**
+   * Finds the first step result in the owner hierarchy of the given result.
+   */
+  public static IStepResultMeta getStepResultMeta( final IResultMeta result )
+  {
+    if( result instanceof IStepResultMeta )
+      return (IStepResultMeta)result;
+    else
+    {
+      final IResultMeta parent = result.getOwner();
+      if( parent != null )
+        return getStepResultMeta( parent );
+    }
+    return null;
+  }
+
+  /**
+   * Determine, if the result is an external result or not.<br/>
+   * If it is, the components of the return value are set accordingly.
+   * 
+   * @return If the project is set, it is an result of an different project. If the (scenario-)folder is set, it is the result of a different scenario.
+   */
+  public static Pair<IProject, IFolder> determineExternalLocation( final IResultMeta result, final IFolder currentScenario )
+  {
+    final URL resultsLocation = result.getWorkspace().getContext();
+    final IFile resultsFile = ResourceUtilities.findFileFromURL( resultsLocation );
+    final IFolder documentScenarioFolder = (IFolder)resultsFile.getParent().getParent();
+
+    if( documentScenarioFolder.equals( currentScenario ) )
+    {
+      /* local result */
+      return Pair.of( null, null );
+    }
+
+    final IProject documentProject = documentScenarioFolder.getProject();
+
+    if( documentProject.equals( currentScenario.getProject() ) )
+    {
+      /* document is in the same project, but in another scenario */
+      return Pair.of( null, documentScenarioFolder );
+    }
+
+    /* outside of the current project */
+    return Pair.of( documentProject, documentScenarioFolder );
   }
 }

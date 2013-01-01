@@ -83,9 +83,7 @@ public class ResultInfoBuilder
       final IFolder scenarioFolder = scenario.getFolder();
       printScenario( scenarioFolder, printer );
 
-      final String description = htmlString( scenario.getDescription() );
-      if( !StringUtils.isBlank( description ) )
-        printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", description ); //$NON-NLS-1$ 
+      printDescription( scenario.getDescription(), printer );
     }
     else if( (element instanceof IResultMeta) )
       printChain( (IResultMeta)element, printer );
@@ -126,9 +124,7 @@ public class ResultInfoBuilder
       printScenario( scenarioFolder, printer );
     }
 
-    final String description = htmlString( result.getDescription() );
-    if( !StringUtils.isBlank( description ) )
-      printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", description ); //$NON-NLS-1$ 
+    printDescription( result.getDescription(), printer );
   }
 
   private void printScenario( final IFolder scenarioFolder, final PrintWriter printer )
@@ -146,9 +142,7 @@ public class ResultInfoBuilder
 
     try
     {
-      final String description = htmlString( project.getDescription().getComment() );
-      if( !StringUtils.isBlank( description ) )
-        printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", description ); //$NON-NLS-1$ 
+      printDescription( project.getDescription().getComment(), printer );
     }
     catch( final CoreException e )
     {
@@ -161,9 +155,7 @@ public class ResultInfoBuilder
     final String name = htmlString( result.getName() );
     printer.format( "<p><b>%s:</b> %s</p>%n", "Teilmodell", name ); //$NON-NLS-1$
 
-    final String description = htmlString( result.getDescription() );
-    if( !StringUtils.isBlank( description ) )
-      printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", description ); //$NON-NLS-1$ 
+    printDescription( result.getDescription(), printer );
 
     final Date calcStartTime = result.getCalcStartTime();
     final Date calcEndTime = result.getCalcEndTime();
@@ -182,12 +174,7 @@ public class ResultInfoBuilder
 
   private void printStepResult( final IStepResultMeta result, final PrintWriter printer )
   {
-    String stepLabel;
-    final Date stepResultTime = result.getStepTime();
-    if( stepResultTime == null )
-      stepLabel = result.getStepType().toString();
-    else
-      stepLabel = m_dateFormat.format( stepResultTime ); //$NON-NLS-1$
+    final String stepLabel = formatStepLabel( result );
 
     printer.format( "<p><b>%s:</b></p>%n", "Zeitschritt" ); //$NON-NLS-1$
     printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", stepLabel ); //$NON-NLS-1$ 
@@ -195,13 +182,20 @@ public class ResultInfoBuilder
     printer.println( "<br/>" ); //$NON-NLS-1$
   }
 
+  public String formatStepLabel( final IStepResultMeta result )
+  {
+    final Date stepResultTime = result.getStepTime();
+    if( stepResultTime == null )
+      return result.getStepType().toString();
+    else
+      return m_dateFormat.format( stepResultTime ); //$NON-NLS-1$
+  }
+
   private void printDocumentResult( final IDocumentResultMeta result, final PrintWriter printer )
   {
     printer.format( "<p><b>%s:</b></p>%n", "Ergebnis" ); //$NON-NLS-1$
 
-    final String description = htmlString( result.getDescription() );
-    if( !StringUtils.isBlank( description ) )
-      printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", description ); //$NON-NLS-1$
+    printDescription( result.getDescription(), printer );
 
     final String docType = result.getDocumentType().toString();
     printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", "Datenart", docType ); //$NON-NLS-1$
@@ -212,6 +206,15 @@ public class ResultInfoBuilder
       printer.format( "<li style='text' bindent='10' indent='150' value='%s:'></li>%n", "Wertebereich", docType ); //$NON-NLS-1$
       printer.println( valueRangeHtml );
     }
+  }
+
+  private void printDescription( final String description, final PrintWriter printer )
+  {
+    if( StringUtils.isBlank( description ) )
+      return;
+
+    final String htmlText = htmlStringBreaklines( description );
+    printer.format( "<li style='text' bindent='0' indent='10' value=''>%s</li>%n", htmlText ); //$NON-NLS-1$
   }
 
   private String formatValueRanges( final IDocumentResultMeta result )
@@ -260,5 +263,15 @@ public class ResultInfoBuilder
     final String result = StringUtils.replace( text, "\"", "&quot;" );
 
     return StringUtils.replace( result, "'", "&apos;" );
+  }
+
+  /**
+   * Additionally replaces breaklines with '<br/>
+   * , can only be used for text nodes.
+   */
+  private static String htmlStringBreaklines( final String text )
+  {
+    final String htmlText = htmlString( text );
+    return StringUtils.replace( htmlText, "\n", "<br/>" );
   }
 }

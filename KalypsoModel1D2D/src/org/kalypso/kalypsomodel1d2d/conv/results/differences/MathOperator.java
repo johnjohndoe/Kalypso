@@ -47,7 +47,7 @@ import java.math.BigDecimal;
  */
 public enum MathOperator
 {
-  ePlus
+  ePlus( "plus" )
   {
     @Override
     public BigDecimal getResult( final BigDecimal o1, final BigDecimal o2 )
@@ -56,7 +56,7 @@ public enum MathOperator
     }
   },
 
-  eMinus
+  eMinus( "minus" )
   {
     @Override
     public BigDecimal getResult( final BigDecimal o1, final BigDecimal o2 )
@@ -64,6 +64,19 @@ public enum MathOperator
       return o1.subtract( o2 );
     }
   };
+
+  private final String m_label;
+
+  private MathOperator( final String label )
+  {
+    m_label = label;
+  }
+
+  @Override
+  public String toString( )
+  {
+    return m_label;
+  }
 
   public abstract BigDecimal getResult( BigDecimal o1, BigDecimal o2 );
 }
