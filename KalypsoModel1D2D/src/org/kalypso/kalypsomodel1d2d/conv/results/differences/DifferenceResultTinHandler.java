@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -216,6 +217,8 @@ public class DifferenceResultTinHandler
   {
     try
     {
+      FolderUtilities.mkdirs( diffFile.getParent() );
+
       final File tinResultFile = diffFile.getLocation().toFile();
 
       GmlSerializer.serializeWorkspace( tinResultFile, triangleWorkspace, "UTF-8" ); //$NON-NLS-1$
