@@ -25,14 +25,20 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
+import org.kalypso.kalypsomodel1d2d.project.Scenario1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * Creates the formatted (html) info text for a 1d2d result.
@@ -51,17 +57,20 @@ public class ResultInfoBuilder
   public String format( final Object element )
   {
     if( element == null )
-      return Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.5" ); //$NON-NLS-1$
-
-    if( !(element instanceof IResultMeta) )
-      return null;
-
-    final IResultMeta result = (IResultMeta)element;
+      return "<form>" + Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.5" ) + "<form>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final StringWriter buffer = new StringWriter();
     final PrintWriter printer = new PrintWriter( buffer );
 
-    printInformation( result, printer );
+    if( element instanceof IProject )
+      printProject( (IProject)element, printer );
+    else if( element instanceof IScenario )
+    {
+      final IFolder scenarioFolder = ((IScenario)element).getFolder();
+      printScenario( scenarioFolder, printer );
+    }
+    else if( (element instanceof IResultMeta) )
+      printResultChain( (IResultMeta)element, printer );
 
     printer.flush();
     printer.close();
@@ -69,7 +78,7 @@ public class ResultInfoBuilder
     return buffer.toString();
   }
 
-  private void printInformation( final IResultMeta result, final PrintWriter printer )
+  private void printResultChain( final IResultMeta result, final PrintWriter printer )
   {
     printer.append( "<form>" ); //$NON-NLS-1$
 
@@ -106,42 +115,36 @@ public class ResultInfoBuilder
 
   private void printScenarioResult( final IScenarioResultMeta result, final PrintWriter printer )
   {
-    // TODO: uäargh! Lots of copy/paste code....!
-    // final IScenarioResultMeta scenarioResult = getScenarioResultMeta( result );
-    // if( scenarioResult != null )
-    // {
-    // scenarioName = scenarioResult.getName();
-    // scenarioDescription = scenarioResult.getDescription();
-    // }
-    // else
-    // {
-    // scenarioName = null;
-    // scenarioDescription = null;
-    // }
+    final Scenario1D2D scenario = ResultMeta1d2dHelper.findScenarioLocation( result );
+    if( scenario != null )
+    {
+      final IFolder scenarioFolder = scenario.getScenarioFolder();
+      printScenario( scenarioFolder, printer );
+    }
 
-    // Scenario
-    // final String scenarioName;
-    // final String scenarioDescription;
+    final String description = htmlString( result.getDescription() );
+    if( !StringUtils.isBlank( description ) )
+      printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", description ); //$NON-NLS-1$ 
+  }
 
-//    if( scenarioResult != null )
-//    {
-//      buf.append( "<p>" );
-//      buf.append( "<span color='header' font='header'>" + "Szenario: " + scenarioName + "</span>" );
-//      buf.append( "</p>" );
-//      buf.append( "<p>" );
-//      buf.append( scenarioDescription );
-//      buf.append( "</p>" );
-//    }
+  private void printScenario( final IFolder scenarioFolder, final PrintWriter printer )
+  {
+    printProject( scenarioFolder.getProject(), printer );
 
+    final String name = scenarioFolder.getName();
+    printer.format( "<p><b>%s:</b> %s</p>%n", "Szenario", name ); //$NON-NLS-1$
+  }
+
+  private void printProject( final IProject project, final PrintWriter printer )
+  {
+    final String projectName = project.getName();
+    printer.format( "<p><b>%s:</b> %s</p>%n", "Projekt", projectName ); //$NON-NLS-1$
   }
 
   private void printCalcUnitResult( final ICalcUnitResultMeta result, final PrintWriter printer )
   {
     final String name = htmlString( result.getName() );
-
-    printer.println( "<p>" ); //$NON-NLS-1$
-    printer.format( "<b>%s:</b> %s%n", "Teilmodell", name ); //$NON-NLS-1$
-    printer.println( "</p>" ); //$NON-NLS-1$
+    printer.format( "<p><b>%s:</b> %s</p>%n", "Teilmodell", name ); //$NON-NLS-1$
 
     final String description = htmlString( result.getDescription() );
     if( !StringUtils.isBlank( description ) )
