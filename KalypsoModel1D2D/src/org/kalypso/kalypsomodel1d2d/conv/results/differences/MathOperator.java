@@ -42,12 +42,14 @@ package org.kalypso.kalypsomodel1d2d.conv.results.differences;
 
 import java.math.BigDecimal;
 
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
+
 /**
  * @author Thomas Jung
  */
 public enum MathOperator
 {
-  ePlus( "plus" )
+  ePlus( Messages.getString("MathOperator_0") ) //$NON-NLS-1$
   {
     @Override
     public BigDecimal getResult( final BigDecimal o1, final BigDecimal o2 )
@@ -56,7 +58,7 @@ public enum MathOperator
     }
   },
 
-  eMinus( "minus" )
+  eMinus( Messages.getString("MathOperator_1") ) //$NON-NLS-1$
   {
     @Override
     public BigDecimal getResult( final BigDecimal o1, final BigDecimal o2 )
