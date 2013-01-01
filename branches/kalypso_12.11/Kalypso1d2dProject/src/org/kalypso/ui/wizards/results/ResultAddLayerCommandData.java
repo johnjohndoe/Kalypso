@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -153,7 +152,7 @@ public class ResultAddLayerCommandData
       /* properties that identify the result theme */
       setProperty( PROPERTY_RESULT_DOCUMENT_ID, m_documentResult.getId() );
 
-      final Pair<IProject, IFolder> externalLocation = determineExternalLocation();
+      final Pair<IProject, IFolder> externalLocation = ResultMeta1d2dHelper.determineExternalLocation( m_documentResult, m_scenarioFolder );
       final boolean isExternal = externalLocation.getRight() != null;
       setProperty( PROPERTY_RESULT_EXTERNAL, Boolean.toString( isExternal ) );
     }
@@ -164,7 +163,7 @@ public class ResultAddLayerCommandData
     Assert.isNotNull( m_sldFile );
 
     final Pair<String, String> types = determineTypes();
-    final Pair<IProject, IFolder> externalLocation = determineExternalLocation();
+    final Pair<IProject, IFolder> externalLocation = ResultMeta1d2dHelper.determineExternalLocation( m_documentResult, m_scenarioFolder );
 
     final String type = types.getLeft();
     final String nodeParameterType = types.getRight();
@@ -285,7 +284,7 @@ public class ResultAddLayerCommandData
 
   private String buildSourePath( )
   {
-    final Pair<IProject, IFolder> externalLocation = determineExternalLocation();
+    final Pair<IProject, IFolder> externalLocation = ResultMeta1d2dHelper.determineExternalLocation( m_documentResult, m_scenarioFolder );
 
     final IProject documentProject = externalLocation.getLeft();
     final IFolder documentScenarioFolder = externalLocation.getRight();
@@ -310,35 +309,5 @@ public class ResultAddLayerCommandData
 
     /* outside of the current project: make absolute path */
     return ResourceUtilities.createQuietURL( documentDataFile ).toExternalForm();
-  }
-
-  /**
-   * Determine, if the document is an external result or not.<br/>
-   * If it is, the components of the return value are set accordingly.
-   * 
-   * @return If the project is set, it is an result of an different project. If the (scenario-)folder is set, it is the result of a different scenario.
-   */
-  private Pair<IProject, IFolder> determineExternalLocation( )
-  {
-    final URL resultsLocation = m_documentResult.getWorkspace().getContext();
-    final IFile resultsFile = ResourceUtilities.findFileFromURL( resultsLocation );
-    final IFolder documentScenarioFolder = (IFolder)resultsFile.getParent().getParent();
-
-    if( documentScenarioFolder.equals( m_scenarioFolder ) )
-    {
-      /* local result */
-      return Pair.of( null, null );
-    }
-
-    final IProject documentProject = documentScenarioFolder.getProject();
-
-    if( documentProject.equals( m_scenarioFolder.getProject() ) )
-    {
-      /* document is in the same project, but in another scenario */
-      return Pair.of( null, documentScenarioFolder );
-    }
-
-    /* outside of the current project */
-    return Pair.of( documentProject, documentScenarioFolder );
   }
 }
