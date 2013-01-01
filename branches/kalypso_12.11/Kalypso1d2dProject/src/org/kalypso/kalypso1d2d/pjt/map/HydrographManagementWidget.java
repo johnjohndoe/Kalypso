@@ -156,7 +156,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * A widget with option pane, which allows the user to create, edit and delete hydrographs for 1d2d result files.<BR>
  * The user can add / remove hydrograph locations for each calculation unit.
- *
+ * 
  * @author Thomas Jung
  */
 public class HydrographManagementWidget extends AbstractWidget implements IWidgetWithOptions
@@ -174,7 +174,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       if( !(theme instanceof IKalypsoFeatureTheme) )
         return false;
 
-      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)theme;
       final FeatureList featureList = ft.getFeatureList();
       final Feature hydrographsFeature = featureList == null ? null : featureList.getOwner();
 
@@ -201,7 +201,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
   private final Runnable m_refreshHydrographViewerRunnable = new Runnable()
   {
     @Override
-    @SuppressWarnings("synthetic-access")
+    @SuppressWarnings( "synthetic-access" )
     public void run( )
     {
       ViewerUtilities.refresh( m_hydrographViewer, true );
@@ -352,7 +352,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     featureComposite.addChangeListener( new IFeatureChangeListener()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public void featureChanged( final ICommand changeCommand )
       {
         m_theme.postCommand( changeCommand, null );
@@ -429,11 +429,12 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         final SelectCalcUnitForHydrographWizard addCalcUnitWizard = new SelectCalcUnitForHydrographWizard();
         addCalcUnitWizard.init( PlatformUI.getWorkbench(), new StructuredSelection() );
         addCalcUnitWizard.setMapModel( getMapPanel().getMapModell() );
-        final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+        final IHandlerService handlerService = (IHandlerService)PlatformUI.getWorkbench().getService( IHandlerService.class );
         final IEvaluationContext context = handlerService.getCurrentState();
-        final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+        final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
         final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, addCalcUnitWizard );
+        wizardDialog2.setRememberSize( true );
 
         if( wizardDialog2.open() == Window.OK )
         {
@@ -458,7 +459,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
     m_processHydrographCollectionButton.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -503,7 +504,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         if( m_theme == null )
@@ -569,15 +570,15 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
   protected void handleThemeComboSelected( final SelectionChangedEvent event )
   {
-    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
     final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) firstElement;
+      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)firstElement;
       final FeatureList featureList = ft.getFeatureList();
       final Feature hydrographsFeature = featureList == null ? null : featureList.getOwner();
       if( hydrographsFeature != null )
-        setHydrographs( (IHydrographCollection) hydrographsFeature.getAdapter( IHydrographCollection.class ), ft );
+        setHydrographs( (IHydrographCollection)hydrographsFeature.getAdapter( IHydrographCollection.class ), ft );
     }
     else
       setHydrographs( null, null );
@@ -639,7 +640,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         m_theme.postCommand( new EmptyCommand( StringUtils.EMPTY, false ), refreshRunnable );
@@ -665,8 +666,8 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     ErrorDialog.openError( m_hydrographViewer.getControl().getShell(), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.20" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.21" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-    m_selectedHydrograph = (IHydrograph) selection.getFirstElement();
+    final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+    m_selectedHydrograph = (IHydrograph)selection.getFirstElement();
 
     featureComposite.disposeControl();
 
@@ -736,7 +737,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         handleHydrographImport( event );
       }
     };
-    importAction.setDescription( Messages.getString( Messages.getString("HydrographManagementWidget.0") ) ); //$NON-NLS-1$
+    importAction.setDescription( Messages.getString( Messages.getString( "HydrographManagementWidget.0" ) ) ); //$NON-NLS-1$
 
     final Action exportAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.28" ), exportID ) //$NON-NLS-1$
     {
@@ -767,7 +768,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     manager.add( exportAction );
   }
 
-  protected void handleHydrographExport( @SuppressWarnings("unused") final Event event )
+  protected void handleHydrographExport( @SuppressWarnings( "unused" ) final Event event )
   {
     // set wizard
     final IWizard exportProfileWizard = new ExportHydrographWizard( m_hydrographs, m_selectedHydrograph );
@@ -779,7 +780,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     dialog.open();
   }
 
-  protected void handleHydrographImport( @SuppressWarnings("unused") final Event event )
+  protected void handleHydrographImport( @SuppressWarnings( "unused" ) final Event event )
   {
     final IMapPanel mapPanel = getMapPanel();
 
@@ -812,21 +813,21 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     refreshControl();
   }
 
-  protected void handleHydrographSelected( @SuppressWarnings("unused") final Event event )
+  protected void handleHydrographSelected( @SuppressWarnings( "unused" ) final Event event )
   {
     // set widget
     final EditHydrographWidget widget = new EditHydrographWidget( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.32" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.33" ), false, IHydrograph.QNAME_PROP_LOCATION, m_theme, this ); //$NON-NLS-1$ //$NON-NLS-2$
     setDelegate( widget );
   }
 
-  protected void handleHydrographRemoved( @SuppressWarnings("unused") final Event event )
+  protected void handleHydrographRemoved( @SuppressWarnings( "unused" ) final Event event )
   {
     // set widget
     final RemoveHydrographWidget widget = new RemoveHydrographWidget( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.34" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.35" ), true, IHydrograph.QNAME_PROP_LOCATION, m_theme ); //$NON-NLS-1$ //$NON-NLS-2$
     setDelegate( widget );
   }
 
-  protected void handleHydrographAdded( @SuppressWarnings("unused") final Event event )
+  protected void handleHydrographAdded( @SuppressWarnings( "unused" ) final Event event )
   {
     // set widget
     final CreateHydrographWidget widget = new CreateHydrographWidget( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.36" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.37" ), IHydrograph.QNAME, m_theme ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -844,7 +845,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     GM_Envelope envelope = location.getEnvelope();
     if( location instanceof GM_Point )
     {
-      final GM_Point point = (GM_Point) location;
+      final GM_Point point = (GM_Point)location;
       final GM_Position position = point.getPosition();
       final double newMaxX = position.getX() + 30;
       final double newMinX = position.getX() - 30;
@@ -856,7 +857,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     }
     else if( location instanceof GM_Curve )
     {
-      final GM_Curve line = (GM_Curve) location;
+      final GM_Curve line = (GM_Curve)location;
       envelope = line.getEnvelope();
     }
 
@@ -875,7 +876,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       @Override
       public String getText( final Object element )
       {
-        final IHydrograph hydrograph = (IHydrograph) element;
+        final IHydrograph hydrograph = (IHydrograph)element;
         return hydrograph.getName();
       }
     } );
@@ -919,7 +920,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         themesForCombo.add( theme );
       else if( theme instanceof IMapModell )
       {
-        final IKalypsoTheme[] allThemes = ((IMapModell) theme).getAllThemes();
+        final IKalypsoTheme[] allThemes = ((IMapModell)theme).getAllThemes();
         for( final IKalypsoTheme kalypsoTheme : allThemes )
         {
           if( HYDROGRAPH_PREDICATE.decide( kalypsoTheme ) )
@@ -1005,8 +1006,8 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
   private void paintHydrographInMap( final Graphics g )
   {
-    final Graphics2D g2 = (Graphics2D) g;
-    final GM_Point point = (GM_Point) m_selectedHydrograph.getLocation();
+    final Graphics2D g2 = (Graphics2D)g;
+    final GM_Point point = (GM_Point)m_selectedHydrograph.getLocation();
     final IMapPanel mapPanel = getMapPanel();
 
     if( mapPanel == null )
@@ -1016,8 +1017,8 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     if( projection == null || point == null )
       return;
 
-    final int x = (int) projection.getDestX( point.getX() );
-    final int y = (int) projection.getDestY( point.getY() );
+    final int x = (int)projection.getDestX( point.getX() );
+    final int y = (int)projection.getDestY( point.getY() );
 
     final int sizeOuter = 16;
     final Color defaultColor = g2.getColor();
@@ -1040,7 +1041,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     display.asyncExec( new Runnable()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public void run( )
       {
         if( selection != null && m_hydrographViewer != null )

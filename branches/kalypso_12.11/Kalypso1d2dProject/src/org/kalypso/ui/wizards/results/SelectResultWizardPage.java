@@ -161,18 +161,6 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
   {
     m_binding = new DatabindingWizardPage( this, null );
 
-    /* set a fixed size to the Wizard */
-    // HACK!!
-    // FIXME: bad -> do this in a different way!
-    final Object layoutData = parent.getLayoutData();
-    if( layoutData instanceof GridData )
-    {
-      final GridData pLayout = (GridData)layoutData;
-      pLayout.widthHint = 700;
-      pLayout.heightHint = 400;
-      parent.layout();
-    }
-
     final Composite panel = new Composite( parent, SWT.NONE );
     setControl( panel );
 
@@ -185,6 +173,7 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
     final ResultMetaInfoViewer resultViewer = new ResultMetaInfoViewer( panel, SWT.NONE, m_factory );
     resultViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
+    parent.layout();
     // TODO: allow user to set an individually name of the difference result
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -230,7 +219,12 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
 
     createToolbar( treePanel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    createTree( treePanel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final Control treeControl = createTree( treePanel );
+    final GridData treeData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    // REMARK: ensure a minimum width of all controls when the wizard is opened the first time
+    treeData.heightHint = 300;
+    treeData.widthHint = 400;
+    treeControl.setLayoutData( treeData );
 
     if( m_data.getShowOptions() )
       createFilterControls( treePanel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -245,10 +239,10 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
     final Group panel = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
 
-    panel.setText( Messages.getString("SelectResultWizardPage_0") ); //$NON-NLS-1$
+    panel.setText( Messages.getString( "SelectResultWizardPage_0" ) ); //$NON-NLS-1$
 
     final Label label = new Label( panel, SWT.NONE );
-    label.setText( Messages.getString("SelectResultWizardPage_1") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "SelectResultWizardPage_1" ) ); //$NON-NLS-1$
 
     final ComboViewer combo = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
     combo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
@@ -95,7 +95,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   }
 
   @Override
-  public Composite createControl( final Group parent )
+  public Control createControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 4, false ) );

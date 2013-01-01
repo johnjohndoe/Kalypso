@@ -63,6 +63,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.map.HydrographUtils;
@@ -96,6 +97,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
   public SelectCalcUnitForHydrographWizard( )
   {
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.1" ) ); //$NON-NLS-1$
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
   }
 
   @Override

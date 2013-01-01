@@ -45,16 +45,18 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormText;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
@@ -69,15 +71,7 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public class ResultMetaInfoViewer extends Viewer
 {
-  /*
-   * fonts
-   */
-  // FIXME never disposed; use JFaceResources instead!
-  private final Font fTextHeader;
-
-  private final Font fTextNormal;
-
-  private final Group m_panel;
+  private final Composite m_panel;
 
   private Object m_input;
 
@@ -85,13 +79,23 @@ public class ResultMetaInfoViewer extends Viewer
 
   private final IThemeConstructionFactory m_factory;
 
+  private final ScrolledForm m_form;
+
+  private final Group m_control;
+
   public ResultMetaInfoViewer( final Composite parent, final int style, final IThemeConstructionFactory factory )
   {
-    m_panel = new Group( parent, style );
+    m_control = new Group( parent, style );
+    m_control.setLayout( new FillLayout() );
+
+    m_control.setText( Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0" ) ); //$NON-NLS-1$
+
+    m_form = new ScrolledForm( m_control );
+    m_form.setExpandHorizontal( true );
+    m_form.setExpandVertical( true );
+
+    m_panel = m_form.getBody();
     m_panel.setLayout( new GridLayout() );
-    fTextHeader = new Font( parent.getDisplay(), "Tahoma", 10, SWT.BOLD ); //$NON-NLS-1$
-    fTextNormal = new Font( parent.getDisplay(), "Tahoma", 8, SWT.NONE ); //$NON-NLS-1$
-    parent.getDisplay();
 
     m_factory = factory;
   }
@@ -99,7 +103,7 @@ public class ResultMetaInfoViewer extends Viewer
   @Override
   public Control getControl( )
   {
-    return m_panel;
+    return m_control;
   }
 
   @Override
@@ -125,9 +129,8 @@ public class ResultMetaInfoViewer extends Viewer
     m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
     m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_panel.setText( Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0" ) ); //$NON-NLS-1$
-    m_textPanel.setFont( "header", fTextHeader ); //$NON-NLS-1$
-    m_textPanel.setFont( "text", fTextNormal ); //$NON-NLS-1$
+    m_textPanel.setFont( "header", JFaceResources.getHeaderFont() ); //$NON-NLS-1$
+    m_textPanel.setFont( "text", JFaceResources.getDialogFont() ); //$NON-NLS-1$
 
     if( m_input instanceof IResultMeta )
     {
@@ -137,7 +140,7 @@ public class ResultMetaInfoViewer extends Viewer
       if( m_factory != null )
       {
         final IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
-        final Composite buttonControl = createThemeCreator.createControl( m_panel );
+        final Control buttonControl = createThemeCreator.createControl( m_panel );
         if( buttonControl != null )
           buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
       }
@@ -145,7 +148,8 @@ public class ResultMetaInfoViewer extends Viewer
       final String infoText = getInformationText( result );
       m_textPanel.setText( infoText, true, false );
     }
-    m_panel.layout( true );
+
+    m_form.reflow( true );
   }
 
   // FIXME: move into a separate builder class, we need a much better abstraction here...

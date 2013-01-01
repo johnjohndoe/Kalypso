@@ -72,19 +72,19 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     /* Get the map */
-    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
+    final IWorkbenchWindow window = (IWorkbenchWindow)context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final MapView mapView = (MapView)window.getActivePage().findView( MapView.ID );
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     try
@@ -94,6 +94,7 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
       // open wizard
       final GenerateDifferenceResultTinWizard wizard = new GenerateDifferenceResultTinWizard( scenarioFolder, resultModel, modelProvider );
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
+      wizardDialog2.setRememberSize( true );
       if( wizardDialog2.open() == Window.OK )
       {
         modelProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
@@ -104,7 +105,7 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
     catch( final CoreException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler.2") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler.2" ) ); //$NON-NLS-1$
     }
 
     return Status.CANCEL_STATUS;

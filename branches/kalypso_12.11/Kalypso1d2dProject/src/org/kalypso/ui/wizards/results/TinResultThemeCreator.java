@@ -52,7 +52,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
@@ -103,7 +103,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
   }
 
   @Override
-  public Composite createControl( final Group parent )
+  public Control createControl( final Composite parent )
   {
     // check if it is a TIN
 
