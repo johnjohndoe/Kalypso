@@ -51,7 +51,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlUtilities;
@@ -61,6 +60,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.MathOperator;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
@@ -93,40 +93,26 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
 
     try
     {
-      GM_TriangulatedSurface masterSurface = null;
-      GM_TriangulatedSurface slaveSurface = null;
-
       monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.18" ) ); //$NON-NLS-1$
-      masterSurface = getSurfaceData( m_data.getMasterResult() );
+      final GM_TriangulatedSurface masterSurface = getSurfaceData( m_data.getMasterResult() );
       monitor.worked( 10 );
       if( masterSurface == null )
         return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.19" ) ); //$NON-NLS-1$
 
       monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.20" ) ); //$NON-NLS-1$
-      slaveSurface = getSurfaceData( m_data.getSlaveResult() );
+      final GM_TriangulatedSurface slaveSurface = getSurfaceData( m_data.getSlaveResult() );
       monitor.worked( 10 );
       if( slaveSurface == null )
         return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.21" ) ); //$NON-NLS-1$
 
-      final IStepResultMeta destResult = m_data.getDestinationResult();
-
       monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.23" ) ); //$NON-NLS-1$
 
+      final IStepResultMeta destResult = m_data.getDestinationResult();
       final IFolder scenarioFolder = m_data.getScenarioFolder();
-      final IPath docPath = destResult.getFullPath();
-      final IFolder folder = scenarioFolder.getFolder( docPath );
+      final IPath stepPath = destResult.getFullPath();
+      final IFolder stepFolder = scenarioFolder.getFolder( stepPath );
 
-      /* generate unique name for difference file */
-      final String name = "tin"; //$NON-NLS-1$
-      final String extension = ".gmlz"; //$NON-NLS-1$
-      final File parentDir = docPath.toFile();
-
-      // check, if file already exists and get the unique name */
-      final File tinPath = new File( parentDir, "Tin" ); //$NON-NLS-1$
-      final String uniqueFileName = FileUtilities.createNewUniqueFileName( name, extension, tinPath );
-
-      final IFolder destPath = folder.getFolder( "Tin" ); //$NON-NLS-1$
-      final IFile destFile = destPath.getFile( uniqueFileName );
+      final IFile destFile = createDestinationFilename( stepFolder );
 
       final MathOperator operator = m_data.getOperator();
       final DifferenceResultTinHandler differenceHandler = new DifferenceResultTinHandler( masterSurface, slaveSurface, operator, m_minMaxCatcher );
@@ -135,16 +121,9 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
       monitor.worked( 3 );
 
       /* update the result db */
+
       /* create the path entry for the document */
-      final int extensionIndex = destFile.getName().lastIndexOf( "." ); //$NON-NLS-1$
-      final String substring = destFile.getName().substring( 0, extensionIndex );
-
-      /* create filename */
-      final String param = "DIFFERENCE"; //$NON-NLS-1$
-      final String paramName = substring + "_" + param + extension; //$NON-NLS-1$
-
-      /* we "know", that the results are stored in the "Tin" folder */
-      final Path path = new Path( "Tin/" + paramName ); //$NON-NLS-1$
+      final IPath destPath = destFile.getFullPath().makeRelativeTo( stepFolder.getFullPath() );
 
       // get min max via a minmaxCatcher during processing.
       final BigDecimal min = m_minMaxCatcher.getMinValue();
@@ -153,8 +132,8 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
       // TODO: set a good description e.g.
       final String description = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.32" ); //$NON-NLS-1$
 
-      final IStepResultMeta stepResult = destResult;
-      ResultMeta1d2dHelper.addDocument( stepResult, "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max ); //$NON-NLS-1$
+      final IStepResultMeta stepResult = m_data.getDestinationResult();
+      ResultMeta1d2dHelper.addDocument( stepResult, "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, destPath, Status.OK_STATUS, min, max ); //$NON-NLS-1$
 
       // FIXME: workspace not correctly dirty
 
@@ -181,6 +160,21 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
       monitor.done();
     }
     return new Status( IStatus.OK, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.36" ) ); //$NON-NLS-1$
+  }
+
+  private IFile createDestinationFilename( final IFolder stepFolder )
+  {
+    final IFolder tinFolder = stepFolder.getFolder( "Tin" ); //$NON-NLS-1$
+
+    /* generate unique name for difference file */
+    final String prefix = "tin"; //$NON-NLS-1$
+    final String suffix = String.format( "_%s.gmlz", ResultType.DIFFERENCE.name() );
+
+    // check, if file already exists and get the unique name */
+    final File tinDir = tinFolder.getLocation().toFile();
+    final String uniqueFileName = FileUtilities.createNewUniqueFileName( prefix, suffix, tinDir );
+
+    return tinFolder.getFile( uniqueFileName );
   }
 
   private GM_TriangulatedSurface getSurfaceData( final IDocumentResultMeta docResult )
