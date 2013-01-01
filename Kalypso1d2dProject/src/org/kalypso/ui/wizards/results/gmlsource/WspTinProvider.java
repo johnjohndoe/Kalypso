@@ -76,7 +76,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.wizards.results.ResultMetaInfoViewer;
+import org.kalypso.ui.wizards.results.ResultInfoBuilder;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -98,9 +98,6 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
 
   private static final Object[] NO_CHILDREN = new Object[] {};
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -113,29 +110,18 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     }
   }
 
-  /**
-   * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createContentProvider()
-   */
   @Override
   public ITreeContentProvider createContentProvider( )
   {
     return this;
   }
 
-  /**
-   * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createLabelProvider()
-   */
   @Override
   public ILabelProvider createLabelProvider( )
   {
     return WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider();
-
   }
 
-  /**
-   * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createInfoControl(org.eclipse.swt.widgets.Composite,
-   *      java.lang.Object)
-   */
   @Override
   public void createInfoControl( final Composite parent, final Object element )
   {
@@ -145,7 +131,9 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       sc.setExpandHorizontal( true );
       sc.setExpandVertical( true );
 
-      final String informationText = ResultMetaInfoViewer.getInformationText( (IResultMeta) element );
+      final ResultInfoBuilder infoBuilder = new ResultInfoBuilder();
+
+      final String informationText = infoBuilder.format( element );
 
       final Composite panel = new Composite( sc, SWT.NONE );
       panel.setLayout( new GridLayout() );
@@ -161,35 +149,25 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     }
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     m_resultParents.clear();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-   */
   @Override
   public Object[] getElements( final Object inputElement )
   {
     return ProjectUtilities.allOfNature( Kalypso1D2DProjectNature.ID );
   }
 
-  /**
-   * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createSource(java.lang.Object)
-   */
   @Override
   public IGmlSource createSource( final Object element )
   {
     // create source if it is a tin-wsp
     if( element instanceof IDocumentResultMeta )
     {
-      final IDocumentResultMeta wspDoc = (IDocumentResultMeta) element;
+      final IDocumentResultMeta wspDoc = (IDocumentResultMeta)element;
       if( wspDoc.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.tinWsp )
       {
         try
@@ -243,7 +221,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
 
         if( parentElement instanceof IScenario )
         {
-          final IScenario scenario = (IScenario) parentElement;
+          final IScenario scenario = (IScenario)parentElement;
 
           final IFolder scenarioFolder = scenario.getFolder();
           final IFile resultsFile = scenarioFolder.getFile( Path.fromPortableString( "models/scenarioResultMeta.gml" ) ); //$NON-NLS-1$
@@ -251,7 +229,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
 
           final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resultUrl, null );
           m_workspace.add( workspace );
-          final IResultMeta rootMeta = (IResultMeta) workspace.getRootFeature().getAdapter( IResultMeta.class );
+          final IResultMeta rootMeta = (IResultMeta)workspace.getRootFeature().getAdapter( IResultMeta.class );
 
           final IFeatureBindingCollection<IResultMeta> metaChildren = rootMeta.getChildren();
 
@@ -294,12 +272,12 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
         final boolean filtered = filterResultMeta( child );
         if( !filtered )
         {
-          result.add( (IResultMeta) child );
+          result.add( (IResultMeta)child );
         }
       }
       else
       {
-        result.add( (IResultMeta) child );
+        result.add( (IResultMeta)child );
       }
     }
 
@@ -327,7 +305,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
 
   private boolean filterResultMeta( final Object child )
   {
-    final IResultMeta wspMeta = findFirstWspTinMetaChild( (IResultMeta) child );
+    final IResultMeta wspMeta = findFirstWspTinMetaChild( (IResultMeta)child );
     final boolean filtered = wspMeta == null;
     return filtered;
   }
@@ -336,7 +314,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   {
     if( resultMeta instanceof IDocumentResultMeta )
     {
-      final IDocumentResultMeta docMeta = (IDocumentResultMeta) resultMeta;
+      final IDocumentResultMeta docMeta = (IDocumentResultMeta)resultMeta;
       if( docMeta.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.tinWsp )
       {
         return docMeta;
@@ -356,9 +334,6 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-   */
   @Override
   public Object getParent( final Object element )
   {
@@ -369,7 +344,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
 
     if( element instanceof IScenario )
     {
-      final IScenario s = (IScenario) element;
+      final IScenario s = (IScenario)element;
       final IScenario parentScenario = s.getParentScenario();
       if( parentScenario != null )
       {
@@ -381,7 +356,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
 
     if( element instanceof IResultMeta )
     {
-      final IResultMeta result = (IResultMeta) element;
+      final IResultMeta result = (IResultMeta)element;
       final IResultMeta parentResult = result.getOwner();
       if( parentResult != null )
       {
@@ -397,9 +372,6 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     throw new IllegalStateException( Messages.getString( "org.kalypso.ui.wizards.results.gmlsource.WspTinProvider.1" ) + element ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-   */
   @Override
   public boolean hasChildren( final Object element )
   {
