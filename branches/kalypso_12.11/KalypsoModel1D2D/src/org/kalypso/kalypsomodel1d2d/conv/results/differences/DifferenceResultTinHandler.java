@@ -81,7 +81,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class DifferenceResultTinHandler
 {
-  // FIXME: shoud not this come from outside?
   private final ResultType m_parameter = ResultType.DIFFERENCE;
 
   private final GM_TriangulatedSurface m_master;
@@ -122,7 +121,7 @@ public class DifferenceResultTinHandler
 
       if( surface.size() == 0 )
       {
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString("DifferenceResultTinHandler.0") ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "DifferenceResultTinHandler.0" ) ); //$NON-NLS-1$
         throw new CoreException( status );
       }
 
@@ -215,30 +214,11 @@ public class DifferenceResultTinHandler
     {
       final File tinResultFile = diffFile.getLocation().toFile();
 
-      final String name = tinResultFile.getPath();
-
-      final int extensionIndex = name.lastIndexOf( "." ); //$NON-NLS-1$
-
-      final String substring = name.substring( 0, extensionIndex );
-      final String extension = name.substring( extensionIndex, name.length() );
-
-      // FIXME: strange: the caller gives a filename, but the file is really not save there... -> the caller should instead tweak the filename, this code does not belong here!
-
-      /* create filename */
-      String param;
-      if( m_parameter != null )
-        param = m_parameter.name();
-      else
-        param = ""; //$NON-NLS-1$
-
-      final String fileName = substring + "_" + param + extension; //$NON-NLS-1$
-
-      final File paramFile = new File( fileName );
-      GmlSerializer.serializeWorkspace( paramFile, triangleWorkspace, "UTF-8" ); //$NON-NLS-1$
+      GmlSerializer.serializeWorkspace( tinResultFile, triangleWorkspace, "UTF-8" ); //$NON-NLS-1$
     }
     catch( IOException | GmlSerializeException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString("DifferenceResultTinHandler.1"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "DifferenceResultTinHandler.1" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
