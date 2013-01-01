@@ -20,7 +20,11 @@ package org.kalypso.kalypsomodel1d2d.project;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * Wrapper around a {@link de.renew.workflow.connector.cases.IScenario} of a 1D2D project.<br/>
@@ -52,6 +56,12 @@ public class Scenario1D2D
     return new Project1D2D( m_scenarioFolder.getProject() );
   }
 
+  /** Returns the {@link IFolder} that is wrapped by this instance. */
+  public IFolder getScenarioFolder( )
+  {
+    return m_scenarioFolder;
+  }
+
   public IFolder getModelsFolder( )
   {
     return m_scenarioFolder.getFolder( new Path( FOLDER_MODELS ) );
@@ -75,5 +85,14 @@ public class Scenario1D2D
   public IFile getResultMetaFile( )
   {
     return getModelsFolder().getFile( FILE_RESULT_META );
+  }
+
+  /**
+   * Resolves the real IScenario that corresponds to this resource handle.<br/>
+   * This may load the underlying scenario file.
+   */
+  public IScenario loadScenario( ) throws CoreException
+  {
+    return ScenarioHelper.findScenario( m_scenarioFolder );
   }
 }
