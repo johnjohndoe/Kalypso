@@ -56,6 +56,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
@@ -92,12 +93,18 @@ public class RestartSelectWizard extends Wizard
 
   public RestartSelectWizard( final IControlModel1D2D controlModel )
   {
+    // FIXME: get string from outside, should be the same as the action name
+    setWindowTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.0" ) ); //$NON-NLS-1$
+
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
+
     final IHandlerService handlerService = (IHandlerService)PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     m_scenarioFolder = ScenarioHelper.getScenarioFolder();
     m_controlModel = controlModel;
     m_modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
@@ -106,15 +113,13 @@ public class RestartSelectWizard extends Wizard
     catch( final CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.5" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, getWindowTitle(), Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
   @Override
   public void addPages( )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.0" ) ); //$NON-NLS-1$
-
     final String title1 = Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.8" ); //$NON-NLS-1$
 
     final SelectResultData data = new SelectResultData( m_resultModel );

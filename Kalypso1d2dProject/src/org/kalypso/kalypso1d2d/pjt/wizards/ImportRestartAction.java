@@ -54,6 +54,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -62,6 +63,8 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
@@ -92,6 +95,9 @@ public class ImportRestartAction extends Action
     m_resultModel = resultModel;
 
     setText( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.0" ) ); //$NON-NLS-1$
+
+    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.IMPORT_EXTERNAL_RESULT ) );
   }
 
   @Override

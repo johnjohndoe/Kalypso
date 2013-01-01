@@ -79,8 +79,8 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
@@ -88,20 +88,21 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
     {
       final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName() );
 
-      final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+      final IWorkbenchWindow window = (IWorkbenchWindow)context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
 
       // open wizard
       final SelectLengthSectionWizard selectLengthSectionWizard = new SelectLengthSectionWizard( resultModel );
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, selectLengthSectionWizard );
+      wizardDialog2.setRememberSize( true );
       if( wizardDialog2.open() == Window.OK )
       {
-        final FeatureTemplateView featureView = (FeatureTemplateView) window.getActivePage().showView( FeatureTemplateView.ID );
+        final FeatureTemplateView featureView = (FeatureTemplateView)window.getActivePage().showView( FeatureTemplateView.ID );
 
         final String gmlResultPath = selectLengthSectionWizard.getSelectedLGmlResultPath();
         if( gmlResultPath == null )
           return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.0" ) ); //$NON-NLS-1$
 
-        final UIJob job = new UIJob( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.1") ) //$NON-NLS-1$
+        final UIJob job = new UIJob( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.1" ) ) //$NON-NLS-1$
         {
           @Override
           public IStatus runInUIThread( final IProgressMonitor monitor )

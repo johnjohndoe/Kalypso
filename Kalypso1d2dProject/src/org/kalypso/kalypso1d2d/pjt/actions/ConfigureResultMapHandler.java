@@ -66,11 +66,11 @@ public class ConfigureResultMapHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     /* Get the map */
-    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
+    final MapView mapView = (MapView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.0" ) ); //$NON-NLS-1$
 
@@ -88,14 +88,11 @@ public class ConfigureResultMapHandler extends AbstractHandler
     addLayerWizard.setCommandTarget( commandTarget );
     addLayerWizard.setMapModel( mapPanel.getMapModell() );
 
-    // final KalypsoAddLayerWizard addLayerWizard = new KalypsoAddLayerWizard( outlineView );
-    // addLayerWizard.init( PlatformUI.getWorkbench() );
-    // final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, addLayerWizard );
     final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, addLayerWizard );
+    wizardDialog2.setRememberSize( true );
     if( wizardDialog2.open() == Window.OK )
       return Status.OK_STATUS;
 
     return Status.CANCEL_STATUS;
   }
-
 }

@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
@@ -73,7 +74,9 @@ public class SelectLengthSectionWizard extends Wizard
   public SelectLengthSectionWizard( final IScenarioResultMeta resultModel )
   {
     m_resultModel = resultModel;
+
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.0" ) ); //$NON-NLS-1$
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
   }
 
   @Override

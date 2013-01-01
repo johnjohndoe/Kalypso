@@ -55,6 +55,7 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
@@ -87,6 +88,7 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
   public AddResultThemeWizard( )
   {
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.1" ) ); //$NON-NLS-1$
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
   }
 
   @Override

@@ -73,11 +73,11 @@ public class ResultDataManagerHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     /* Get the map */
-    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
+    final MapView mapView = (MapView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.2" ) ); //$NON-NLS-1$
     final JobExclusiveCommandTarget commandTarget = mapView.getCommandTarget();
@@ -99,6 +99,7 @@ public class ResultDataManagerHandler extends AbstractHandler
       final ResultManager1d2dWizard managerWizard = new ResultManager1d2dWizard( mapModel, commandTarget, resultModel, modelProvider );
 
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, managerWizard );
+      wizardDialog2.setRememberSize( true );
       if( wizardDialog2.open() == Window.OK )
         return Status.OK_STATUS;
 

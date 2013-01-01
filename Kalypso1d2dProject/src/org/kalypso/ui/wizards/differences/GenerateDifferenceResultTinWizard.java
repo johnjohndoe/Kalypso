@@ -48,6 +48,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
@@ -92,9 +93,11 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;
     m_modelProvider = modelProvider;
+
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.3" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
   }
 
   @Override

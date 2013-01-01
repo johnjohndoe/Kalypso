@@ -77,24 +77,24 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     /* Get the map */
-    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
+    final IWorkbenchWindow window = (IWorkbenchWindow)context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final MapView mapView = (MapView)window.getActivePage().findView( MapView.ID );
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     final IMapModell orgMapModell = mapPanel.getMapModell();
 
     if( !(orgMapModell instanceof GisTemplateMapModell) )
-      throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler.2") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler.2" ) ); //$NON-NLS-1$
 
     try
     {
@@ -105,9 +105,10 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
       // open wizard
       final ConfigureLengthSectionWizard wizard = new ConfigureLengthSectionWizard( scenarioFolder, resultModel, panel );
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
+      wizardDialog2.setRememberSize( true );
       if( wizardDialog2.open() == Window.OK )
       {
-        ((ICommandPoster) modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+        ((ICommandPoster)modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
         modelProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
 
         return null;

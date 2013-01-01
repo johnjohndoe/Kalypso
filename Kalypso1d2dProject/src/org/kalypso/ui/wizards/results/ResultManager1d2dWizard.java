@@ -44,6 +44,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -85,6 +86,7 @@ public class ResultManager1d2dWizard extends Wizard
 
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.1" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
 
     // FIXME: this log is never used and/or displayed to the user...!
     m_geoLog = createLog();
@@ -111,7 +113,7 @@ public class ResultManager1d2dWizard extends Wizard
     final SelectResultData data = new SelectResultData( m_resultModel );
 
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
-    selectResultWizardPage.setDescription( Messages.getString("ResultManager1d2dWizard.0") ); //$NON-NLS-1$
+    selectResultWizardPage.setDescription( Messages.getString( "ResultManager1d2dWizard.0" ) ); //$NON-NLS-1$
 
     selectResultWizardPage.setFilter( new DocumentResultViewerFilter() );
 

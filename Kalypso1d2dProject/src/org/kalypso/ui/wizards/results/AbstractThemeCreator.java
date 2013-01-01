@@ -41,7 +41,7 @@
 package org.kalypso.ui.wizards.results;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * @author Thomas jung
@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Group;
 public abstract class AbstractThemeCreator implements IResultThemeConstructor
 {
   @Override
-  public Composite createControl( final Group parent )
+  public Control createControl( final Composite parent )
   {
     return null;
   }

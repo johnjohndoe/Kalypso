@@ -40,13 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -76,7 +76,8 @@ public class RestartSelectorControl extends AbstractFeatureControl
       {
         final IControlModel1D2D controlModel = (IControlModel1D2D)getFeature().getAdapter( IControlModel1D2D.class );
         final RestartSelectWizard wizard = new RestartSelectWizard( controlModel );
-        final WizardDialog wizardDialog = new WizardDialog( parent.getDisplay().getActiveShell(), wizard );
+        final WizardDialog2 wizardDialog = new WizardDialog2( parent.getDisplay().getActiveShell(), wizard );
+        wizardDialog.setRememberSize( true );
         wizardDialog.open();
       }
     } );

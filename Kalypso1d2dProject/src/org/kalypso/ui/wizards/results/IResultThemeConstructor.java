@@ -41,7 +41,7 @@
 package org.kalypso.ui.wizards.results;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * Interface for creation of result themes
@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Group;
  */
 public interface IResultThemeConstructor
 {
-  Composite createControl( Group parent );
+  Control createControl( Composite parent );
 
   ResultAddLayerCommandData[] getThemeCommandData( );
 }

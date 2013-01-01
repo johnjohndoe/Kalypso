@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
@@ -85,6 +86,7 @@ public class ConfigureLengthSectionWizard extends Wizard
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.Title" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
   }
 
   @Override
