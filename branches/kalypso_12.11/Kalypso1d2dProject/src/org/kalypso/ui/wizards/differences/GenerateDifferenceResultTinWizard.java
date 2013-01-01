@@ -42,9 +42,10 @@ package org.kalypso.ui.wizards.differences;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.commons.command.EmptyCommand;
@@ -137,107 +138,125 @@ public class GenerateDifferenceResultTinWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
+    try
+    {
+      final TinDifferenceData data = configureData();
+
+      /* Start */
+      final ICoreRunnableWithProgress op = new GenerateDifferenceResultTinOperation( data );
+
+      final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
+
+      if( status.isOK() )
+        saveResultModel();
+      else
+      {
+        Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+        StatusDialog.open( getShell(), status, getWindowTitle() );
+      }
+
+      return !status.matches( IStatus.ERROR );
+    }
+    catch( final CoreException e )
+    {
+      /* happens for validation problem when creating data -> never close wizard */
+      StatusDialog.open( getShell(), e.getStatus(), getWindowTitle() );
+      return false;
+    }
+  }
+
+  private void saveResultModel( )
+  {
+    try
+    {
+      ((ICommandPoster)m_modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+      m_modelProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
+    }
+    catch( final Exception e )
+    {
+      // TODO: better error handling!
+      e.printStackTrace();
+    }
+  }
+
+  private TinDifferenceData configureData( ) throws CoreException
+  {
     final MathOperator operator = MathOperator.eMinus;
 
-    IDocumentResultMeta.DOCUMENTTYPE masterDocType = null;
-    IDocumentResultMeta.DOCUMENTTYPE slaveDocType = null;
-
     /* check user input */
-    // master
+    final IDocumentResultMeta masterResult = getMasterResult();
+    final IDocumentResultMeta slaveResult = getSlaveResult();
+
+    if( !slaveResult.getDocumentType().equals( masterResult.getDocumentType() ) )
+    {
+      final String message = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.11" ); //$NON-NLS-1$  
+      final IStatus status = new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
+
+      // REMARK: it was previously possible to proceed here, but that makes no sense.
+      // if( !MessageDialog.openQuestion( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.11" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.12" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      // return false;
+    }
+
+    final IStepResultMeta destinationResult = getDestinationResult();
+
+    return new TinDifferenceData( masterResult, slaveResult, destinationResult, operator, m_scenarioFolder );
+  }
+
+  // FIXME: not nice to validate after user has entered the values; instead the wizard should directly validate the input
+
+  private IDocumentResultMeta getMasterResult( ) throws CoreException
+  {
     final SelectResultWizardPage masterResultPage = (SelectResultWizardPage)getPage( PAGE_SELECT_MASTER_RESULTS_NAME );
     final IResultMeta[] masterResults = masterResultPage.getSelectedResults();
 
-    if( masterResults.length == 0 || !(masterResults[0] instanceof IDocumentResultMeta) )
+    if( masterResults.length != 1 || !(masterResults[0] instanceof IDocumentResultMeta) )
     {
-      MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.7" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      return false;
-    }
-    else
-    {
-      if( masterResults[0] instanceof IDocumentResultMeta )
-      {
-        masterDocType = ((IDocumentResultMeta)masterResults[0]).getDocumentType();
-      }
+      final String message = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.7" ) + '\n' + Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.8" ); //$NON-NLS-1$ //$NON-NLS-2$ 
+      final IStatus status = new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
     }
 
-    // slave
+    return (IDocumentResultMeta)masterResults[0];
+  }
+
+  private IDocumentResultMeta getSlaveResult( ) throws CoreException
+  {
     final SelectResultWizardPage slaveResultPage = (SelectResultWizardPage)getPage( PAGE_SELECT_SLAVE_RESULTS_NAME );
     final IResultMeta[] slaveResults = slaveResultPage.getSelectedResults();
 
-    if( slaveResults.length == 0 || !(slaveResults[0] instanceof IDocumentResultMeta) )
+    if( slaveResults.length != 1 || !(slaveResults[0] instanceof IDocumentResultMeta) )
     {
-      MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.9" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      return false;
-    }
-    else
-    {
-      if( slaveResults[0] instanceof IDocumentResultMeta )
-      {
-        slaveDocType = ((IDocumentResultMeta)slaveResults[0]).getDocumentType();
-      }
+      final String message = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.9" ) + '\n' + Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.10" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IStatus status = new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
     }
 
-    if( !slaveDocType.equals( masterDocType ) )
-    {
-      if( !MessageDialog.openQuestion( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.11" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.12" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        return false;
-    }
+    return (IDocumentResultMeta)slaveResults[0];
+  }
 
+  private IStepResultMeta getDestinationResult( ) throws CoreException
+  {
     final SelectResultWizardPage destinationResultPage = (SelectResultWizardPage)getPage( PAGE_SELECT_DESTINATION_RESULTS_NAME );
     final IResultMeta[] destinationResults = destinationResultPage.getSelectedResults();
 
-    // destination
-    if( destinationResults.length == 0 )
+    if( destinationResults.length != 1 )
     {
-      MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.13" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      return false;
-    }
-    else
-    {
-      IResultMeta destResult = null;
-
-      // TODO: allow the user to set an individual result name and store information about master and slave in the ResultMeta entry
-
-      // take the first selected step result
-      for( final IResultMeta resultMeta : destinationResults )
-      {
-        if( resultMeta instanceof IStepResultMeta )
-        {
-          destResult = resultMeta;
-        }
-      }
-
-      if( destResult == null )
-      {
-        MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.15" ), Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.16" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        return false;
-      }
+      final String message = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.13" ) + '\n' + Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.14" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IStatus status = new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
     }
 
-    /* Start */
-    final ICoreRunnableWithProgress op = new GenerateDifferenceResultTinOperation( operator, masterResults, destinationResults, slaveResults, m_scenarioFolder );
+    final IResultMeta destResult = destinationResults[0];
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
-    if( !status.isOK() )
-    {
-      //ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.37"), status ); //$NON-NLS-1$
-      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-      StatusDialog.open( getShell(), status, getWindowTitle() );
-    }
-    else
-    {
-      try
-      {
-        ((ICommandPoster)m_modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
-        m_modelProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
+    // TODO: allow the user to set an individual result name and store information about master and slave in the ResultMeta entry
 
-    return !status.matches( IStatus.ERROR );
+    if( destResult instanceof IStepResultMeta )
+      return (IStepResultMeta)destResult;
+
+    final String message = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.15" ) + '\n' + Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.16" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IStatus status = new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, message );
+    throw new CoreException( status );
   }
 
   public IFile getSelection( )
