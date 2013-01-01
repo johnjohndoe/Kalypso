@@ -62,6 +62,18 @@ public class ResultInfoBuilder
     final StringWriter buffer = new StringWriter();
     final PrintWriter printer = new PrintWriter( buffer );
 
+    printInformation( element, printer );
+
+    printer.flush();
+    printer.close();
+
+    return buffer.toString();
+  }
+
+  private void printInformation( final Object element, final PrintWriter printer )
+  {
+    printer.append( "<form>" ); //$NON-NLS-1$
+
     if( element instanceof IProject )
       printProject( (IProject)element, printer );
     else if( element instanceof IScenario )
@@ -70,21 +82,7 @@ public class ResultInfoBuilder
       printScenario( scenarioFolder, printer );
     }
     else if( (element instanceof IResultMeta) )
-      printResultChain( (IResultMeta)element, printer );
-
-    printer.flush();
-    printer.close();
-
-    return buffer.toString();
-  }
-
-  private void printResultChain( final IResultMeta result, final PrintWriter printer )
-  {
-    printer.append( "<form>" ); //$NON-NLS-1$
-
-    // TODO: print project/scenario for external results
-
-    printChain( result, printer );
+      printChain( (IResultMeta)element, printer );
 
     printer.append( "</form>" ); //$NON-NLS-1$    
   }
