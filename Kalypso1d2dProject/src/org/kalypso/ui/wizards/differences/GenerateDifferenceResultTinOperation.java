@@ -77,8 +77,6 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 public final class GenerateDifferenceResultTinOperation implements ICoreRunnableWithProgress
 {
-  private final MinMaxCatcher m_minMaxCatcher = new MinMaxCatcher();
-
   private final TinDifferenceData m_data;
 
   public GenerateDifferenceResultTinOperation( final TinDifferenceData data )
@@ -115,7 +113,7 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
       final IFile destFile = createDestinationFilename( stepFolder );
 
       final MathOperator operator = m_data.getOperator();
-      final DifferenceResultTinHandler differenceHandler = new DifferenceResultTinHandler( masterSurface, slaveSurface, operator, m_minMaxCatcher );
+      final DifferenceResultTinHandler differenceHandler = new DifferenceResultTinHandler( masterSurface, slaveSurface, operator );
       differenceHandler.generateDifferences( destFile, monitor );
 
       monitor.worked( 3 );
@@ -126,8 +124,9 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
       final IPath destPath = destFile.getFullPath().makeRelativeTo( stepFolder.getFullPath() );
 
       // get min max via a minmaxCatcher during processing.
-      final BigDecimal min = m_minMaxCatcher.getMinValue();
-      final BigDecimal max = m_minMaxCatcher.getMaxValue();
+      final MinMaxCatcher minMax = differenceHandler.getMinMax();
+      final BigDecimal min = minMax.getMinValue();
+      final BigDecimal max = minMax.getMaxValue();
 
       // TODO: set a good description e.g.
       final String description = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.32" ); //$NON-NLS-1$
