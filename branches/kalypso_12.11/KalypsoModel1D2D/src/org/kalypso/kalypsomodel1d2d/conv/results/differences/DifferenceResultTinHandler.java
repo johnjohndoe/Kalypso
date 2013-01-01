@@ -81,22 +81,26 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class DifferenceResultTinHandler
 {
+  private final MinMaxCatcher m_minMaxCatcher = new MinMaxCatcher();
+
   private final ResultType m_parameter = ResultType.DIFFERENCE;
 
   private final GM_TriangulatedSurface m_master;
 
   private final GM_TriangulatedSurface m_slave;
 
-  private final MinMaxCatcher m_minMaxCatcher;
-
   private final MathOperator m_operator;
 
-  public DifferenceResultTinHandler( final GM_TriangulatedSurface master, final GM_TriangulatedSurface slave, final MathOperator operator, final MinMaxCatcher minMaxCatcher )
+  public DifferenceResultTinHandler( final GM_TriangulatedSurface master, final GM_TriangulatedSurface slave, final MathOperator operator )
   {
     m_master = master;
     m_slave = slave;
     m_operator = operator;
-    m_minMaxCatcher = minMaxCatcher;
+  }
+
+  public MinMaxCatcher getMinMax( )
+  {
+    return m_minMaxCatcher;
   }
 
   public void generateDifferences( final IFile diffFile, final IProgressMonitor monitor ) throws CoreException
