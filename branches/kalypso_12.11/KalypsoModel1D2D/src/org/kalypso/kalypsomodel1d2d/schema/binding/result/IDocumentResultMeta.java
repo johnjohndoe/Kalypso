@@ -51,23 +51,22 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
  * @author Thomas Jung
- * 
  */
 public interface IDocumentResultMeta extends IResultMeta
 {
   enum DOCUMENTTYPE
   {
-    nodes(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.0" )), //$NON-NLS-1$
-    tinTerrain(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.1" )), //$NON-NLS-1$
-    tinWsp(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.2" )), //$NON-NLS-1$
-    tinVelo(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.3" )), //$NON-NLS-1$
-    tinDepth(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.4" )), //$NON-NLS-1$
-    tinShearStress(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.5" )), //$NON-NLS-1$
-    hydrograph(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.6" )), //$NON-NLS-1$
-    lengthSection(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.7" )), //$NON-NLS-1$
-    tinDifference(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.8" )), //$NON-NLS-1$
-    log(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.9" )), //$NON-NLS-1$
-    coreDataZip(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.10" )); //$NON-NLS-1$
+    nodes( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.0" ) ), //$NON-NLS-1$
+    tinTerrain( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.1" ) ), //$NON-NLS-1$
+    tinWsp( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.2" ) ), //$NON-NLS-1$
+    tinVelo( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.3" ) ), //$NON-NLS-1$
+    tinDepth( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.4" ) ), //$NON-NLS-1$
+    tinShearStress( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.5" ) ), //$NON-NLS-1$
+    hydrograph( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.6" ) ), //$NON-NLS-1$
+    lengthSection( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.7" ) ), //$NON-NLS-1$
+    tinDifference( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.8" ) ), //$NON-NLS-1$
+    log( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.9" ) ), //$NON-NLS-1$
+    coreDataZip( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.10" ) ); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -83,79 +82,82 @@ public interface IDocumentResultMeta extends IResultMeta
     }
   }
 
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "DocumentResultMeta" ); //$NON-NLS-1$
+  QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "DocumentResultMeta" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "type" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "type" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValue" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MIN_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValue" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValue" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MAX_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValue" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE_VELO = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueVelo" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MIN_VALUE_VELO = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueVelo" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE_VELO = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueVelo" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MAX_VALUE_VELO = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueVelo" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueDepth" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MIN_VALUE_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueDepth" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueDepth" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MAX_VALUE_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueDepth" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueWaterlevel" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MIN_VALUE_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueWaterlevel" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueWaterlevel" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MAX_VALUE_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueWaterlevel" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueWaveHsig" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueWaveHsig" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_HSIG = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueWaveHsig" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_HSIG = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueWaveHsig" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueWavePeriod" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueWavePeriod" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_PER = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueWavePeriod" ); //$NON-NLS-1$
+  QName QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_PER = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueWavePeriod" ); //$NON-NLS-1$
 
-  public DOCUMENTTYPE getDocumentType( );
+  DOCUMENTTYPE getDocumentType( );
 
-  public void setDocumentType( DOCUMENTTYPE documentType );
+  void setDocumentType( DOCUMENTTYPE documentType );
 
-  public BigDecimal getMinValue( );
+  BigDecimal getMinValue( );
 
-  public BigDecimal getMaxValue( );
+  BigDecimal getMaxValue( );
 
-  public void setMinValue( BigDecimal minValue );
+  void setMinValue( BigDecimal minValue );
 
-  public void setMaxValue( BigDecimal maxValue );
+  void setMaxValue( BigDecimal maxValue );
 
-  public void setMinMaxValues( final NodeResultMinMaxCatcher minMaxCatcher );
+  void setMinMaxValues( NodeResultMinMaxCatcher minMaxCatcher );
 
-  public BigDecimal getMinValueVelo( );
+  // FIXME: that is ugly; not all results have all parameters;
+  // TODO: we should rather separate the implementations into different types (tin-result, node-result, ....)
+  // TODO: other idea: attach additional (typed) information to each document
+  BigDecimal getMinValueVelo( );
 
-  public BigDecimal getMinValueDepth( );
+  BigDecimal getMinValueDepth( );
 
-  public BigDecimal getMinValueWaterlevel( );
+  BigDecimal getMinValueWaterlevel( );
 
-  public BigDecimal getMinValueWaveHsig( );
+  BigDecimal getMinValueWaveHsig( );
 
-  public BigDecimal getMinValueWavePer( );
+  BigDecimal getMinValueWavePer( );
 
-  public BigDecimal getMaxValueVelo( );
+  BigDecimal getMaxValueVelo( );
 
-  public BigDecimal getMaxValueDepth( );
+  BigDecimal getMaxValueDepth( );
 
-  public BigDecimal getMaxValueWaterlevel( );
+  BigDecimal getMaxValueWaterlevel( );
 
-  public BigDecimal getMaxValueWaveHsig( );
+  BigDecimal getMaxValueWaveHsig( );
 
-  public BigDecimal getMaxValueWavePer( );
+  BigDecimal getMaxValueWavePer( );
 
   /**
    * returns the {@link BigDecimal} max value from this result document for given type of result, the type string should
    * be one of the node result types provided by {@link org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper} on
    * error returns null
    */
-  public BigDecimal getMaxValueForType( String type );
+  BigDecimal getMaxValueForType( String type );
 
   /**
    * returns the {@link BigDecimal} min value from this result document for given type of result, the type string should
    * be one of the node result types provided by {@link org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper} on
    * error returns null
    */
-  public BigDecimal getMinValueForType( String type );
+  BigDecimal getMinValueForType( String type );
 }

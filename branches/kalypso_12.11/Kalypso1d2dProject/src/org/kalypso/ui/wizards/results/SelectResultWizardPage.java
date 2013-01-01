@@ -170,13 +170,12 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
     createTreeControls( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Info View for one result */
-    final ResultMetaInfoViewer resultViewer = new ResultMetaInfoViewer( panel, SWT.NONE, m_factory );
-    resultViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final ResultMetaInfoViewer resultViewer = new ResultMetaInfoViewer( m_factory );
+    final Control resultControl = resultViewer.createControl( panel );
+    resultControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     // REMARK: necessary, else the minimum width of the tree contorl is not applied
     parent.layout();
-
-    // TODO: allow user to set an individually name of the difference result
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {

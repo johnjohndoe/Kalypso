@@ -50,36 +50,37 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
  * @author Thomas Jung
- * 
  */
 public interface ICalcUnitResultMeta extends IResultMeta
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "CalculationUnitResultMeta" ); //$NON-NLS-1$
+  QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "CalculationUnitResultMeta" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CALC_START_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "simulationStartTime" ); //$NON-NLS-1$
+  QName QNAME_PROP_CALC_START_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "simulationStartTime" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CALC_END_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "simulationEndTime" ); //$NON-NLS-1$
+  QName QNAME_PROP_CALC_END_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "simulationEndTime" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CALC_UNIT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "calcUnitID" ); //$NON-NLS-1$
+  QName QNAME_PROP_CALC_UNIT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "calcUnitID" ); //$NON-NLS-1$
 
-  public void setCalcStartTime( final Date startTime );
+  void setCalcStartTime( Date startTime );
 
-  public Date getCalcStartTime( );
+  Date getCalcStartTime( );
 
-  public void setCalcEndTime( final Date endTime );
+  // FIXME: it is not really clear what is the meaning of this... we should exactly define what is meant here...
+  // TODO: and it is never set
+  void setCalcEndTime( Date endTime );
 
-  public Date getCalcEndTime( );
+  // FIXME: it is not really clear what is the meaning of this... we should exactly define what is meant here
+  Date getCalcEndTime( );
 
-  public String getCalcUnit( );
+  String getCalcUnit( );
 
-  public void setCalcUnit( String calcUnitID );
+  void setCalcUnit( String calcUnitID );
 
-  public IStepResultMeta addStepResult( );
+  IStepResultMeta addStepResult( );
 
-  public boolean containsChildType( final DOCUMENTTYPE doctype );
+  boolean containsChildType( DOCUMENTTYPE doctype );
 
-  public IDocumentResultMeta getDocument( DOCUMENTTYPE doctype );
+  IDocumentResultMeta getDocument( DOCUMENTTYPE doctype );
 
-  public IDocumentResultMeta[] getDocuments( DOCUMENTTYPE doctype );
-
+  IDocumentResultMeta[] getDocuments( DOCUMENTTYPE doctype );
 }
