@@ -18,17 +18,19 @@
  */
 package org.kalypso.ui.wizards.results;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
@@ -39,6 +41,13 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public class ResultInfoBuilder
 {
+  private final DateFormat m_dateFormat = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.LONG );
+
+  public ResultInfoBuilder( )
+  {
+    m_dateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+  }
+
   public String format( final Object element )
   {
     if( element == null )
@@ -49,27 +58,54 @@ public class ResultInfoBuilder
 
     final IResultMeta result = (IResultMeta)element;
 
-    final StringBuffer buf = new StringBuffer();
+    final StringWriter buffer = new StringWriter();
+    final PrintWriter printer = new PrintWriter( buffer );
 
-    /* possible entries */
-    // final String scenarioName;
-    // final String scenarioDescription;
-    String calcUnitName = null;
-    // String calcUnitDescription = null;
-    String calcStart = null;
-    String calcEnd = null;
+    printInformation( result, printer );
 
-    // String stepName = null;
-    // String stepDescription = null;
-    String stepType = null;
-    String stepTime = null;
+    printer.flush();
+    printer.close();
 
-    // String docName;
-    // String docDescription;
-    String docType = null;
-    BigDecimal docMin = null;
-    BigDecimal docMax = null;
+    return buffer.toString();
+  }
 
+  private void printInformation( final IResultMeta result, final PrintWriter printer )
+  {
+    printer.append( "<form>" ); //$NON-NLS-1$
+
+    // TODO: print project/scenario for external results
+
+    printChain( result, printer );
+
+    printer.append( "</form>" ); //$NON-NLS-1$    
+  }
+
+  private void printChain( final IResultMeta result, final PrintWriter printer )
+  {
+    if( result == null )
+      return;
+
+    // Head recursion, to we start ultimatively with the root of the results and append the whole chain successively
+    final IResultMeta owner = result.getOwner();
+    printChain( owner, printer );
+
+    printResult( result, printer );
+  }
+
+  private void printResult( final IResultMeta result, final PrintWriter printer )
+  {
+    if( result instanceof IScenarioResultMeta )
+      printScenarioResult( (IScenarioResultMeta)result, printer );
+    if( result instanceof ICalcUnitResultMeta )
+      printCalcUnitResult( (ICalcUnitResultMeta)result, printer );
+    else if( result instanceof IStepResultMeta )
+      printStepResult( (IStepResultMeta)result, printer );
+    else if( result instanceof IDocumentResultMeta )
+      printDocumentResult( (IDocumentResultMeta)result, printer );
+  }
+
+  private void printScenarioResult( final IScenarioResultMeta result, final PrintWriter printer )
+  {
     // TODO: uäargh! Lots of copy/paste code....!
     // final IScenarioResultMeta scenarioResult = getScenarioResultMeta( result );
     // if( scenarioResult != null )
@@ -83,194 +119,128 @@ public class ResultInfoBuilder
     // scenarioDescription = null;
     // }
 
-    final DateFormat dateFormat = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.LONG );
-    // dateFormat.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-    dateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-
-    final ICalcUnitResultMeta calcUnitResult = ResultMeta1d2dHelper.getCalcUnitResultMeta( result );
-    if( calcUnitResult != null )
-    {
-      calcUnitName = calcUnitResult.getName();
-      // calcUnitDescription = calcUnitResult.getDescription();
-
-      final Date calcStartTime = calcUnitResult.getCalcStartTime();
-      final Date calcEndTime = calcUnitResult.getCalcEndTime();
-      calcStart = calcStartTime == null ? "-" : dateFormat.format( calcStartTime ); //$NON-NLS-1$
-      calcEnd = calcEndTime == null ? "-" : dateFormat.format( calcEndTime ); //$NON-NLS-1$
-    }
-
-    final IStepResultMeta stepResult = getStepResultMeta( result );
-    if( stepResult != null )
-    {
-      // stepName = stepResult.getName();
-      // stepDescription = stepResult.getDescription();
-      stepType = stepResult.getStepType().toString();
-      final Date stepResultTime = stepResult.getStepTime();
-      stepTime = stepResultTime == null ? "-" : dateFormat.format( stepResultTime ); //$NON-NLS-1$
-    }
-
-    IDocumentResultMeta docResult = null;
-    if( result instanceof IDocumentResultMeta )
-    {
-      docResult = (IDocumentResultMeta)result;
-
-      // get infos of the selected document
-      // docName = docResult.getName();
-      // docDescription = docResult.getDescription();
-      docType = docResult.getDocumentType().toString();
-      // if( docResult.getMinValue() != null )
-      // {
-      // docMin = docResult.getMinValue().toString();
-      // }
-      //
-      // if( docResult.getMaxValue() != null )
-      // {
-      // docMax = docResult.getMaxValue().toString();
-      // }
-    }
-
-    /* make string buffer */
-
-    buf.append( "<form>" ); //$NON-NLS-1$
-
     // Scenario
-    /*
-     * if( scenarioResult != null ) { buf.append( "<p>" ); buf.append( "<span color=\"header\" font=\"header\">" +
-     * "Szenario: " + scenarioName + "</span>" ); buf.append( "</p>" );
-     * buf.append( "<p>" ); buf.append( scenarioDescription ); buf.append( "</p>" ); }
-     */
-    // CalcUnit
-    if( calcUnitResult != null )
-    {
-      buf.append( "<p>" ); //$NON-NLS-1$
-      buf.append( "<b>Teilmodell " + calcUnitName + "</b>" ); //$NON-NLS-1$ //$NON-NLS-2$
-      buf.append( "</p>" ); //$NON-NLS-1$
-      //
-      // buf.append( "<p>" );
-      // buf.append( calcUnitDescription );
-      // buf.append( "</p>" );
+    // final String scenarioName;
+    // final String scenarioDescription;
 
-      buf.append( "<p>" ); //$NON-NLS-1$
-      buf.append( "<b>Datum der Berechnung:</b>" ); //$NON-NLS-1$
-      buf.append( "</p>" ); //$NON-NLS-1$
+//    if( scenarioResult != null )
+//    {
+//      buf.append( "<p>" );
+//      buf.append( "<span color='header' font='header'>" + "Szenario: " + scenarioName + "</span>" );
+//      buf.append( "</p>" );
+//      buf.append( "<p>" );
+//      buf.append( scenarioDescription );
+//      buf.append( "</p>" );
+//    }
 
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"Beginn:\">" + calcStart + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"Ende:\">" + calcEnd + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
-      buf.append( "<br/>\n\n" ); //$NON-NLS-1$
-    }
-
-    // Step
-    if( stepResult != null )
-    {
-      buf.append( "<p>" ); //$NON-NLS-1$
-      buf.append( "<b>Zeitschrittart:</b>" ); //$NON-NLS-1$
-      buf.append( "</p>" ); //$NON-NLS-1$
-
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + stepType + "\"></li>" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"zum Zeitpunkt:\">" + stepTime + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      buf.append( "<br/>" ); //$NON-NLS-1$
-    }
-
-    // Document
-    if( docResult != null )
-    {
-      buf.append( "<p>" ); //$NON-NLS-1$
-      buf.append( "<b>Datentyp: </b>" ); //$NON-NLS-1$
-      buf.append( "</p>" ); //$NON-NLS-1$
-
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + docType + "\"></li>" ); //$NON-NLS-1$ //$NON-NLS-2$
-      boolean bDone = false;
-
-      for( final String resultType : NodeResultHelper.NodeStyleTypes )
-      {
-        BigDecimal minValueForType = null;
-        BigDecimal maxValueForType = null;
-        if( resultType.equals( NodeResultHelper.WAVE_DIRECTION_TYPE ) )
-          continue;
-
-        try
-        {
-          minValueForType = docResult.getMinValueForType( resultType );
-          docMin = minValueForType;
-          maxValueForType = docResult.getMaxValueForType( resultType );
-          docMax = maxValueForType;
-        }
-        catch( final Exception e )
-        {
-          System.out.println();
-          continue;
-        }
-
-        if( docMax != null )
-        {
-          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"maximaler " + resultType + " Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        }
-        if( docMin != null )
-        {
-          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"minimaler " + resultType + " Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        }
-        bDone = true;
-        /*
-         * set actual min/max settings also in the helper map
-         */
-        final String sourceFile = docResult.getFullPath().toOSString();
-        final int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
-        final String stepNameStr = sourceFile.substring( beginIndex, beginIndex + 16 );
-        final Map<String, Object> m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepNameStr );
-
-        final Double minValueForTypeAsDouble = minValueForType == null ? null : minValueForType.doubleValue();
-        final Double maxValueForTypeAsDouble = maxValueForType == null ? null : maxValueForType.doubleValue();
-
-        m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MIN_PREFIX + resultType.toLowerCase(), minValueForTypeAsDouble );
-        m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MAX_PREFIX + resultType.toLowerCase(), maxValueForTypeAsDouble );
-      }
-      if( !bDone )
-      {
-        docMin = null;
-        docMax = null;
-        try
-        {
-          docMin = docResult.getMinValue();
-          docMax = docResult.getMaxValue();
-        }
-        catch( final Exception e )
-        {
-          System.out.println();
-        }
-        if( docMax != null )
-        {
-          buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"maximaler Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        if( docMin != null )
-        {
-          buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"minimaler Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-      }
-    }
-
-    buf.append( "</form>" ); //$NON-NLS-1$
-
-    return buf.toString();
   }
 
-  /**
-   * gets the StepResultMeta as the papa of all documents (except tin_terrain)
-   */
-  // FIXME: move to helper
-  private static IStepResultMeta getStepResultMeta( final IResultMeta result )
+  private void printCalcUnitResult( final ICalcUnitResultMeta result, final PrintWriter printer )
   {
-    if( result instanceof IStepResultMeta )
-      return (IStepResultMeta)result;
+    final String name = htmlString( result.getName() );
+
+    printer.println( "<p>" ); //$NON-NLS-1$
+    printer.format( "<b>%s:</b> %s%n", "Teilmodell", name ); //$NON-NLS-1$
+    printer.println( "</p>" ); //$NON-NLS-1$
+
+    final String description = htmlString( result.getDescription() );
+    if( !StringUtils.isBlank( description ) )
+      printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", description ); //$NON-NLS-1$ 
+
+    final Date calcStartTime = result.getCalcStartTime();
+    final Date calcEndTime = result.getCalcEndTime();
+
+    final String calcStart = calcStartTime == null ? "-" : m_dateFormat.format( calcStartTime ); //$NON-NLS-1$
+    final String calcEnd = calcEndTime == null ? "-" : m_dateFormat.format( calcEndTime ); //$NON-NLS-1$
+
+    printer.format( "<li style='text' bindent='0' indent='10' value=''><b>%s</b></li>%n", "Datum der Berechnung", calcStart ); //$NON-NLS-1$ 
+
+    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", "Beginn", calcStart ); //$NON-NLS-1$ 
+    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", "Ende", calcEnd ); //$NON-NLS-1$ 
+
+    printer.println( "<br/>" ); //$NON-NLS-1$
+    printer.println();
+  }
+
+  private void printStepResult( final IStepResultMeta result, final PrintWriter printer )
+  {
+    String stepLabel;
+    final Date stepResultTime = result.getStepTime();
+    if( stepResultTime == null )
+      stepLabel = result.getStepType().toString();
     else
+      stepLabel = m_dateFormat.format( stepResultTime ); //$NON-NLS-1$
+
+    printer.format( "<p><b>%s:</b></p>%n", "Zeitschritt" ); //$NON-NLS-1$
+    printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", stepLabel ); //$NON-NLS-1$ 
+
+    printer.println( "<br/>" ); //$NON-NLS-1$
+  }
+
+  private void printDocumentResult( final IDocumentResultMeta result, final PrintWriter printer )
+  {
+    printer.format( "<p><b>%s:</b></p>%n", "Ergebnis" ); //$NON-NLS-1$
+
+    final String description = htmlString( result.getDescription() );
+    if( !StringUtils.isBlank( description ) )
+      printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", description ); //$NON-NLS-1$
+
+    final String docType = result.getDocumentType().toString();
+    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", "Datenart", docType ); //$NON-NLS-1$
+
+    final String valueRangeHtml = formatValueRanges( result );
+    if( !StringUtils.isBlank( valueRangeHtml ) )
     {
-      final IResultMeta parent = result.getOwner();
-      if( parent != null )
-      {
-        return getStepResultMeta( parent );
-      }
+      printer.format( "<li style='text' bindent='10' indent='150' value='%s:'></li>%n", "Wertebereich", docType ); //$NON-NLS-1$
+      printer.println( valueRangeHtml );
     }
-    return null;
+  }
+
+  private String formatValueRanges( final IDocumentResultMeta result )
+  {
+    final StringWriter buffer = new StringWriter();
+    final PrintWriter printer = new PrintWriter( buffer );
+
+    /* min - max (if set) */
+    final BigDecimal docMin = result.getMinValue();
+    final BigDecimal docMax = result.getMaxValue();
+    // TODO: name is not ideal here, but works for most cases
+    printMinMax( result.getName(), docMin, docMax, printer );
+
+    /* min - max for each node type (if set) */
+    for( final String resultType : NodeResultHelper.NodeStyleTypes )
+    {
+      if( resultType.equals( NodeResultHelper.WAVE_DIRECTION_TYPE ) )
+        continue;
+
+      final String parameterLabel = NodeResultHelper.translateNodeParameterType( resultType.toLowerCase() );
+
+      final BigDecimal minValueForType = result.getMinValueForType( resultType );
+      final BigDecimal maxValueForType = result.getMaxValueForType( resultType );
+      printMinMax( parameterLabel, minValueForType, maxValueForType, printer );
+    }
+
+    printer.flush();
+    printer.close();
+
+    return buffer.toString();
+  }
+
+  private void printMinMax( final String label, final BigDecimal docMin, final BigDecimal docMax, final PrintWriter printer )
+  {
+    if( docMin == null && docMax == null )
+      return;
+
+    final String minText = docMin == null ? "?" : docMin.toString();
+    final String maxText = docMax == null ? "?" : docMax.toString();
+    printer.format( "<li style='text' bindent='20' indent='150' value='%s'>%s - %s</li>%n", label, minText, maxText ); //$NON-NLS-1$
+  }
+
+  // FIXME: move to helper
+  private static String htmlString( final String text )
+  {
+    final String result = StringUtils.replace( text, "\"", "&quot;" );
+
+    return StringUtils.replace( result, "'", "&apos;" );
   }
 }
