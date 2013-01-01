@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
-import java.util.Date;
-import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 
@@ -53,8 +50,8 @@ import org.eclipse.core.resources.IFolder;
  * </p>
  * 
  * @author Gernot Belger
- * 
  */
+// FIXME: move to Scenario1D2D etc.
 public class ResultsAcessor
 {
   private final IFolder m_resultFolder;
@@ -73,11 +70,4 @@ public class ResultsAcessor
   {
     return m_resultFolder;
   }
-
-  public Map<Date, IFile> getTimestepsFiles( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 }

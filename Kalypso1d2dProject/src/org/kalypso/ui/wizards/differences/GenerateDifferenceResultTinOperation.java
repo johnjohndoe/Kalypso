@@ -45,8 +45,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 
-import javax.activation.UnsupportedDataTypeException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -69,7 +67,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.MinMaxCatcher;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -82,65 +79,42 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
 {
   private final MinMaxCatcher m_minMaxCatcher = new MinMaxCatcher();
 
-  private final IFolder m_scenarioFolder;
+  private final TinDifferenceData m_data;
 
-  private final MathOperator m_operator;
-
-  private final IResultMeta[] m_masterResults;
-
-  private final IResultMeta[] m_destinationResults;
-
-  private final IResultMeta[] m_slaveResults;
-
-  public GenerateDifferenceResultTinOperation( final MathOperator operator, final IResultMeta[] masterResults, final IResultMeta[] destinationResults, final IResultMeta[] slaveResults, final IFolder scenarioFolder )
+  public GenerateDifferenceResultTinOperation( final TinDifferenceData data )
   {
-    m_operator = operator;
-    m_masterResults = masterResults;
-    m_destinationResults = destinationResults;
-    m_slaveResults = slaveResults;
-    m_scenarioFolder = scenarioFolder;
+    m_data = data;
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.17"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.17" ), 100 ); //$NON-NLS-1$
 
     try
     {
       GM_TriangulatedSurface masterSurface = null;
       GM_TriangulatedSurface slaveSurface = null;
 
-      monitor.subTask( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.18") ); //$NON-NLS-1$
-      masterSurface = getSurfaceData( m_masterResults[0] );
+      monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.18" ) ); //$NON-NLS-1$
+      masterSurface = getSurfaceData( m_data.getMasterResult() );
       monitor.worked( 10 );
       if( masterSurface == null )
         return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.19" ) ); //$NON-NLS-1$
 
-      monitor.subTask( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.20") ); //$NON-NLS-1$
-      slaveSurface = getSurfaceData( m_slaveResults[0] );
+      monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.20" ) ); //$NON-NLS-1$
+      slaveSurface = getSurfaceData( m_data.getSlaveResult() );
       monitor.worked( 10 );
       if( slaveSurface == null )
         return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.21" ) ); //$NON-NLS-1$
 
-      IResultMeta destResult = null;
+      final IStepResultMeta destResult = m_data.getDestinationResult();
 
-      // take the first selected step result FIXME: why multiple results here, makes no sense
-      for( final IResultMeta resultMeta : m_destinationResults )
-      {
-        if( resultMeta instanceof IStepResultMeta )
-        {
-          destResult = resultMeta;
-        }
-      }
+      monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.23" ) ); //$NON-NLS-1$
 
-      if( destResult == null )
-        return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.22" ) ); //$NON-NLS-1$
-
-      monitor.subTask( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.23") ); //$NON-NLS-1$
-
+      final IFolder scenarioFolder = m_data.getScenarioFolder();
       final IPath docPath = destResult.getFullPath();
-      final IFolder folder = m_scenarioFolder.getFolder( docPath );
+      final IFolder folder = scenarioFolder.getFolder( docPath );
 
       /* generate unique name for difference file */
       final String name = "tin"; //$NON-NLS-1$
@@ -154,7 +128,8 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
       final IFolder destPath = folder.getFolder( "Tin" ); //$NON-NLS-1$
       final IFile destFile = destPath.getFile( uniqueFileName );
 
-      final DifferenceResultTinHandler differenceHandler = new DifferenceResultTinHandler( masterSurface, slaveSurface, m_operator, m_minMaxCatcher );
+      final MathOperator operator = m_data.getOperator();
+      final DifferenceResultTinHandler differenceHandler = new DifferenceResultTinHandler( masterSurface, slaveSurface, operator, m_minMaxCatcher );
       differenceHandler.generateDifferences( destFile, monitor );
 
       monitor.worked( 3 );
@@ -175,21 +150,13 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
       final BigDecimal min = m_minMaxCatcher.getMinValue();
       final BigDecimal max = m_minMaxCatcher.getMaxValue();
 
-      if( destResult instanceof IStepResultMeta )
-      {
-        // TODO: set a good description e.g.
-        final String description = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.32" ); //$NON-NLS-1$
+      // TODO: set a good description e.g.
+      final String description = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.32" ); //$NON-NLS-1$
 
-        final IStepResultMeta stepResult = (IStepResultMeta)destResult;
-        ResultMeta1d2dHelper.addDocument( stepResult, "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max ); //$NON-NLS-1$
+      final IStepResultMeta stepResult = destResult;
+      ResultMeta1d2dHelper.addDocument( stepResult, "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max ); //$NON-NLS-1$
 
-        // FIXME: workspace not correctly dirty
-      }
-      else
-      {
-        throw new UnsupportedDataTypeException( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.34" ) ); //$NON-NLS-1$
-        // TODO: cleanFiles();
-      }
+      // FIXME: workspace not correctly dirty
 
       monitor.worked( 1 );
     }
@@ -202,7 +169,7 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
     {
       e.printStackTrace();
       // TODO: cleanFiles();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.35") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.35" ) ); //$NON-NLS-1$
     }
     catch( final Throwable t )
     {
@@ -216,46 +183,42 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
     return new Status( IStatus.OK, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.36" ) ); //$NON-NLS-1$
   }
 
-  private GM_TriangulatedSurface getSurfaceData( final IResultMeta resultMeta )
+  private GM_TriangulatedSurface getSurfaceData( final IDocumentResultMeta docResult )
   {
     /* get the result data */
-    if( resultMeta instanceof IDocumentResultMeta )
+    final DOCUMENTTYPE documentType = docResult.getDocumentType();
+
+    if( documentType == DOCUMENTTYPE.tinWsp || documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinShearStress
+        || documentType == DOCUMENTTYPE.tinTerrain )
     {
-      final IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
-
-      final DOCUMENTTYPE documentType = docResult.getDocumentType();
-
-      if( documentType == DOCUMENTTYPE.tinWsp || documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinShearStress
-          || documentType == DOCUMENTTYPE.tinTerrain )
+      try
       {
-        try
+        final IPath docPath = docResult.getFullPath();
+        if( docPath == null )
+          return null;
+
+        final IFolder scenarioFolder = m_data.getScenarioFolder();
+        final URL scenarioURL = ResourceUtilities.createURL( scenarioFolder );
+        final URL surfaceURL = UrlUtilities.resolveWithZip( scenarioURL, docPath.toPortableString() );
+
+        final GMLWorkspace w = GmlSerializer.createGMLWorkspace( surfaceURL, null );
+
+        final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+        w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+
+        final GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryPropertyValue();
+
+        if( geometryProperty instanceof GM_TriangulatedSurface )
         {
-          final IPath docPath = docResult.getFullPath();
-          if( docPath == null )
-            return null;
-
-          final URL scenarioURL = ResourceUtilities.createURL( m_scenarioFolder );
-          final URL surfaceURL = UrlUtilities.resolveWithZip( scenarioURL, docPath.toPortableString() );
-
-          final GMLWorkspace w = GmlSerializer.createGMLWorkspace( surfaceURL, null );
-
-          final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-          w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-
-          final GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryPropertyValue();
-
-          if( geometryProperty instanceof GM_TriangulatedSurface )
-          {
-            return (GM_TriangulatedSurface) geometryProperty;
-          }
+          return (GM_TriangulatedSurface)geometryProperty;
         }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
-        return null;
       }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+      return null;
     }
     return null;
   }
