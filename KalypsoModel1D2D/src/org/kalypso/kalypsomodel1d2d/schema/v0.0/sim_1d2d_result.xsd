@@ -73,6 +73,7 @@ Provide schema for the result model metadata of 1d2d simulations.
 							<xs:documentation><![CDATA[Number of simulated timestep, may be null for 'steady' or 'max' steps.]]></xs:documentation>
 						</xs:annotation>
 					</xs:element>
+                    <!-- deprecated, not used any more -->
 					<xs:element name="isRestart" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation><![CDATA[true, if this step was used to restart the simulation.]]></xs:documentation>
