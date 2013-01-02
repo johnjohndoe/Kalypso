@@ -42,15 +42,14 @@ package org.kalypso.ui.wizards.results;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.commons.databinding.IDataBinding;
 
 /**
  * Interface for creation of result themes
  * 
  * @author Thomas Jung
  */
-public interface IResultThemeConstructor
+public interface IResultControl
 {
-  Control createControl( Composite parent );
-
-  ResultAddLayerCommandData[] getThemeCommandData( );
+  Control createControl( IDataBinding binding, Composite parent );
 }

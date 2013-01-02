@@ -44,19 +44,26 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.results.AddResultThemeWizard;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -82,17 +89,30 @@ public class ConfigureResultMapHandler extends AbstractHandler
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultMapHandler.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultMapHandler.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
-    // Open wizard on that map!
-    final AddResultThemeWizard addLayerWizard = new AddResultThemeWizard();
-    addLayerWizard.init( PlatformUI.getWorkbench(), new StructuredSelection() );
-    addLayerWizard.setCommandTarget( commandTarget );
-    addLayerWizard.setMapModel( mapPanel.getMapModell() );
+    try
+    {
+      final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
+      final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
 
-    final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, addLayerWizard );
-    wizardDialog2.setRememberSize( true );
-    if( wizardDialog2.open() == Window.OK )
-      return Status.OK_STATUS;
+      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName() );
 
-    return Status.CANCEL_STATUS;
+      // Open wizard on that map!
+      final AddResultThemeWizard wizard = new AddResultThemeWizard( scenarioFolder, resultModel, commandTarget, mapPanel.getMapModell() );
+
+      final WizardDialog2 dialog = new WizardDialog2( shell, wizard );
+      dialog.setRememberSize( true );
+
+      if( dialog.open() == Window.OK )
+        return Status.OK_STATUS;
+
+      return Status.CANCEL_STATUS;
+    }
+    catch( final CoreException e )
+    {
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.3" ), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.4" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      return Status.CANCEL_STATUS;
+    }
   }
 }

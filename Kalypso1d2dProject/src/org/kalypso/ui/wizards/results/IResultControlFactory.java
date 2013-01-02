@@ -45,7 +45,7 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 /**
  * @author Thomas Jung
  */
-public interface IThemeConstructionFactory
+public interface IResultControlFactory
 {
-  public IResultThemeConstructor createThemeConstructor( IResultMeta resultMeta );
+  public IResultControl createThemeConstructor( IResultMeta resultMeta );
 }

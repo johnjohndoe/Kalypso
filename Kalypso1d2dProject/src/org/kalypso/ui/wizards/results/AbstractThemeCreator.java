@@ -42,19 +42,19 @@ package org.kalypso.ui.wizards.results;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.commons.databinding.IDataBinding;
 
 /**
  * @author Thomas jung
  */
-public abstract class AbstractThemeCreator implements IResultThemeConstructor
+public abstract class AbstractThemeCreator implements IResultControl
 {
   @Override
-  public Control createControl( final Composite parent )
+  public Control createControl( final IDataBinding binding, final Composite parent )
   {
     return null;
   }
 
-  @Override
   public ResultAddLayerCommandData[] getThemeCommandData( )
   {
     return null;

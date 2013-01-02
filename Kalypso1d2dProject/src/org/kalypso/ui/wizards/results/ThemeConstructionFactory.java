@@ -56,9 +56,9 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  * 
  * @author Thomas Jung
  */
-public class ThemeConstructionFactory implements IThemeConstructionFactory
+public class ThemeConstructionFactory implements IResultControlFactory
 {
-  private final Map<IResultMeta, IResultThemeConstructor> m_creatorMap = new HashMap<>();
+  private final Map<IResultMeta, AbstractThemeCreator> m_creatorMap = new HashMap<>();
 
   private final IFolder m_scenarioFolder;
 
@@ -68,18 +68,18 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
   }
 
   @Override
-  public IResultThemeConstructor createThemeConstructor( final IResultMeta resultMeta )
+  public AbstractThemeCreator createThemeConstructor( final IResultMeta resultMeta )
   {
     // check if already present in map, if yes, return the already existing element
     if( m_creatorMap.containsKey( resultMeta ) )
       return m_creatorMap.get( resultMeta );
 
-    final IResultThemeConstructor constructor = doCreateConstructor( resultMeta );
+    final AbstractThemeCreator constructor = doCreateConstructor( resultMeta );
     m_creatorMap.put( resultMeta, constructor );
     return constructor;
   }
 
-  private IResultThemeConstructor doCreateConstructor( final IResultMeta resultMeta )
+  private AbstractThemeCreator doCreateConstructor( final IResultMeta resultMeta )
   {
     // creates new instances for each IResultMeta type, adds it to the HashMap and returns it
     if( resultMeta instanceof IScenarioResultMeta )
@@ -118,8 +118,10 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
         case nodes:
           return new NodeResultThemeCreator( documentResult, m_scenarioFolder );
 
-        default:
-          return null;
+        case coreDataZip:
+        case hydrograph:
+        case lengthSection:
+        case log:
       }
     }
 

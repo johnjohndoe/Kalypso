@@ -87,6 +87,8 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 public final class GenerateDifferenceResultTinOperation implements ICoreRunnableWithProgress
 {
+  static final String STR_PREFIX_DIFFFERENCES = "Differenzen";
+
   private final TinDifferenceData m_data;
 
   public GenerateDifferenceResultTinOperation( final TinDifferenceData data )
@@ -141,7 +143,10 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
       final String description = formatDescription();
 
       final IStepResultMeta stepResult = m_data.getDestinationResult();
-      ResultMeta1d2dHelper.addDocument( stepResult, "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, destPath, Status.OK_STATUS, min, max ); //$NON-NLS-1$
+
+      final String name = buildDestinationName();
+
+      ResultMeta1d2dHelper.addDocument( stepResult, name, description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, destPath, Status.OK_STATUS, min, max );
 
       // FIXME: workspace not correctly dirty
 
@@ -170,6 +175,15 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
     return new Status( IStatus.OK, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.36" ) ); //$NON-NLS-1$
   }
 
+  private String buildDestinationName( )
+  {
+    final String destinationName = m_data.getDestinationName();
+    if( StringUtils.isBlank( destinationName ) )
+      return STR_PREFIX_DIFFFERENCES;
+
+    return String.format( "%s - %s", STR_PREFIX_DIFFFERENCES, destinationName );
+  }
+
   private String formatDescription( )
   {
     final IDocumentResultMeta masterResult = m_data.getMasterResult();
@@ -180,7 +194,7 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
 
     // TODO: name is not ideal, but works for most cases
     final String parameterLabel = masterResult.getName();
-    printer.format( Messages.getString("GenerateDifferenceResultTinOperation.0"), parameterLabel ); //$NON-NLS-1$
+    printer.format( Messages.getString( "GenerateDifferenceResultTinOperation.0" ), parameterLabel ); //$NON-NLS-1$
 
     printer.format( "\t%s%n", formatResultLabel( masterResult ) ); //$NON-NLS-1$
     printer.format( "\t\t%s%n", m_data.getOperator().toString() ); //$NON-NLS-1$

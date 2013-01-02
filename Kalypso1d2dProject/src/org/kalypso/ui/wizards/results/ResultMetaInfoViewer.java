@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -64,14 +65,17 @@ public class ResultMetaInfoViewer
 
   private FormText m_infoArea;
 
-  private final IThemeConstructionFactory m_factory;
+  private final IResultControlFactory m_factory;
 
   private ScrolledForm m_form;
 
   private Composite m_factoryPanel;
 
-  public ResultMetaInfoViewer( final IThemeConstructionFactory factory )
+  private final IDataBinding m_binding;
+
+  public ResultMetaInfoViewer( final IDataBinding binding, final IResultControlFactory factory )
   {
+    m_binding = binding;
     m_factory = factory;
   }
 
@@ -120,8 +124,8 @@ public class ResultMetaInfoViewer
     if( m_input instanceof IResultMeta && m_factory != null )
     {
       final IResultMeta result = (IResultMeta)m_input;
-      final IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
-      createThemeCreator.createControl( m_factoryPanel );
+      final IResultControl createThemeCreator = m_factory.createThemeConstructor( result );
+      createThemeCreator.createControl( m_binding, m_factoryPanel );
       m_factoryPanel.layout( true );
     }
 

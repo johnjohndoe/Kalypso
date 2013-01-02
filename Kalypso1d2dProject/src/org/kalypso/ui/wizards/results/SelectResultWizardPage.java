@@ -97,7 +97,7 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
   private final SelectResultData m_data;
 
   // TODO: most use cases of result viewer only need the information about a result node, not creation of a theme. We should separate these concerns.
-  private IThemeConstructionFactory m_factory;
+  private IResultControlFactory m_factory;
 
   private CheckboxTreeViewer m_treeViewer;
 
@@ -132,7 +132,7 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
     super.dispose();
   }
 
-  public void setFactory( final IThemeConstructionFactory factory )
+  public void setFactory( final IResultControlFactory factory )
   {
     Assert.isTrue( m_treeViewer == null );
 
@@ -170,7 +170,7 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
     createTreeControls( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Info View for one result */
-    final ResultMetaInfoViewer resultViewer = new ResultMetaInfoViewer( m_factory );
+    final ResultMetaInfoViewer resultViewer = new ResultMetaInfoViewer( m_binding, m_factory );
     final Control resultControl = resultViewer.createControl( panel );
     resultControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
