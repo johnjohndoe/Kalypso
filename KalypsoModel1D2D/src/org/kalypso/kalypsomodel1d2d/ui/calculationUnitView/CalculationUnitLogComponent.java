@@ -185,7 +185,7 @@ public class CalculationUnitLogComponent
       if( location instanceof GM_Point )
       {
         final GM_Envelope panedBBox = mapPanel.getBoundingBox().getPaned( (GM_Point)location );
-        final GM_Envelope scaledEnvelope = GeometryUtilities.scaleEnvelope( panedBBox, 0.7 );
+        final GM_Envelope scaledEnvelope = GeometryUtilities.scaleEnvelope( panedBBox, 0.0 );
         mapPanel.setBoundingBox( scaledEnvelope );
       }
       else if( location != null )
