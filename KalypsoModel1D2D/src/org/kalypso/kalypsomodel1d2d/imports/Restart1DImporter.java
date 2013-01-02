@@ -255,7 +255,6 @@ public class Restart1DImporter
     final IStepResultMeta stepResultMeta = calcUnitResult.getChildren().addNew( IStepResultMeta.QNAME, IStepResultMeta.class );
     stepResultMeta.setDescription( description );
     stepResultMeta.setName( name );
-    stepResultMeta.setRestart( false );
     stepResultMeta.setStatus( Status.OK_STATUS );
     stepResultMeta.setStepTime( null );
     stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.steady );
