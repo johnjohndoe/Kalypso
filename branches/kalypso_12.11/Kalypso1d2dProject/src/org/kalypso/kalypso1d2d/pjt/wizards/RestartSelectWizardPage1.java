@@ -52,6 +52,10 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
   public RestartSelectWizardPage1( final String pageName, final String title, final SelectResultData data )
   {
     super( pageName, title, data );
+
+    // FIXME: actually, selecting results outside the current scenario already works (if not calculating via WPS service).
+    // BUT: pre-checking the configured restarts does not work with those elements. This would need reworking the setCheckstate stuff of the page (maybe based on prefix of result url?)
+    // data.setShowOptions( true );
   }
 
   @Override
