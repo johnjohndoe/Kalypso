@@ -23,8 +23,6 @@ package org.kalypso.kalypsomodel1d2d.sim;
  */
 public interface IRMAPreprocessing
 {
-  String INPUT_RESTART_FILE_PREFIX = "restartFile"; //$NON-NLS-1$
-
   String INPUT_ROUGHNESS = "roughness"; //$NON-NLS-1$
 
   String INPUT_FLOW_RELATIONSHIPS = "flowRelationships"; //$NON-NLS-1$
@@ -52,7 +50,7 @@ public interface IRMAPreprocessing
 
   String OUTPUT_CONTROL = ISimulation1D2DConstants.R10_File;
 
-  String INPUT_RESTART_FILE = "restartFile0"; //$NON-NLS-1$
+  String INPUT_RESTART_FILE = "restartFile"; //$NON-NLS-1$
 
   String OUTPUT_RMA_VERSION = "rmaVersion"; //$NON-NLS-1$
 }
