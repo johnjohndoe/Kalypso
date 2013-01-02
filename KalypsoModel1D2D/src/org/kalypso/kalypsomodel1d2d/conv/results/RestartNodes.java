@@ -40,15 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
@@ -69,55 +64,20 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class RestartNodes
 {
-  public static RestartNodes createRestartNodes( final File tmpdir, final List<IRestartInfo> restartInfos ) throws CoreException
-  {
-    final RestartNodes restartNodes = new RestartNodes();
-
-    for( final IRestartInfo restartInfo : restartInfos )
-    {
-      try
-      {
-        final IPath restartFilePath = restartInfo.getRestartFilePath();
-        if( restartFilePath == null )
-          continue;
-
-        final URL scenarioURL = tmpdir.toURI().toURL();
-        final URL restartURL = UrlUtilities.resolveWithZip( scenarioURL, restartFilePath.toPortableString() );
-
-        restartNodes.addResultUrl( restartURL );
-      }
-      catch( final MalformedURLException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
-
-    return restartNodes;
-  }
-
   private final double DEFAULT_SEARCH_DISTANCE = 0.5;
 
   private final FeatureList m_nodes = new SplitSort( null, null );
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   public void addResultUrl( final URL restartURL ) throws CoreException
   {
-    // if( restartURL == null )
-    // throw new CoreException( StatusUtilities.createErrorStatus( "Restart file(s) not defined: " +
-    // restartURL.getAbsolutePath() ) );
-    //
-    // if( !restartURL.exists() )
-    // throw new CoreException( StatusUtilities.createErrorStatus( "Restart file(s) does not exists: " +
-    // restartURL.getAbsolutePath() ) );
-
     try
     {
       final GMLWorkspace resultWorkspace = GmlSerializer.createGMLWorkspace( restartURL, null );
       final TransformVisitor visitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final Feature rootFeature = resultWorkspace.getRootFeature();
       resultWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE );
-      final INodeResultCollection nodeResults = (INodeResultCollection) rootFeature.getAdapter( INodeResultCollection.class );
+      final INodeResultCollection nodeResults = (INodeResultCollection)rootFeature.getAdapter( INodeResultCollection.class );
       for( final INodeResult node : nodeResults.getNodeResults() )
         m_nodes.add( node );
     }
@@ -142,7 +102,7 @@ public class RestartNodes
     if( feature == null )
       return null;
 
-    return (INodeResult) feature.getAdapter( INodeResult.class );
+    return (INodeResult)feature.getAdapter( INodeResult.class );
   }
 
   public int getSize( )
@@ -152,5 +112,4 @@ public class RestartNodes
 
     return m_nodes.size();
   }
-
 }
