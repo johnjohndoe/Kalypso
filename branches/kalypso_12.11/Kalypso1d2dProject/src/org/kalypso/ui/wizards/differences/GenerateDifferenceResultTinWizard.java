@@ -62,7 +62,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.results.SelectResultData;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
-import org.kalypso.ui.wizards.results.ThemeConstructionFactory;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypso.ui.wizards.results.filters.NonTinDocumentResultViewerFilter;
 
@@ -89,11 +88,15 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
   private final IScenarioDataProvider m_modelProvider;
 
+  private final DifferenceResultData m_destinationData;
+
   public GenerateDifferenceResultTinWizard( final IFolder scenarioFolder, final IScenarioResultMeta resultModel, final IScenarioDataProvider modelProvider )
   {
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;
     m_modelProvider = modelProvider;
+
+    m_destinationData = new DifferenceResultData( m_resultModel );
 
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.3" ) ); //$NON-NLS-1$
 
@@ -125,17 +128,15 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     slavePage.setFilter( resultFilter );
 
     /* destination */
-    final SelectResultData destinationData = new SelectResultData( m_resultModel );
-
     final String titleDestination = Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6" ); //$NON-NLS-1$
-    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, titleDestination, destinationData );
+    final SelectResultWizardPage destinationPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, titleDestination, m_destinationData );
 
-    selectDestinationResultWizardPage.setFactory( new ThemeConstructionFactory( m_scenarioFolder ) );
-    selectDestinationResultWizardPage.setFilter( new DocumentResultViewerFilter() );
+    destinationPage.setFactory( new GenerateDifferenceControlFactory( m_destinationData ) );
+    destinationPage.setFilter( new DocumentResultViewerFilter() );
 
     addPage( masterPage );
     addPage( slavePage );
-    addPage( selectDestinationResultWizardPage );
+    addPage( destinationPage );
   }
 
   @Override
@@ -202,12 +203,12 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     }
 
     final IStepResultMeta destinationResult = getDestinationResult();
+    final String destinationName = m_destinationData.getDestinationName();
 
-    return new TinDifferenceData( masterResult, slaveResult, destinationResult, operator, m_scenarioFolder );
+    return new TinDifferenceData( masterResult, slaveResult, destinationResult, destinationName, operator, m_scenarioFolder );
   }
 
   // FIXME: not nice to validate after user has entered the values; instead the wizard should directly validate the input
-
   private IDocumentResultMeta getMasterResult( ) throws CoreException
   {
     final SelectResultWizardPage masterResultPage = (SelectResultWizardPage)getPage( PAGE_SELECT_MASTER_RESULTS_NAME );
@@ -251,8 +252,6 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     }
 
     final IResultMeta destResult = destinationResults[0];
-
-    // TODO: allow the user to set an individual result name and store information about master and slave in the ResultMeta entry
 
     if( destResult instanceof IStepResultMeta )
       return (IStepResultMeta)destResult;

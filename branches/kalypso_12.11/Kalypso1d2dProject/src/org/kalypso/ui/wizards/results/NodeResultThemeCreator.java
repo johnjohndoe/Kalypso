@@ -51,6 +51,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
@@ -95,7 +96,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   }
 
   @Override
-  public Control createControl( final Composite parent )
+  public Control createControl( final IDataBinding binding, final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 4, false ) );

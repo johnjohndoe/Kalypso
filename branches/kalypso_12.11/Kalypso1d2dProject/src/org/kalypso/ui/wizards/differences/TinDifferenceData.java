@@ -40,11 +40,14 @@ class TinDifferenceData
 
   private final MathOperator m_operator;
 
-  public TinDifferenceData( final IDocumentResultMeta masterResult, final IDocumentResultMeta slaveResult, final IStepResultMeta destinationResult, final MathOperator operator, final IFolder scenarioFolder )
+  private final String m_destinationName;
+
+  public TinDifferenceData( final IDocumentResultMeta masterResult, final IDocumentResultMeta slaveResult, final IStepResultMeta destinationResult, final String destinationName, final MathOperator operator, final IFolder scenarioFolder )
   {
     m_masterResult = masterResult;
     m_slaveResult = slaveResult;
     m_destinationResult = destinationResult;
+    m_destinationName = destinationName;
     m_operator = operator;
     m_scenarioFolder = scenarioFolder;
   }
@@ -72,5 +75,10 @@ class TinDifferenceData
   public MathOperator getOperator( )
   {
     return m_operator;
+  }
+
+  public String getDestinationName( )
+  {
+    return m_destinationName;
   }
 }

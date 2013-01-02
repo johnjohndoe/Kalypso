@@ -40,53 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypso1d2d.pjt.map.MapUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.wizards.results.filters.NonMapDataResultViewerFilter;
-
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Wizard to add result themes to the map.
  * 
  * @author Thomas Jung
  */
-public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
+public class AddResultThemeWizard extends Wizard
 {
   private final static String PAGE_SELECT_RESULTS_NAME = "selectResults"; //$NON-NLS-1$
 
-  private IKalypsoLayerModell m_modell;
+  private final IKalypsoLayerModell m_modell;
 
-  private IScenarioResultMeta m_resultModel;
+  private final IScenarioResultMeta m_resultModel;
 
-  private ICommandTarget m_commandTarget;
+  private final ICommandTarget m_commandTarget;
 
-  private ThemeConstructionFactory m_themeConstructionFactory;
+  private final ThemeConstructionFactory m_themeConstructionFactory;
 
-  public AddResultThemeWizard( )
+  public AddResultThemeWizard( final IFolder scenarioFolder, final IScenarioResultMeta resultModel, final ICommandTarget commandTarget, final IKalypsoLayerModell model )
   {
+    m_resultModel = resultModel;
+    m_commandTarget = commandTarget;
+    m_modell = model;
+
+    m_themeConstructionFactory = new ThemeConstructionFactory( scenarioFolder );
+
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.1" ) ); //$NON-NLS-1$
     setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
   }
@@ -110,64 +102,17 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
     // Page: Neues Thema konfigurieren???
   }
 
-  public void setCommandTarget( final ICommandTarget commandTarget )
-  {
-    m_commandTarget = commandTarget;
-  }
-
-  public void setMapModel( final IKalypsoLayerModell modell )
-  {
-    m_modell = modell;
-  }
-
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    final IHandlerService handlerService = (IHandlerService)workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-    try
-    {
-      final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getFolder();
-      m_themeConstructionFactory = new ThemeConstructionFactory( scenarioFolder );
-
-      // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName() );
-    }
-    catch( final CoreException e )
-    {
-      Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.3" ), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.4" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-  }
-
   @Override
   public boolean performFinish( )
   {
     final SelectResultWizardPage page = (SelectResultWizardPage)getPage( PAGE_SELECT_RESULTS_NAME );
     final IResultMeta[] results = page.getSelectedResults();
-    final IKalypsoLayerModell modell = m_modell;
 
-    if( modell == null )
-    {
-      System.out.println( "No map template available." ); //$NON-NLS-1$
-      return false;
-    }
-
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-    {
-      @Override
-      @SuppressWarnings( "synthetic-access" )
-      public IStatus execute( final IProgressMonitor monitor )
-      {
-        return MapUtils.addThemes( modell, m_commandTarget, results, m_themeConstructionFactory, monitor );
-      }
-    };
+    final AddResultThemeOperation operation = new AddResultThemeOperation( m_modell, m_commandTarget, results, m_themeConstructionFactory );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.5" ), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.wizards.results.AddResultThemeWizard.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return status.isOK();
   }
