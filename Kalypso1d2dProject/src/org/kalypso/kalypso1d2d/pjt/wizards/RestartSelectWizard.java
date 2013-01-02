@@ -43,9 +43,13 @@ package org.kalypso.kalypso1d2d.pjt.wizards;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
@@ -56,10 +60,13 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
@@ -154,6 +161,9 @@ public class RestartSelectWizard extends Wizard
         continue;
 
       final String stepResultFilePath = restartInfo.getRestartFilePath().toString();
+
+      // FIXME: handle results outside current scenario...
+
       final IFeatureBindingCollection<IResultMeta> calcUnitChildren = calcUnitMetaResult.getChildren();
       for( final IResultMeta calcUnitChild : calcUnitChildren )
       {
@@ -187,22 +197,27 @@ public class RestartSelectWizard extends Wizard
   {
     final List<IRestartInfo> restartInfos = m_controlModel.getRestartInfos();
     restartInfos.clear();
+
     final IResultMeta[] selectedResults;
+
+    // FIXME: dangerous.. what if the user goes to page2, confgures it, and then returns?
     if( getContainer().getCurrentPage().equals( m_restartSelectWizardPage2 ) )
       selectedResults = m_restartSelectWizardPage2.getSortedResults();
     else
       selectedResults = m_restartSelectWizardPage1.getSelectedResults();
+
     for( final IResultMeta element : selectedResults )
     {
       if( element instanceof StepResultMeta )
       {
         final IStepResultMeta result = (IStepResultMeta)element;
-        result.setRestart( true );
+
         final IRestartInfo restartInfo = m_controlModel.addRestartInfo();
         restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta)result.getOwner()).getCalcUnit() );
         restartInfo.setStepResultMetaID( result.getId() );
 
-        // TODO: implement accessing zip file!
+        // TODO: implement accessing zip file! FIXME: why?
+
         final IFeatureBindingCollection<IResultMeta> children = result.getChildren();
 
         for( final IResultMeta resultMeta : children )
@@ -211,11 +226,15 @@ public class RestartSelectWizard extends Wizard
           {
             final IDocumentResultMeta docResult = (IDocumentResultMeta)resultMeta;
             if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.nodes )
-              restartInfo.setRestartFilePath( docResult.getFullPath().toPortableString() );
+            {
+              final String restartPath = createRestartPath( docResult );
+              restartInfo.setRestartFilePath( restartPath );
+            }
           }
         }
       }
     }
+
     try
     {
       // TODO: check if really something has changed, else we always get a dirty control model, which is not nice for
@@ -230,5 +249,33 @@ public class RestartSelectWizard extends Wizard
       e.printStackTrace();
     }
     return true;
+  }
+
+  private String createRestartPath( final IDocumentResultMeta nodeResult )
+  {
+    final IPath documentPath = nodeResult.getFullPath();
+
+    final Pair<IProject, IFolder> externalLocation = ResultMeta1d2dHelper.determineExternalLocation( nodeResult, m_scenarioFolder );
+
+    final IProject documentProject = externalLocation.getLeft();
+    final IFolder documentScenarioFolder = externalLocation.getRight();
+
+    if( documentScenarioFolder == null )
+    {
+      /* document is part of current scenario, just use document path relative to scenario */
+      return documentPath.toPortableString();
+    }
+
+    final IFile documentDataFile = documentScenarioFolder.getFile( documentPath );
+
+    if( documentProject == null )
+    {
+      /* document is in the same project, but in another scenario: make project relative path */
+      final IPath projectRelativePath = documentDataFile.getProjectRelativePath();
+      return String.format( "%s/%s", UrlResolver.PROJECT_PROTOCOLL, projectRelativePath.toPortableString() ); //$NON-NLS-1$
+    }
+
+    /* outside of the current project: make absolute path */
+    return ResourceUtilities.createQuietURL( documentDataFile ).toExternalForm();
   }
 }

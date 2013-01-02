@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
@@ -184,13 +185,23 @@ public class PreRMAData implements IPreRMAData
 
     final IContainer scenarioFolder = findScenarioFolder();
 
-    URL restartPrefixURL = scenarioFolder.getLocationURI().toURL();
+    // FIXME: the zip variant does not work for result data outside the current scenario
+    URL restartPrefixURL;
     if( !StringUtils.isEmpty( m_input ) && !SERVER_INPUT_LOCAL.equals( m_input ) )
     {
       final URL restartFileUrl = (URL)m_inputProvider.getInputForID( IRMAPreprocessing.INPUT_RESTART_FILE );
       ZipUtilities.unzip( restartFileUrl, tmpDir );
       restartPrefixURL = tmpDir.toURI().toURL();
     }
+    else
+      restartPrefixURL = ResourceUtilities.createURL( scenarioFolder );
+
+    /* add trailing / */
+    final URL fullPrefixURL;
+    if( restartPrefixURL.toString().endsWith( "/" ) ) //$NON-NLS-1$
+      fullPrefixURL = restartPrefixURL;
+    else
+      fullPrefixURL = new URL( restartPrefixURL.toString() + "/" ); //$NON-NLS-1$
 
     final RestartNodes restartNodes = new RestartNodes();
 
@@ -198,14 +209,9 @@ public class PreRMAData implements IPreRMAData
 
     for( final Object element : restartInfos )
     {
-      final IRestartInfo iRestartInfo = (IRestartInfo)element;
+      final IRestartInfo info = (IRestartInfo)element;
 
-      URL fullPrefixURL = restartPrefixURL;
-
-      if( !restartPrefixURL.toString().endsWith( "/" ) ) //$NON-NLS-1$
-        fullPrefixURL = new URL( restartPrefixURL.toString() + "/" ); //$NON-NLS-1$
-
-      final URL restartURL = new URL( fullPrefixURL, iRestartInfo.getRestartFilePath().toPortableString() );
+      final URL restartURL = info.resolveRestartLocation( fullPrefixURL );
       restartNodes.addResultUrl( restartURL );
     }
 

@@ -40,79 +40,74 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Dejan Antanaskovic
- * 
  */
 public class RestartInfo extends Feature_Impl implements IRestartInfo
 {
-
-  public RestartInfo( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RestartInfo( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo#getCalculationUnitID()
-   */
   @Override
   public String getCalculationUnitID( )
   {
-    return (String) getProperty( IRestartInfo.QNAME_PROP_CALC_UNIT_ID );
+    return (String)getProperty( IRestartInfo.QNAME_PROP_CALC_UNIT_ID );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo#getStepResultMetaID()
-   */
   @Override
   public String getStepResultMetaID( )
   {
-    return (String) getProperty( IRestartInfo.QNAME_PROP_STEP_RESULT_ID );
+    return (String)getProperty( IRestartInfo.QNAME_PROP_STEP_RESULT_ID );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo#getRestartFilePath()
-   */
   @Override
   public IPath getRestartFilePath( )
   {
-    final String path = (String) getProperty( IRestartInfo.QNAME_PROP_RESULT_FILE_PATH );
+    final String path = (String)getProperty( IRestartInfo.QNAME_PROP_RESULT_FILE_PATH );
     if( path == null )
       return null;
+
     return Path.fromPortableString( path );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo#setCalculationUnitID(java.lang.String)
-   */
   @Override
   public void setCalculationUnitID( final String gmlID )
   {
     setProperty( IRestartInfo.QNAME_PROP_CALC_UNIT_ID, gmlID );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo#setStepResultMetaID(java.lang.String)
-   */
   @Override
   public void setStepResultMetaID( final String gmlID )
   {
     setProperty( IRestartInfo.QNAME_PROP_STEP_RESULT_ID, gmlID );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo#setRestartFilePath(java.lang.String)
-   */
   @Override
   public void setRestartFilePath( final String filePath )
   {
     setProperty( IRestartInfo.QNAME_PROP_RESULT_FILE_PATH, filePath );
   }
 
+  @Override
+  public URL resolveRestartLocation( final URL currentScenario ) throws MalformedURLException
+  {
+    final String path = (String)getProperty( IRestartInfo.QNAME_PROP_RESULT_FILE_PATH );
+    if( StringUtils.isBlank( path ) )
+      return null;
+
+    return UrlResolverSingleton.resolveUrl( currentScenario, path );
+  }
 }
