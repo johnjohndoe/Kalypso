@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.ui.wizards.results.IResultControl;
 
 /**
@@ -49,7 +50,7 @@ class GenerateDifferenceControl implements IResultControl
   public Control createControl( final IDataBinding binding, final Composite parent )
   {
     final Group panel = new Group( parent, SWT.NONE );
-    panel.setText( "Name" );
+    panel.setText( Messages.getString("GenerateDifferenceControl_0") ); //$NON-NLS-1$
 
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
 

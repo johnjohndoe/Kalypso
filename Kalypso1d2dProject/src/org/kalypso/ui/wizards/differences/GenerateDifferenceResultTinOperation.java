@@ -87,7 +87,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 public final class GenerateDifferenceResultTinOperation implements ICoreRunnableWithProgress
 {
-  static final String STR_PREFIX_DIFFFERENCES = "Differenzen";
+  static final String STR_PREFIX_DIFFFERENCES = Messages.getString("GenerateDifferenceResultTinOperation.1"); //$NON-NLS-1$
 
   private final TinDifferenceData m_data;
 
@@ -181,7 +181,7 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
     if( StringUtils.isBlank( destinationName ) )
       return STR_PREFIX_DIFFFERENCES;
 
-    return String.format( "%s - %s", STR_PREFIX_DIFFFERENCES, destinationName );
+    return String.format( "%s - %s", STR_PREFIX_DIFFFERENCES, destinationName ); //$NON-NLS-1$
   }
 
   private String formatDescription( )
