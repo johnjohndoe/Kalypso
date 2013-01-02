@@ -51,11 +51,9 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class StepResultMeta extends ResultMeta implements IStepResultMeta
 {
- 
   public StepResultMeta( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -65,7 +63,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   public Date getStepTime( )
   {
     // may be null for 'steady' or 'max' steps.
-    return DateUtilities.toDate( (XMLGregorianCalendar) getProperty( QNAME_PROP_STEP_TIME ) );
+    return DateUtilities.toDate( (XMLGregorianCalendar)getProperty( QNAME_PROP_STEP_TIME ) );
   }
 
   @Override
@@ -73,38 +71,17 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   {
     try
     {
-      final String value = (String) getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE );
+      final String value = (String)getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE );
       return value == null || value.isEmpty() ? STEPTYPE.error : STEPTYPE.valueOf( value );
     }
     catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
-      
+
       return STEPTYPE.error;
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#isRestart()
-   */
-  @Override
-  public boolean isRestart( )
-  {
-    return (Boolean) getProperty( QNAME_PROP_STEP_IS_RESTART );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setRestart(boolean)
-   */
-  @Override
-  public void setRestart( final boolean setRestart )
-  {
-    setProperty( QNAME_PROP_STEP_IS_RESTART, setRestart );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setStepTime(java.util.Date)
-   */
   @Override
   public void setStepTime( final Date stepTime )
   {
@@ -112,13 +89,9 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
     setProperty( QNAME_PROP_STEP_TIME, gregorianCalendar );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setStepType(org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.STEPTYPE)
-   */
   @Override
   public void setStepType( final STEPTYPE stepType )
   {
     setProperty( QNAME_PROP_STEP_TYPE, stepType.name() );
   }
-
 }

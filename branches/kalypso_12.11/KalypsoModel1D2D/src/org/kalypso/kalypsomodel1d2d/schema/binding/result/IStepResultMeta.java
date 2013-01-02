@@ -75,23 +75,17 @@ public interface IStepResultMeta extends IResultMeta
     }
   }
 
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "StepResultMeta" ); //$NON-NLS-1$
+  QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "StepResultMeta" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STEP_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "stepTime" ); //$NON-NLS-1$
+  QName QNAME_PROP_STEP_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "stepTime" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STEP_IS_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "isRestart" ); //$NON-NLS-1$
+  QName QNAME_PROP_STEP_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "type" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STEP_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "type" ); //$NON-NLS-1$
+  void setStepTime( final Date stepTime );
 
-  public void setStepTime( final Date stepTime );
+  Date getStepTime( );
 
-  public Date getStepTime( );
+  STEPTYPE getStepType( );
 
-  public boolean isRestart( );
-
-  public void setRestart( boolean setRestart );
-
-  public STEPTYPE getStepType( );
-
-  public void setStepType( STEPTYPE stepType );
+  void setStepType( STEPTYPE stepType );
 }
