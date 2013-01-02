@@ -223,12 +223,11 @@ public class ExecutePreRMAKalypso
     if( restartInfos != null )
     {
       // fill restart ip
-      int restartCount = 0;
       if( restartInfos.size() > 0 && !WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
       {
         final String restartFilePath = zipRestartInfos( restartInfos );
         if( restartFilePath != null )
-          inputs.put( IRMAPreprocessing.INPUT_RESTART_FILE_PREFIX + restartCount++, restartFilePath );
+          inputs.put( IRMAPreprocessing.INPUT_RESTART_FILE, restartFilePath );
       }
     }
 
@@ -249,15 +248,20 @@ public class ExecutePreRMAKalypso
     {
       final File zipOutput = File.createTempFile( "kalypsoMultiRestartFile" + new Date().getTime(), ".zip" ); //$NON-NLS-1$  //$NON-NLS-2$
       zipOutput.delete();
+
       final List<File> files = new ArrayList<>();
       for( final IRestartInfo restartInfo : restartInfos )
       {
+        // FIXME: cannot work for restart data outside the current scenario
+        // it is also not clear how we should put those files into the zip based at the result folder
+
         final IPath restartFilePath = restartInfo.getRestartFilePath();
         final IResource foundPath = m_scenarioFolder.findMember( restartFilePath );
 
         if( restartFilePath != null )
           files.add( new File( foundPath.getLocationURI() ) );
       }
+
       ZipUtilities.zip( zipOutput, files.toArray( new File[files.size()] ), new File( m_scenarioFolder.getLocationURI() ) );
       return zipOutput.toURI().toURL().toExternalForm();
     }
