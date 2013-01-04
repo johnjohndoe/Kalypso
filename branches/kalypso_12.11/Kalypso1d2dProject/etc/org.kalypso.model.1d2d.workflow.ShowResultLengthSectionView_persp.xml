@@ -34,6 +34,7 @@
       <info folder="true" part="org.eclipse.ui.internal.ViewStack@1ee22840" ratio="0.5" ratioLeft="527" ratioRight="527" relationship="2" relative="org.eclipse.ui.editorss">
         <folder activePageID="org.kalypso.ui.views.featuretemplateview" appearance="2" expanded="2">
           <page content="org.kalypso.ui.views.featuretemplateview" label="Feature Ansicht" />
+          <page content="org.kalypso.ui.views.featuretemplateview:*" label="Feature Ansicht" />
           <page content="org.kalypso.ui.views.mapView" label="LabelNotFound" />
           <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
             <part id="0" />
