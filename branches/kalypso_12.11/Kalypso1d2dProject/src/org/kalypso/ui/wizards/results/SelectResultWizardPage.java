@@ -59,10 +59,8 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -100,8 +98,6 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
   private IResultControlFactory m_factory;
 
   private CheckboxTreeViewer m_treeViewer;
-
-  private Object[] m_checkedElements = null;
 
   private ViewerFilter m_filter;
 
@@ -198,19 +194,6 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
         handleCheckStateChanged( element, isChecked );
       }
     } );
-
-    /* Check elements if any defined */
-    if( m_checkedElements != null )
-    {
-      final ITreeContentProvider contentProvider = (ITreeContentProvider)m_treeViewer.getContentProvider();
-      for( final Object elementToCheck : m_checkedElements )
-      {
-        final Object parentToExpand = contentProvider.getParent( elementToCheck );
-        if( parentToExpand != null )
-          m_treeViewer.expandToLevel( parentToExpand, 1 );
-      }
-      m_treeViewer.setCheckedElements( m_checkedElements );
-    }
   }
 
   private Control createTreeControls( final Composite parent )
@@ -320,20 +303,9 @@ public class SelectResultWizardPage extends WizardPage implements ITreeViewerPro
     getContainer().updateButtons();
   }
 
-  /**
-   * The elements which should initially be checked.
-   * <p>
-   * This method must be called before createControl is invoked.
-   * </p>
-   */
-  public void setInitialCheckedElements( final Object[] checkedElements )
-  {
-    m_checkedElements = checkedElements;
-  }
-
   // TODO: not nice... currently used to refresh tree
   @Override
-  public TreeViewer getTreeViewer( )
+  public CheckboxTreeViewer getTreeViewer( )
   {
     return m_treeViewer;
   }

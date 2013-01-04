@@ -38,36 +38,30 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.actions;
+package org.kalypso.ui.wizards.lengthsection;
 
 import java.net.URL;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
-import org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -80,72 +74,81 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+
+    final String commandName = HandlerUtils.getCommandName( event );
     final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IScenarioDataProvider modelProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
 
     try
     {
-      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName() );
-
       final IWorkbenchWindow window = (IWorkbenchWindow)context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
 
+      /* close old secondaryid views, that have been restored */
+      final IWorkbenchPage page = window.getActivePage();
+      closeAllViews( page );
+
+      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName() );
+
       // open wizard
-      final SelectLengthSectionWizard selectLengthSectionWizard = new SelectLengthSectionWizard( resultModel );
-      final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, selectLengthSectionWizard );
-      wizardDialog2.setRememberSize( true );
-      if( wizardDialog2.open() == Window.OK )
+      final SelectLengthSectionWizard selectLengthSectionWizard = new SelectLengthSectionWizard( resultModel, window );
+      final WizardDialog2 dialog = new WizardDialog2( shell, selectLengthSectionWizard );
+      dialog.setRememberSize( true );
+
+      if( dialog.open() != Window.OK )
       {
-        final FeatureTemplateView featureView = (FeatureTemplateView)window.getActivePage().showView( FeatureTemplateView.ID );
-
-        final String gmlResultPath = selectLengthSectionWizard.getSelectedLGmlResultPath();
-        if( gmlResultPath == null )
-          return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.0" ) ); //$NON-NLS-1$
-
-        final UIJob job = new UIJob( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.1" ) ) //$NON-NLS-1$
-        {
-          @Override
-          public IStatus runInUIThread( final IProgressMonitor monitor )
-          {
-            try
-            {
-              // load template
-              // load template from resource:
-              final URL url = getClass().getResource( "resources/lengthsection.gft" ); //$NON-NLS-1$
-
-              final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( url, new NullProgressMonitor() );
-
-              final URL urlContext = ResourceUtilities.createURL( scenarioFolder );
-
-              // root feature
-              final String featurePath = ""; //$NON-NLS-1$
-
-              // path to gml, relative to context
-              final String href = gmlResultPath;
-
-              final String linkType = "gml"; //$NON-NLS-1$
-
-              // set template to view in ui thread, sepcify href, featurePath and linkType
-              featureView.setTemplate( template, urlContext, featurePath, href, linkType );
-
-              return Status.OK_STATUS;
-            }
-            catch( final Throwable e )
-            {
-              return StatusUtilities.statusFromThrowable( e );
-            }
-          }
-        };
-        job.schedule();
-
-        return null;
+        closeAllViews( page );
+        openErrorView( page );
       }
+      else
+        closeEmptyView( page );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      StatusDialog.open( shell, e.getStatus(), commandName );
+    }
+
+    return null;
+  }
+
+  private void closeEmptyView( final IWorkbenchPage page )
+  {
+    final IViewReference[] viewReferences = page.getViewReferences();
+    for( final IViewReference reference : viewReferences )
+    {
+      final String id = reference.getId();
+      final String secondaryId = reference.getSecondaryId();
+      if( FeatureTemplateView.ID.equals( id ) && StringUtils.isBlank( secondaryId ) )
+        page.hideView( reference );
+    }
+  }
+
+  private void closeAllViews( final IWorkbenchPage page )
+  {
+    final IViewReference[] viewReferences = page.getViewReferences();
+    for( final IViewReference reference : viewReferences )
+    {
+      final String id = reference.getId();
+      if( FeatureTemplateView.ID.equals( id ) )
+        page.hideView( reference );
+    }
+  }
+
+  private void openErrorView( final IWorkbenchPage page )
+  {
+    try
+    {
+      final URL url = getClass().getResource( "resources/lengthsectionError.gft" ); //$NON-NLS-1$
+
+      final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( url, new NullProgressMonitor() );
+
+      final FeatureTemplateView featureView = (FeatureTemplateView)page.showView( FeatureTemplateView.ID );
+      /* fixme, does not work... */
+      featureView.setTemplate( template, null, null, null, null );
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
     }
-
-    return null;
   }
 }

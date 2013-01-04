@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" name="No length section">
+
+  <view typename="om:Observation" style="SWT.NONE" xmlns:om="http://www.opengis.net/om" xmlns:ogc="http://www.opengis.net/ogc">
+    <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+    <gridLayout numColumns="1" marginHeight="0" marginWidth="0" />
+
+    <label style="SWT.NONE" text="Failed to open length section">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.CENTER" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+    </label>
+  </view>
+</featuretemplate>

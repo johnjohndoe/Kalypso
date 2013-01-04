@@ -365,7 +365,7 @@
              commandId="org.kalypso.model.1d2d.workflow.ConfigureResultMap">
        </handler>
        <handler
-             class="org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler"
+             class="org.kalypso.ui.wizards.lengthsection.ShowResultLengthSectionViewHandler"
              commandId="org.kalypso.model.1d2d.workflow.ShowResultLengthSectionView">
        </handler>
        <handler
