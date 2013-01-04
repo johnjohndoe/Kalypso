@@ -91,6 +91,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -1043,5 +1044,37 @@ public class ResultMeta1d2dHelper
 
     /* outside of the current project */
     return Pair.of( documentProject, documentScenarioFolder );
+  }
+
+  /**
+   * Build a full (url) location for a given result.<br/>
+   * results of the given scenario will get a relative url, other results a project- or workspace relative path.
+   */
+  public static String buildFullLocation( final IResultMeta result, final IFolder scenarioFolder )
+  {
+    final IPath documentPath = result.getFullPath();
+
+    final Pair<IProject, IFolder> externalLocation = ResultMeta1d2dHelper.determineExternalLocation( result, scenarioFolder );
+
+    final IProject documentProject = externalLocation.getLeft();
+    final IFolder documentScenarioFolder = externalLocation.getRight();
+
+    if( documentScenarioFolder == null )
+    {
+      /* document is part of current scenario, just use document path relative to scenario */
+      return documentPath.toPortableString();
+    }
+
+    final IFile documentDataFile = documentScenarioFolder.getFile( documentPath );
+
+    if( documentProject == null )
+    {
+      /* document is in the same project, but in another scenario: make project relative path */
+      final IPath projectRelativePath = documentDataFile.getProjectRelativePath();
+      return String.format( "%s/%s", UrlResolver.PROJECT_PROTOCOLL, projectRelativePath.toPortableString() ); //$NON-NLS-1$
+    }
+
+    /* outside of the current project: make absolute path */
+    return ResourceUtilities.createQuietURL( documentDataFile ).toExternalForm();
   }
 }
