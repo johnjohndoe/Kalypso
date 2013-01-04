@@ -484,9 +484,16 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     {
       final GM_PolygonPatch surfacePatch = surface.getSurfacePatch();
       final GM_Polygon newSurface = GeometryFactory.createGM_Surface( surfacePatch );
-      final GM_Triangle[] triangles = ConstraintDelaunayHelper.triangulateSimple( newSurface );
-      for( final GM_Triangle triangle : triangles )
-        refinementList.add( GeometryFactory.createGM_Surface( triangle ) );
+
+      final int nodeCount = surfacePatch.getExteriorRing().length;
+      if( nodeCount > 5 || !newSurface.getConvexHull().equals( newSurface ) )
+      {
+        final GM_Triangle[] triangles = ConstraintDelaunayHelper.triangulateSimple( newSurface );
+        for( final GM_Triangle triangle : triangles )
+          refinementList.add( GeometryFactory.createGM_Surface( triangle ) );
+      }
+      else
+        refinementList.add( newSurface );
     }
 
     if( refinementList.size() == 0 )
