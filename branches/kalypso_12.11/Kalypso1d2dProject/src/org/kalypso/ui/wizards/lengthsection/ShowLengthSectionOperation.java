@@ -90,11 +90,11 @@ class ShowLengthSectionOperation implements ICoreRunnableWithProgress
 
     if( lsCount == 0 )
     {
-      final String message = Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.9" );
+      final String message = Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.9" ); //$NON-NLS-1$
       return new Status( IStatus.INFO, Kalypso1d2dProjectPlugin.PLUGIN_ID, message );
     }
 
-    return log.asMultiStatusOrOK( "Problem(s) when trying to open longitudinal section(s)." );
+    return log.asMultiStatusOrOK( Messages.getString("ShowLengthSectionOperation.1") ); //$NON-NLS-1$
   }
 
   private Featuretemplate loadTemplate( ) throws CoreException
@@ -134,7 +134,7 @@ class ShowLengthSectionOperation implements ICoreRunnableWithProgress
           // set name of result as view label
           final ResultInfoBuilder infoBuilder = new ResultInfoBuilder();
           final String stepLabel = infoBuilder.formatResultLabel( docResult, currentScenario );
-          final String viewLabel = String.format( "%s - %s", stepLabel, docResult.getName() );
+          final String viewLabel = String.format( "%s - %s", stepLabel, docResult.getName() ); //$NON-NLS-1$
           featureView.setCustomName( viewLabel );
 
           return Status.OK_STATUS;
