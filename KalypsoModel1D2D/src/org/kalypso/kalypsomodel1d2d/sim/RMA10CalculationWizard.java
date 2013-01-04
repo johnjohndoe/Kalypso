@@ -215,13 +215,14 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
     final IStatus simulationStatus = m_calcPage.getSimulationStatus();
 
     addPage( m_resultPage );
-    getContainer().updateButtons();
+    final IWizardContainer container = getContainer();
+    if( container != null )
+      container.updateButtons();
 
     // get status
     if( simulationStatus.matches( IStatus.ERROR ) )
     {
       // HACK: disable cancel, after result processing, as canceling will not change anything from now on
-      final IWizardContainer container = getContainer();
       if( container instanceof WizardDialog2 )
       {
         final Button cancelButton = ((WizardDialog2)container).getButton( IDialogConstants.CANCEL_ID );
@@ -236,8 +237,8 @@ public class RMA10CalculationWizard extends Wizard implements ISimulation1D2DCon
     }
 
     /* If result processing starts immediately, show that page */
-    if( m_calcPage.getStartResultProcessing() )
-      getContainer().showPage( m_resultPage );
+    if( m_calcPage.getStartResultProcessing() && container != null )
+      container.showPage( m_resultPage );
 
     return simulationStatus;
   }
