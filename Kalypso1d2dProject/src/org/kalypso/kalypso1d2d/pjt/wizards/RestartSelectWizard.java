@@ -43,13 +43,9 @@ package org.kalypso.kalypso1d2d.pjt.wizards;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
@@ -60,9 +56,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
@@ -225,7 +219,7 @@ public class RestartSelectWizard extends Wizard
             final IDocumentResultMeta docResult = (IDocumentResultMeta)resultMeta;
             if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.nodes )
             {
-              final String restartPath = createRestartPath( docResult );
+              final String restartPath = ResultMeta1d2dHelper.buildFullLocation( docResult, m_scenarioFolder );
               restartInfo.setRestartFilePath( restartPath );
             }
           }
@@ -247,33 +241,5 @@ public class RestartSelectWizard extends Wizard
       e.printStackTrace();
     }
     return true;
-  }
-
-  private String createRestartPath( final IDocumentResultMeta nodeResult )
-  {
-    final IPath documentPath = nodeResult.getFullPath();
-
-    final Pair<IProject, IFolder> externalLocation = ResultMeta1d2dHelper.determineExternalLocation( nodeResult, m_scenarioFolder );
-
-    final IProject documentProject = externalLocation.getLeft();
-    final IFolder documentScenarioFolder = externalLocation.getRight();
-
-    if( documentScenarioFolder == null )
-    {
-      /* document is part of current scenario, just use document path relative to scenario */
-      return documentPath.toPortableString();
-    }
-
-    final IFile documentDataFile = documentScenarioFolder.getFile( documentPath );
-
-    if( documentProject == null )
-    {
-      /* document is in the same project, but in another scenario: make project relative path */
-      final IPath projectRelativePath = documentDataFile.getProjectRelativePath();
-      return String.format( "%s/%s", UrlResolver.PROJECT_PROTOCOLL, projectRelativePath.toPortableString() ); //$NON-NLS-1$
-    }
-
-    /* outside of the current project: make absolute path */
-    return ResourceUtilities.createQuietURL( documentDataFile ).toExternalForm();
   }
 }

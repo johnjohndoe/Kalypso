@@ -81,6 +81,8 @@ public class SelectLengthSectionWizard extends Wizard
     final String title = Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.2" ); //$NON-NLS-1$
 
     final SelectResultData data = new SelectResultData( m_resultModel );
+    data.setShowOptions( true );
+
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, title, data );
 
     selectResultWizardPage.setFilter( new LengthSectionViewerFilter() );
@@ -102,6 +104,6 @@ public class SelectLengthSectionWizard extends Wizard
       StatusDialog.open( getShell(), status, getWindowTitle() );
 //    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.12" ), status ); //$NON-NLS-1$
 
-    return !status.matches( IStatus.ERROR );
+    return status.isOK();
   }
 }
