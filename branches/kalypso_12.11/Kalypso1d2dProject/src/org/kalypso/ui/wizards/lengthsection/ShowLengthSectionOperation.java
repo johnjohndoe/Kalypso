@@ -133,7 +133,8 @@ class ShowLengthSectionOperation implements ICoreRunnableWithProgress
 
           // set name of result as view label
           final ResultInfoBuilder infoBuilder = new ResultInfoBuilder();
-          final String viewLabel = infoBuilder.formatResultLabel( docResult, currentScenario );
+          final String stepLabel = infoBuilder.formatResultLabel( docResult, currentScenario );
+          final String viewLabel = String.format( "%s - %s", stepLabel, docResult.getName() );
           featureView.setCustomName( viewLabel );
 
           return Status.OK_STATUS;
