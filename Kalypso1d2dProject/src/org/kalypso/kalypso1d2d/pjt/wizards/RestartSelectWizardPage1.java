@@ -40,7 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
+import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.swt.widgets.Composite;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.results.SelectResultData;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 
@@ -49,13 +54,38 @@ import org.kalypso.ui.wizards.results.SelectResultWizardPage;
  */
 public class RestartSelectWizardPage1 extends SelectResultWizardPage
 {
-  public RestartSelectWizardPage1( final String pageName, final String title, final SelectResultData data )
+  private final IResultMeta[] m_checkedResults;
+
+  public RestartSelectWizardPage1( final String pageName, final String title, final SelectResultData data, final IResultMeta[] checkedResults )
   {
     super( pageName, title, data );
+
+    m_checkedResults = checkedResults;
 
     // FIXME: actually, selecting results outside the current scenario already works (if not calculating via WPS service).
     // BUT: pre-checking the configured restarts does not work with those elements. This would need reworking the setCheckstate stuff of the page (maybe based on prefix of result url?)
     // data.setShowOptions( true );
+
+    setTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.3" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.4" ) ); //$NON-NLS-1$
+  }
+
+  @Override
+  public void createControl( final Composite parent )
+  {
+    super.createControl( parent );
+
+    /* Check elements if any defined */
+    final CheckboxTreeViewer treeViewer = getTreeViewer();
+
+    final ITreeContentProvider contentProvider = (ITreeContentProvider)treeViewer.getContentProvider();
+    for( final Object elementToCheck : m_checkedResults )
+    {
+      final Object parentToExpand = contentProvider.getParent( elementToCheck );
+      if( parentToExpand != null )
+        treeViewer.expandToLevel( parentToExpand, 1 );
+    }
+    treeViewer.setCheckedElements( m_checkedResults );
   }
 
   @Override

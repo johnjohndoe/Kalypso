@@ -129,8 +129,10 @@ public class RestartSelectWizard extends Wizard
   {
     final String title1 = Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.8" ); //$NON-NLS-1$
 
+    final IResultMeta[] checkedResults = getCheckedResults();
+
     final SelectResultData data = new SelectResultData( m_resultModel );
-    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage1", title1, data ); //$NON-NLS-1$
+    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage1", title1, data, checkedResults ); //$NON-NLS-1$
 
     m_restartSelectWizardPage1.addAction( new ImportRestartAction( m_restartSelectWizardPage1, m_scenarioFolder, m_modelProvider, m_resultModel ) );
 
@@ -142,14 +144,10 @@ public class RestartSelectWizard extends Wizard
     m_restartSelectWizardPage2 = new RestartSelectWizardPage2( "restartSelectionPage2", title2, null ); //$NON-NLS-1$ 
     addPage( m_restartSelectWizardPage2 );
 
-    configureRestartSelectPage();
   }
 
-  private void configureRestartSelectPage( )
+  private IResultMeta[] getCheckedResults( )
   {
-    m_restartSelectWizardPage1.setTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.3" ) ); //$NON-NLS-1$
-    m_restartSelectWizardPage1.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.4" ) ); //$NON-NLS-1$
-
     final List<IResultMeta> checkedElements = new ArrayList<>();
 
     final List<IRestartInfo> restartInfos = m_controlModel.getRestartInfos();
@@ -189,7 +187,7 @@ public class RestartSelectWizard extends Wizard
       }
     }
 
-    m_restartSelectWizardPage1.setInitialCheckedElements( checkedElements.toArray() );
+    return checkedElements.toArray( new IResultMeta[checkedElements.size()] );
   }
 
   @Override
