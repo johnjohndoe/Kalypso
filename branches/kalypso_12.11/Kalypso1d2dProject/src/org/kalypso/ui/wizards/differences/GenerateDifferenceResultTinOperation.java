@@ -46,14 +46,10 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -71,7 +67,6 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.MathOperator;
 import org.kalypso.kalypsomodel1d2d.project.Scenario1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
@@ -87,7 +82,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 public final class GenerateDifferenceResultTinOperation implements ICoreRunnableWithProgress
 {
-  static final String STR_PREFIX_DIFFFERENCES = Messages.getString("GenerateDifferenceResultTinOperation.1"); //$NON-NLS-1$
+  static final String STR_PREFIX_DIFFFERENCES = Messages.getString( "GenerateDifferenceResultTinOperation.1" ); //$NON-NLS-1$
 
   private final TinDifferenceData m_data;
 
@@ -189,6 +184,8 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
     final IDocumentResultMeta masterResult = m_data.getMasterResult();
     final IDocumentResultMeta slaveResult = m_data.getSlaveResult();
 
+    final IFolder scenarioFolder = m_data.getScenarioFolder();
+
     final StringWriter buffer = new StringWriter();
     final PrintWriter printer = new PrintWriter( buffer );
 
@@ -196,47 +193,17 @@ public final class GenerateDifferenceResultTinOperation implements ICoreRunnable
     final String parameterLabel = masterResult.getName();
     printer.format( Messages.getString( "GenerateDifferenceResultTinOperation.0" ), parameterLabel ); //$NON-NLS-1$
 
-    printer.format( "\t%s%n", formatResultLabel( masterResult ) ); //$NON-NLS-1$
+    final ResultInfoBuilder infoBuilder = new ResultInfoBuilder();
+
+    printer.format( "\t%s%n", infoBuilder.formatResultLabel( masterResult, scenarioFolder ) ); //$NON-NLS-1$
     printer.format( "\t\t%s%n", m_data.getOperator().toString() ); //$NON-NLS-1$
-    printer.format( "\t%s%n", formatResultLabel( slaveResult ) ); //$NON-NLS-1$
+    printer.format( "\t%s%n", infoBuilder.formatResultLabel( slaveResult, scenarioFolder ) ); //$NON-NLS-1$
 
     Messages.getString( "org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.32" ); //$NON-NLS-1$
 
     printer.close();
 
     return buffer.toString();
-  }
-
-  private String formatResultLabel( final IDocumentResultMeta result )
-  {
-    final Collection<String> buffer = new ArrayList<>( 5 );
-
-    final Pair<IProject, IFolder> externalLocation = ResultMeta1d2dHelper.determineExternalLocation( result, m_data.getScenarioFolder() );
-
-    final IProject externalProject = externalLocation.getLeft();
-    if( externalProject != null )
-      buffer.add( externalProject.getName() );
-
-    final IFolder externalScenario = externalLocation.getRight();
-    if( externalScenario != null )
-      buffer.add( externalScenario.getName() );
-
-    /* calc unit */
-    final ICalcUnitResultMeta calcUnitResult = ResultMeta1d2dHelper.getCalcUnitResultMeta( result );
-    if( calcUnitResult != null )
-      buffer.add( calcUnitResult.getName() );
-
-    /* step */
-    final IStepResultMeta stepResult = ResultMeta1d2dHelper.getStepResultMeta( result );
-    if( calcUnitResult != null )
-    {
-      // REMARK: using info bulder here, so it is formatted ni the same way as the information in the info panel
-      final ResultInfoBuilder infoBuilder = new ResultInfoBuilder();
-      final String stepLabel = infoBuilder.formatStepLabel( stepResult );
-      buffer.add( stepLabel );
-    }
-
-    return StringUtils.join( buffer, " - " ); //$NON-NLS-1$
   }
 
   private IFile createDestinationFilename( final IFolder stepFolder )

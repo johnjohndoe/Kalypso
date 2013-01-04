@@ -18,13 +18,10 @@
  */
 package org.kalypso.ui.wizards.lengthsection;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.httpclient.URIException;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -38,14 +35,15 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
+import org.kalypso.ui.wizards.results.ResultInfoBuilder;
 
 /**
  * @author Gernot Belger
@@ -80,15 +78,8 @@ class ShowLengthSectionOperation implements ICoreRunnableWithProgress
         final IDocumentResultMeta docResult = (IDocumentResultMeta)resultMeta;
         if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.lengthSection )
         {
-          try
-          {
-            final IStatus status = openLengthSection( docResult, template );
-            log.add( status );
-          }
-          catch( final CoreException e )
-          {
-            log.add( e.getStatus() );
-          }
+          final IStatus status = openLengthSection( docResult, template );
+          log.add( status );
 
           lsCount++;
         }
@@ -114,9 +105,11 @@ class ShowLengthSectionOperation implements ICoreRunnableWithProgress
     return GisTemplateHelper.loadGisFeatureTemplate( url, new NullProgressMonitor() );
   }
 
-  private IStatus openLengthSection( final IDocumentResultMeta docResult, final Featuretemplate template ) throws CoreException
+  private IStatus openLengthSection( final IDocumentResultMeta docResult, final Featuretemplate template )
   {
-    final String href = findLocation( docResult );
+    final IFolder currentScenario = ScenarioHelper.getScenarioFolder();
+    final String href = ResultMeta1d2dHelper.buildFullLocation( docResult, currentScenario );
+    final URL context = ResourceUtilities.createQuietURL( currentScenario );
 
     final IWorkbenchPage page = m_window.getActivePage();
 
@@ -136,7 +129,12 @@ class ShowLengthSectionOperation implements ICoreRunnableWithProgress
           final String featurePath = ""; //$NON-NLS-1$
 
           // set template to view in ui thread, sepcify href, featurePath and linkType
-          featureView.setTemplate( template, null, featurePath, href, linkType );
+          featureView.setTemplate( template, context, featurePath, href, linkType );
+
+          // set name of result as view label
+          final ResultInfoBuilder infoBuilder = new ResultInfoBuilder();
+          final String viewLabel = infoBuilder.formatResultLabel( docResult, currentScenario );
+          featureView.setCustomName( viewLabel );
 
           return Status.OK_STATUS;
         }
@@ -150,29 +148,5 @@ class ShowLengthSectionOperation implements ICoreRunnableWithProgress
     job.schedule();
 
     return Status.OK_STATUS;
-  }
-
-  private String findLocation( final IDocumentResultMeta docResult ) throws CoreException
-  {
-    try
-    {
-      final IPath fullPath = docResult.getFullPath();
-
-      final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
-      final URL urlContext = ResourceUtilities.createURL( scenarioFolder );
-
-      // path to gml, relative to context
-      final String href = fullPath.toPortableString();
-
-      final URL resolvedUrl = UrlResolverSingleton.resolveUrl( urlContext, href );
-
-      return resolvedUrl.toExternalForm();
-    }
-    catch( URIException | MalformedURLException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Failed to resolve result location", e ); //$NON-NLS-1$
-      throw new CoreException( status );
-    }
   }
 }

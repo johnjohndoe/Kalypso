@@ -22,9 +22,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -132,13 +135,13 @@ public class ResultInfoBuilder
     printProject( scenarioFolder.getProject(), printer );
 
     final String name = scenarioFolder.getName();
-    printer.format( "<p><b>%s:</b> %s</p>%n", Messages.getString("ResultInfoBuilder.0"), name ); //$NON-NLS-1$ //$NON-NLS-2$
+    printer.format( "<p><b>%s:</b> %s</p>%n", Messages.getString( "ResultInfoBuilder.0" ), name ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void printProject( final IProject project, final PrintWriter printer )
   {
     final String projectName = project.getName();
-    printer.format( "<p><b>%s:</b> %s</p>%n", Messages.getString("ResultInfoBuilder.1"), projectName ); //$NON-NLS-1$ //$NON-NLS-2$
+    printer.format( "<p><b>%s:</b> %s</p>%n", Messages.getString( "ResultInfoBuilder.1" ), projectName ); //$NON-NLS-1$ //$NON-NLS-2$
 
     try
     {
@@ -153,7 +156,7 @@ public class ResultInfoBuilder
   private void printCalcUnitResult( final ICalcUnitResultMeta result, final PrintWriter printer )
   {
     final String name = htmlString( result.getName() );
-    printer.format( "<p><b>%s:</b> %s</p>%n", Messages.getString("ResultInfoBuilder.2"), name ); //$NON-NLS-1$ //$NON-NLS-2$
+    printer.format( "<p><b>%s:</b> %s</p>%n", Messages.getString( "ResultInfoBuilder.2" ), name ); //$NON-NLS-1$ //$NON-NLS-2$
 
     printDescription( result.getDescription(), printer );
 
@@ -163,10 +166,10 @@ public class ResultInfoBuilder
     final String calcStart = calcStartTime == null ? "-" : m_dateFormat.format( calcStartTime ); //$NON-NLS-1$
     final String calcEnd = calcEndTime == null ? "-" : m_dateFormat.format( calcEndTime ); //$NON-NLS-1$
 
-    printer.format( "<li style='text' bindent='0' indent='10' value=''><b>%s</b></li>%n", Messages.getString("ResultInfoBuilder.3"), calcStart ); //$NON-NLS-1$ //$NON-NLS-2$ 
+    printer.format( "<li style='text' bindent='0' indent='10' value=''><b>%s</b></li>%n", Messages.getString( "ResultInfoBuilder.3" ), calcStart ); //$NON-NLS-1$ //$NON-NLS-2$ 
 
-    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", Messages.getString("ResultInfoBuilder.4"), calcStart ); //$NON-NLS-1$ //$NON-NLS-2$ 
-    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", Messages.getString("ResultInfoBuilder.5"), calcEnd ); //$NON-NLS-1$ //$NON-NLS-2$ 
+    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", Messages.getString( "ResultInfoBuilder.4" ), calcStart ); //$NON-NLS-1$ //$NON-NLS-2$ 
+    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", Messages.getString( "ResultInfoBuilder.5" ), calcEnd ); //$NON-NLS-1$ //$NON-NLS-2$ 
 
     printer.println( "<br/>" ); //$NON-NLS-1$
     printer.println();
@@ -176,7 +179,7 @@ public class ResultInfoBuilder
   {
     final String stepLabel = formatStepLabel( result );
 
-    printer.format( "<p><b>%s:</b></p>%n", Messages.getString("ResultInfoBuilder.6") ); //$NON-NLS-1$ //$NON-NLS-2$
+    printer.format( "<p><b>%s:</b></p>%n", Messages.getString( "ResultInfoBuilder.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     printer.format( "<li style='text' bindent='10' indent='150' value='%s'></li>%n", stepLabel ); //$NON-NLS-1$ 
 
     printer.println( "<br/>" ); //$NON-NLS-1$
@@ -193,17 +196,17 @@ public class ResultInfoBuilder
 
   private void printDocumentResult( final IDocumentResultMeta result, final PrintWriter printer )
   {
-    printer.format( "<p><b>%s:</b></p>%n", Messages.getString("ResultInfoBuilder.7") ); //$NON-NLS-1$ //$NON-NLS-2$
+    printer.format( "<p><b>%s:</b></p>%n", Messages.getString( "ResultInfoBuilder.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     printDescription( result.getDescription(), printer );
 
     final String docType = result.getDocumentType().toString();
-    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", Messages.getString("ResultInfoBuilder.8"), docType ); //$NON-NLS-1$ //$NON-NLS-2$
+    printer.format( "<li style='text' bindent='10' indent='150' value='%s:'>%s</li>%n", Messages.getString( "ResultInfoBuilder.8" ), docType ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final String valueRangeHtml = formatValueRanges( result );
     if( !StringUtils.isBlank( valueRangeHtml ) )
     {
-      printer.format( "<li style='text' bindent='10' indent='150' value='%s:'></li>%n", Messages.getString("ResultInfoBuilder.9"), docType ); //$NON-NLS-1$ //$NON-NLS-2$
+      printer.format( "<li style='text' bindent='10' indent='150' value='%s:'></li>%n", Messages.getString( "ResultInfoBuilder.9" ), docType ); //$NON-NLS-1$ //$NON-NLS-2$
       printer.println( valueRangeHtml );
     }
   }
@@ -273,5 +276,37 @@ public class ResultInfoBuilder
   {
     final String htmlText = htmlString( text );
     return StringUtils.replace( htmlText, "\n", "<br/>" ); //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  public String formatResultLabel( final IResultMeta result, final IFolder currentScenario )
+  {
+    final Collection<String> buffer = new ArrayList<>( 5 );
+
+    final Pair<IProject, IFolder> externalLocation = ResultMeta1d2dHelper.determineExternalLocation( result, currentScenario );
+
+    final IProject externalProject = externalLocation.getLeft();
+    if( externalProject != null )
+      buffer.add( externalProject.getName() );
+
+    final IFolder externalScenario = externalLocation.getRight();
+    if( externalScenario != null )
+      buffer.add( externalScenario.getName() );
+
+    /* calc unit */
+    final ICalcUnitResultMeta calcUnitResult = ResultMeta1d2dHelper.getCalcUnitResultMeta( result );
+    if( calcUnitResult != null )
+      buffer.add( calcUnitResult.getName() );
+
+    /* step */
+    final IStepResultMeta stepResult = ResultMeta1d2dHelper.getStepResultMeta( result );
+    if( calcUnitResult != null )
+    {
+      // REMARK: using info bulder here, so it is formatted ni the same way as the information in the info panel
+      final ResultInfoBuilder infoBuilder = new ResultInfoBuilder();
+      final String stepLabel = infoBuilder.formatStepLabel( stepResult );
+      buffer.add( stepLabel );
+    }
+
+    return StringUtils.join( buffer, " - " ); //$NON-NLS-1$
   }
 }
