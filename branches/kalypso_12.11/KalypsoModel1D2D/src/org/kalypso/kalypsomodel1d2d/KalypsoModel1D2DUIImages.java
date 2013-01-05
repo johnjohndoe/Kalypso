@@ -75,7 +75,9 @@ public class KalypsoModel1D2DUIImages
     ELEVATION_MOVE_UP( "icons/elcl16/list_up.gif" ), //$NON-NLS-1$
     ELEVATION_MOVE_DOWN( "icons/elcl16/list_down.gif" ), //$NON-NLS-1$
     IMPORT_EXTERNAL_RESULT( "icons/obj16/importExternalResult.gif" ), //$NON-NLS-1$
-    CHANNEL_EDIT_INFO( "icons/obj16/createChannelInfo.png" ); //$NON-NLS-1$
+    CHANNEL_EDIT_INFO( "icons/obj16/createChannelInfo.png" ), //$NON-NLS-1$
+    RESTART_SORT_DOWN( "icons/elcl16/list_down.gif" ), //$NON-NLS-1$
+    RESTART_SORT_UP( "icons/elcl16/list_up.gif" ); //$NON-NLS-1$
 
     private final String m_imagePath;
 
@@ -84,9 +86,6 @@ public class KalypsoModel1D2DUIImages
       m_imagePath = imagePath;
     }
 
-    /**
-     * @see org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey#getImagePath()
-     */
     @Override
     public String getImagePath( )
     {

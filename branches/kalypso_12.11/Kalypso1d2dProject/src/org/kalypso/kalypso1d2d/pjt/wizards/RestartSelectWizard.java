@@ -67,10 +67,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-import org.kalypso.ui.wizards.results.SelectResultData;
-import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -80,10 +77,6 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
  */
 public class RestartSelectWizard extends Wizard
 {
-  private RestartSelectWizardPage1 m_restartSelectWizardPage1;
-
-  private RestartSelectWizardPage2 m_restartSelectWizardPage2;
-
   private IScenarioResultMeta m_resultModel;
 
   private final IScenarioDataProvider m_modelProvider;
@@ -92,11 +85,10 @@ public class RestartSelectWizard extends Wizard
 
   private final IFolder m_scenarioFolder;
 
+  private final RestartSelectData m_data;
+
   public RestartSelectWizard( final IControlModel1D2D controlModel )
   {
-    // FIXME: get string from outside, should be the same as the action name
-    setWindowTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.0" ) ); //$NON-NLS-1$
-
     setDialogSettings( DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), getClass().getName() ) );
 
     final IHandlerService handlerService = (IHandlerService)PlatformUI.getWorkbench().getService( IHandlerService.class );
@@ -116,33 +108,24 @@ public class RestartSelectWizard extends Wizard
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
       ErrorDialog.openError( shell, getWindowTitle(), Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
+
+    final IResultMeta[] checkedResults = getCheckedResults();
+
+    m_data = new RestartSelectData( m_scenarioFolder, m_resultModel, checkedResults );
   }
 
   @Override
   public void addPages( )
   {
-    final String title1 = Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.8" ); //$NON-NLS-1$
+    final RestartSelectWizardPage1 page = new RestartSelectWizardPage1( "restartSelectionPage1", m_data ); //$NON-NLS-1$
+    page.addAction( new ImportRestartAction( page, m_scenarioFolder, m_modelProvider, m_resultModel ) );
 
-    final IResultMeta[] checkedResults = getCheckedResults();
-
-    final SelectResultData data = new SelectResultData( m_resultModel );
-    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage1", title1, data, checkedResults ); //$NON-NLS-1$
-
-    m_restartSelectWizardPage1.addAction( new ImportRestartAction( m_restartSelectWizardPage1, m_scenarioFolder, m_modelProvider, m_resultModel ) );
-
-    m_restartSelectWizardPage1.setFilter( new DocumentResultViewerFilter() );
-
-    addPage( m_restartSelectWizardPage1 );
-
-    final String title2 = Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.10" ); //$NON-NLS-1$
-    m_restartSelectWizardPage2 = new RestartSelectWizardPage2( "restartSelectionPage2", title2, null ); //$NON-NLS-1$ 
-    addPage( m_restartSelectWizardPage2 );
-
+    addPage( page );
   }
 
-  private IResultMeta[] getCheckedResults( )
+  private IStepResultMeta[] getCheckedResults( )
   {
-    final List<IResultMeta> checkedElements = new ArrayList<>();
+    final List<IStepResultMeta> checkedElements = new ArrayList<>();
 
     final List<IRestartInfo> restartInfos = m_controlModel.getRestartInfos();
     for( final IRestartInfo restartInfo : restartInfos )
@@ -173,7 +156,7 @@ public class RestartSelectWizard extends Wizard
               {
                 final String docPath = docResult.getFullPath().toString();
                 if( docPath.equals( stepResultFilePath ) )
-                  checkedElements.add( calcUnitChild );
+                  checkedElements.add( stepResult );
               }
             }
           }
@@ -181,7 +164,7 @@ public class RestartSelectWizard extends Wizard
       }
     }
 
-    return checkedElements.toArray( new IResultMeta[checkedElements.size()] );
+    return checkedElements.toArray( new IStepResultMeta[checkedElements.size()] );
   }
 
   @Override
@@ -190,17 +173,10 @@ public class RestartSelectWizard extends Wizard
     final List<IRestartInfo> restartInfos = m_controlModel.getRestartInfos();
     restartInfos.clear();
 
-    final IResultMeta[] selectedResults;
-
-    // FIXME: dangerous.. what if the user goes to page2, confgures it, and then returns?
-    if( getContainer().getCurrentPage().equals( m_restartSelectWizardPage2 ) )
-      selectedResults = m_restartSelectWizardPage2.getSortedResults();
-    else
-      selectedResults = m_restartSelectWizardPage1.getSelectedResults();
-
-    for( final IResultMeta element : selectedResults )
+    final IStepResultMeta[] restartResults = m_data.getRestartResults();
+    for( final IResultMeta element : restartResults )
     {
-      if( element instanceof StepResultMeta )
+      if( element instanceof IStepResultMeta )
       {
         final IStepResultMeta result = (IStepResultMeta)element;
 
@@ -210,8 +186,8 @@ public class RestartSelectWizard extends Wizard
 
         // TODO: implement accessing zip file! FIXME: why?
 
+        /* find node result for this step */
         final IFeatureBindingCollection<IResultMeta> children = result.getChildren();
-
         for( final IResultMeta resultMeta : children )
         {
           if( resultMeta instanceof IDocumentResultMeta )

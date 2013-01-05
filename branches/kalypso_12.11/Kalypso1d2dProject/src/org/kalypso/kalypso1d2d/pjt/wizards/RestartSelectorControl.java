@@ -75,7 +75,10 @@ public class RestartSelectorControl extends AbstractFeatureControl
       public void widgetSelected( final SelectionEvent e )
       {
         final IControlModel1D2D controlModel = (IControlModel1D2D)getFeature().getAdapter( IControlModel1D2D.class );
+
         final RestartSelectWizard wizard = new RestartSelectWizard( controlModel );
+        wizard.setWindowTitle( button.getText() );
+
         final WizardDialog2 wizardDialog = new WizardDialog2( parent.getDisplay().getActiveShell(), wizard );
         wizardDialog.setRememberSize( true );
         wizardDialog.open();
