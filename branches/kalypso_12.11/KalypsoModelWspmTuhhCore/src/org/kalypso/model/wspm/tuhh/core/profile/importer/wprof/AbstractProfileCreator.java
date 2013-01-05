@@ -102,7 +102,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
 
   public GM_Point transform( final GM_Point location ) throws Exception
   {
-    return (GM_Point) m_data.getTransformer().transform( location );
+    return m_data.getTransformer().transform( location );
   }
 
   public ProfileMarkers getMarkers( )

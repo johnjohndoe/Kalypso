@@ -9,26 +9,15 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.core.jaxb.TemplateUtilities;
-import org.kalypso.kalypso1d2d.internal.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.GisTemplateHelper;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Style;
-import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizards.imports.utils.StyleUtils;
-import org.kalypso.ui.wizards.results.IResultControl;
-import org.kalypso.ui.wizards.results.IResultControlFactory;
-import org.kalypso.ui.wizards.results.ResultAddLayerCommandData;
 
 /**
  * Utility class for creating GisMapView map files
