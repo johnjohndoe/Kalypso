@@ -1080,8 +1080,11 @@
     <xs:complexContent>
       <xs:extension base="gml:AbstractFeatureType">
         <xs:sequence>
+          <!-- DEPRECATED not used any more -->
           <xs:element name="calculationUnitID" type="xs:string" minOccurs="1" maxOccurs="1" />
+          <!-- DEPRECATED not used any more -->
           <xs:element name="stepResultMetaID" type="xs:string" minOccurs="1" maxOccurs="1" />
+          
           <xs:element name="filePath" type="xs:string" minOccurs="1" maxOccurs="1" />
         </xs:sequence>
       </xs:extension>

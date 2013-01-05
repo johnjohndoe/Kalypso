@@ -56,21 +56,9 @@ public interface IRestartInfo extends Feature
 {
   QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "RestartInfo" ); //$NON-NLS-1$
 
-  QName QNAME_PROP_CALC_UNIT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "calculationUnitID" ); //$NON-NLS-1$
-
-  QName QNAME_PROP_STEP_RESULT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "stepResultMetaID" ); //$NON-NLS-1$
-
   QName QNAME_PROP_RESULT_FILE_PATH = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "filePath" ); //$NON-NLS-1$
 
-  String getCalculationUnitID( );
-
-  String getStepResultMetaID( );
-
   IPath getRestartFilePath( );
-
-  void setCalculationUnitID( final String gmlID );
-
-  void setStepResultMetaID( final String gmlID );
 
   void setRestartFilePath( final String filePath );
 
