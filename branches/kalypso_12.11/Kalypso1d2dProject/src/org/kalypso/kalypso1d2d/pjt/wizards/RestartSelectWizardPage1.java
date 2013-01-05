@@ -150,7 +150,7 @@ public class RestartSelectWizardPage1 extends WizardPage implements ITreeViewerP
 
     /* step result list */
     final Group restartResultsGroup = new Group( rightPanel, SWT.NONE );
-    restartResultsGroup.setText( "Results used for restart - sorted by precedence" );
+    restartResultsGroup.setText( Messages.getString("RestartSelectWizardPage1.0") ); //$NON-NLS-1$
     restartResultsGroup.setLayout( new FillLayout() );
     restartResultsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final RestartSorterComposite sorterComposite = new RestartSorterComposite( m_binding, restartResultsGroup, m_data );
@@ -214,7 +214,7 @@ public class RestartSelectWizardPage1 extends WizardPage implements ITreeViewerP
         if( !newElement.isValid() )
         {
           /* war user that result is invalid */
-          final String message = String.format( "Invalid result: missing data file: %s", newElement.getRestartInfoPath() );
+          final String message = String.format( RestartSorterLabelProvider.STR_INVALID_RESULT, newElement.getRestartInfoPath() );
           MessageDialog.openWarning( getShell(), getTitle(), message );
           return;
         }
