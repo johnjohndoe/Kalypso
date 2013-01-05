@@ -135,6 +135,8 @@ public class RestartSelectWizardPage1 extends WizardPage implements ITreeViewerP
     final Control treeControl = m_treeComposite.createControls( m_binding, panel, SWT.BORDER );
     treeControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final TreeViewer treeViewer = m_treeComposite.getTreeViewer();
+    treeViewer.setExpandPreCheckFilters( true );
+
     treeViewer.setLabelProvider( new RestartSelectLabelProvider( m_data ) );
     treeViewer.getControl().setFocus();
 
@@ -150,7 +152,7 @@ public class RestartSelectWizardPage1 extends WizardPage implements ITreeViewerP
 
     /* step result list */
     final Group restartResultsGroup = new Group( rightPanel, SWT.NONE );
-    restartResultsGroup.setText( Messages.getString("RestartSelectWizardPage1.0") ); //$NON-NLS-1$
+    restartResultsGroup.setText( Messages.getString( "RestartSelectWizardPage1.0" ) ); //$NON-NLS-1$
     restartResultsGroup.setLayout( new FillLayout() );
     restartResultsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final RestartSorterComposite sorterComposite = new RestartSorterComposite( m_binding, restartResultsGroup, m_data );
