@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -71,15 +74,15 @@ public class ResultMetaInfoViewer
 
   private Composite m_factoryPanel;
 
-  private final IDataBinding m_binding;
+  private final SelectResultData m_data;
 
-  public ResultMetaInfoViewer( final IDataBinding binding, final IResultControlFactory factory )
+  public ResultMetaInfoViewer( final IResultControlFactory factory, final SelectResultData data )
   {
-    m_binding = binding;
     m_factory = factory;
+    m_data = data;
   }
 
-  public Control createControl( final Composite parent )
+  public Control createControl( final IDataBinding binding, final Composite parent )
   {
     final Group control = new Group( parent, SWT.NONE );
 
@@ -100,17 +103,28 @@ public class ResultMetaInfoViewer
     m_factoryPanel.setLayout( new FillLayout() );
     m_factoryPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
+    /* binding */
+    m_data.addPropertyChangeListener( SelectResultData.PROPERTY_TREE_SELECTION, new PropertyChangeListener()
+    {
+      @Override
+      public void propertyChange( final PropertyChangeEvent evt )
+      {
+        final Object newValue = evt.getNewValue();
+        setInput( binding, newValue );
+      }
+    } );
+
     return control;
   }
 
-  public void setInput( final Object input )
+  protected void setInput( final IDataBinding binding, final Object input )
   {
     m_input = input;
 
-    refresh();
+    refresh( binding );
   }
 
-  private void refresh( )
+  private void refresh( final IDataBinding binding )
   {
     if( m_form == null )
       return;
@@ -125,7 +139,7 @@ public class ResultMetaInfoViewer
     {
       final IResultMeta result = (IResultMeta)m_input;
       final IResultControl createThemeCreator = m_factory.createThemeConstructor( result );
-      createThemeCreator.createControl( m_binding, m_factoryPanel );
+      createThemeCreator.createControl( binding, m_factoryPanel );
       m_factoryPanel.layout( true );
     }
 

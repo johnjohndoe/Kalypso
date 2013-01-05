@@ -35,9 +35,9 @@ public class SelectResultData extends AbstractModelObject
 {
   public enum ShowType
   {
-    current( Messages.getString("SelectResultData_0") ), //$NON-NLS-1$
-    project( Messages.getString("SelectResultData_1") ), //$NON-NLS-1$
-    all( Messages.getString("SelectResultData_2") ); //$NON-NLS-1$
+    current( Messages.getString( "SelectResultData_0" ) ), //$NON-NLS-1$
+    project( Messages.getString( "SelectResultData_1" ) ), //$NON-NLS-1$
+    all( Messages.getString( "SelectResultData_2" ) ); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -59,11 +59,15 @@ public class SelectResultData extends AbstractModelObject
 
   public static final String PROPERTY_RESULT_ROOT = "resultRoot"; //$NON-NLS-1$
 
+  public static final String PROPERTY_TREE_SELECTION = "treeSelection"; //$NON-NLS-1$
+
   private final IScenarioResultMeta m_currentScenarioResult;
 
   private boolean m_showOptions = false;
 
   private Object m_resultRoot;
+
+  private Object m_treeSelection = null;
 
   public SelectResultData( final IScenarioResultMeta currentScenarioResult )
   {
@@ -150,5 +154,19 @@ public class SelectResultData extends AbstractModelObject
     m_showOptions = showOptions;
 
     firePropertyChange( PROPERTY_SHOW_OPTIONS, oldValue, showOptions );
+  }
+
+  public Object getTreeSelection( )
+  {
+    return m_treeSelection;
+  }
+
+  public void setTreeSelection( final Object treeSelection )
+  {
+    final Object oldValue = m_treeSelection;
+
+    m_treeSelection = treeSelection;
+
+    firePropertyChange( PROPERTY_TREE_SELECTION, oldValue, treeSelection );
   }
 }
