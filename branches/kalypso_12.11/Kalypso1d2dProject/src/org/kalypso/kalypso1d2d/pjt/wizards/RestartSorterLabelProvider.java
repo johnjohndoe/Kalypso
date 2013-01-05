@@ -22,7 +22,8 @@ import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.eclipse.core.databinding.property.value.SimpleValueProperty;
 import org.eclipse.core.resources.IFolder;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.eclipse.core.runtime.IPath;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.ui.wizards.results.ResultInfoBuilder;
 
 /**
@@ -42,7 +43,16 @@ class RestartSorterLabelProvider extends SimpleValueProperty
   @Override
   protected Object doGetValue( final Object source )
   {
-    return m_infoBuilder.formatResultLabel( (IResultMeta)source, m_currentScenario );
+    final RestartElement element = (RestartElement)source;
+    final IStepResultMeta stepResult = element.getStepResult();
+    if( stepResult == null )
+    {
+      final IPath path = element.getRestartInfoPath();
+
+      return String.format( "Invalid element, file does not exist: %s", path.toPortableString() );
+    }
+    else
+      return m_infoBuilder.formatResultLabel( stepResult, m_currentScenario );
   }
 
   @Override

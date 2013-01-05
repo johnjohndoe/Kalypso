@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 
 /**
  * @author Gernot Belger
@@ -83,9 +84,14 @@ public class RestartSelectLabelProvider extends LabelProvider implements IFontPr
   @Override
   public Font getFont( final Object element )
   {
-    final boolean isRestart = m_data.getRestartResultSet().contains( element );
-    if( isRestart )
-      return JFaceResources.getBannerFont();
+    if( element instanceof IStepResultMeta )
+    {
+      final RestartElement restartElement = m_data.findRestartElement( (IStepResultMeta)element );
+
+      final boolean isRestart = m_data.getRestartResultSet().contains( restartElement );
+      if( isRestart )
+        return JFaceResources.getBannerFont();
+    }
 
     return null;
   }

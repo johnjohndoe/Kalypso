@@ -42,6 +42,7 @@ package org.kalypso.kalypso1d2d.pjt.wizards;
 
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -62,6 +63,7 @@ import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.ui.wizards.results.IResultControlFactory;
 import org.kalypso.ui.wizards.results.ResultMetaInfoViewer;
+import org.kalypso.ui.wizards.results.SelectResultData.ShowType;
 import org.kalypso.ui.wizards.results.SelectResultTreeComposite;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 
@@ -90,7 +92,7 @@ public class RestartSelectWizardPage1 extends WizardPage implements ITreeViewerP
 
     // FIXME: actually, selecting results outside the current scenario already works (if not calculating via WPS service).
     // BUT: pre-checking the configured restarts does not work with those elements. This would need reworking the setCheckstate stuff of the page (maybe based on prefix of result url?)
-//    data.setShowOptions( true );
+    data.setShowOptions( true );
 
     setTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.3" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.4" ) ); //$NON-NLS-1$
@@ -136,6 +138,11 @@ public class RestartSelectWizardPage1 extends WizardPage implements ITreeViewerP
     treeViewer.setLabelProvider( new RestartSelectLabelProvider( m_data ) );
     treeViewer.getControl().setFocus();
 
+    /* initialize restart elements */
+    // REMARK: at this place, so we do not need to update labels of sorter composite
+    final ITreeContentProvider contentProvider = (ITreeContentProvider)treeViewer.getContentProvider();
+    m_data.initalizeRestartElements( contentProvider );
+
     /* right panel */
     final Composite rightPanel = new Composite( panel, SWT.NONE );
     rightPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -163,34 +170,61 @@ public class RestartSelectWizardPage1 extends WizardPage implements ITreeViewerP
       @Override
       public void doubleClick( final DoubleClickEvent event )
       {
-        addRestartResult( treeViewer );
+        treeDoubleClicked( treeViewer );
       }
     } );
 
     /* autoexpand restart elements */
+    autoexpandRestartElements( treeViewer );
+  }
+
+  private void autoexpandRestartElements( final TreeViewer treeViewer )
+  {
+    /* automatically show alien projects/scenarios if the restart set contanis those */
+    final ShowType type = m_data.findShowType( m_data.getRestartResults() );
+    m_data.setShowAllType( type );
+
+    /* now content provider contains the right elements, expand them! */
     final ITreeContentProvider contentProvider = (ITreeContentProvider)treeViewer.getContentProvider();
-    for( final Object elementToCheck : m_data.getRestartResultSet() )
+
+    for( final Object object : m_data.getRestartResultSet() )
     {
-      final Object parentToExpand = contentProvider.getParent( elementToCheck );
+      final RestartElement element = (RestartElement)object;
+
+      final IStepResultMeta stepResult = element.getStepResult();
+
+      final Object parentToExpand = contentProvider.getParent( stepResult );
       if( parentToExpand != null )
         treeViewer.expandToLevel( parentToExpand, 1 );
     }
   }
 
-  protected void addRestartResult( final TreeViewer treeViewer )
+  protected void treeDoubleClicked( final TreeViewer treeViewer )
   {
     final Object treeSelection = m_data.getTreeSelection();
     if( treeSelection instanceof IStepResultMeta )
     {
       final IObservableList resultSet = m_data.getRestartResultSet();
-      if( !resultSet.contains( treeSelection ) )
+
+      final RestartElement oldElement = m_data.findRestartElement( (IStepResultMeta)treeSelection );
+
+      if( oldElement == null )
       {
-        resultSet.add( treeSelection );
-        m_data.setSelectedRestart( (IStepResultMeta)treeSelection );
+        final RestartElement newElement = m_data.createRestartElement( (IStepResultMeta)treeSelection );
+        if( !newElement.isValid() )
+        {
+          /* war user that result is invalid */
+          final String message = String.format( "Invalid result: missing data file: %s", newElement.getRestartInfoPath() );
+          MessageDialog.openWarning( getShell(), getTitle(), message );
+          return;
+        }
+
+        resultSet.add( newElement );
+        m_data.setSelectedRestart( newElement );
       }
       else
       {
-        resultSet.remove( treeSelection );
+        resultSet.remove( oldElement );
         m_data.setSelectedRestart( null );
       }
     }
