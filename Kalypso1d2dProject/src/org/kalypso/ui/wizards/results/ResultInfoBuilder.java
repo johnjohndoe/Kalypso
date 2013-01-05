@@ -61,7 +61,7 @@ public class ResultInfoBuilder
   public String format( final Object element )
   {
     if( element == null )
-      return "<form>" + Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.5" ) + "<form>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return "<form>" + Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.5" ) + "</form>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final StringWriter buffer = new StringWriter();
     final PrintWriter printer = new PrintWriter( buffer );
