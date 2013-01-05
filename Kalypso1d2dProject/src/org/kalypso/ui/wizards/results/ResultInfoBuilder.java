@@ -292,21 +292,18 @@ public class ResultInfoBuilder
     if( externalScenario != null )
       buffer.add( externalScenario.getName() );
 
-    /* calc unit */
-    final ICalcUnitResultMeta calcUnitResult = ResultMeta1d2dHelper.getCalcUnitResultMeta( result );
-    if( calcUnitResult != null )
-      buffer.add( calcUnitResult.getName() );
-
-    /* step */
-    final IStepResultMeta stepResult = ResultMeta1d2dHelper.getStepResultMeta( result );
-    if( calcUnitResult != null )
-    {
-      // REMARK: using info bulder here, so it is formatted ni the same way as the information in the info panel
-      final ResultInfoBuilder infoBuilder = new ResultInfoBuilder();
-      final String stepLabel = infoBuilder.formatStepLabel( stepResult );
-      buffer.add( stepLabel );
-    }
+    /* recurively add his element and all owners */
+    addNameChain( buffer, result );
 
     return StringUtils.join( buffer, " - " ); //$NON-NLS-1$
+  }
+
+  private void addNameChain( final Collection<String> buffer, final IResultMeta result )
+  {
+    final IResultMeta owner = result.getOwner();
+    if( owner != null && !(owner instanceof IScenarioResultMeta) )
+      addNameChain( buffer, owner );
+
+    buffer.add( result.getName() );
   }
 }
