@@ -197,7 +197,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
       {
         final String tinCRS = tinReference.getTin().getCoordinateSystem();
         final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( tinCRS );
-        final GM_Point transformedPoint = (GM_Point)transformer.transform( point );
+        final GM_Point transformedPoint = transformer.transform( point );
         final GM_Position transPos = transformedPoint.getPosition();
 
         final double wspValue = tinReference.getValue( transPos );
