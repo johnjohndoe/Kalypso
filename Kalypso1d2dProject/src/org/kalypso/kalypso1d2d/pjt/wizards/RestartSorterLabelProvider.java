@@ -23,6 +23,7 @@ import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.eclipse.core.databinding.property.value.SimpleValueProperty;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
+import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.ui.wizards.results.ResultInfoBuilder;
 
@@ -31,6 +32,8 @@ import org.kalypso.ui.wizards.results.ResultInfoBuilder;
  */
 class RestartSorterLabelProvider extends SimpleValueProperty
 {
+  static String STR_INVALID_RESULT = Messages.getString("RestartSorterLabelProvider_0"); //$NON-NLS-1$
+
   private final ResultInfoBuilder m_infoBuilder = new ResultInfoBuilder();
 
   private final IFolder m_currentScenario;
@@ -49,7 +52,7 @@ class RestartSorterLabelProvider extends SimpleValueProperty
     {
       final IPath path = element.getRestartInfoPath();
 
-      return String.format( "Invalid element, file does not exist: %s", path.toPortableString() );
+      return String.format( STR_INVALID_RESULT, path.toPortableString() );
     }
     else
       return m_infoBuilder.formatResultLabel( stepResult, m_currentScenario );
