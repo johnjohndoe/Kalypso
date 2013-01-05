@@ -62,18 +62,6 @@ public class RestartInfo extends Feature_Impl implements IRestartInfo
   }
 
   @Override
-  public String getCalculationUnitID( )
-  {
-    return (String)getProperty( IRestartInfo.QNAME_PROP_CALC_UNIT_ID );
-  }
-
-  @Override
-  public String getStepResultMetaID( )
-  {
-    return (String)getProperty( IRestartInfo.QNAME_PROP_STEP_RESULT_ID );
-  }
-
-  @Override
   public IPath getRestartFilePath( )
   {
     final String path = (String)getProperty( IRestartInfo.QNAME_PROP_RESULT_FILE_PATH );
@@ -81,18 +69,6 @@ public class RestartInfo extends Feature_Impl implements IRestartInfo
       return null;
 
     return Path.fromPortableString( path );
-  }
-
-  @Override
-  public void setCalculationUnitID( final String gmlID )
-  {
-    setProperty( IRestartInfo.QNAME_PROP_CALC_UNIT_ID, gmlID );
-  }
-
-  @Override
-  public void setStepResultMetaID( final String gmlID )
-  {
-    setProperty( IRestartInfo.QNAME_PROP_STEP_RESULT_ID, gmlID );
   }
 
   @Override
