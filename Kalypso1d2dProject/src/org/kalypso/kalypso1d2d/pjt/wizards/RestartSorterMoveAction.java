@@ -24,7 +24,6 @@ import java.beans.PropertyChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 
 /**
  * @author Gernot Belger
@@ -54,7 +53,7 @@ class RestartSorterMoveAction extends Action
 
   protected void update( )
   {
-    final IStepResultMeta selectedStep = m_data.getSelectedRestart();
+    final RestartElement selectedStep = m_data.getSelectedRestart();
     final IObservableList resultSet = m_data.getRestartResultSet();
 
     final int position = resultSet.indexOf( selectedStep );
@@ -68,7 +67,7 @@ class RestartSorterMoveAction extends Action
     if( !isEnabled() )
       return;
 
-    final IStepResultMeta selectedStep = m_data.getSelectedRestart();
+    final RestartElement selectedStep = m_data.getSelectedRestart();
     final IObservableList resultSet = m_data.getRestartResultSet();
 
     final int position = resultSet.indexOf( selectedStep );

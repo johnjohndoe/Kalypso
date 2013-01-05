@@ -44,7 +44,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
+import org.kalypso.ui.wizards.results.SelectResultData.ShowType;
 
 /**
  * @author Gernot Belger
@@ -134,10 +134,16 @@ class RestartSorterComposite extends Composite
 
   protected void treeDoubleClicked( )
   {
-    final IStepResultMeta currentResult = m_data.getSelectedRestart();
+    final RestartElement currentResult = m_data.getSelectedRestart();
     if( currentResult == null )
       return;
 
-    m_data.setTreeSelection( currentResult );
+    /* make sure, element can be selected (i.e. tree shows the right elements ) */
+    final ShowType showType = m_data.findShowType( currentResult );
+    if( showType.compareTo( m_data.getShowAllType() ) > 0 )
+      m_data.setShowAllType( showType );
+
+    /* now we can always select it */
+    m_data.setTreeSelection( currentResult.getStepResult() );
   }
 }

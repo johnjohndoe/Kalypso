@@ -40,12 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
@@ -56,6 +60,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.kalypso1d2d.internal.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
@@ -63,12 +68,8 @@ import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
@@ -109,9 +110,9 @@ public class RestartSelectWizard extends Wizard
       ErrorDialog.openError( shell, getWindowTitle(), Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    final IResultMeta[] checkedResults = getCheckedResults();
+    final RestartElement[] configuredResults = getRestartResults();
 
-    m_data = new RestartSelectData( m_scenarioFolder, m_resultModel, checkedResults );
+    m_data = new RestartSelectData( m_scenarioFolder, m_resultModel, configuredResults );
   }
 
   @Override
@@ -123,48 +124,41 @@ public class RestartSelectWizard extends Wizard
     addPage( page );
   }
 
-  private IStepResultMeta[] getCheckedResults( )
+  private RestartElement[] getRestartResults( )
   {
-    final List<IStepResultMeta> checkedElements = new ArrayList<>();
+    final List<RestartElement> elements = new ArrayList<>();
 
     final List<IRestartInfo> restartInfos = m_controlModel.getRestartInfos();
     for( final IRestartInfo restartInfo : restartInfos )
     {
-      final String restartUnitID = restartInfo.getCalculationUnitID();
-      final ICalcUnitResultMeta calcUnitMetaResult = m_resultModel.findCalcUnitMetaResult( restartUnitID );
-      if( calcUnitMetaResult == null )
-        continue;
-
-      final String stepResultFilePath = restartInfo.getRestartFilePath().toString();
-
-      // FIXME: handle results outside current scenario...
-
-      final IFeatureBindingCollection<IResultMeta> calcUnitChildren = calcUnitMetaResult.getChildren();
-      for( final IResultMeta calcUnitChild : calcUnitChildren )
-      {
-        if( calcUnitChild instanceof IStepResultMeta )
-        {
-          final IStepResultMeta stepResult = (IStepResultMeta)calcUnitChild;
-          final IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
-          for( final IResultMeta resultMeta : children )
-          {
-            if( resultMeta instanceof IDocumentResultMeta )
-            {
-              final IDocumentResultMeta docResult = (IDocumentResultMeta)resultMeta;
-
-              if( docResult.getDocumentType().equals( IDocumentResultMeta.DOCUMENTTYPE.nodes ) )
-              {
-                final String docPath = docResult.getFullPath().toString();
-                if( docPath.equals( stepResultFilePath ) )
-                  checkedElements.add( stepResult );
-              }
-            }
-          }
-        }
-      }
+      final RestartElement element = buildRestartElement( restartInfo );
+      if( element != null )
+        elements.add( element );
     }
 
-    return checkedElements.toArray( new IStepResultMeta[checkedElements.size()] );
+    return elements.toArray( new RestartElement[elements.size()] );
+  }
+
+  private RestartElement buildRestartElement( final IRestartInfo restartInfo )
+  {
+    final IFolder currentScenario = m_scenarioFolder;
+    final URL currentScenarioLocation = ResourceUtilities.createQuietURL( currentScenario );
+
+    final IPath restartFilePath = restartInfo.getRestartFilePath();
+
+    try
+    {
+      final URL fullLocation = restartInfo.resolveRestartLocation( currentScenarioLocation );
+
+      final IFile restartFile = ResourceUtilities.findFileFromURL( fullLocation );
+
+      return new RestartElement( restartFilePath, restartFile );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      return new RestartElement( restartFilePath, null );
+    }
   }
 
   @Override
@@ -173,33 +167,18 @@ public class RestartSelectWizard extends Wizard
     final List<IRestartInfo> restartInfos = m_controlModel.getRestartInfos();
     restartInfos.clear();
 
-    final IStepResultMeta[] restartResults = m_data.getRestartResults();
-    for( final IResultMeta element : restartResults )
+    final RestartElement[] restartResults = m_data.getRestartResults();
+    for( final RestartElement element : restartResults )
     {
-      if( element instanceof IStepResultMeta )
+      final IDocumentResultMeta nodeResult = element.getNodeResult();
+      if( nodeResult != null )
       {
-        final IStepResultMeta result = (IStepResultMeta)element;
-
         final IRestartInfo restartInfo = m_controlModel.addRestartInfo();
-        restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta)result.getOwner()).getCalcUnit() );
-        restartInfo.setStepResultMetaID( result.getId() );
 
         // TODO: implement accessing zip file! FIXME: why?
 
-        /* find node result for this step */
-        final IFeatureBindingCollection<IResultMeta> children = result.getChildren();
-        for( final IResultMeta resultMeta : children )
-        {
-          if( resultMeta instanceof IDocumentResultMeta )
-          {
-            final IDocumentResultMeta docResult = (IDocumentResultMeta)resultMeta;
-            if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.nodes )
-            {
-              final String restartPath = ResultMeta1d2dHelper.buildFullLocation( docResult, m_scenarioFolder );
-              restartInfo.setRestartFilePath( restartPath );
-            }
-          }
-        }
+        final String restartPath = ResultMeta1d2dHelper.buildFullLocation( nodeResult, m_scenarioFolder );
+        restartInfo.setRestartFilePath( restartPath );
       }
     }
 
