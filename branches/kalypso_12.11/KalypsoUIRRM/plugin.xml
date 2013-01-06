@@ -965,12 +965,13 @@
     <handler class="org.kalypso.ui.rrm.internal.scenarios.MergeScenariosHandler" commandId="org.kalypso.model.rrm.MergeScenariosCommand">
        <activeWhen>
              <reference definitionId="oneScenario"/>
+             <!-- FIXME: AND if project is rrm -->
        </activeWhen>
     </handler>
  </extension>
 
  <extension point="org.eclipse.ui.menus">
-    <menuContribution locationURI="popup:org.kalypso.kalypso1d2d.pjt.views.ScenarioView?after=additions">
+    <menuContribution locationURI="popup:org.kalypso.kalypso1d2d.pjt.views.ScenarioView?after=scenario">
        <command commandId="org.kalypso.model.rrm.MergeScenariosCommand">
           <visibleWhen checkEnabled="true"/>
        </command>
