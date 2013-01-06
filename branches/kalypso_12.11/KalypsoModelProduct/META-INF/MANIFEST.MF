@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Kalypso
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.kalypso.model.product;singleton:=true
 Bundle-Version: 12.11.0.qualifier
 Bundle-Activator: org.kalypso.model.product.KalypsoModelProductPlugin
-Bundle-Vendor: http://sourceforge.net/projects/kalypso/
+Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.help.ui,
  org.eclipse.ui.ide.application,
