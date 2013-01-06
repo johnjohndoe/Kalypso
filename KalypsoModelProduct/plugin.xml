@@ -14,7 +14,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.kalypso.model.product.kalypsomodelapplication"
-            name="Kalypso">
+            name="%product.name">
          <property
                name="aboutImage"
                value="etc/aboutKalypso.gif"/>
@@ -95,13 +95,24 @@
           </includes>
        </viewerActionBinding>
     </extension>
+    <extension
+          point="org.eclipse.ui.commands">
+       <command
+             defaultHandler="org.kalypso.model.product.help.ReportErrorHandler"
+             description="%command.description"
+             id="org.kalypso.model.product.reportErrorCommand"
+             name="%command.name">
+       </command>
+    </extension>
+
+
 
    <extension point="org.eclipse.ui.menus">
         <menuContribution
               locationURI="toolbar:org.eclipse.ui.main.toolbar">
            <toolbar
                  id="org.kalypso.model.product.toolbar"
-                 label="Info">
+                 label="%toolbar.label">
               <command
                     commandId="org.eclipse.ui.help.aboutAction"
                     icon="icons/about.gif"
@@ -109,8 +120,15 @@
               </command>
            </toolbar>
         </menuContribution>
+        <menuContribution
+              allPopups="false"
+              locationURI="menu:help?after=group.tools">
+           <command
+                 commandId="org.kalypso.model.product.reportErrorCommand"
+                 style="push">
+           </command>
+        </menuContribution>
     </extension>
   
-   
 
 </plugin>
