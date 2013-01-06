@@ -56,7 +56,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -78,6 +77,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
@@ -319,7 +319,7 @@ public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWi
           return;
         }
 
-        final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+        final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
         flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
 
         /* Post it as an command */
