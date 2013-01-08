@@ -46,12 +46,14 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.utils.log.GeoStatusLog;
 
 /**
@@ -59,13 +61,11 @@ import org.kalypso.utils.log.GeoStatusLog;
  * 
  * @author Holger Albert
  */
-public class TestUtilities
+public final class TestUtilities
 {
-  /**
-   * The constructor.
-   */
   private TestUtilities( )
   {
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -103,7 +103,7 @@ public class TestUtilities
    * @param project
    *          The target project.
    */
-  public static void unzipResources( final String path, final IProject project ) throws IOException
+  public static void unzipResources( final String path, final IProject project ) throws IOException, CoreException
   {
     /* The input stream. */
     InputStream inputStream = null;
@@ -115,6 +115,8 @@ public class TestUtilities
 
       /* Unzip them into the project. */
       ZipUtilities.unzip( inputStream, project.getLocation().toFile() );
+
+      project.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     finally
     {
@@ -128,7 +130,7 @@ public class TestUtilities
     try
     {
       /* Save the log as text file. */
-      final GeoStatusLog log = new GeoStatusLog( new File( targetDir, "log.gml" ) ); //$NON-NLS-1$
+      final GeoStatusLog log = new GeoStatusLog( new File( targetDir, "log.gml" ), KalypsoUIRRMPlugin.getID() ); //$NON-NLS-1$
       log.log( status );
       log.serialize();
     }

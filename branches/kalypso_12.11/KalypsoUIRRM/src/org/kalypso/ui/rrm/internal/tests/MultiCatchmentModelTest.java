@@ -70,7 +70,7 @@ import org.kalypso.ui.rrm.internal.calccase.MultiCatchmentModelRunner;
 
 /**
  * Test for verifying a multi catchment model.
- *
+ * 
  * @author Holger Albert
  */
 public class MultiCatchmentModelTest
@@ -147,7 +147,7 @@ public class MultiCatchmentModelTest
 
   /**
    * This function executes the catchment model.
-   *
+   * 
    * @param simulation
    *          The simulation.
    * @param control
@@ -164,7 +164,7 @@ public class MultiCatchmentModelTest
   private void executeCatchmentModels( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws CoreException
   {
     /* Create the catchment model info. */
-    final MultiCatchmentModelInfo info = new MultiCatchmentModelInfo( simulation, control, model, (IMultiGenerator) generator, targetLink, parameterType );
+    final MultiCatchmentModelInfo info = new MultiCatchmentModelInfo( simulation, control, model, (IMultiGenerator)generator, targetLink, parameterType );
 
     /* Create the catchment model runner. */
     final MultiCatchmentModelRunner runner = new MultiCatchmentModelRunner();
