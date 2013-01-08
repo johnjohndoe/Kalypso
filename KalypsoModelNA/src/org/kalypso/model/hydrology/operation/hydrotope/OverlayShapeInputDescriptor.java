@@ -64,5 +64,4 @@ public class OverlayShapeInputDescriptor extends AbstractShapeInputDescriptor<GM
     final Object property = getProperty( index, m_drwbmColumn );
     return property == null ? null : property.toString();
   }
-
 }
