@@ -65,7 +65,7 @@ public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
 
   public ImportOverlayWizard( )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyDataImportGeologyWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.ImportOverlayWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -77,7 +77,7 @@ public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
   @Override
   protected String getDescription( )
   {
-    return Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.3" ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ui.rrm.wizards.ImportOverlayWizard.1" ); //$NON-NLS-1$
   }
 
   @Override
@@ -91,7 +91,7 @@ public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
 
     final InputDescriptor inputDescriptor = new OverlayShapeInputDescriptor( shapeFile, drwbpmProperty, crs, charset );
 
-    final OverlayCollection output = (OverlayCollection) overlayWorkspace.getRootFeature();
+    final OverlayCollection output = (OverlayCollection)overlayWorkspace.getRootFeature();
 
     return new OverlayImportOperation( inputDescriptor, output, ImportType.CLEAR_OUTPUT );
   }
