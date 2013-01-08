@@ -231,7 +231,10 @@ public class NAControlConverter
     writer.append( getBoolean( controlFE.doGenerateNMQ() ) + "       Statistische Abflusswerte  .nmq\n" ); //$NON-NLS-1$
     // Folgende Dateien werden zusätzlich mit Speicherinhalt generiert .sph, .spv, .spn, .spb
     writer.append( getBoolean( controlFE.doGenerateSPI() ) + "       Speicherinhalt             .spi\n" ); //$NON-NLS-1$
-    writer.append( getBoolean( controlFE.doGenerateSUP() ) + "       Speicherueberlauf          .sup\n" ); //$NON-NLS-1$
+
+    // REMARK: this comment was previously (since ever) using '.sup' as extension,
+    // which is the reason why all the variables are named 'sup' insead of 'sub'
+    writer.append( getBoolean( controlFE.doGenerateSUP() ) + "       Speicherueberlauf          .sub\n" ); //$NON-NLS-1$
 
     // IMPORTANT: number of lines is important and mut not be changed; we need to write dummy entries for old suds stuff
     writer.append( "n       xxxx not used xxxxxxxxxxx  .xxx\n" ); //$NON-NLS-1$
