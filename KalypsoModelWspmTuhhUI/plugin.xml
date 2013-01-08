@@ -839,6 +839,15 @@
               name="%command.name.4">
               <description>%command.description.3</description>
         </wizard>
+        <wizard
+              class="org.kalypso.model.wspm.tuhh.ui.imports.ctripple.CodedTrippleImportWizard"
+              icon="icons/elcl16/import_ctripple.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.imports.ctripple.CodedTrippleImportWizard"
+              name="%org.kalypso.model.wspm.tuhh.ui.imports.ctripple.CodedTrippleImportWizard.name">
+           <description>
+              %org.kalypso.model.wspm.tuhh.ui.imports.ctripple.CodedTrippleImportWizard.description
+           </description>
+        </wizard>
         
         <wizard
               class="org.kalypso.model.wspm.tuhh.ui.imports.ewawi.EwawiImportWizard"

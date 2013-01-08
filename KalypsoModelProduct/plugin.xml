@@ -14,7 +14,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.kalypso.model.product.kalypsomodelapplication"
-            name="%product.name">
+            name="Kalypso">
          <property
                name="aboutImage"
                value="etc/aboutKalypso.gif"/>
