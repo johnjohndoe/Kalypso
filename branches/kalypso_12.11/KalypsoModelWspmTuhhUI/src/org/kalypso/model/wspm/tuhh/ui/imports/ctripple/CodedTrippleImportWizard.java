@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
+package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.PageChangedEvent;
@@ -37,7 +37,7 @@ import org.kalypso.model.wspm.tuhh.ui.imports.WspmTuhhProjectSelection;
 /**
  * @author Holger Albert
  */
-public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
+public class CodedTrippleImportWizard extends Wizard implements IWorkbenchWizard
 {
   private final WizardPageChangedListener m_pageListener = new WizardPageChangedListener()
   {
@@ -48,43 +48,43 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
     }
   };
 
-  private AbstractEwawiWorker m_worker;
+  private AbstractCodedTrippleWorker m_worker;
 
-  private EwawiImportData m_data;
+  private CodedTrippleImportData m_data;
 
-  private EwawiImportFilesPage m_importFilesPage;
+  private CodedTrippleImportFilesPage m_importFilesPage;
 
-  private EwawiPreviewProfilesPage m_profilesPreviewPage;
+  private CodedTripplePreviewProfilesPage m_profilesPreviewPage;
 
-  public EwawiImportWizard( )
+  public CodedTrippleImportWizard( )
   {
     m_worker = null;
     m_data = null;
     m_importFilesPage = null;
     m_profilesPreviewPage = null;
 
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "ewawiImportWizard" ) ); //$NON-NLS-1$
-    setWindowTitle( Messages.getString( "EwawiImportWizard.0" ) ); //$NON-NLS-1$
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "codedTrippleImportWizard" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "CodedTrippleImportWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
   @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     final WspmTuhhProjectSelection projectSelection = new WspmTuhhProjectSelection( selection );
     if( !projectSelection.hasProject() )
-      throw new IllegalArgumentException( Messages.getString( "EwawiImportWizard.1" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "CodedTrippleImportWizard.1" ) ); //$NON-NLS-1$
 
-    m_worker = new EwawiWorker( projectSelection.getWorkspace(), projectSelection.getProject() );
-    m_data = new EwawiImportData();
+    m_worker = new CodedTrippleWorker( projectSelection.getWorkspace(), projectSelection.getProject() );
+    m_data = new CodedTrippleImportData();
     m_data.init( getDialogSettings() );
   }
 
   @Override
   public void addPages( )
   {
-    m_importFilesPage = new EwawiImportFilesPage( m_data );
-    m_profilesPreviewPage = new EwawiPreviewProfilesPage( m_data );
+    m_importFilesPage = new CodedTrippleImportFilesPage( m_data );
+    m_profilesPreviewPage = new CodedTripplePreviewProfilesPage( m_data );
 
     addPage( m_importFilesPage );
     addPage( m_profilesPreviewPage );
@@ -115,7 +115,7 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
     /* Save the dialog settings. */
     m_data.storeSettings( getDialogSettings() );
 
-    final EwawiImportOperation operation = new EwawiImportOperation( m_worker, m_data );
+    final CodedTrippleImportOperation operation = new CodedTrippleImportOperation( m_worker, m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !result.isOK() )
       StatusDialog.open( getShell(), result, getWindowTitle() );
@@ -127,7 +127,7 @@ public class EwawiImportWizard extends Wizard implements IWorkbenchWizard
   {
     if( selectedPage == m_profilesPreviewPage )
     {
-      final EwawiCreateProfilesOperation operation = new EwawiCreateProfilesOperation( m_data );
+      final CodedTrippleCreateProfilesOperation operation = new CodedTrippleCreateProfilesOperation( m_data );
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
       if( !status.isOK() )
         new StatusDialog( getShell(), status, getWindowTitle() ).open();

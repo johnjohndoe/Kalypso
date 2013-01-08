@@ -19,14 +19,13 @@
 package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ewawi;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.IPageChangeProvider;
-import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.jface.dialog.WizardPageChangedListener;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -44,7 +43,7 @@ import org.kalypso.ui.views.map.MapView;
  */
 public class ImportEwawiWizard extends AbstractImportProfileWizard
 {
-  private final IPageChangedListener m_pageListener = new IPageChangedListener()
+  private final WizardPageChangedListener m_pageListener = new WizardPageChangedListener()
   {
     @Override
     public void pageChanged( final PageChangedEvent event )
@@ -66,7 +65,7 @@ public class ImportEwawiWizard extends AbstractImportProfileWizard
     m_profilesPreviewPage = null;
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "ewawiImportWizard" ) ); //$NON-NLS-1$
-    setWindowTitle( Messages.getString("ImportEwawiWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ImportEwawiWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -90,14 +89,9 @@ public class ImportEwawiWizard extends AbstractImportProfileWizard
   @Override
   public void setContainer( final IWizardContainer container )
   {
-    final IWizardContainer oldContainer = getContainer();
-    if( oldContainer instanceof IPageChangeProvider )
-      ((IPageChangeProvider)oldContainer).removePageChangedListener( m_pageListener );
+    m_pageListener.setContainer( getContainer(), container );
 
     super.setContainer( container );
-
-    if( container instanceof IPageChangeProvider )
-      ((IPageChangeProvider)container).addPageChangedListener( m_pageListener );
   }
 
   @Override

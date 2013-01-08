@@ -17,6 +17,7 @@ Require-Bundle: org.kalypso.model.wspm.core;visibility:=reexport,
  org.kalypso.module
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.tuhh.core,
+ org.kalypso.model.wspm.tuhh.core.ctripple,
  org.kalypso.model.wspm.tuhh.core.gml,
  org.kalypso.model.wspm.tuhh.core.profile,
  org.kalypso.model.wspm.tuhh.core.profile.energyloss,

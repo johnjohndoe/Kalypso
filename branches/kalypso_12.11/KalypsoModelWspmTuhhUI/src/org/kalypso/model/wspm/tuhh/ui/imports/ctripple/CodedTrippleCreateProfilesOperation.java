@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.ui.imports.ewawi;
+package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 
 import java.io.File;
 
@@ -25,21 +25,19 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.ewawi.data.EwawiPlus;
-import org.kalypso.model.wspm.ewawi.data.reader.EwawiProReader;
-import org.kalypso.model.wspm.ewawi.data.reader.EwawiStaReader;
-import org.kalypso.model.wspm.ewawi.utils.EwawiKey;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTripple;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleReader;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Holger Albert
  */
-public class EwawiCreateProfilesOperation implements ICoreRunnableWithProgress
+public class CodedTrippleCreateProfilesOperation implements ICoreRunnableWithProgress
 {
-  private final EwawiImportData m_data;
+  private final CodedTrippleImportData m_data;
 
-  public EwawiCreateProfilesOperation( final EwawiImportData data )
+  public CodedTrippleCreateProfilesOperation( CodedTrippleImportData data )
   {
     m_data = data;
   }
@@ -54,32 +52,26 @@ public class EwawiCreateProfilesOperation implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString( "EwawiCreateProfilesOperation.0" ), 1000 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString( "EwawiCreateProfilesOperation.1" ) ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "CodedTrippleCreateProfilesOperation.0" ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "CodedTrippleCreateProfilesOperation.1" ) ); //$NON-NLS-1$
 
-      /* Create the ewawi data object. */
-      final EwawiKey key = new EwawiKey( "", "ALIAS", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      final EwawiPlus data = new EwawiPlus( key );
-
-      /* Read the .pro file. */
-      final EwawiProReader proReader = new EwawiProReader( data );
-      final File proFile = m_data.getProFile().getFile();
-      proReader.read( proFile );
+      /* Read the source file. */
+      CodedTrippleReader reader = new CodedTrippleReader();
+      File sourceFile = m_data.getSourceFile().getFile();
+      reader.read( sourceFile );
 
       /* Monitor. */
       monitor.worked( 500 );
 
-      /* Read the .sta file. */
-      final EwawiStaReader staReader = new EwawiStaReader( data );
-      final File staFile = m_data.getStaFile().getFile();
-      staReader.read( staFile );
+      /* Get the coded tripple data object. */
+      CodedTripple data = reader.getCodedTrippleData();
 
       /* Create a ok status. */
-      final IStatus okStatus = new Status( IStatus.OK, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "EwawiCreateProfilesOperation.2" ) ); //$NON-NLS-1$
+      final IStatus okStatus = new Status( IStatus.OK, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "CodedTrippleCreateProfilesOperation.2" ) ); //$NON-NLS-1$
 
-      /* Store the ewawi data object. */
-      m_data.setEwawiData( data );
-      m_data.setEwawiDataStatus( okStatus );
+      /* Store the coded tripple data object. */
+      m_data.setCodedTrippleData( data );
+      m_data.setCodedTrippleDataStatus( okStatus );
 
       /* Monitor. */
       monitor.worked( 500 );
@@ -91,9 +83,9 @@ public class EwawiCreateProfilesOperation implements ICoreRunnableWithProgress
       /* Create a error status. */
       final Status errorStatus = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), ex.getLocalizedMessage(), ex );
 
-      /* Store the ewawi data object. */
-      m_data.setEwawiData( null );
-      m_data.setEwawiDataStatus( errorStatus );
+      /* Store the coded tripple data object. */
+      m_data.setCodedTrippleData( null );
+      m_data.setCodedTrippleDataStatus( errorStatus );
 
       return errorStatus;
     }
