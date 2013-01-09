@@ -49,15 +49,23 @@
         <AxisNumberRangeRestriction minRange="1000" />
       </Axis>
       <ScreenAxis id="screenAxisX">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.ScreenAxisProvider" />
         <Position>BOTTOM</Position>
       </ScreenAxis>
       <ScreenAxis id="screenAxisY">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" /><Direction>NEGATIVE</Direction>
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.ScreenAxisProvider" /><Direction>NEGATIVE</Direction>
+      	<Position>LEFT</Position>
+      </ScreenAxis>
+      <ScreenAxis id="normalizedAxisX">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.NormalizedAxisProvider" />
+        <Position>BOTTOM</Position>
+      </ScreenAxis>
+      <ScreenAxis id="normalizedAxisY">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.NormalizedAxisProvider" /><Direction>NEGATIVE</Direction>
       	<Position>LEFT</Position>
       </ScreenAxis>
       <ScreenAxis id="screenAxisYinverted">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.ScreenAxisProvider" />
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
       </ScreenAxis>
