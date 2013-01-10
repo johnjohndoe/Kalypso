@@ -18,25 +18,76 @@
  */
 package org.kalypso.model.wspm.tuhh.core.ctripple;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.apache.commons.io.IOUtils;
 
 /**
+ * The coded tripple reader.
+ * 
  * @author Holger Albert
  */
 public class CodedTrippleReader
 {
+  /**
+   * Contains the profiles and horizons.
+   */
+  private CodedTripple m_codedTripple;
+
   public CodedTrippleReader( )
   {
+    m_codedTripple = null;
   }
 
-  public void read( File sourceFile )
+  /**
+   * This function reads the source file and creates the coded tripple.
+   * 
+   * @param sourceFile
+   *          The source file.
+   */
+  public void read( File sourceFile ) throws IOException
   {
-    // TODO
+    /* The reader. */
+    BufferedReader bf = null;
+
+    try
+    {
+      /* Reset the old coded triple. */
+      m_codedTripple = null;
+
+      /* Create the reader. */
+      bf = new BufferedReader( new FileReader( sourceFile ) );
+
+      /* Create the coded tripple. */
+      CodedTripple codedTripple = new CodedTripple();
+
+      String line = null;
+      while( (line = bf.readLine()) != null )
+      {
+        CodedTrippleProfilePoint point = CodedTrippleProfilePoint.createProfilePoint( line );
+        codedTripple.addProfilePoint( point );
+      }
+
+      /* Store the new coded triple. */
+      m_codedTripple = codedTripple;
+    }
+    finally
+    {
+      /* Close the reader. */
+      IOUtils.closeQuietly( bf );
+    }
   }
 
-  public CodedTripple getCodedTrippleData( )
+  /**
+   * This function returns the coded tripple. It may return null, if no file was read or an error has occured during reading of a file.
+   * 
+   * @return The coded tripple or null.
+   */
+  public CodedTripple getCodedTripple( )
   {
-    // TODO
-    return null;
+    return m_codedTripple;
   }
 }

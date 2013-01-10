@@ -64,7 +64,7 @@ public class CodedTrippleCreateProfilesOperation implements ICoreRunnableWithPro
       monitor.worked( 500 );
 
       /* Get the coded tripple data object. */
-      CodedTripple data = reader.getCodedTrippleData();
+      CodedTripple data = reader.getCodedTripple();
 
       /* Create a ok status. */
       final IStatus okStatus = new Status( IStatus.OK, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "CodedTrippleCreateProfilesOperation.2" ) ); //$NON-NLS-1$
