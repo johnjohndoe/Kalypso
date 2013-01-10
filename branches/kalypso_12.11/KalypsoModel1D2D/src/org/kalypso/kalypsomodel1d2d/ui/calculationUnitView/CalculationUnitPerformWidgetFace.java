@@ -40,13 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
@@ -69,24 +69,21 @@ public class CalculationUnitPerformWidgetFace
     final Form form = toolkit.createForm( parent );
 
     final Composite body = form.getBody();
-    GridLayoutFactory.fillDefaults().applyTo( body );
+
+    final FillLayout fillLayout = new FillLayout( SWT.VERTICAL );
+    fillLayout.spacing = 5;
+    body.setLayout( fillLayout );
 
     // Calculation Unit Section
     final Section selectCalcUnitSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
     selectCalcUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.1" ) ); //$NON-NLS-1$
-    final GridData selectCalcUnitData = new GridData( SWT.FILL, SWT.FILL, true, false );
-    selectCalcUnitSection.setLayoutData( selectCalcUnitData );
 
     final Section calculationElementUnitSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
-    final GridData unitSectionData = new GridData( SWT.FILL, SWT.FILL, true, false );
-    calculationElementUnitSection.setLayoutData( unitSectionData );
     calculationElementUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.2" ) ); //$NON-NLS-1$
 
     // Creates Section for "Calculation Settings Unit"
     final Section logSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
     logSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.5" ) ); //$NON-NLS-1$
-    final GridData logData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    logSection.setLayoutData( logData );
 
     createCalculationUnitSection( selectCalcUnitSection, toolkit );
     createCalculationElementsSection( calculationElementUnitSection, toolkit );
@@ -105,8 +102,15 @@ public class CalculationUnitPerformWidgetFace
   private void createCalculationElementsSection( final Section calculationElementUnitSection, final FormToolkit toolkit )
   {
     final SelectedCalculationComponent calcElementGUI = new SelectedCalculationComponent( m_dataModel );
-    final Control client = calcElementGUI.createControl( calculationElementUnitSection, toolkit );
-    calculationElementUnitSection.setClient( client );
+
+    final ScrolledForm form = new ScrolledForm( calculationElementUnitSection, SWT.V_SCROLL | SWT.H_SCROLL );
+    form.setExpandHorizontal( true );
+    form.setExpandVertical( true );
+    final Composite body = form.getBody();
+    body.setLayout( new FillLayout() );
+
+    calcElementGUI.createControl( body, toolkit );
+    calculationElementUnitSection.setClient( form );
   }
 
   private void createProblemsInCalculationSection( final Section problemsSection, final FormToolkit toolkit )
