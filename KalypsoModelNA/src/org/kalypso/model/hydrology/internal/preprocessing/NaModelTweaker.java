@@ -51,11 +51,12 @@ import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Before any ascii files are written, the modell.gml (calcCase.gml) gets tweaked by this class.<br/>
- *
+ * 
  * @author Gernot Belger
  */
 public class NaModelTweaker
@@ -72,7 +73,7 @@ public class NaModelTweaker
 
   /**
    * update workspace and do some tricks in order to fix some things the fortran-kernel can not handle for now
-   *
+   * 
    * @param workspace
    * @throws Exception
    */
@@ -88,19 +89,19 @@ public class NaModelTweaker
    * Updates workspace, so that interflow and channelflow dependencies gets optimized <br>
    * Groundwater flow can now run in opposite direction to channel flow.<br>
    * before: <code>
-   *
+   * 
    *     -C-o (existing channel c with catchment T and downstream node o)
    *      ^
    *      T
-   *
+   * 
    * </code> after: <code>
-   *
+   * 
    *     -C-o
    *        |
    *        V<T  (new virtual channel with existing catchment T, downstream node o and no upstream node)
-   *
+   * 
    * </code>
-   *
+   * 
    * @param workspace
    */
   private void updateGWNet( )
@@ -126,19 +127,19 @@ public class NaModelTweaker
   /**
    * before: <br>
    * <code>
-   *
+   * 
    * Node1 O <---  O Node2
-   *
+   * 
    * </code> after: <br>
    * <code>
-   *
+   * 
    * Node1 O <--- newVChannel <-- newNode O <-- newVChannel
    *                                      A
    *                                      |
    *                                      O-- Node2
-   *
+   * 
    * </code>
-   *
+   * 
    * @param workspace
    * @throws Exception
    */
@@ -154,7 +155,7 @@ public class NaModelTweaker
       {
         if( branching instanceof BranchingWithNode )
         {
-          final BranchingWithNode branchingWithNode = (BranchingWithNode) branching;
+          final BranchingWithNode branchingWithNode = (BranchingWithNode)branching;
 
           final Node targetNode = branchingWithNode.getNode();
           if( targetNode == null )
@@ -191,7 +192,7 @@ public class NaModelTweaker
    * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)|
    *                                          A- Q(constant)<br>
    * </code>
-   *
+   * 
    * @param workspace
    * @throws Exception
    */
@@ -206,9 +207,12 @@ public class NaModelTweaker
       {
         final Node newNode = buildVChannelNet( node );
 
+        // IMPORTANT: subtle: resolve value before setting the link to null, else the value will be null, beeing retreived in a lazy way.
+        final TimeseriesLinkType zuflussLinkValue = zuflussLink.getTimeseriesLink();
+
         // move zufluss-property to new node
         node.setZuflussLink( null );
-        newNode.setZuflussLink( zuflussLink.getTimeseriesLink() );
+        newNode.setZuflussLink( zuflussLinkValue );
 
         final Boolean synteticZufluss = node.isSynteticZufluss();
         newNode.setIsSynteticZufluss( synteticZufluss );
@@ -229,7 +233,7 @@ public class NaModelTweaker
   /**
    * if results exists (from a former simulation) for a node, use this results as input, later the upstream nodes will
    * be ignored for calculation
-   *
+   * 
    * @param workspace
    * @throws Exception
    */
@@ -262,11 +266,11 @@ public class NaModelTweaker
 
   /**
    * before: <code>
-   *
+   * 
    *     o(existing)
-   *
+   * 
    * </code> after: <code>
-   *
+   * 
    *  |new Channel3|
    *     |
    *     V
@@ -277,7 +281,7 @@ public class NaModelTweaker
    *     |
    *     V
    *     o(existing)
-   *
+   * 
    * </code>
    */
   private Node buildVChannelNet( final Node existingNode )
