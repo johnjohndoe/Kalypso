@@ -38,6 +38,11 @@ public class CodedTrippleProfileHorizon
     m_points.add( point );
   }
 
+  /**
+   * This function returns the profile points of this horizon.
+   * 
+   * @return The profile points of this horizon.
+   */
   public CodedTrippleProfilePoint[] getProfilePoints( )
   {
     return m_points.toArray( new CodedTrippleProfilePoint[] {} );

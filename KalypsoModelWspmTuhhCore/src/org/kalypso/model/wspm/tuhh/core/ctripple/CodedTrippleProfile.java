@@ -27,13 +27,13 @@ import java.util.List;
  */
 public class CodedTrippleProfile
 {
-  private final BigDecimal m_station;
+  private final String m_name;
 
   private final List<CodedTrippleProfilePoint> m_points;
 
-  public CodedTrippleProfile( BigDecimal station )
+  public CodedTrippleProfile( String name )
   {
-    m_station = station;
+    m_name = name;
     m_points = new ArrayList<>();
   }
 
@@ -43,9 +43,19 @@ public class CodedTrippleProfile
     m_points.add( point );
   }
 
-  public BigDecimal getStation( )
+  public String getName( )
   {
-    return m_station;
+    return m_name;
+  }
+
+  /**
+   * This function returns all profile points of every horizon.
+   * 
+   * @return All profile points of every horizon.
+   */
+  public CodedTrippleProfilePoint[] getProfilePoints( )
+  {
+    return m_points.toArray( new CodedTrippleProfilePoint[] {} );
   }
 
   public CodedTrippleProfileHorizon[] getProfileHorizons( )
@@ -60,6 +70,12 @@ public class CodedTrippleProfile
 
     // TODO Create horizons here... because codes may have changed...
     // TODO hash by horizonId...
+    return null;
+  }
+
+  public BigDecimal getStation( )
+  {
+    // TODO
     return null;
   }
 }

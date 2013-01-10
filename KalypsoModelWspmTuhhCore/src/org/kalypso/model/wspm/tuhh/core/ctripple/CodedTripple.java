@@ -18,44 +18,59 @@
  */
 package org.kalypso.model.wspm.tuhh.core.ctripple;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Holger Albert
  */
 public class CodedTripple
 {
-  final Map<BigDecimal, CodedTrippleProfile> m_profiles;
+  final Map<String, CodedTrippleProfile> m_profiles;
+
+  private final CodedTrippleHorizonMapper m_mapper;
 
   final Set<String> m_badCodes;
 
   public CodedTripple( )
   {
     m_profiles = new LinkedHashMap<>();
+    m_mapper = new CodedTrippleHorizonMapper();
     m_badCodes = new HashSet<>();
   }
 
   public void addProfilePoint( CodedTrippleProfilePoint point )
   {
-    // Check for code...
-    // String code = point.getCode();
+    /* Get the code of the point. */
+    String code = point.getCode();
 
-    /* horizon from profiles. */
-    // String horizonId = horizonMapper.getHorizonId( code );
+    /* Get the horizon id for that code. */
+    String horizonId = m_mapper.getHorizonId( code );
+    if( !StringUtils.isEmpty( horizonId ) )
+    {
+      /* Id of of our profile parts. */
+      String partId = m_mapper.getPartId( horizonId );
 
-    /* Id of of our profile objects. */
-    // horizonMapper.getPartId(horizontId);
+      /* There is no part id mapped for this horizon id. */
+      if( StringUtils.isEmpty( partId ) )
+        m_badCodes.add( code );
+    }
+    else
+    {
+      /* There is no horizon id mapped for this code. */
+      m_badCodes.add( code );
+    }
 
-    // TODO Hash by name...
-    BigDecimal station = point.getStation();
-    if( !m_profiles.containsKey( station ) )
-      m_profiles.put( station, new CodedTrippleProfile( station ) );
+    /* Add the profile point to the correct profile. */
+    String name = point.getName();
+    if( !m_profiles.containsKey( name ) )
+      m_profiles.put( name, new CodedTrippleProfile( name ) );
 
-    CodedTrippleProfile profile = m_profiles.get( station );
+    CodedTrippleProfile profile = m_profiles.get( name );
     profile.addProfilePoint( point );
   }
 
