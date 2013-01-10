@@ -47,6 +47,7 @@ import org.kalypso.model.hydrology.binding.OverlayElement;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.parameter.DRWBMDefinition;
+import org.kalypso.model.hydrology.binding.parameter.ISoilType;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
@@ -56,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
 /**
  * Wrapper that holds {@link IHydrotope}.
- *
+ * 
  * @author Gernot Belger
  */
 public class HydrotopeInfo
@@ -77,7 +78,7 @@ public class HydrotopeInfo
 
   private double m_area;
 
-  private final Soiltype m_soilType;
+  private final ISoilType m_soilType;
 
   public HydrotopeInfo( final IHydrotope hydrotop, final ParameterHash landuseHash, final int localID ) throws NAPreprocessorException
   {
@@ -121,7 +122,7 @@ public class HydrotopeInfo
     return m_maxPerc;
   }
 
-  public Soiltype getSoilType( )
+  public ISoilType getSoilType( )
   {
     return m_soilType;
   }
@@ -144,7 +145,7 @@ public class HydrotopeInfo
       final IXLinkedFeature landuseClassLink = linkedLanduse.getLanduse();
       if( landuseClassLink == null )
       {
-        final String msg = String.format( Messages.getString("HydrotopeInfo.3"), getName() ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "HydrotopeInfo.3" ), getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( msg );
       }
 
@@ -157,7 +158,7 @@ public class HydrotopeInfo
     if( landuseClass != null )
       return landuseClass;
 
-    final String msg = String.format( Messages.getString("HydrotopeInfo.4"), landuseName, getName() ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "HydrotopeInfo.4" ), landuseName, getName() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
   }
 
@@ -167,7 +168,7 @@ public class HydrotopeInfo
     if( landuseSealing == null )
     {
       final String landuseName = m_landuseClass.getName();
-      final String msg = String.format( Messages.getString("HydrotopeInfo.5"), landuseName, getName() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "HydrotopeInfo.5" ), landuseName, getName() ); //$NON-NLS-1$
       throw new NAPreprocessorException( msg );
     }
 
@@ -195,7 +196,7 @@ public class HydrotopeInfo
 
       if( maxPercolationRate == null )
       {
-        final String msg = String.format( Messages.getString("HydrotopeInfo.6"), getName() ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "HydrotopeInfo.6" ), getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( msg );
       }
 
@@ -206,7 +207,7 @@ public class HydrotopeInfo
     if( maxPercolationRate != null )
       return maxPercolationRate * maxPercCorrection;
 
-    final String msg = String.format( Messages.getString("HydrotopeInfo.7"), getName() ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "HydrotopeInfo.7" ), getName() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
   }
 
@@ -239,7 +240,7 @@ public class HydrotopeInfo
 
       if( gwFactor == null )
       {
-        final String msg = String.format( Messages.getString("HydrotopeInfo.8"), getName() ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "HydrotopeInfo.8" ), getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( msg );
       }
 
@@ -250,7 +251,7 @@ public class HydrotopeInfo
     if( gwFactor != null )
       return gwFactor * gwInflowCorrection;
 
-    final String msg = String.format( Messages.getString("HydrotopeInfo.9"), getName() ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "HydrotopeInfo.9" ), getName() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
   }
 
@@ -263,7 +264,7 @@ public class HydrotopeInfo
     return linkedCatchment.getCorrGwInflowRate();
   }
 
-  private Soiltype calculateSoiltype( ) throws NAPreprocessorException
+  private ISoilType calculateSoiltype( ) throws NAPreprocessorException
   {
     /* overlay always wins */
     final DRWBMDefinition drwbm = getDrwbmDefinition();
@@ -271,7 +272,7 @@ public class HydrotopeInfo
     {
       final IXLinkedFeature soiltypeLink = drwbm.getSoiltype();
       if( soiltypeLink != null )
-        return (Soiltype) soiltypeLink.getFeature();
+        return (ISoilType)soiltypeLink.getFeature();
     }
 
     /* use link to pedology */
@@ -280,9 +281,9 @@ public class HydrotopeInfo
     {
       final IXLinkedFeature soilTypeLink = linkedPedology.getSoilType();
       if( soilTypeLink != null )
-        return (Soiltype) soilTypeLink.getFeature();
+        return (Soiltype)soilTypeLink.getFeature();
 
-      final String msg = String.format( Messages.getString("HydrotopeInfo.10"), getName() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "HydrotopeInfo.10" ), getName() ); //$NON-NLS-1$
       throw new NAPreprocessorException( msg );
     }
 
@@ -321,7 +322,7 @@ public class HydrotopeInfo
       /* If we have overlays we must have landuse references */
       if( linkedLanduse == null )
       {
-        final String message = String.format( Messages.getString("HydrotopeInfo.11"), getName() ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "HydrotopeInfo.11" ), getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( message );
       }
 
@@ -408,7 +409,7 @@ public class HydrotopeInfo
     if( landuseLink == null )
       return null;
 
-    return (Landuse) landuseLink.getFeature();
+    return (Landuse)landuseLink.getFeature();
   }
 
   private Catchment getLinkedCatchment( )
@@ -417,7 +418,7 @@ public class HydrotopeInfo
     if( catchmentLink == null )
       return null;
 
-    return (Catchment) catchmentLink.getFeature();
+    return (Catchment)catchmentLink.getFeature();
   }
 
   private Geology getLinkedGeology( )
@@ -426,7 +427,7 @@ public class HydrotopeInfo
     if( geologyLink == null )
       return null;
 
-    return (Geology) geologyLink.getFeature();
+    return (Geology)geologyLink.getFeature();
   }
 
   private SoilType getLinkedPedology( )
@@ -435,7 +436,7 @@ public class HydrotopeInfo
     if( pedologyLink == null )
       return null;
 
-    return (SoilType) pedologyLink.getFeature();
+    return (SoilType)pedologyLink.getFeature();
   }
 
   private OverlayElement getLinkedOverlay( )
@@ -444,7 +445,7 @@ public class HydrotopeInfo
     if( overlayLink == null )
       return null;
 
-    return (OverlayElement) overlayLink.getFeature();
+    return (OverlayElement)overlayLink.getFeature();
   }
 
   private DRWBMDefinition getDrwbmDefinition( )
@@ -457,20 +458,20 @@ public class HydrotopeInfo
     if( drwbmDefinitionLink == null )
       return null;
 
-    return (DRWBMDefinition) drwbmDefinitionLink.getFeature();
+    return (DRWBMDefinition)drwbmDefinitionLink.getFeature();
   }
 
   public void validateAttributes( ) throws NAPreprocessorException
   {
     if( m_gwFactor < 0.0 || m_gwFactor > 1.0 )
     {
-      final String message = String.format( Messages.getString("HydrotopeInfo.12"), m_gwFactor, getName() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "HydrotopeInfo.12" ), m_gwFactor, getName() ); //$NON-NLS-1$
       throw new NAPreprocessorException( message );
     }
 
     if( m_maxPerc < 0.0 )
     {
-      final String message = String.format( Messages.getString("HydrotopeInfo.13"), m_maxPerc, getName() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "HydrotopeInfo.13" ), m_maxPerc, getName() ); //$NON-NLS-1$
       throw new NAPreprocessorException( message );
     }
 

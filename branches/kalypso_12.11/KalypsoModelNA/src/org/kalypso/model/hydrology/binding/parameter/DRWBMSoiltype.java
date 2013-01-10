@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 /**
  * @author Dirk Kuch
  */
-public class DRWBMSoiltype extends Feature_Impl
+public class DRWBMSoiltype extends Feature_Impl implements ISoilType
 {
   private static final String NS_NAPARAMETER = NaModelConstants.NS_NAPARAMETER;
 
@@ -67,6 +67,7 @@ public class DRWBMSoiltype extends Feature_Impl
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Override
   public synchronized IFeatureBindingCollection<DRWBMSoilLayerParameter> getParameters( )
   {
     if( m_parameters == null )

@@ -76,38 +76,67 @@ public class DRWBMSoilLayerParameter extends SoilLayerParameter
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public Double getPipeDiameter( )
+  public double getPipeDiameter( )
   {
-    return getProperty( PROPERTY_PIPE_DIAMETER, Double.class );
+    return getDoubleProperty( PROPERTY_PIPE_DIAMETER, 0.0 );
   }
 
-  public Double getPipeRoughness( )
+  public double getPipeRoughness( )
   {
-    return getProperty( PROPERTY_PIPE_ROUGHNESS, Double.class );
+    return getDoubleProperty( PROPERTY_PIPE_ROUGHNESS, 0.0 );
   }
 
-  public Double getDrainagePipeKfValue( )
+  public double getDrainagePipeKfValue( )
   {
-    return getProperty( PROPERTY_DRAINAGE_PIPE_KF_VALUE, Double.class );
+    return getDoubleProperty( PROPERTY_DRAINAGE_PIPE_KF_VALUE, 0.0 );
   }
 
-  public Double getDrainagePipeSlope( )
+  public double getDrainagePipeSlope( )
   {
-    return getProperty( PROPERTY_DRAINAGE_PIPE_SLOPE, Double.class );
+    return getDoubleProperty( PROPERTY_DRAINAGE_PIPE_SLOPE, 0.0 );
   }
 
-  public Double getOverflowHeight( )
+  public double getOverflowHeight( )
   {
-    return getProperty( PROPERTY_OVERFLOW_HEIGHT, Double.class );
+    return getDoubleProperty( PROPERTY_OVERFLOW_HEIGHT, 0.0 );
   }
 
-  public Double getAreaPerOutlet( )
+  public double getAreaPerOutlet( )
   {
-    return getProperty( PROPERTY_AREA_PER_OUTLET, Double.class );
+    return getDoubleProperty( PROPERTY_AREA_PER_OUTLET, 0.0 );
   }
 
-  public Double getWidthOfArea( )
+  public double getWidthOfArea( )
   {
-    return getProperty( PROPERTY_WIDTH_OF_AREA, Double.class );
+    return getDoubleProperty( PROPERTY_WIDTH_OF_AREA, 0.0 );
+  }
+
+  public boolean isDrainageFunction( )
+  {
+    if( isPropertySet( PROPERTY_PIPE_DIAMETER ) )
+      return true;
+    if( isPropertySet( PROPERTY_PIPE_ROUGHNESS ) )
+      return true;
+    if( isPropertySet( PROPERTY_DRAINAGE_PIPE_KF_VALUE ) )
+      return true;
+    if( isPropertySet( PROPERTY_DRAINAGE_PIPE_SLOPE ) )
+      return true;
+
+    // FIXME: coupling overflow height
+
+    if( isPropertySet( PROPERTY_OVERFLOW_HEIGHT ) )
+      return true;
+    if( isPropertySet( PROPERTY_AREA_PER_OUTLET ) )
+      return true;
+
+    // FIXME: sealingBelowDrwbm
+
+    return false;
+  }
+
+  private boolean isPropertySet( final QName propertyName )
+  {
+    final Object value = getProperty( propertyName );
+    return value != null;
   }
 }

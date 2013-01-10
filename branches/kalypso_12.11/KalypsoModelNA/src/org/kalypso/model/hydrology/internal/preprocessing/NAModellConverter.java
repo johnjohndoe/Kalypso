@@ -134,7 +134,7 @@ public class NAModellConverter
     final BodenartWriter bodenartManager = new BodenartWriter( parameterWorkspace, m_logger );
     bodenartManager.write( m_asciiDirs.bodenartFile );
 
-    final BodentypWriter bodentypManager = new BodentypWriter( parameterWorkspace, m_logger );
+    final BodentypWriter bodentypManager = new BodentypWriter( parameter, m_logger );
     bodentypManager.write( m_asciiDirs.bodentypFile );
 
     final SnowtypWriter schneeManager = new SnowtypWriter( parameter, m_logger );
@@ -177,6 +177,6 @@ public class NAModellConverter
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatusOrOK( Messages.getString("NAModellConverter_0") ); //$NON-NLS-1$
+    return m_log.asMultiStatusOrOK( Messages.getString( "NAModellConverter_0" ) ); //$NON-NLS-1$
   }
 }
