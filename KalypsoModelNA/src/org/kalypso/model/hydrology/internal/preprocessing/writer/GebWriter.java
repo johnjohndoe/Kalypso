@@ -99,7 +99,13 @@ public class GebWriter extends AbstractCoreFileWriter
     writer.append( "\n" ); //$NON-NLS-1$
 
     // 2
-    final long area = Math.round( catchment.getGeometry().getArea() );
+    // REMARK: formerly the area of the catchment geometry was written here.
+    // But: the area of the catchment is not equal to the total area of it's hydrotopes, written to the we.hyd file.
+    // And: the calculation does not use this area here since long again (at least since 2.1.8
+    // double catchmentArea = catchment.getGeometry().getArea();
+    // We now write '-9999' so it is clear that this number is never used.
+    final double catchmentArea = -9999;
+    final long area = Math.round( catchmentArea );
     writer.append( Long.toString( area ) );
     writer.append( "\n" ); //$NON-NLS-1$
 
