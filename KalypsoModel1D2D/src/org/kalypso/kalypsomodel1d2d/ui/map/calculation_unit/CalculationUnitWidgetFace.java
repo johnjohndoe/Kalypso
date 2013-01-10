@@ -67,15 +67,16 @@ class CalculationUnitWidgetFace
 
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    final Form scrolledForm = toolkit.createForm( parent );
+    final Form form = toolkit.createForm( parent );
 
-    final Composite body = scrolledForm.getBody();
+    final Composite body = form.getBody();
     GridLayoutFactory.fillDefaults().applyTo( body );
 
     // Calculation Unit Section
     final Section calculationUnitSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
     calculationUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.0" ) ); //$NON-NLS-1$
-    calculationUnitSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    final GridData unitsSectionData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    calculationUnitSection.setLayoutData( unitsSectionData );
 
     // Creates Section for "Calculation Settings Unit"
     final Section calculationSettingsSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
@@ -85,11 +86,13 @@ class CalculationUnitWidgetFace
     // Creates Section for "Calculation Elements Unit"
     final Section calculationElementUnitSection = toolkit.createSection( body, Section.EXPANDED | Section.TITLE_BAR );
     calculationElementUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.2" ) ); //$NON-NLS-1$
-    calculationElementUnitSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    calculationElementUnitSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     createCalculationUnit( calculationUnitSection, toolkit );
     createCalculationSettingsSection( calculationSettingsSection, toolkit );
     createCalculationElements( calculationElementUnitSection, toolkit );
+
+//    body.layout( true, true );
 
     return body;
   }
