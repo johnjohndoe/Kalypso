@@ -97,7 +97,6 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CloneCalculationUnitWizard;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
@@ -158,8 +157,6 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   // FIXME: use actions and toolbar instead
   private Button m_btnMaximizeCalcUnit;
 
-  private Button m_btnCreateCalcUnit;
-
   private Button m_btnCloneCalcUnit;
 
   private Button m_btnRunCalculation;
@@ -180,9 +177,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
     final TableViewer tableViewer = createTableControl( composite, toolkit );
     final Table table = tableViewer.getTable();
-    final GridData tableData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    tableData.minimumHeight = 200;
-    table.setLayoutData( tableData );
+    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Display display = parent.getDisplay();
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
@@ -329,27 +324,9 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_ADD ) )
     {
-      m_btnCreateCalcUnit = new Button( btnComposite, SWT.PUSH );
-      m_btnCreateCalcUnit.setImage( AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).createImage() );//$NON-NLS-1$
-      DisposeButtonImageListener.hookToButton( m_btnCreateCalcUnit );
-      m_btnCreateCalcUnit.addSelectionListener( new SelectionAdapter()
-      {
-        @Override
-        public void widgetSelected( final SelectionEvent event )
-        {
-          try
-          {
-            createFeatureWrapper();
-            final int newEntryPosition = viewer.getTable().getItemCount() - 1;
-            viewer.getTable().select( newEntryPosition );
-          }
-          catch( final Throwable th )
-          {
-            th.printStackTrace();
-          }
-        }
-      } );
-      m_btnCreateCalcUnit.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.Tooltip.BTN_ADD" ) ); //$NON-NLS-1$
+      final IAction createUnitAction = new CreateCalcUnitAction( m_dataModel );
+      m_actions.add( createUnitAction );
+      ActionButton.createButton( toolkit, btnComposite, createUnitAction );
     }
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_CLONE ) )
@@ -439,15 +416,6 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   protected void moveSelection( @SuppressWarnings( "unused" ) final int delta )
   {
     throw new UnsupportedOperationException();
-  }
-
-  protected void createFeatureWrapper( )
-  {
-    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-
-    final CreateCalculationUnitWizard calculationWizard = new CreateCalculationUnitWizard( getDataModel() );
-    final WizardDialog wizardDialog = new WizardDialog( shell, calculationWizard );
-    wizardDialog.open();
   }
 
   protected void cloneFeatureWrapper( )
@@ -554,7 +522,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
         final IStructuredSelection newSelection = currentSelection == null ? StructuredSelection.EMPTY : new StructuredSelection( currentSelection );
         if( !ObjectUtils.equals( oldSelection, currentSelection ) )
-          tableViewer.setSelection( newSelection );
+          tableViewer.setSelection( newSelection, true );
 
         final boolean isEnabled = currentSelection instanceof Feature;
 
