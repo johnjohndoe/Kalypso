@@ -15,8 +15,8 @@
         <Title>Keine Daten vorhanden</Title>
         <Description />
         <MapperRefs>
-          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#screenAxisX" />
-          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#screenAxisY" />
+          <DomainAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#normalizedAxisX" />
+          <TargetAxisRef url="urn:org:kalypso:simulation:base:diagramm:global#normalizedAxisY" />
         </MapperRefs>
         <Styles>
           <TextStyle role="defaultTextStyle">
