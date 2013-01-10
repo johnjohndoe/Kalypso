@@ -128,7 +128,8 @@ public class NaPostProcessor
     }
     catch( final SimulationException e )
     {
-      m_errorLog.add( IStatus.ERROR, Messages.getString("NaPostProcessor.2"), e ); //$NON-NLS-1$
+      e.printStackTrace();
+      m_errorLog.add( IStatus.ERROR, Messages.getString( "NaPostProcessor.2" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -231,7 +232,7 @@ public class NaPostProcessor
   {
     try
     {
-      return FileUtils.readLines( new File( startDir, FILENAME_OUTPUT_RES ), (Charset) null );
+      return FileUtils.readLines( new File( startDir, FILENAME_OUTPUT_RES ), (Charset)null );
     }
     catch( final IOException e )
     {

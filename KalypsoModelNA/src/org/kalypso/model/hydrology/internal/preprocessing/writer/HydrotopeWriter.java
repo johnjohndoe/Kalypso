@@ -51,7 +51,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.parameter.Soiltype;
+import org.kalypso.model.hydrology.binding.parameter.ISoilType;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
@@ -134,7 +134,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
 
   private String getSoilTypeName( final Catchment catchment, final HydrotopeInfo hydrotopInfo )
   {
-    final Soiltype soiltype = hydrotopInfo.getSoilType();
+    final ISoilType soiltype = hydrotopInfo.getSoilType();
 
     final String soiltypeName = soiltype.getName();
 

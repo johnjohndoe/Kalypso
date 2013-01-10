@@ -53,7 +53,6 @@ import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.SoilLayerParameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -61,13 +60,13 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class BodentypWriter extends AbstractCoreFileWriter
 {
-  private final GMLWorkspace m_parameterWorkspace;
+  private final Parameter m_parameter;
 
-  public BodentypWriter( final GMLWorkspace parameterWorkspace, final Logger logger )
+  public BodentypWriter( final Parameter parameter, final Logger logger )
   {
     super( logger );
 
-    m_parameterWorkspace = parameterWorkspace;
+    m_parameter = parameter;
   }
 
   @Override
@@ -75,13 +74,11 @@ public class BodentypWriter extends AbstractCoreFileWriter
   {
     buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
 
-    final Parameter parameter = (Parameter) m_parameterWorkspace.getRootFeature();
-
     // write normal soil types
-    doWrite( parameter.getSoiltypes(), buffer );
+    doWrite( m_parameter.getSoiltypes(), buffer );
 
     // write DRWBM soil types
-    doWriteDRWBM( parameter.getDRWBMSoiltypes(), buffer );
+    doWriteDRWBM( m_parameter.getDRWBMSoiltypes(), buffer );
   }
 
   private void doWrite( final IFeatureBindingCollection<Soiltype> soiltypes, final PrintWriter buffer )
@@ -142,8 +139,26 @@ public class BodentypWriter extends AbstractCoreFileWriter
       // additional drwbm soil type parameters
       if( parameter instanceof DRWBMSoilLayerParameter )
       {
-        final DRWBMSoilLayerParameter drwbmParam = (DRWBMSoilLayerParameter) parameter;
-        buffer.append( String.format( Locale.US, " %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f", drwbmParam.getPipeDiameter(), drwbmParam.getPipeRoughness(), drwbmParam.getDrainagePipeKfValue(), drwbmParam.getDrainagePipeSlope(), drwbmParam.getOverflowHeight(), drwbmParam.getAreaPerOutlet(), drwbmParam.getWidthOfArea() ) ); //$NON-NLS-1$
+        // FIXME: check core version here; throw exception if < 3.0.0.0
+
+        final DRWBMSoilLayerParameter drwbmParam = (DRWBMSoilLayerParameter)parameter;
+
+        // FIXME: 0, if none of those parameters is set
+        if( drwbmParam.isDrainageFunction() )
+        {
+          final Double pipeDiameter = drwbmParam.getPipeDiameter(); // Rohrdurchmesser [mm; Standard = 0]
+          final Double pipeRoughness = drwbmParam.getPipeRoughness(); // Rauhigkeit Rohr [KS-Wert; Standard = 0]
+          final Double drainagePipeKfValue = drwbmParam.getDrainagePipeKfValue(); // Durchlässigkeit Dränrohr [KF-Wert; Standard = 0]
+          final Double drainagePipeSlope = drwbmParam.getDrainagePipeSlope(); // Rohrgefälle; Standard = 0
+          final Double overflowHeight = drwbmParam.getOverflowHeight(); // Überlaufhöhe [mm; Standard = 0]
+          final Integer couplingOverflowPipe = 1; // FIXME: • Kopplung Überlaufrohr Schicht [Schicht; Standard = 0]
+          final Double areaPerOutlet = drwbmParam.getAreaPerOutlet(); // Entwässerungsfläche pro Rohr [m²; Standard = 0]
+          // FIXME: no more used??
+          final Double widthOfArea = drwbmParam.getWidthOfArea(); // BREIT MASSNAHMENFLÄCHE; noch genutzt??
+          final Integer sealingBelowDrwbm = 1; // FIXME: Abdichtung unterhalb der Maßnahme: 1/0 ; Standard = 0
+
+          buffer.append( String.format( Locale.US, " 1 %.1f %.1f %.1f %.1f %.1f %d %.1f %d", pipeDiameter, pipeRoughness, drainagePipeKfValue, drainagePipeSlope, overflowHeight, couplingOverflowPipe, areaPerOutlet, sealingBelowDrwbm ) ); //$NON-NLS-1$
+        }
       }
 
       // line end

@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * Binding class for {http://www.tuhh.de/parameter}Parameter
- *
+ * 
  * @author Gernot Belger
  */
 public class Parameter extends UnversionedModel
@@ -65,11 +65,15 @@ public class Parameter extends UnversionedModel
 
   public static final QName MEMBER_DRWBM_SOILTYPE = new QName( NS_NAPARAMETER, "drwbmSoiltypeMember" ); //$NON-NLS-1$
 
+  public static final QName MEMBER_DRWBM_DEFINITION = new QName( NS_NAPARAMETER, "drwbmDefinitionMember" ); //$NON-NLS-1$
+
   public static final QName MEMBER_SNOW = new QName( NS_NAPARAMETER, "snowMember" ); //$NON-NLS-1$
 
   private IFeatureBindingCollection<Soiltype> m_soiltypes;
 
   private IFeatureBindingCollection<DRWBMSoiltype> m_drwbmSoilTypes;
+
+  private IFeatureBindingCollection<DRWBMDefinition> m_drwbmDefinitions;
 
   private IFeatureBindingCollection<Snow> m_snow;
 
@@ -94,6 +98,14 @@ public class Parameter extends UnversionedModel
     return m_drwbmSoilTypes;
   }
 
+  public synchronized IFeatureBindingCollection<DRWBMDefinition> getDRWBMDefinitions( )
+  {
+    if( m_drwbmDefinitions == null )
+      m_drwbmDefinitions = new FeatureBindingCollection<>( this, DRWBMDefinition.class, MEMBER_DRWBM_DEFINITION );
+
+    return m_drwbmDefinitions;
+  }
+
   public synchronized IFeatureBindingCollection<Snow> getSnow( )
   {
     if( m_snow == null )
@@ -106,7 +118,7 @@ public class Parameter extends UnversionedModel
   {
     final Feature feature = getWorkspace().getFeature( featureID );
     if( feature instanceof Soiltype )
-      return (Soiltype) feature;
+      return (Soiltype)feature;
 
     return null;
   }

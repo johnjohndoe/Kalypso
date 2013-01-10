@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * 
  * @author Gernot Belger
  */
-public class Soiltype extends Feature_Impl
+public class Soiltype extends Feature_Impl implements ISoilType
 {
   private static final String NS_NAPARAMETER = NaModelConstants.NS_NAPARAMETER;
 
@@ -69,6 +69,7 @@ public class Soiltype extends Feature_Impl
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Override
   public synchronized IFeatureBindingCollection<SoilLayerParameter> getParameters( )
   {
     if( m_parameters == null )

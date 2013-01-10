@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * Binding class for rrmLanduse:LanduseCollection's
- *
+ * 
  * @author Gernot Belger
  */
 public class LanduseCollection extends UnversionedModel
@@ -82,10 +82,10 @@ public class LanduseCollection extends UnversionedModel
 
   /**
    * Create/Import a new landuse into this collection.
-   *
+   * 
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public Landuse importLanduse( final ImportType importType, final String name, final GM_MultiSurface geometry, final String description, final Double corrSealing, final String landuseRef )
+  public Landuse importLanduse( final ImportType importType, final String name, final GM_MultiSurface geometry, final Double corrSealing, final String landuseRef )
   {
     // Handle existing landuses that intersect the new one
     final List<Landuse> existingLanduses = m_landuses.query( geometry.getEnvelope() );
@@ -106,7 +106,6 @@ public class LanduseCollection extends UnversionedModel
         final Landuse landuse = m_landuses.addNew( Landuse.FEATURE_LANDUSE );
         landuse.setName( name );
         landuse.setGeometry( geometry );
-        landuse.setDescription( description );
         landuse.setCorrSealing( corrSealing );
         addLanduseLink( landuseRef, landuse );
         return landuse;
@@ -132,10 +131,7 @@ public class LanduseCollection extends UnversionedModel
             else
               landuse.setCorrSealing( existingLanduse.getCorrSealing() );
 
-            if( description != null )
-              landuse.setDescription( description );
-            else
-              landuse.setDescription( existingLanduse.getDescription() );
+            landuse.setDescription( existingLanduse.getDescription() );
 
             if( landuseRef != null )
               addLanduseLink( landuseRef, landuse );
