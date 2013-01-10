@@ -103,7 +103,7 @@ public class CalculationUnitLogComponent
   private void guiProblemViewer( final Composite parent, final FormToolkit toolkit )
   {
     final Label noLogLabel = toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.0" ) ); //$NON-NLS-1$
-    final GridData noLogGridData = new GridData( SWT.FILL, SWT.END, true, true );
+    final GridData noLogGridData = new GridData( SWT.CENTER, SWT.CENTER, true, true );
     noLogLabel.setLayoutData( noLogGridData );
     noLogLabel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.1" ) ); //$NON-NLS-1$
 
@@ -127,8 +127,8 @@ public class CalculationUnitLogComponent
       }
     } );
 
-    noLogLabel.setVisible( false );
-    noLogGridData.exclude = true;
+    noLogLabel.setVisible( true );
+    noLogGridData.exclude = false;
     logControl.setVisible( false );
     tableGridData.exclude = true;
 
