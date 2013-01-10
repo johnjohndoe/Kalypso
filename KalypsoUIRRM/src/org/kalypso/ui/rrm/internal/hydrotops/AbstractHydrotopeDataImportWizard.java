@@ -85,12 +85,22 @@ public abstract class AbstractHydrotopeDataImportWizard extends Wizard implement
     m_dataWorkspace = HydrotopesHelper.findWorkspaceForImport( selection );
 
     final String[] properties = getProperties();
+    final String[] optionalProperties = getOptionalProperties();
+
     final String description = getDescription();
 
     m_wizardPage = new ImportShapeWizardPage( "shapePage", properties ); //$NON-NLS-1$
     m_wizardPage.setDescription( description ); //$NON-NLS-1$
 
+    for( final String optionalProperty : optionalProperties )
+      m_wizardPage.setOptional( optionalProperty, true );
+
     addPage( m_wizardPage );
+  }
+
+  protected String[] getOptionalProperties( )
+  {
+    return new String[] {};
   }
 
   @Override
@@ -110,7 +120,7 @@ public abstract class AbstractHydrotopeDataImportWizard extends Wizard implement
 
     try
     {
-      m_dataWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_dataWorkspace, m_dataWorkspace.getRootFeature(), (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      m_dataWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_dataWorkspace, m_dataWorkspace.getRootFeature(), (Feature[])null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
       /* Make sure data is dirty */
       m_dataWorkspace.postCommand( new EmptyCommand( StringUtils.EMPTY, false ) );
@@ -118,7 +128,7 @@ public abstract class AbstractHydrotopeDataImportWizard extends Wizard implement
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("AbstractHydrotopeDataImportWizard_1"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "AbstractHydrotopeDataImportWizard_1" ), e ); //$NON-NLS-1$
       StatusDialog.open( shell, status, windowTitle );
       return false;
     }

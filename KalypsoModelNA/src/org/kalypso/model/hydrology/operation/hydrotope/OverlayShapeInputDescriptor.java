@@ -43,6 +43,7 @@ package org.kalypso.model.hydrology.operation.hydrotope;
 import java.io.File;
 import java.nio.charset.Charset;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.hydrology.operation.hydrotope.OverlayImportOperation.InputDescriptor;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -51,17 +52,36 @@ public class OverlayShapeInputDescriptor extends AbstractShapeInputDescriptor<GM
 {
   private final String m_drwbmColumn;
 
-  public OverlayShapeInputDescriptor( final File shapeFile, final String drwbmColumn, final String crs, final Charset charset )
+  private final String m_drwbmLabel;
+
+  public OverlayShapeInputDescriptor( final File shapeFile, final String drwbmLabel, final String drwbmColumn, final String crs, final Charset charset )
   {
     super( shapeFile, crs, charset );
 
+    m_drwbmLabel = drwbmLabel;
     m_drwbmColumn = drwbmColumn;
+  }
+
+  @Override
+  public final String getDescription( final int index ) throws CoreException
+  {
+    if( StringUtils.isBlank( m_drwbmLabel ) )
+      return super.getDescription( index );
+
+    final Object property = getProperty( index, m_drwbmLabel );
+    if( property == null )
+      return null;
+
+    return property.toString();
   }
 
   @Override
   public String getDRWBMDefinition( final int index ) throws CoreException
   {
     final Object property = getProperty( index, m_drwbmColumn );
-    return property == null ? null : property.toString();
+    if( property == null )
+      return null;
+
+    return property.toString();
   }
 }

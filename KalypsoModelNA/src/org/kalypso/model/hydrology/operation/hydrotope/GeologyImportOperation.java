@@ -94,12 +94,11 @@ public class GeologyImportOperation extends AbstractImportOperation<GM_MultiSurf
   protected Feature importRow( final int i, final String label, final GM_MultiSurface geometry, final IStatusCollector log ) throws CoreException
   {
     final Geology geology = m_output.importGeology( label, geometry, m_importType, log );
-    if( geology != null )
-    {
-      geology.setDescription( m_inputDescriptor.getDescription( i ) );
-      geology.setMaxPerkulationsRate( m_inputDescriptor.getMaxPerkulationsRate( i ) );
-      geology.setGWFactor( m_inputDescriptor.getGWFactor( i ) );
-    }
+    if( geology == null )
+      return null;
+
+    geology.setMaxPerkulationsRate( m_inputDescriptor.getMaxPerkulationsRate( i ) );
+    geology.setGWFactor( m_inputDescriptor.getGWFactor( i ) );
 
     return geology;
   }

@@ -97,7 +97,7 @@ public abstract class AbstractShapeInputDescriptor<T extends GM_Object> implemen
   }
 
   @Override
-  public final String getDescription( final int index )
+  public String getDescription( final int index ) throws CoreException
   {
     return Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.AbstractShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
   }
@@ -155,6 +155,12 @@ public abstract class AbstractShapeInputDescriptor<T extends GM_Object> implemen
 
   protected final Object getProperty( final int row, final String property ) throws CoreException
   {
+    if( property == null )
+    {
+      /* happens for optional properties */
+      return null;
+    }
+
     final ShapeFile shape = getShapeFile();
 
     try
