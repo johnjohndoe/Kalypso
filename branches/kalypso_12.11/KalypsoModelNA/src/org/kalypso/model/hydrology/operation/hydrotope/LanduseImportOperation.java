@@ -112,14 +112,10 @@ public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurf
       // FIXME: is this a hack just for Planer-Client?? In that case -> do error handling in case of 'normal' landuse
       // import, else the user never gets an error message here...!
 
-// final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
-
-      return m_output.importLanduse( ImportType.UPDATE, label, geometry, null, null, null );
+      return m_output.importLanduse( ImportType.UPDATE, label, geometry, null, null );
     }
     else
     {
-// final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
-      final String desc = m_inputDescriptor.getDescription( i );
       final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
       final String landuseRef = m_landuseClasses.getReference( landuseclass );
       if( landuseRef == null )
@@ -128,7 +124,7 @@ public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurf
         throw new CoreException( new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message ) );
       }
 
-      return m_output.importLanduse( m_importType, label, geometry, desc, corrSealing, landuseRef );
+      return m_output.importLanduse( m_importType, label, geometry, corrSealing, landuseRef );
     }
   }
 }

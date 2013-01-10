@@ -113,12 +113,7 @@ public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSur
     final SoilType soilType = m_output.importSoilType( label, geometry, m_importType, log );
     if( soilType != null )
     {
-      final String desc = m_inputDescriptor.getDescription( i );
-
-      soilType.setDescription( desc );
-
       final String href = "parameter.gml#" + soilTypeRef; //$NON-NLS-1$
-
       soilType.setSoilType( href );
     }
 

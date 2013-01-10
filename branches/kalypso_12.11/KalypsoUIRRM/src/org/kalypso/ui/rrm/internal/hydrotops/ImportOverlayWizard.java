@@ -43,25 +43,30 @@ package org.kalypso.ui.rrm.internal.hydrotops;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage;
 import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
+import org.kalypso.model.hydrology.binding.parameter.DRWBMDefinition;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.operation.hydrotope.OverlayImportOperation;
 import org.kalypso.model.hydrology.operation.hydrotope.OverlayImportOperation.InputDescriptor;
 import org.kalypso.model.hydrology.operation.hydrotope.OverlayShapeInputDescriptor;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Dejan Antanaskovic
  */
 public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
 {
+  private final static String PROPERTY_DRWBM_DEFINITION = "DRWBM Definition";
 
-  private final static String PROPERTY_DRWBM_DEFINITION = "DRWBM"; //$NON-NLS-1$
+  private final static String PROPERTY_DESCRIPTION = "Description";
 
   public ImportOverlayWizard( )
   {
@@ -71,7 +76,14 @@ public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
   @Override
   protected String[] getProperties( )
   {
-    return new String[] { PROPERTY_DRWBM_DEFINITION };
+    return new String[] { PROPERTY_DESCRIPTION, PROPERTY_DRWBM_DEFINITION };
+  }
+
+  @Override
+  protected String[] getOptionalProperties( )
+  {
+    // all properties are optional
+    return getProperties();
   }
 
   @Override
@@ -83,16 +95,36 @@ public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
   @Override
   protected ICoreRunnableWithProgress createImportOperation( final ImportShapeWizardPage wizardPage, final GMLWorkspace overlayWorkspace, final Parameter parameter )
   {
+    final String drwbmLabel = wizardPage.getProperty( PROPERTY_DESCRIPTION );
     final String drwbpmProperty = wizardPage.getProperty( PROPERTY_DRWBM_DEFINITION );
 
     final File shapeFile = wizardPage.getShapeFile();
     final String crs = wizardPage.getSelectedCRS();
     final Charset charset = wizardPage.getSelectedCharset();
 
-    final InputDescriptor inputDescriptor = new OverlayShapeInputDescriptor( shapeFile, drwbpmProperty, crs, charset );
+    final InputDescriptor inputDescriptor = new OverlayShapeInputDescriptor( shapeFile, drwbmLabel, drwbpmProperty, crs, charset );
+
+    final Map<String, String> drwbmClasses = hashDrwbmDefinitions( parameter );
+    // REMARK: no check for empty drwbm types: overlay can be used without soiltypes
 
     final OverlayCollection output = (OverlayCollection)overlayWorkspace.getRootFeature();
 
-    return new OverlayImportOperation( inputDescriptor, output, ImportType.CLEAR_OUTPUT );
+    return new OverlayImportOperation( inputDescriptor, output, drwbmClasses, ImportType.CLEAR_OUTPUT );
+  }
+
+  private Map<String, String> hashDrwbmDefinitions( final Parameter parameter )
+  {
+    final Map<String, String> definitions = new HashMap<>();
+
+    final IFeatureBindingCollection<DRWBMDefinition> drwbmDefinitions = parameter.getDRWBMDefinitions();
+    for( final DRWBMDefinition definition : drwbmDefinitions )
+    {
+      final String name = definition.getName();
+      final String id = definition.getId();
+
+      definitions.put( name, id );
+    }
+
+    return definitions;
   }
 }

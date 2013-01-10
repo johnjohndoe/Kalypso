@@ -83,7 +83,7 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
 
     String getName( int index );
 
-    String getDescription( int index );
+    String getDescription( int index ) throws CoreException;
 
     T getGeometry( int index ) throws CoreException;
   }
@@ -110,12 +110,16 @@ public abstract class AbstractImportOperation<T extends GM_Object> implements IC
       try
       {
         final String label = m_inputDescriptor.getName( i );
+        final String description = m_inputDescriptor.getDescription( i );
         final T geometry = m_inputDescriptor.getGeometry( i );
         checkGeometry( geometry, label );
 
         final Feature newFeature = importRow( i, label, geometry, m_log );
         if( newFeature != null )
+        {
+          newFeature.setDescription( description );
           newFeatures.add( newFeature );
+        }
       }
       catch( final CoreException e )
       {

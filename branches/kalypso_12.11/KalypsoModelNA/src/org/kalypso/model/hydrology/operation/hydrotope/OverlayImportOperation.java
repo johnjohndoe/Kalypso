@@ -40,11 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.OverlayElement;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
+import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -58,7 +65,6 @@ public class OverlayImportOperation extends AbstractImportOperation<GM_MultiSurf
 {
   public interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_MultiSurface>
   {
-
     String getDRWBMDefinition( int index ) throws CoreException;
   }
 
@@ -68,16 +74,19 @@ public class OverlayImportOperation extends AbstractImportOperation<GM_MultiSurf
 
   private final InputDescriptor m_inputDescriptor;
 
+  private final Map<String, String> m_drwbmClasses;
+
   /**
    * @param output
    *          An (empty) list containing rrmHydo:OverlayElement features
    */
-  public OverlayImportOperation( final InputDescriptor inputDescriptor, final OverlayCollection output, final ImportType importType )
+  public OverlayImportOperation( final InputDescriptor inputDescriptor, final OverlayCollection output, final Map<String, String> drwbmClasses, final ImportType importType )
   {
     super( inputDescriptor );
 
     m_inputDescriptor = inputDescriptor;
     m_output = output;
+    m_drwbmClasses = drwbmClasses;
     m_importType = importType;
   }
 
@@ -96,10 +105,24 @@ public class OverlayImportOperation extends AbstractImportOperation<GM_MultiSurf
   {
     // find landuse and drwbm soil type
     final String definition = m_inputDescriptor.getDRWBMDefinition( i );
+    final String definitionRef = checkDefinition( definition, i );
 
-    if( definition == null )
+    return m_output.importOverlayElement( label, geometry, m_importType, definitionRef, log );
+  }
+
+  private String checkDefinition( final String definition, final int elementId ) throws CoreException
+  {
+    if( StringUtils.isBlank( definition ) )
       return null;
 
-    return m_output.importOverlayElement( label, geometry, m_importType, definition, log );
+    final String drwbmId = m_drwbmClasses.get( definition );
+    if( drwbmId == null )
+    {
+      final String message = String.format( "Unknown SUDS definition '%s' at feature-id %d", definition, elementId + 1 );
+      throw new CoreException( new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message ) );
+    }
+
+    final String drwbmModelRef = RrmScenario.FILE_PARAMETER_GML;
+    return String.format( "%s#%s", drwbmModelRef, drwbmId );
   }
 }

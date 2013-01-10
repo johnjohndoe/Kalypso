@@ -93,7 +93,7 @@ public class ImportGeologyWizard extends AbstractHydrotopeDataImportWizard
 
     final InputDescriptor inputDescriptor = new GeologyShapeInputDescriptor( shapeFile, maxPerculationsRateProperty, gwFactorProperty, crs, charset );
 
-    final GeologyCollection output = (GeologyCollection) dataWorkspace.getRootFeature();
+    final GeologyCollection output = (GeologyCollection)dataWorkspace.getRootFeature();
     return new GeologyImportOperation( inputDescriptor, output, ImportType.CLEAR_OUTPUT );
   }
 }
