@@ -18,12 +18,47 @@
  */
 package org.kalypso.model.wspm.tuhh.core.ctripple;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Holger Albert
  */
 public class CodedTrippleHorizonMapper
 {
+  private final Map<String, String> m_codeToHorizonId;
+
+  private final Map<String, String> m_horizonIdToPartId;
+
   public CodedTrippleHorizonMapper( )
   {
+    m_codeToHorizonId = new HashMap<>();
+    m_horizonIdToPartId = new HashMap<>();
+  }
+
+  /**
+   * This function returns the horizon id associated with the code of the point.
+   * 
+   * @param code
+   *          The code of the point.
+   * @return The horizon id.
+   */
+  public String getHorizonId( String code )
+  {
+    // TODO
+    return null;
+  }
+
+  /**
+   * This function returns the part id of a profile part of Kalypso for the horizon id.
+   * 
+   * @param horizonId
+   *          The horizon id.
+   * @return The part id of a profile part of Kalypso.
+   */
+  public String getPartId( String horizonId )
+  {
+    // TODO
+    return null;
   }
 }
