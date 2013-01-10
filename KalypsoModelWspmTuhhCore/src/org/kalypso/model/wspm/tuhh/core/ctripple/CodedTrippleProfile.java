@@ -16,33 +16,50 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
+package org.kalypso.model.wspm.tuhh.core.ctripple;
 
 import java.math.BigDecimal;
-
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfile;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Holger Albert
  */
-public class CodedTrippleProfileStationLabelProvider extends ColumnLabelProvider
+public class CodedTrippleProfile
 {
-  public CodedTrippleProfileStationLabelProvider( )
+  private final BigDecimal m_station;
+
+  private final List<CodedTrippleProfilePoint> m_points;
+
+  public CodedTrippleProfile( BigDecimal station )
   {
+    m_station = station;
+    m_points = new ArrayList<>();
   }
 
-  @Override
-  public String getText( final Object element )
+  public void addProfilePoint( CodedTrippleProfilePoint point )
   {
-    if( element instanceof CodedTrippleProfile )
-    {
-      final CodedTrippleProfile profile = (CodedTrippleProfile)element;
-      final BigDecimal station = profile.getStation();
-      if( station != null )
-        return String.format( "%.4f", station.doubleValue() ); //$NON-NLS-1$
-    }
+    /* Only store points in correct order. */
+    m_points.add( point );
+  }
 
-    return super.getText( element );
+  public BigDecimal getStation( )
+  {
+    return m_station;
+  }
+
+  public CodedTrippleProfileHorizon[] getProfileHorizons( )
+  {
+    // String code = point.getCode();
+
+    /* horizon from profiles. */
+    // String horizonId = horizonMapper.getHorizonId( code );
+
+    /* Id of of our profile objects. */
+    // horizonMapper.getPartId(horizontId);
+
+    // TODO Create horizons here... because codes may have changed...
+    // TODO hash by horizonId...
+    return null;
   }
 }

@@ -21,6 +21,7 @@ package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTripple;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfile;
 
 /**
  * @author Holger Albert
@@ -45,14 +46,14 @@ public class CodedTrippleProfilesContentProvider implements ITreeContentProvider
   public Object[] getElements( final Object inputElement )
   {
     /* CASE: CodedTrippleProfile[] was set as input. */
-    // TODO
-    // if( inputElement instanceof CodedTrippleProfile[] )
-    // return (Object[])inputElement;
+    if( inputElement instanceof CodedTrippleProfile[] )
+      return (Object[])inputElement;
 
     /* CASE: CodedTripple was set as input. */
     if( inputElement instanceof CodedTripple )
     {
-      // TODO
+      CodedTripple codedTripple = (CodedTripple)inputElement;
+      return codedTripple.getProfiles();
     }
 
     /* CASE: null or something unknown was set as input. */

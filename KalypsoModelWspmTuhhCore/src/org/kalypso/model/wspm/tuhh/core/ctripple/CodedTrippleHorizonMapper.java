@@ -16,33 +16,14 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
-
-import java.math.BigDecimal;
-
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfile;
+package org.kalypso.model.wspm.tuhh.core.ctripple;
 
 /**
  * @author Holger Albert
  */
-public class CodedTrippleProfileStationLabelProvider extends ColumnLabelProvider
+public class CodedTrippleHorizonMapper
 {
-  public CodedTrippleProfileStationLabelProvider( )
+  public CodedTrippleHorizonMapper( )
   {
-  }
-
-  @Override
-  public String getText( final Object element )
-  {
-    if( element instanceof CodedTrippleProfile )
-    {
-      final CodedTrippleProfile profile = (CodedTrippleProfile)element;
-      final BigDecimal station = profile.getStation();
-      if( station != null )
-        return String.format( "%.4f", station.doubleValue() ); //$NON-NLS-1$
-    }
-
-    return super.getText( element );
   }
 }

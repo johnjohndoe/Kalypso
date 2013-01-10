@@ -18,12 +18,49 @@
  */
 package org.kalypso.model.wspm.tuhh.core.ctripple;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author Holger Albert
  */
 public class CodedTripple
 {
+  final Map<BigDecimal, CodedTrippleProfile> m_profiles;
+
+  final Set<String> m_badCodes;
+
   public CodedTripple( )
   {
+    m_profiles = new LinkedHashMap<>();
+    m_badCodes = new HashSet<>();
+  }
+
+  public void addProfilePoint( CodedTrippleProfilePoint point )
+  {
+    // Check for code...
+    // String code = point.getCode();
+
+    /* horizon from profiles. */
+    // String horizonId = horizonMapper.getHorizonId( code );
+
+    /* Id of of our profile objects. */
+    // horizonMapper.getPartId(horizontId);
+
+    // TODO Hash by name...
+    BigDecimal station = point.getStation();
+    if( !m_profiles.containsKey( station ) )
+      m_profiles.put( station, new CodedTrippleProfile( station ) );
+
+    CodedTrippleProfile profile = m_profiles.get( station );
+    profile.addProfilePoint( point );
+  }
+
+  public CodedTrippleProfile[] getProfiles( )
+  {
+    return m_profiles.values().toArray( new CodedTrippleProfile[] {} );
   }
 }
