@@ -61,7 +61,7 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.processing.KalypsoNaProcessor;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
@@ -146,12 +146,12 @@ public class NAModelSimulation
   private void validateVersion( final File naExe, final Version calcCoreVersion, final IStatusCollector log )
   {
     final String filename = naExe.getName();
-    log.add( IStatus.OK, Messages.getString("NAModelSimulation.1"), null, filename ); //$NON-NLS-1$
+    log.add( IStatus.OK, Messages.getString( "NAModelSimulation.1" ), null, filename ); //$NON-NLS-1$
 
     if( calcCoreVersion == null )
     {
-      final String coreExample = String.format( EXECUTABLES_FILE_TEMPLATE, Messages.getString("NAModelSimulation.13") ); //$NON-NLS-1$
-      final String message = String.format( Messages.getString("NAModelSimulation.14"), coreExample ); //$NON-NLS-1$
+      final String coreExample = String.format( EXECUTABLES_FILE_TEMPLATE, Messages.getString( "NAModelSimulation.13" ) ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "NAModelSimulation.14" ), coreExample ); //$NON-NLS-1$
       log.add( IStatus.WARNING, message );
     }
   }
@@ -256,10 +256,10 @@ public class NAModelSimulation
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
     final NAModellControl naControl = simulationData.getNaControl();
 
-    final HydroHash hydroHash = m_preprocessor.getHydroHash();
+    final NaCatchmentData catchmentData = m_preprocessor.getCatchmentData();
     final IDManager idManager = m_preprocessor.getIdManager();
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( idManager, m_logger, modelWorkspace, naControl, hydroHash );
+    final NaPostProcessor postProcessor = new NaPostProcessor( idManager, m_logger, modelWorkspace, naControl, catchmentData );
     postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
 
     if( processStatus != null )

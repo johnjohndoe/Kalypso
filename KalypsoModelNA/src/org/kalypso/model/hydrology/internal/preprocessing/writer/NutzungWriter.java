@@ -60,7 +60,6 @@ import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -82,14 +81,13 @@ public class NutzungWriter
     m_nutzungDir = nutzungDir;
   }
 
-  public void writeFile( final HydroHash hydroHash ) throws IOException, NAPreprocessorException
+  public void writeFile( final ParameterHash landuseHash ) throws IOException, NAPreprocessorException
   {
-    if( hydroHash == null )
+    if( landuseHash == null )
       return;
 
     try
     {
-      final ParameterHash landuseHash = hydroHash.getParameterHash();
       final Parameter parameter = m_data.getParameter();
       final List<Feature> list = (List<Feature>)parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
       for( final Feature nutzungFE : list )

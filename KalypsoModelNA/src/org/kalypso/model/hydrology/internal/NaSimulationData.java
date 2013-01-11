@@ -42,10 +42,12 @@ package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
 import java.net.URL;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.IHydrotope;
@@ -57,6 +59,8 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.binding.cm.CatchmentModel;
 import org.kalypso.model.hydrology.internal.binding.timeseriesMappings.TimeseriesMappingCollection;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.model.hydrology.util.optimize.NaOptimizeLoader;
 import org.kalypso.ogc.gml.serialize.FeatureProviderWithCacheFactory;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -102,6 +106,8 @@ public class NaSimulationData implements INaSimulationData
   private final URL m_preprocessedASCIIlocation;
 
   private Version m_calcCoreVersion;
+
+  private ParameterHash m_landuseHash;
 
   public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL syntNUrl, final URL lzsimUrl, final URL catchmentModelsUrl, final URL timeseriesMappingsUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessedASCIIlocation ) throws Exception
   {
@@ -395,5 +401,20 @@ public class NaSimulationData implements INaSimulationData
   public Version getCalcCoreVersion( )
   {
     return m_calcCoreVersion;
+  }
+
+  @Override
+  public void initLanduseHash( final Logger logger ) throws NAPreprocessorException
+  {
+    Assert.isLegal( m_landuseHash == null );
+    m_landuseHash = new ParameterHash( getParameter(), logger );
+  }
+
+  @Override
+  public ParameterHash getLanduseHash( )
+  {
+    Assert.isNotNull( m_landuseHash );
+
+    return m_landuseHash;
   }
 }

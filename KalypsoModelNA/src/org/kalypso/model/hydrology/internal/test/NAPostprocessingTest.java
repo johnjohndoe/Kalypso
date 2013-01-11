@@ -68,11 +68,10 @@ import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -124,31 +123,33 @@ public class NAPostprocessingTest
 
     final URL parameterResource = new URL( baseURL, "parameter.gml" ); //$NON-NLS-1$
     final GMLWorkspace parameterWorkspace = GmlSerializer.createGMLWorkspace( parameterResource, null );
-    final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
+    final Parameter parameter = (Parameter)parameterWorkspace.getRootFeature();
 
     final URL controlResource = new URL( baseURL, "expertControl.gml" ); //$NON-NLS-1$
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlResource, null );
-    final NAModellControl naControl = (NAModellControl) controlWorkspace.getRootFeature();
+    final NAModellControl naControl = (NAModellControl)controlWorkspace.getRootFeature();
 
     final NaAsciiDirs naAsciiDirs = new NaAsciiDirs( asciiBaseDir );
     final NaSimulationDirs naSimulationDirs = new NaSimulationDirs( resultsDir );
 
     final URL hydrotopResource = new URL( baseURL, "hydrotop.gml" ); //$NON-NLS-1$
     final GMLWorkspace hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopResource, null );
-    final HydrotopeCollection naHydrotop = (HydrotopeCollection) hydrotopWorkspace.getRootFeature();
+    final HydrotopeCollection naHydrotop = (HydrotopeCollection)hydrotopWorkspace.getRootFeature();
 
-    final NaModell model = (NaModell) modelWorkspace.getRootFeature();
-    final IFeatureBindingCollection<Catchment> catchmentList = model.getCatchments();
-    final Catchment[] catchments = catchmentList.toArray( new Catchment[catchmentList.size()] );
+    final NaModell model = (NaModell)modelWorkspace.getRootFeature();
 
     final ParameterHash landuseHash = new ParameterHash( parameter, logger );
 
+    final NaCatchmentData catchmentData = new NaCatchmentData( landuseHash );
+    catchmentData.addHydrotopes( model, naHydrotop, false );
+
+    // REMARK: for backards compatibility: touch each catchment id, so it is known
     final IDManager idManager = new IDManager();
+    final Catchment[] catchments = catchmentData.getCatchmentsAndSubCatchments();
+    for( final Catchment catchment : catchments )
+      idManager.getAsciiID( catchment );
 
-    final HydroHash hydroHash = new HydroHash( landuseHash, catchments, idManager, false );
-    hydroHash.initHydrotopes( naHydrotop );
-
-    final NaPostProcessor postProcessor = new NaPostProcessor( idManager, logger, modelWorkspace, naControl, hydroHash );
+    final NaPostProcessor postProcessor = new NaPostProcessor( idManager, logger, modelWorkspace, naControl, catchmentData );
     postProcessor.process( naAsciiDirs, naSimulationDirs );
 
     return resultsDir;

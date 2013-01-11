@@ -41,22 +41,21 @@
 
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.parameter.ISoilType;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentByAsciiIdSorter;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.Sealing;
 
 /**
@@ -64,16 +63,16 @@ import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.Sealing;
  */
 public class HydrotopeWriter extends AbstractCoreFileWriter
 {
-  private final HydroHash m_hydroHash;
-
   private final IDManager m_idManager;
 
-  public HydrotopeWriter( final IDManager idManager, final HydroHash hydroHash, final Logger logger )
+  private final NaCatchmentData m_catchmentData;
+
+  public HydrotopeWriter( final IDManager idManager, final NaCatchmentData catchmentData, final Logger logger )
   {
     super( logger );
 
-    m_hydroHash = hydroHash;
     m_idManager = idManager;
+    m_catchmentData = catchmentData;
   }
 
   @Override
@@ -82,10 +81,13 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     final String hydrotopeFileTile = Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.2" ); //$NON-NLS-1$
     writer.append( hydrotopeFileTile ).append( '\n' );
 
-    final Collection<Catchment> catchments = m_hydroHash.getCatchments();
+    final Catchment[] catchments = m_catchmentData.getCatchmentsAndSubCatchments();
+    // REMARK: sort by id, so we can compare ascii files more easily
+    Arrays.sort( catchments, new CatchmentByAsciiIdSorter( m_idManager ) );
+
     for( final Catchment catchment : catchments )
     {
-      final CatchmentInfo catchmentInfo = m_hydroHash.getHydrotopInfo( catchment );
+      final CatchmentInfo catchmentInfo = m_catchmentData.getInfo( catchment );
       final String checkMsg = catchmentInfo.checkArea();
       if( checkMsg != null )
         getLogger().warning( checkMsg );
@@ -152,35 +154,35 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     return soiltypeName;
   }
 
-  public void writeMapping( final File outputFile ) throws FileNotFoundException
-  {
-    PrintWriter writer = null;
-    try
-    {
-      writer = new PrintWriter( outputFile );
-
-      final Collection<Catchment> catchments = m_hydroHash.getCatchments();
-      for( final Catchment catchment : catchments )
-      {
-        final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
-
-        final CatchmentInfo catchmentInfo = m_hydroHash.getHydrotopInfo( catchment );
-        final Collection<HydrotopeInfo> hydrotops = catchmentInfo.getHydrotops();
-        for( final HydrotopeInfo hydrotopInfo : hydrotops )
-        {
-          final int hydrotopID = hydrotopInfo.getLocalID();
-          final String featureId = hydrotopInfo.getFeatureId();
-          final String hydrotopName = hydrotopInfo.getName();
-
-          writer.format( Locale.US, "%6d %6d   --->   [%s] \t%s\n", catchmentAsciiID, hydrotopID, featureId, hydrotopName ); //$NON-NLS-1$
-        }
-      }
-
-      writer.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
-  }
+//  public void writeMapping( final File outputFile ) throws FileNotFoundException
+//  {
+//    PrintWriter writer = null;
+//    try
+//    {
+//      writer = new PrintWriter( outputFile );
+//
+//      final Collection<Catchment> catchments = m_hydroHash.getCatchments();
+//      for( final Catchment catchment : catchments )
+//      {
+//        final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
+//
+//        final CatchmentInfo catchmentInfo = m_hydroHash.getHydrotopInfo( catchment );
+//        final Collection<HydrotopeInfo> hydrotops = catchmentInfo.getHydrotops();
+//        for( final HydrotopeInfo hydrotopInfo : hydrotops )
+//        {
+//          final int hydrotopID = hydrotopInfo.getLocalID();
+//          final String featureId = hydrotopInfo.getFeatureId();
+//          final String hydrotopName = hydrotopInfo.getName();
+//
+//          writer.format( Locale.US, "%6d %6d   --->   [%s] \t%s\n", catchmentAsciiID, hydrotopID, featureId, hydrotopName ); //$NON-NLS-1$
+//        }
+//      }
+//
+//      writer.close();
+//    }
+//    finally
+//    {
+//      IOUtils.closeQuietly( writer );
+//    }
+//  }
 }

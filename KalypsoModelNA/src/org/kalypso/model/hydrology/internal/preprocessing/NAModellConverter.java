@@ -58,7 +58,7 @@ import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.BodenartWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.BodentypWriter;
@@ -102,7 +102,7 @@ public class NAModellConverter
     m_logger = logger;
   }
 
-  public void writeUncalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final HydroHash hydroHash ) throws IOException, NAPreprocessorException, SimulationException
+  public void writeUncalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final NaCatchmentData catchmentData ) throws IOException, NAPreprocessorException, SimulationException
   {
     final NaModell naModel = m_data.getNaModel();
     final NAControl metaControl = m_data.getMetaControl();
@@ -140,18 +140,16 @@ public class NAModellConverter
     final HRBFileWriter hrbFileWriter = new HRBFileWriter( channels, m_idManager, m_asciiDirs.klimaDatDir, m_logger );
     hrbFileWriter.write( m_asciiDirs.hrbFile );
 
-    if( hydroHash != null )
+    if( catchmentData != null )
     {
       final NutzungWriter nutzungManager = new NutzungWriter( m_data, m_asciiDirs.hydroTopDir );
-      nutzungManager.writeFile( hydroHash );
+      nutzungManager.writeFile( m_data.getLanduseHash() );
 
-      final HydrotopeWriter hydrotopManager = new HydrotopeWriter( m_idManager, hydroHash, m_logger );
+      final HydrotopeWriter hydrotopManager = new HydrotopeWriter( m_idManager, catchmentData, m_logger );
       hydrotopManager.write( m_asciiDirs.hydrotopFile );
-      // CHECK: do we still need this mapping file, what is it good for?
-      // hydrotopManager.writeMapping( m_asciiDirs.hydrotopMappingFile );
 
       final InitialValues initialValues = m_data.getInitialValues();
-      final LzsimWriter lzsimWriter = new LzsimWriter( m_idManager, hydroHash, initialValues, metaControl, m_logger );
+      final LzsimWriter lzsimWriter = new LzsimWriter( m_idManager, catchmentData, initialValues, metaControl, m_logger );
       lzsimWriter.writeLzsimFiles( m_asciiDirs.lzsimDir );
     }
   }

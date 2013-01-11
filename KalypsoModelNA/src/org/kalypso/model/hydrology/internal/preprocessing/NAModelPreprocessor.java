@@ -59,17 +59,16 @@ import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * Converts KalypsoHydrology gml files to Kalypso-NA ascii files.
@@ -88,9 +87,9 @@ public class NAModelPreprocessor
 
   private final NaAsciiDirs m_asciiDirs;
 
-  private HydroHash m_hydroHash;
-
   private TimeseriesFileManager m_tsFileManager;
+
+  private NaCatchmentData m_catchmentData;
 
   public NAModelPreprocessor( final NaAsciiDirs asciiDirs, final INaSimulationData simulationData, final Logger logger )
   {
@@ -126,7 +125,7 @@ public class NAModelPreprocessor
     }
   }
 
-  private IStatus doProcess( final ISimulationMonitor monitor ) throws SimulationException, NAPreprocessorException, IOException, GM_Exception
+  private IStatus doProcess( final ISimulationMonitor monitor ) throws SimulationException, NAPreprocessorException, IOException
   {
     final IStatusCollector log = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
 
@@ -152,6 +151,18 @@ public class NAModelPreprocessor
     checkCancel( monitor );
 
     monitor.setMessage( Messages.getString( "NAModelPreprocessor.1" ) ); //$NON-NLS-1$
+
+    /* build catchments */
+    m_simulationData.initLanduseHash( m_logger );
+
+    /* first, dissolve hydrotopes */
+    final HydrotopeCollection hydrotopes = m_simulationData.getHydrotopCollection();
+    final ParameterHash landuseHash = m_simulationData.getLanduseHash();
+    final NaCatchmentData catchmentData = new NaCatchmentData( landuseHash );
+    final IStatus status = catchmentData.addHydrotopes( naModel, hydrotopes, true );
+    if( !status.isOK() )
+      log.add( status );
+
     final NaModelTweaker naModelTweaker = new NaModelTweaker( naModel, rootNode );
     naModelTweaker.tweakModel();
     checkCancel( monitor );
@@ -165,8 +176,10 @@ public class NAModelPreprocessor
     // write net and so on....
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.23" ) ); //$NON-NLS-1$
     final NAModellConverter naModellConverter = new NAModellConverter( m_idManager, m_simulationData, m_asciiDirs, m_logger );
-    initNetData( rootNode );
-    naModellConverter.writeUncalibratedFiles( m_relevantElements, m_tsFileManager, m_hydroHash );
+
+    initNetData( rootNode, catchmentData );
+
+    naModellConverter.writeUncalibratedFiles( m_relevantElements, m_tsFileManager, m_catchmentData );
     log.add( naModellConverter.getStatus() );
 
     final NAOptimize optimizeConfig = m_simulationData.getNaOptimize();
@@ -205,36 +218,26 @@ public class NAModelPreprocessor
     naModellConverter.writeCalibratedFiles( m_relevantElements, m_tsFileManager );
   }
 
-  private void initNetData( final Node rootNode ) throws SimulationException, GM_Exception, NAPreprocessorException
+  private void initNetData( final Node rootNode, final NaCatchmentData catchmentData ) throws SimulationException
   {
     final NaModell naModel = m_simulationData.getNaModel();
-    final HydrotopeCollection hydrotopeCollection = m_simulationData.getHydrotopCollection();
     final NAControl metaControl = m_simulationData.getMetaControl();
-    final Parameter parameter = m_simulationData.getParameter();
 
     final NetFileAnalyser nodeManager = new NetFileAnalyser( rootNode, m_logger, naModel, m_idManager );
     m_relevantElements = nodeManager.analyseNet();
 
-    if( hydrotopeCollection != null )
+    /* restrict catchment data to relevant elements */
+    m_catchmentData = new NaCatchmentData( m_simulationData.getLanduseHash() );
+
+    final Catchment[] relevantCatchments = m_relevantElements.getCatchmentsSorted( m_idManager );
+    for( final Catchment relevantCatchment : relevantCatchments )
     {
-      final Catchment[] catchments = m_relevantElements.getCatchmentsSorted( m_idManager );
-      initHydroHash( parameter, hydrotopeCollection, catchments );
+      final CatchmentInfo relevantInfo = catchmentData.getInfo( relevantCatchment );
+      m_catchmentData.addInfo( relevantInfo );
     }
 
     final boolean usePrecipitationForm = metaControl.isUsePrecipitationForm();
     m_tsFileManager = new TimeseriesFileManager( m_idManager, usePrecipitationForm );
-  }
-
-  private HydroHash initHydroHash( final Parameter parameter, final HydrotopeCollection hydrotopeCollection, final Catchment[] catchments ) throws GM_Exception, NAPreprocessorException
-  {
-    if( m_hydroHash == null )
-    {
-      final ParameterHash landuseHash = new ParameterHash( parameter, m_logger );
-      m_hydroHash = new HydroHash( landuseHash, catchments, m_idManager );
-      m_hydroHash.initHydrotopes( hydrotopeCollection );
-    }
-
-    return m_hydroHash;
   }
 
   private void checkCancel( final ISimulationMonitor monitor )
@@ -243,8 +246,8 @@ public class NAModelPreprocessor
       throw new OperationCanceledException();
   }
 
-  public HydroHash getHydroHash( )
+  public NaCatchmentData getCatchmentData( )
   {
-    return m_hydroHash;
+    return m_catchmentData;
   }
 }
