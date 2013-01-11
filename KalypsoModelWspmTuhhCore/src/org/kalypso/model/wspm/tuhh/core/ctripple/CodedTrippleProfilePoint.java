@@ -37,7 +37,7 @@ public class CodedTrippleProfilePoint
 
   private final String m_code;
 
-  public CodedTrippleProfilePoint( String name, double easting, double northing, double height, String code )
+  public CodedTrippleProfilePoint( final String name, final double easting, final double northing, final double height, final String code )
   {
     m_name = name;
     m_easting = easting;
@@ -71,17 +71,17 @@ public class CodedTrippleProfilePoint
     return m_code;
   }
 
-  public static CodedTrippleProfilePoint createProfilePoint( String line ) throws IOException
+  public static CodedTrippleProfilePoint createProfilePoint( final String line ) throws IOException
   {
-    String[] tokens = line.split( ";" );
+    final String[] tokens = line.split( ";" );
     if( tokens.length != 5 )
       throw new IOException( String.format( "Could not parse the line '%s'. The format should be '<name>; <easting>; <northing>; <height>; <code>'...", line ) );
 
-    String name = tokens[0].trim();
-    double easting = NumberUtils.parseDouble( tokens[1].trim() );
-    double northing = NumberUtils.parseDouble( tokens[2].trim() );
-    double height = NumberUtils.parseDouble( tokens[3].trim() );
-    String code = tokens[4].trim();
+    final String name = tokens[0].trim();
+    final double easting = NumberUtils.parseDouble( tokens[1].trim() );
+    final double northing = NumberUtils.parseDouble( tokens[2].trim() );
+    final double height = NumberUtils.parseDouble( tokens[3].trim() );
+    final String code = tokens[4].trim();
 
     return new CodedTrippleProfilePoint( name, easting, northing, height, code );
   }

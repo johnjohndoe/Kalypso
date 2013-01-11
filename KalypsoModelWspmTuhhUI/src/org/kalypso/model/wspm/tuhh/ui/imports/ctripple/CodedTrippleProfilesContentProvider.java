@@ -52,7 +52,7 @@ public class CodedTrippleProfilesContentProvider implements ITreeContentProvider
     /* CASE: CodedTripple was set as input. */
     if( inputElement instanceof CodedTripple )
     {
-      CodedTripple codedTripple = (CodedTripple)inputElement;
+      final CodedTripple codedTripple = (CodedTripple)inputElement;
       return codedTripple.getProfiles();
     }
 

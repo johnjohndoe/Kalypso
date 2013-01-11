@@ -36,27 +36,27 @@ public class CodedTripple
 
   private final Set<String> m_badCodes;
 
-  public CodedTripple( CodedTrippleHorizonMapper mapper )
+  public CodedTripple( final CodedTrippleHorizonMapper mapper )
   {
     m_profiles = new LinkedHashMap<>();
     m_mapper = mapper;
     m_badCodes = new HashSet<>();
   }
 
-  public void addProfilePoint( CodedTrippleProfilePoint point )
+  public void addProfilePoint( final CodedTrippleProfilePoint point )
   {
     /* Get the code of the point. */
-    String code = point.getCode();
+    final String code = point.getCode();
 
     /* Get the horizon id for that code. */
-    String horizonId = m_mapper.getHorizonId( code );
-    if( !StringUtils.isEmpty( horizonId ) )
+    final String horizonId = m_mapper.getHorizonId( code );
+    if( !StringUtils.isBlank( horizonId ) )
     {
       /* Id of of our profile parts. */
-      String partId = m_mapper.getPartId( horizonId );
+      final String partId = m_mapper.getPartId( horizonId );
 
       /* There is no part id mapped for this horizon id. */
-      if( StringUtils.isEmpty( partId ) )
+      if( partId == null )
         m_badCodes.add( code );
     }
     else
@@ -66,11 +66,11 @@ public class CodedTripple
     }
 
     /* Add the profile point to the correct profile. */
-    String name = point.getName();
+    final String name = point.getName();
     if( !m_profiles.containsKey( name ) )
       m_profiles.put( name, new CodedTrippleProfile( name, m_mapper ) );
 
-    CodedTrippleProfile profile = m_profiles.get( name );
+    final CodedTrippleProfile profile = m_profiles.get( name );
     profile.addProfilePoint( point );
   }
 

@@ -51,7 +51,7 @@ public class CodedTrippleReader
    * @param mapper
    *          The coded tripple horizon mapper.
    */
-  public void read( File sourceFile, CodedTrippleHorizonMapper mapper ) throws IOException
+  public void read( final File sourceFile, final CodedTrippleHorizonMapper mapper ) throws IOException
   {
     /* The reader. */
     BufferedReader bf = null;
@@ -65,16 +65,16 @@ public class CodedTrippleReader
       bf = new BufferedReader( new FileReader( sourceFile ) );
 
       /* Create the coded tripple. */
-      CodedTripple codedTripple = new CodedTripple( mapper );
+      final CodedTripple codedTripple = new CodedTripple( mapper );
 
       String line = null;
       while( (line = bf.readLine()) != null )
       {
-        String trimmedLine = line.trim();
+        final String trimmedLine = line.trim();
         if( StringUtils.isEmpty( trimmedLine ) )
           continue;
 
-        CodedTrippleProfilePoint point = CodedTrippleProfilePoint.createProfilePoint( trimmedLine );
+        final CodedTrippleProfilePoint point = CodedTrippleProfilePoint.createProfilePoint( trimmedLine );
         codedTripple.addProfilePoint( point );
       }
 

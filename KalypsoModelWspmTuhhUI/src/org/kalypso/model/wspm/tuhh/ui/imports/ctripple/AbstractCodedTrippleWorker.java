@@ -20,7 +20,9 @@ package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleHorizonMapper;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfile;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfileHorizon;
 
 /**
  * @author Holger Albert
@@ -31,11 +33,22 @@ public abstract class AbstractCodedTrippleWorker
   {
   }
 
-  public abstract void updateClassifications( CodedTrippleImportData data ) throws Exception;
+  public abstract void updateClassifications( final CodedTrippleImportData data ) throws Exception;
 
-  public abstract IProfileFeature createNewProfile( CodedTrippleImportData data, CodedTrippleProfile profile ) throws CoreException;
+  public abstract IProfileFeature createNewProfile( final CodedTrippleImportData data, final CodedTrippleProfile profile ) throws CoreException;
 
-  public abstract void createMarkers( IProfileFeature profileFeature );
+  public abstract void createMarkers( final IProfileFeature profileFeature );
 
   public abstract void fireChangeEvents( );
+
+  protected String getName( final CodedTrippleProfileHorizon baseHorizon )
+  {
+    return baseHorizon.getHorizonId();
+  }
+
+  protected String getDescription( final CodedTrippleHorizonMapper mapper, final CodedTrippleProfileHorizon baseHorizon )
+  {
+    final String horizonId = baseHorizon.getHorizonId();
+    return mapper.getHorizonIdDescription( horizonId );
+  }
 }

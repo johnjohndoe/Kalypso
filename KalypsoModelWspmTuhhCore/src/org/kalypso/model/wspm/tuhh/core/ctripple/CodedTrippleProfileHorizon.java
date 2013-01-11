@@ -30,13 +30,13 @@ public class CodedTrippleProfileHorizon
 
   private final List<CodedTrippleProfilePoint> m_points;
 
-  public CodedTrippleProfileHorizon( String horizonId )
+  public CodedTrippleProfileHorizon( final String horizonId )
   {
     m_horizonId = horizonId;
     m_points = new ArrayList<>();
   }
 
-  public void addProfilePoint( CodedTrippleProfilePoint point )
+  public void addProfilePoint( final CodedTrippleProfilePoint point )
   {
     m_points.add( point );
   }

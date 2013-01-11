@@ -38,7 +38,7 @@ public class CodedTrippleImportOperation implements ICoreRunnableWithProgress
 
   private final CodedTrippleImportData m_data;
 
-  public CodedTrippleImportOperation( AbstractCodedTrippleWorker worker, CodedTrippleImportData data )
+  public CodedTrippleImportOperation( final AbstractCodedTrippleWorker worker, final CodedTrippleImportData data )
   {
     m_worker = worker;
     m_data = data;
@@ -65,10 +65,10 @@ public class CodedTrippleImportOperation implements ICoreRunnableWithProgress
       monitor.subTask( Messages.getString( "CodedTrippleImportOperation.2" ) ); //$NON-NLS-1$
 
       /* Get the coded tripple data object. */
-      CodedTripple data = m_data.getCodedTrippleData();
+      final CodedTripple data = m_data.getCodedTrippleData();
 
       /* Get the coded tripple profiles. */
-      CodedTrippleProfile[] profiles = data.getProfiles();
+      final CodedTrippleProfile[] profiles = data.getProfiles();
       for( final CodedTrippleProfile profile : profiles )
       {
         /* Create the wspm profile. */

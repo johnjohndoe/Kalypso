@@ -41,7 +41,7 @@ public class CodedTrippleClassificationUpdater
 
   private final CodedTrippleImportData m_data;
 
-  public CodedTrippleClassificationUpdater( final TuhhWspmProject targetProject, CodedTrippleImportData data )
+  public CodedTrippleClassificationUpdater( final TuhhWspmProject targetProject, final CodedTrippleImportData data )
   {
     m_targetProject = targetProject;
     m_data = data;
@@ -50,16 +50,16 @@ public class CodedTrippleClassificationUpdater
   public void updateClassification( ) throws Exception
   {
     final IWspmClassification classification = m_targetProject.getClassificationMember();
-    CodedTrippleHorizonMapper mapper = m_data.getCodedTrippleData().getMapper();
+    final CodedTrippleHorizonMapper mapper = m_data.getCodedTrippleData().getMapper();
 
     updateCodeClassification( classification, mapper );
     updateStyleDefinitions( classification );
     updatePartTypes( classification, mapper );
   }
 
-  private void updateCodeClassification( final IWspmClassification classification, CodedTrippleHorizonMapper mapper )
+  private void updateCodeClassification( final IWspmClassification classification, final CodedTrippleHorizonMapper mapper )
   {
-    String[] codes = mapper.getCodes();
+    final String[] codes = mapper.getCodes();
     for( final String code : codes )
     {
       final ICodeClass codeClass = classification.findCodeClass( code );
@@ -67,8 +67,8 @@ public class CodedTrippleClassificationUpdater
       {
         final ICodeClass newCodeClass = classification.getCodeClassCollection().addNew( ICodeClass.FEATURE_CODE_CLASS );
         newCodeClass.setName( code );
-        newCodeClass.setDescription( mapper.getCodeDescription( code ) );
-        newCodeClass.setComment( mapper.getCodeDescription( code ) );
+        newCodeClass.setDescription( String.format( "%s (%s)", mapper.getCodeDescription( code ), code ) ); //$NON-NLS-1$
+        newCodeClass.setComment( "" ); //$NON-NLS-1$
       }
     }
   }
@@ -89,18 +89,18 @@ public class CodedTrippleClassificationUpdater
     }
   }
 
-  private void updatePartTypes( final IWspmClassification classification, CodedTrippleHorizonMapper mapper )
+  private void updatePartTypes( final IWspmClassification classification, final CodedTrippleHorizonMapper mapper )
   {
-    String[] horizonIds = mapper.getHorizonIds();
+    final String[] horizonIds = mapper.getHorizonIds();
     for( final String horizonId : horizonIds )
     {
       final IPartType partType = classification.findPartType( horizonId );
       if( partType == null )
       {
         final IPartType newPartType = classification.getPartTypeCollection().addNew( IPartType.FEATURE_PART_TYPE );
-        newPartType.setName( horizonId );
+        newPartType.setName( mapper.getPartId( horizonId ) );
         newPartType.setDescription( mapper.getHorizonIdDescription( horizonId ) );
-        newPartType.setComment( mapper.getHorizonIdDescription( horizonId ) );
+        newPartType.setComment( "" ); //$NON-NLS-1$
         /* HINT: The style references should have the same id as the part here. */
         newPartType.setStyleReference( horizonId );
       }

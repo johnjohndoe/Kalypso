@@ -69,7 +69,7 @@ public class CodedTrippleImportWizard extends Wizard implements IWorkbenchWizard
   }
 
   @Override
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final WspmTuhhProjectSelection projectSelection = new WspmTuhhProjectSelection( selection );
     if( !projectSelection.hasProject() )
