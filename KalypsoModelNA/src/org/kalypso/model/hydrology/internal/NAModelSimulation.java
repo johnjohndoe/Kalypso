@@ -47,14 +47,15 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
+import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAOptimize;
-import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
@@ -65,12 +66,17 @@ import org.kalypso.model.hydrology.internal.processing.KalypsoNaProcessor;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
  */
 public class NAModelSimulation
 {
+  private static final String EXECUTABLES_FILE_TEMPLATE = "Kalypso-NA_%s.exe"; //$NON-NLS-1$
+
+  static final String EXECUTABLES_FILE_PATTERN = "Kalypso-NA_(.+)\\.exe"; //$NON-NLS-1$
+
   private static final DateFormat START_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" ); //$NON-NLS-1$
 
   private final NaSimulationDirs m_simDirs;
@@ -101,6 +107,11 @@ public class NAModelSimulation
       /* Monitor. */
       monitor.setMessage( Messages.getString( "NAModelSimulation.3" ) ); //$NON-NLS-1$
 
+      /* determine calculation core */
+      final File naExe = determineCalculationCore( collector );
+      final Version calcCoreVersion = m_data.setCalcCore( naExe );
+      validateVersion( naExe, calcCoreVersion, collector );
+
       /* Pre processing. */
       final IStatus preProcessStatus = preProcess( m_data, monitor );
       collector.add( preProcessStatus );
@@ -111,7 +122,7 @@ public class NAModelSimulation
       }
 
       /* Processing. */
-      final MultiStatus processStatus = process( m_data, monitor );
+      final MultiStatus processStatus = process( naExe, monitor );
       collector.add( processStatus );
       if( monitor.isCanceled() )
       {
@@ -129,6 +140,45 @@ public class NAModelSimulation
     {
       collector.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, ex.getLocalizedMessage(), ex ) );
       return collector.asMultiStatus( Messages.getString( "NAModelSimulation.9" ) ); //$NON-NLS-1$
+    }
+  }
+
+  private void validateVersion( final File naExe, final Version calcCoreVersion, final IStatusCollector log )
+  {
+    final String filename = naExe.getName();
+    log.add( IStatus.OK, "Running simulation with '%s'", null, filename );
+
+    if( calcCoreVersion == null )
+    {
+      final String coreExample = String.format( EXECUTABLES_FILE_TEMPLATE, "1.2.3.anyText" );
+      final String message = String.format( "Unable to determine version of calculation core. The filename should follow this pattern: %s. Kalypso will not be able to consider different output formats for backwards compatibility.", coreExample );
+      log.add( IStatus.WARNING, message );
+    }
+  }
+
+  private File determineCalculationCore( final IStatusCollector log ) throws SimulationException
+  {
+    try
+    {
+      final String exeVersion = m_data.getMetaControl().getExeVersion();
+
+      final File naExe = CalcCoreUtils.findExecutable( exeVersion, EXECUTABLES_FILE_TEMPLATE, EXECUTABLES_FILE_PATTERN, CalcCoreUtils.COMPATIBILITY_MODE.NA );
+      if( naExe == null )
+      {
+        final String message = Messages.getString( "KalypsoNaProcessor.0" ); //$NON-NLS-1$
+        throw new SimulationException( message );
+      }
+
+      // REMARK: file existance has been checked inside the CalcCoreUtils
+      return naExe;
+    }
+    catch( final CoreException e )
+    {
+      final IStatus status = e.getStatus();
+      log.add( status );
+
+      final String msg = status.getMessage();
+      throw new SimulationException( msg, e );
     }
   }
 
@@ -172,7 +222,7 @@ public class NAModelSimulation
     }
   }
 
-  private MultiStatus process( final INaSimulationData simulationData, final ISimulationMonitor monitor )
+  private MultiStatus process( final File naExe, final ISimulationMonitor monitor )
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
@@ -180,9 +230,7 @@ public class NAModelSimulation
     try
     {
       /* Processing. */
-      final NAControl metaControl = simulationData.getMetaControl();
-      final String exeVersion = metaControl.getExeVersion();
-      m_processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
+      m_processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, naExe );
       m_processor.prepare();
       m_processor.run( monitor );
     }

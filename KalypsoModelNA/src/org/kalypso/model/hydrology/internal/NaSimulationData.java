@@ -42,6 +42,8 @@ package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.model.hydrology.INaSimulationData;
@@ -52,6 +54,7 @@ import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.binding.cm.CatchmentModel;
 import org.kalypso.model.hydrology.internal.binding.timeseriesMappings.TimeseriesMappingCollection;
 import org.kalypso.model.hydrology.util.optimize.NaOptimizeLoader;
@@ -63,6 +66,7 @@ import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
@@ -97,6 +101,8 @@ public class NaSimulationData implements INaSimulationData
 
   private final URL m_preprocessedASCIIlocation;
 
+  private Version m_calcCoreVersion;
+
   public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL syntNUrl, final URL lzsimUrl, final URL catchmentModelsUrl, final URL timeseriesMappingsUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessedASCIIlocation ) throws Exception
   {
     m_preprocessedASCIIlocation = preprocessedASCIIlocation;
@@ -111,7 +117,7 @@ public class NaSimulationData implements INaSimulationData
     else
       m_optimizeData = optimizeLoader.load( m_modelWorkspace, m_factory );
 
-    m_naModel = m_modelWorkspace == null ? null : (NaModell) m_modelWorkspace.getRootFeature();
+    m_naModel = m_modelWorkspace == null ? null : (NaModell)m_modelWorkspace.getRootFeature();
     m_parameterWorkspace = readWorkspaceOrNull( parameterUrl );
     m_hydrotopeCollection = readModel( hydrotopUrl, HydrotopeCollection.class );
     m_lzsimWorkspace = loadAndCheckForFile( lzsimUrl );
@@ -140,7 +146,7 @@ public class NaSimulationData implements INaSimulationData
     if( workspace == null )
       return null;
 
-    return (CatchmentModel) workspace.getRootFeature();
+    return (CatchmentModel)workspace.getRootFeature();
   }
 
   private TimeseriesMappingCollection readTimeseriesMappings( final URL location ) throws Exception
@@ -149,7 +155,7 @@ public class NaSimulationData implements INaSimulationData
     if( workspace == null )
       return null;
 
-    return (TimeseriesMappingCollection) workspace.getRootFeature();
+    return (TimeseriesMappingCollection)workspace.getRootFeature();
   }
 
   private GMLWorkspace readWorkspaceOrNull( final URL location ) throws Exception
@@ -276,9 +282,12 @@ public class NaSimulationData implements INaSimulationData
   }
 
   @Override
-  public GMLWorkspace getParameterWorkspace( )
+  public Parameter getParameter( )
   {
-    return m_parameterWorkspace;
+    if( m_parameterWorkspace == null )
+      return null;
+
+    return (Parameter)m_parameterWorkspace.getRootFeature();
   }
 
   @Override
@@ -299,7 +308,7 @@ public class NaSimulationData implements INaSimulationData
     if( m_lzsimWorkspace == null )
       return null;
 
-    return (InitialValues) m_lzsimWorkspace.getRootFeature();
+    return (InitialValues)m_lzsimWorkspace.getRootFeature();
   }
 
   /**
@@ -351,5 +360,40 @@ public class NaSimulationData implements INaSimulationData
   public IFeatureProviderFactory getFeatureProviderFactory( )
   {
     return m_factory;
+  }
+
+  @Override
+  public Version setCalcCore( final File naExe )
+  {
+    m_calcCoreVersion = findCalcCoreVersion( naExe.getName() );
+
+    return m_calcCoreVersion;
+  }
+
+  private Version findCalcCoreVersion( final String filename )
+  {
+    final Pattern pattern = Pattern.compile( NAModelSimulation.EXECUTABLES_FILE_PATTERN );
+    final Matcher matcher = pattern.matcher( filename );
+
+    if( !matcher.matches() )
+      return null;
+
+    final String versionString = matcher.group( 1 );
+
+    try
+    {
+      return new Version( versionString );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      System.out.format( "Failed to determine calc core version from filename: %s%n", filename );
+      return null;
+    }
+  }
+
+  @Override
+  public Version getCalcCoreVersion( )
+  {
+    return m_calcCoreVersion;
   }
 }

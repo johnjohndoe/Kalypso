@@ -47,41 +47,49 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.parameter.DRWBMSoilLayerParameter;
 import org.kalypso.model.hydrology.binding.parameter.DRWBMSoiltype;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.SoilLayerParameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.osgi.framework.Version;
 
 /**
  * @author huebsch
  */
 public class BodentypWriter extends AbstractCoreFileWriter
 {
-  private final Parameter m_parameter;
+  /* DRWBM soltypes where first supported in this version */
+  private static final Version VERSION_MIN_DRWBM_SOIL_TYPES = new Version( 3, 0, 0 );
 
-  public BodentypWriter( final Parameter parameter, final Logger logger )
+  private final INaSimulationData m_data;
+
+  public BodentypWriter( final INaSimulationData data, final Logger logger )
   {
     super( logger );
 
-    m_parameter = parameter;
+    m_data = data;
   }
 
   @Override
-  protected void writeContent( final PrintWriter buffer )
+  protected void writeContent( final PrintWriter buffer ) throws NAPreprocessorException
   {
+    final Parameter parameter = m_data.getParameter();
+
     buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
 
     // write normal soil types
-    doWrite( m_parameter.getSoiltypes(), buffer );
+    doWrite( parameter.getSoiltypes(), buffer );
 
     // write DRWBM soil types
-    doWriteDRWBM( m_parameter.getDRWBMSoiltypes(), buffer );
+    doWriteDRWBM( parameter.getDRWBMSoiltypes(), buffer );
   }
 
-  private void doWrite( final IFeatureBindingCollection<Soiltype> soiltypes, final PrintWriter buffer )
+  private void doWrite( final IFeatureBindingCollection<Soiltype> soiltypes, final PrintWriter buffer ) throws NAPreprocessorException
   {
     for( final Soiltype soiltype : soiltypes )
     {
@@ -108,7 +116,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
     }
   }
 
-  private void doWriteDRWBM( final IFeatureBindingCollection<DRWBMSoiltype> soiltypes, final PrintWriter buffer )
+  private void doWriteDRWBM( final IFeatureBindingCollection<DRWBMSoiltype> soiltypes, final PrintWriter buffer ) throws NAPreprocessorException
   {
     for( final DRWBMSoiltype soiltype : soiltypes )
     {
@@ -126,7 +134,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
     }
   }
 
-  private void writeSoilType( final PrintWriter buffer, final String soiltype, final SoilLayerParameter[] parameters )
+  private void writeSoilType( final PrintWriter buffer, final String soiltype, final SoilLayerParameter[] parameters ) throws NAPreprocessorException
   {
     buffer.format( Locale.US, "%-10s%4d%n", soiltype, ArrayUtils.getLength( parameters ) ); //$NON-NLS-1$
 
@@ -139,7 +147,13 @@ public class BodentypWriter extends AbstractCoreFileWriter
       // additional drwbm soil type parameters
       if( parameter instanceof DRWBMSoilLayerParameter )
       {
-        // FIXME: check core version here; throw exception if < 3.0.0.0
+        final Version calcCoreVersion = m_data.getCalcCoreVersion();
+        if( calcCoreVersion != null && calcCoreVersion.compareTo( VERSION_MIN_DRWBM_SOIL_TYPES ) < 0 )
+        {
+          // TODO: would be nicer, if we only write elements that are really needed by the model, so we could still calculate with older models int hat case.
+          final String message = String.format( "The model contains DRWBM-Definitions, this is not supported by the current calculation core (%s). Needs version %s or greater.", calcCoreVersion, VERSION_MIN_DRWBM_SOIL_TYPES );
+          throw new NAPreprocessorException( message );
+        }
 
         final DRWBMSoilLayerParameter drwbmParam = (DRWBMSoilLayerParameter)parameter;
 
