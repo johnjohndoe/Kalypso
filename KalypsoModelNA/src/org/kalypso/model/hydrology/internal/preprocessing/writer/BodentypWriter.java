@@ -151,7 +151,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
         if( calcCoreVersion != null && calcCoreVersion.compareTo( VERSION_MIN_DRWBM_SOIL_TYPES ) < 0 )
         {
           // TODO: would be nicer, if we only write elements that are really needed by the model, so we could still calculate with older models int hat case.
-          final String message = String.format( "The model contains DRWBM-Definitions, this is not supported by the current calculation core (%s). Needs version %s or greater.", calcCoreVersion, VERSION_MIN_DRWBM_SOIL_TYPES );
+          final String message = String.format( Messages.getString("BodentypWriter.0"), calcCoreVersion, VERSION_MIN_DRWBM_SOIL_TYPES ); //$NON-NLS-1$
           throw new NAPreprocessorException( message );
         }
 
@@ -160,7 +160,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
         if( drwbmParam.isDrainageFunction() )
         {
           /* activate drainage function ! */
-          buffer.print( " 1" );
+          buffer.print( " 1" ); //$NON-NLS-1$
 
           /* Rohrdurchmesser [mm; Standard = 0] */
           buffer.printf( Locale.US, " %.1f", drwbmParam.getPipeDiameter() ); //$NON-NLS-1$
