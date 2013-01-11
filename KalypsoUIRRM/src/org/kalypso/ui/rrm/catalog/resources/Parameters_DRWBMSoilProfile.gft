@@ -36,8 +36,9 @@
         <gtt:column name="drainagePipeKFvalue" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
         <gtt:column name="drainagePipeSlope" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
         <gtt:column name="overflowHeight" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
+        <gtt:column name="overflowOutletLayer" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
         <gtt:column name="areaPerOutlet" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
-        <gtt:column name="widthOfArea" alignment="SWT.RIGHT" width="100" editable="true" sortEnabled="false" />
+        <gtt:column name="sealedLayer" alignment="SWT.CENTER" width="100" editable="true" sortEnabled="false" />
         <gtt:column name="description" alignment="SWT.LEFT" width="150" editable="true" sortEnabled="false" />
       </gtt:layer>
     </gtt:gistableview>
