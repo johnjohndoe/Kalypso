@@ -65,7 +65,7 @@ import org.kalypso.model.hydrology.internal.NaResultDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -87,21 +87,21 @@ public class NaPostProcessor
 
   private final NAModellControl m_naControl;
 
-  private final HydroHash m_hydroHash;
-
   private final IDManager m_idManager;
 
   private ENACoreResultsFormat m_coreResultsFormat;
 
   private IStatusCollector m_errorLog;
 
-  public NaPostProcessor( final IDManager idManager, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final HydroHash hydroHash )
+  private final NaCatchmentData m_catchmentData;
+
+  public NaPostProcessor( final IDManager idManager, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final NaCatchmentData catchmentData )
   {
     m_idManager = idManager;
     m_logger = logger;
     m_modelWorkspace = modelWorkspace;
     m_naControl = naControl;
-    m_hydroHash = hydroHash;
+    m_catchmentData = catchmentData;
     m_errorLog = null;
   }
 
@@ -124,7 +124,7 @@ public class NaPostProcessor
 
       final Date[] initialDates = m_naControl.getInitialDatesToBeWritten();
       final LzsimReader lzsimManager = new LzsimReader( initialDates, currentResultDirs.anfangswertDir );
-      lzsimManager.readInitialValues( m_idManager, m_hydroHash, asciiDirs.lzsimDir, m_logger );
+      lzsimManager.readInitialValues( m_idManager, m_catchmentData, asciiDirs.lzsimDir, m_logger );
     }
     catch( final SimulationException e )
     {

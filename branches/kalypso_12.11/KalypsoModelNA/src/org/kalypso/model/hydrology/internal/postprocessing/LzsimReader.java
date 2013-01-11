@@ -45,7 +45,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 
 /**
  * @author huebsch
@@ -65,14 +65,14 @@ public class LzsimReader
   /**
    * Reads the initial values back from the ascii files, if any have been ordered.
    */
-  public void readInitialValues( final IDManager idManager, final HydroHash hydroHash, final File lzsimDir, final Logger logger ) throws Exception
+  public void readInitialValues( final IDManager idManager, final NaCatchmentData catchmentData, final File lzsimDir, final Logger logger ) throws Exception
   {
     if( m_initialDates.length == 0 )
       return;
 
     for( final Date initialDate : m_initialDates )
     {
-      final LzsToGml lzsToGml = new LzsToGml( lzsimDir, initialDate, idManager, hydroHash, logger );
+      final LzsToGml lzsToGml = new LzsToGml( lzsimDir, initialDate, idManager, catchmentData, logger );
       lzsToGml.readLzs();
       lzsToGml.writeGml( m_outputDir );
     }

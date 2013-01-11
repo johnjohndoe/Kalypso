@@ -64,8 +64,8 @@ import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -81,18 +81,18 @@ public class LzsimWriter
 
   private final InitialValues m_initialValues;
 
-  private final HydroHash m_hydroHash;
-
   private final IDManager m_idManager;
 
   private final NAControl m_metaControl;
 
   private final Logger m_logger;
 
-  public LzsimWriter( final IDManager idManager, final HydroHash hydroHash, final InitialValues initialValues, final NAControl metaControl, final Logger logger )
+  private final NaCatchmentData m_catchmentData;
+
+  public LzsimWriter( final IDManager idManager, final NaCatchmentData catchmentData, final InitialValues initialValues, final NAControl metaControl, final Logger logger )
   {
     m_idManager = idManager;
-    m_hydroHash = hydroHash;
+    m_catchmentData = catchmentData;
     m_initialValues = initialValues;
     m_metaControl = metaControl;
     m_logger = logger;
@@ -100,15 +100,7 @@ public class LzsimWriter
 
   public void writeLzsimFiles( final File lzsimDir ) throws SimulationException
   {
-// try
-// {
     doWriteLzsimFiles( lzsimDir );
-// }
-// catch( final Exception e )
-// {
-//      final String msg = String.format( Messages.getString("LzsimWriter.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
-// throw new NAPreprocessorException( msg, e );
-// }
   }
 
   private void doWriteLzsimFiles( final File lzsimDir ) throws SimulationException
@@ -158,7 +150,7 @@ public class LzsimWriter
     final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
     final Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> naChannelHash = new HashMap<>();
     for( final Feature feature : allNAChannelFeatures )
-      naChannelHash.put( feature.getId(), (org.kalypso.model.hydrology.binding.model.channels.Channel) feature );
+      naChannelHash.put( feature.getId(), (org.kalypso.model.hydrology.binding.model.channels.Channel)feature );
     return naChannelHash;
   }
 
@@ -223,7 +215,7 @@ public class LzsimWriter
         throw new SimulationException( msg );
       }
       else
-        result.put( (org.kalypso.model.hydrology.binding.model.Catchment) catchment, iniCatchment );
+        result.put( (org.kalypso.model.hydrology.binding.model.Catchment)catchment, iniCatchment );
     }
 
     return result;
@@ -284,7 +276,7 @@ public class LzsimWriter
      * for catchments that are targets of groundwater flow, but which are not part of the currently written sub-net. We
      * ignore this case silently for now.
      */
-    final Collection<HydrotopeInfo> hydrotops = m_hydroHash.getHydrotops( naCatchment );
+    final Collection<HydrotopeInfo> hydrotops = m_catchmentData.getHydrotops( naCatchment );
     if( hydrotops.size() == 0 )
       return null;
 

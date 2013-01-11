@@ -42,6 +42,7 @@ package org.kalypso.model.hydrology;
 
 import java.io.File;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.NAOptimize;
@@ -53,6 +54,8 @@ import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
 import org.kalypso.model.hydrology.internal.binding.cm.CatchmentModel;
 import org.kalypso.model.hydrology.internal.binding.timeseriesMappings.TimeseriesMappingCollection;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.osgi.framework.Version;
@@ -99,4 +102,8 @@ public interface INaSimulationData
   Version setCalcCore( File naExe );
 
   Version getCalcCoreVersion( );
+
+  void initLanduseHash( Logger logger ) throws NAPreprocessorException;
+
+  ParameterHash getLanduseHash( );
 }
