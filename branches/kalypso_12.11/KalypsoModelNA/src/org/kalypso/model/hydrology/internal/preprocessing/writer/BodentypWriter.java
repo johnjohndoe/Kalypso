@@ -143,21 +143,38 @@ public class BodentypWriter extends AbstractCoreFileWriter
 
         final DRWBMSoilLayerParameter drwbmParam = (DRWBMSoilLayerParameter)parameter;
 
-        // FIXME: 0, if none of those parameters is set
         if( drwbmParam.isDrainageFunction() )
         {
-          final Double pipeDiameter = drwbmParam.getPipeDiameter(); // Rohrdurchmesser [mm; Standard = 0]
-          final Double pipeRoughness = drwbmParam.getPipeRoughness(); // Rauhigkeit Rohr [KS-Wert; Standard = 0]
-          final Double drainagePipeKfValue = drwbmParam.getDrainagePipeKfValue(); // Durchlässigkeit Dränrohr [KF-Wert; Standard = 0]
-          final Double drainagePipeSlope = drwbmParam.getDrainagePipeSlope(); // Rohrgefälle; Standard = 0
-          final Double overflowHeight = drwbmParam.getOverflowHeight(); // Überlaufhöhe [mm; Standard = 0]
-          final Integer couplingOverflowPipe = 1; // FIXME: • Kopplung Überlaufrohr Schicht [Schicht; Standard = 0]
-          final Double areaPerOutlet = drwbmParam.getAreaPerOutlet(); // Entwässerungsfläche pro Rohr [m²; Standard = 0]
-          // FIXME: no more used??
-          final Double widthOfArea = drwbmParam.getWidthOfArea(); // BREIT MASSNAHMENFLÄCHE; noch genutzt??
-          final Integer sealingBelowDrwbm = 1; // FIXME: Abdichtung unterhalb der Maßnahme: 1/0 ; Standard = 0
+          /* activate drainage function ! */
+          buffer.print( " 1" );
 
-          buffer.append( String.format( Locale.US, " 1 %.1f %.1f %.1f %.1f %.1f %d %.1f %d", pipeDiameter, pipeRoughness, drainagePipeKfValue, drainagePipeSlope, overflowHeight, couplingOverflowPipe, areaPerOutlet, sealingBelowDrwbm ) ); //$NON-NLS-1$
+          /* Rohrdurchmesser [mm; Standard = 0] */
+          buffer.printf( Locale.US, " %.1f", drwbmParam.getPipeDiameter() ); //$NON-NLS-1$
+
+          /* // Rauhigkeit Rohr [KS-Wert; Standard = 0] */
+          buffer.printf( Locale.US, " %.1f", drwbmParam.getPipeRoughness() ); //$NON-NLS-1$
+
+          /* // Durchlässigkeit Dränrohr [KF-Wert; Standard = 0] */
+          buffer.printf( Locale.US, " %.1f", drwbmParam.getDrainagePipeKfValue() ); //$NON-NLS-1$
+
+          /* Rohrgefälle; Standard = 0 */
+          buffer.printf( Locale.US, " %.4f", drwbmParam.getDrainagePipeSlope() ); //$NON-NLS-1$
+
+          /* Überlaufhöhe [mm; Standard = 0] */
+          buffer.printf( Locale.US, " %.1f", drwbmParam.getOverflowHeight() ); //$NON-NLS-1$
+
+          /* Kopplung Überlaufrohr Schicht [1-n, # der Schicht; Standard = 0] */
+          buffer.print( ' ' );
+          buffer.print( drwbmParam.getOverflowOutletLayer() ); //$NON-NLS-1$
+
+          /* Entwässerungsfläche pro Rohr [m²; Standard = 0] */
+          buffer.printf( Locale.US, " %.1f", drwbmParam.getAreaPerOutlet() ); //$NON-NLS-1$
+
+          /* Abdichtung unterhalb der Maßnahme: 1/0 ; Standard = 0 */
+          if( drwbmParam.isSealedLayer() )
+            buffer.print( " 1" ); //$NON-NLS-1$
+          else
+            buffer.print( " 0" ); //$NON-NLS-1$
         }
       }
 

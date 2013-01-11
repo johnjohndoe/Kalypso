@@ -69,7 +69,9 @@ public class DRWBMSoilLayerParameter extends SoilLayerParameter
 
   public static final QName PROPERTY_AREA_PER_OUTLET = new QName( NS_NAPARAMETER, "areaPerOutlet" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_WIDTH_OF_AREA = new QName( NS_NAPARAMETER, "widthOfArea" ); //$NON-NLS-1$
+  public static final QName PROPERTY_OVERFLOW_OUTLET_LAYER = new QName( NS_NAPARAMETER, "overflowOutletLayer" ); //$NON-NLS-1$
+
+  public static final QName PROPERTY_LAYER_IS_SEALED = new QName( NS_NAPARAMETER, "sealedLayer" ); //$NON-NLS-1$
 
   public DRWBMSoilLayerParameter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -106,9 +108,14 @@ public class DRWBMSoilLayerParameter extends SoilLayerParameter
     return getDoubleProperty( PROPERTY_AREA_PER_OUTLET, 0.0 );
   }
 
-  public double getWidthOfArea( )
+  public int getOverflowOutletLayer( )
   {
-    return getDoubleProperty( PROPERTY_WIDTH_OF_AREA, 0.0 );
+    return getIntegerProperty( PROPERTY_OVERFLOW_OUTLET_LAYER, 0 );
+  }
+
+  public boolean isSealedLayer( )
+  {
+    return getBooleanProperty( PROPERTY_LAYER_IS_SEALED, false );
   }
 
   public boolean isDrainageFunction( )
@@ -121,15 +128,14 @@ public class DRWBMSoilLayerParameter extends SoilLayerParameter
       return true;
     if( isPropertySet( PROPERTY_DRAINAGE_PIPE_SLOPE ) )
       return true;
-
-    // FIXME: coupling overflow height
-
+    if( isPropertySet( PROPERTY_OVERFLOW_OUTLET_LAYER ) )
+      return true;
     if( isPropertySet( PROPERTY_OVERFLOW_HEIGHT ) )
       return true;
     if( isPropertySet( PROPERTY_AREA_PER_OUTLET ) )
       return true;
-
-    // FIXME: sealingBelowDrwbm
+    if( isPropertySet( PROPERTY_LAYER_IS_SEALED ) )
+      return true;
 
     return false;
   }
