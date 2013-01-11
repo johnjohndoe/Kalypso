@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology;
 
+import java.io.File;
 import java.net.URL;
 
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
@@ -48,11 +49,13 @@ import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
 import org.kalypso.model.hydrology.internal.binding.cm.CatchmentModel;
 import org.kalypso.model.hydrology.internal.binding.timeseriesMappings.TimeseriesMappingCollection;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
@@ -71,7 +74,7 @@ public interface INaSimulationData
 
   void setMetaControl( NAControl metaControl );
 
-  GMLWorkspace getParameterWorkspace( );
+  Parameter getParameter( );
 
   GMLWorkspace getSynthNWorkspace( );
 
@@ -92,4 +95,8 @@ public interface INaSimulationData
   TimeseriesMappingCollection getTimeseriesMappings( );
 
   IFeatureProviderFactory getFeatureProviderFactory( );
+
+  Version setCalcCore( File naExe );
+
+  Version getCalcCoreVersion( );
 }

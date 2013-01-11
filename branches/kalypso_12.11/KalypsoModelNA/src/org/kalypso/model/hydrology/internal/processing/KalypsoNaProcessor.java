@@ -46,10 +46,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
-import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -63,24 +60,20 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class KalypsoNaProcessor
 {
-  public static final String EXECUTABLES_FILE_TEMPLATE = "Kalypso-NA_%s.exe"; //$NON-NLS-1$
-
-  public static final String EXECUTABLES_FILE_PATTERN = "Kalypso-NA_(.+)\\.exe"; //$NON-NLS-1$
-
   private static final String FILENAME_EXE_LOG = "exe.log";//$NON-NLS-1$
 
   private static final String FILENAME_EXE_ERR = "exe.err";//$NON-NLS-1$
 
   private final NaAsciiDirs m_asciiDirs;
 
-  private final String m_exeVersion;
-
   private File m_kalypsoNaExe;
 
-  public KalypsoNaProcessor( final NaAsciiDirs asciiDirs, final String exeVersion )
+  private final File m_exeFile;
+
+  public KalypsoNaProcessor( final NaAsciiDirs asciiDirs, final File exeFile )
   {
     m_asciiDirs = asciiDirs;
-    m_exeVersion = exeVersion;
+    m_exeFile = exeFile;
   }
 
   public void prepare( ) throws SimulationException
@@ -94,23 +87,13 @@ public class KalypsoNaProcessor
   {
     try
     {
-      final File kalypsoNaExe = CalcCoreUtils.findExecutable( m_exeVersion, EXECUTABLES_FILE_TEMPLATE, EXECUTABLES_FILE_PATTERN, CalcCoreUtils.COMPATIBILITY_MODE.NA );
-      if( kalypsoNaExe == null )
-        throw new SimulationException( Messages.getString( "KalypsoNaProcessor.0" ) ); //$NON-NLS-1$
-
-      final File destFile = new File( m_asciiDirs.startDir, kalypsoNaExe.getName() );
+      final File destFile = new File( m_asciiDirs.startDir, m_exeFile.getName() );
       if( !destFile.exists() )
-        FileUtils.copyFile( kalypsoNaExe, destFile );
+        FileUtils.copyFile( m_exeFile, destFile );
 
       destFile.setExecutable( true );
 
       return destFile;
-    }
-    catch( final CoreException e )
-    {
-      final IStatus status = e.getStatus();
-      final String msg = status.getMessage();
-      throw new SimulationException( msg, e );
     }
     catch( final IOException e )
     {
