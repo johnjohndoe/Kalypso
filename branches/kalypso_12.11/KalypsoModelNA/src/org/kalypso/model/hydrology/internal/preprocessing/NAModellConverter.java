@@ -54,7 +54,6 @@ import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
@@ -107,8 +106,6 @@ public class NAModellConverter
   {
     final NaModell naModel = m_data.getNaModel();
     final NAControl metaControl = m_data.getMetaControl();
-    final GMLWorkspace parameterWorkspace = m_data.getParameterWorkspace();
-    final Parameter parameter = (Parameter)parameterWorkspace.getRootFeature();
     final GMLWorkspace synthNWorkspace = m_data.getSynthNWorkspace();
     final NAOptimize naOptimize = m_data.getNaOptimize();
 
@@ -131,13 +128,13 @@ public class NAModellConverter
       zftWriter.write( m_asciiDirs.zftFile );
     }
 
-    final BodenartWriter bodenartManager = new BodenartWriter( parameterWorkspace, m_logger );
+    final BodenartWriter bodenartManager = new BodenartWriter( m_data, m_logger );
     bodenartManager.write( m_asciiDirs.bodenartFile );
 
-    final BodentypWriter bodentypManager = new BodentypWriter( parameter, m_logger );
+    final BodentypWriter bodentypManager = new BodentypWriter( m_data, m_logger );
     bodentypManager.write( m_asciiDirs.bodentypFile );
 
-    final SnowtypWriter schneeManager = new SnowtypWriter( parameter, m_logger );
+    final SnowtypWriter schneeManager = new SnowtypWriter( m_data, m_logger );
     schneeManager.write( m_asciiDirs.schneeFile );
 
     final HRBFileWriter hrbFileWriter = new HRBFileWriter( channels, m_idManager, m_asciiDirs.klimaDatDir, m_logger );
@@ -145,8 +142,8 @@ public class NAModellConverter
 
     if( hydroHash != null )
     {
-      final NutzungWriter nutzungManager = new NutzungWriter( m_asciiDirs.hydroTopDir );
-      nutzungManager.writeFile( parameter, hydroHash );
+      final NutzungWriter nutzungManager = new NutzungWriter( m_data, m_asciiDirs.hydroTopDir );
+      nutzungManager.writeFile( hydroHash );
 
       final HydrotopeWriter hydrotopManager = new HydrotopeWriter( m_idManager, hydroHash, m_logger );
       hydrotopManager.write( m_asciiDirs.hydrotopFile );

@@ -69,12 +69,11 @@ import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHas
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * Converts KalypsoHydrology gml files to Kalypso-NA ascii files.
- *
+ * 
  * @author Gernot Belger
  */
 public class NAModelPreprocessor
@@ -210,9 +209,8 @@ public class NAModelPreprocessor
   {
     final NaModell naModel = m_simulationData.getNaModel();
     final HydrotopeCollection hydrotopeCollection = m_simulationData.getHydrotopCollection();
-    final GMLWorkspace parameterWorkspace = m_simulationData.getParameterWorkspace();
     final NAControl metaControl = m_simulationData.getMetaControl();
-    final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
+    final Parameter parameter = m_simulationData.getParameter();
 
     final NetFileAnalyser nodeManager = new NetFileAnalyser( rootNode, m_logger, naModel, m_idManager );
     m_relevantElements = nodeManager.analyseNet();

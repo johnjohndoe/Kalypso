@@ -235,8 +235,6 @@ public interface NaModelConstants
 
   QName PARA_LANDUSE_PROP_LANDUSE_LINK = new QName( NS_NAPARAMETER, "idealLandUsePeriodLink" ); //$NON-NLS-1$
 
-  QName PARA_SOIL_LAYER_MEMBER = new QName( NS_NAPARAMETER, "soilLayerMember" ); //$NON-NLS-1$
-
   // default values
   QName DEFAULT_MRS_LANDUSE_PROP = new QName( NS_NAPARAMETER, "15" ); // Nutzung Grünland //$NON-NLS-1$
 
