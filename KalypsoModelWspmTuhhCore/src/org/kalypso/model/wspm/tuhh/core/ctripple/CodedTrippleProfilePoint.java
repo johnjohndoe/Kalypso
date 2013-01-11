@@ -77,11 +77,11 @@ public class CodedTrippleProfilePoint
     if( tokens.length != 5 )
       throw new IOException( String.format( "Could not parse the line '%s'. The format should be '<name>; <easting>; <northing>; <height>; <code>'...", line ) );
 
-    String name = tokens[0];
-    double easting = NumberUtils.parseDouble( tokens[1] );
-    double northing = NumberUtils.parseDouble( tokens[2] );
-    double height = NumberUtils.parseDouble( tokens[3] );
-    String code = tokens[4];
+    String name = tokens[0].trim();
+    double easting = NumberUtils.parseDouble( tokens[1].trim() );
+    double northing = NumberUtils.parseDouble( tokens[2].trim() );
+    double height = NumberUtils.parseDouble( tokens[3].trim() );
+    String code = tokens[4].trim();
 
     return new CodedTrippleProfilePoint( name, easting, northing, height, code );
   }

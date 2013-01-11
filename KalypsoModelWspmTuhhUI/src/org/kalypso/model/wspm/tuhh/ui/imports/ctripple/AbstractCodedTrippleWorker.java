@@ -18,6 +18,10 @@
  */
 package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfile;
+
 /**
  * @author Holger Albert
  */
@@ -26,4 +30,12 @@ public abstract class AbstractCodedTrippleWorker
   public AbstractCodedTrippleWorker( )
   {
   }
+
+  public abstract void updateClassifications( CodedTrippleImportData data ) throws Exception;
+
+  public abstract IProfileFeature createNewProfile( CodedTrippleImportData data, CodedTrippleProfile profile ) throws CoreException;
+
+  public abstract void createMarkers( IProfileFeature profileFeature );
+
+  public abstract void fireChangeEvents( );
 }

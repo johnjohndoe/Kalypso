@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * @author Holger Albert
@@ -39,11 +40,11 @@ public class CodedTrippleProfile
 
   private final CodedTrippleHorizonMapper m_mapper;
 
-  public CodedTrippleProfile( String name )
+  public CodedTrippleProfile( String name, CodedTrippleHorizonMapper mapper )
   {
     m_name = name;
     m_points = new ArrayList<>();
-    m_mapper = new CodedTrippleHorizonMapper();
+    m_mapper = mapper;
   }
 
   public void addProfilePoint( CodedTrippleProfilePoint point )
@@ -97,7 +98,7 @@ public class CodedTrippleProfile
 
   public BigDecimal getStation( )
   {
-    // TODO
-    return null;
+    String[] split = m_name.split( "_" );
+    return NumberUtils.parseBigDecimal( split[0] );
   }
 }

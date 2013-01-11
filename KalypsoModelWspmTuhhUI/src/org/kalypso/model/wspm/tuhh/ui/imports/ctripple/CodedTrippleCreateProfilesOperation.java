@@ -20,6 +20,7 @@ package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 
 import java.io.File;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -28,6 +29,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTripple;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleHorizonMapper;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleReader;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -57,10 +59,27 @@ public class CodedTrippleCreateProfilesOperation implements ICoreRunnableWithPro
       monitor.beginTask( Messages.getString( "CodedTrippleCreateProfilesOperation.0" ), 1000 ); //$NON-NLS-1$
       monitor.subTask( Messages.getString( "CodedTrippleCreateProfilesOperation.1" ) ); //$NON-NLS-1$
 
+      /* Get the source file. */
+      File sourceFile = m_data.getSourceFile().getFile();
+
+      /* Create the mapping files. */
+      String codeToHorizonIdFilename = String.format( "%s_CodeToHorizonId.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
+      String horizonIdToPartIdFilename = String.format( "%s_HorizonIdToPartId.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
+      String codeToCodeDescriptionFilename = String.format( "%s_codeToCodeDescription.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
+      String horizonIdToHorizonIdDescriptionFilename = String.format( "%s_horizonIdToHorizonIdDescription.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
+      File codeToHorizonIdFile = new File( sourceFile.getParentFile(), codeToHorizonIdFilename );
+      File horizonIdToPartIdFile = new File( sourceFile.getParentFile(), horizonIdToPartIdFilename );
+      File codeToCodeDescriptionFile = new File( sourceFile.getParentFile(), codeToCodeDescriptionFilename );
+      File horizonIdToHorizonIdDescriptionFile = new File( sourceFile.getParentFile(), horizonIdToHorizonIdDescriptionFilename );
+
+      /* Create the coded tripple horizon mapper. */
+      CodedTrippleHorizonMapper mapper = new CodedTrippleHorizonMapper();
+      mapper.loadIdMappings( codeToHorizonIdFile, horizonIdToPartIdFile );
+      mapper.loadDescriptionMappings( codeToCodeDescriptionFile, horizonIdToHorizonIdDescriptionFile );
+
       /* Read the source file. */
       CodedTrippleReader reader = new CodedTrippleReader();
-      File sourceFile = m_data.getSourceFile().getFile();
-      reader.read( sourceFile );
+      reader.read( sourceFile, mapper );
 
       /* Monitor. */
       monitor.worked( 500 );
