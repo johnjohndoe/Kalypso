@@ -146,12 +146,12 @@ public class NAModelSimulation
   private void validateVersion( final File naExe, final Version calcCoreVersion, final IStatusCollector log )
   {
     final String filename = naExe.getName();
-    log.add( IStatus.OK, "Running simulation with '%s'", null, filename );
+    log.add( IStatus.OK, Messages.getString("NAModelSimulation.1"), null, filename ); //$NON-NLS-1$
 
     if( calcCoreVersion == null )
     {
-      final String coreExample = String.format( EXECUTABLES_FILE_TEMPLATE, "1.2.3.anyText" );
-      final String message = String.format( "Unable to determine version of calculation core. The filename should follow this pattern: %s. Kalypso will not be able to consider different output formats for backwards compatibility.", coreExample );
+      final String coreExample = String.format( EXECUTABLES_FILE_TEMPLATE, Messages.getString("NAModelSimulation.13") ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString("NAModelSimulation.14"), coreExample ); //$NON-NLS-1$
       log.add( IStatus.WARNING, message );
     }
   }

@@ -64,9 +64,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class ImportOverlayWizard extends AbstractHydrotopeDataImportWizard
 {
-  private final static String PROPERTY_DRWBM_DEFINITION = "DRWBM Definition";
+  private final static String PROPERTY_DRWBM_DEFINITION = Messages.getString("ImportOverlayWizard.0"); //$NON-NLS-1$
 
-  private final static String PROPERTY_DESCRIPTION = "Description";
+  private final static String PROPERTY_DESCRIPTION = Messages.getString("ImportOverlayWizard.1"); //$NON-NLS-1$
 
   public ImportOverlayWizard( )
   {

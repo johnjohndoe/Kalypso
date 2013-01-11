@@ -51,6 +51,7 @@ import org.kalypso.model.hydrology.binding.OverlayCollection;
 import org.kalypso.model.hydrology.binding.OverlayElement;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -118,11 +119,11 @@ public class OverlayImportOperation extends AbstractImportOperation<GM_MultiSurf
     final String drwbmId = m_drwbmClasses.get( definition );
     if( drwbmId == null )
     {
-      final String message = String.format( "Unknown SUDS definition '%s' at feature-id %d", definition, elementId + 1 );
+      final String message = String.format( Messages.getString("OverlayImportOperation_0"), definition, elementId + 1 ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message ) );
     }
 
     final String drwbmModelRef = RrmScenario.FILE_PARAMETER_GML;
-    return String.format( "%s#%s", drwbmModelRef, drwbmId );
+    return String.format( "%s#%s", drwbmModelRef, drwbmId ); //$NON-NLS-1$
   }
 }

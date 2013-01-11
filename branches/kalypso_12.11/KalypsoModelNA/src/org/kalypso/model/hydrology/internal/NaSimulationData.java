@@ -386,7 +386,7 @@ public class NaSimulationData implements INaSimulationData
     }
     catch( final IllegalArgumentException e )
     {
-      System.out.format( "Failed to determine calc core version from filename: %s%n", filename );
+      System.out.format( "Failed to determine calc core version from filename: %s%n", filename ); //$NON-NLS-1$
       return null;
     }
   }
