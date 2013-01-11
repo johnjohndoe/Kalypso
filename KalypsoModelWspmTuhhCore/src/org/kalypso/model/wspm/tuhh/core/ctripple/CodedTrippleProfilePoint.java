@@ -19,7 +19,6 @@
 package org.kalypso.model.wspm.tuhh.core.ctripple;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
 
@@ -70,12 +69,6 @@ public class CodedTrippleProfilePoint
   public String getCode( )
   {
     return m_code;
-  }
-
-  public BigDecimal getStation( )
-  {
-    // TODO No need here?
-    return null;
   }
 
   public static CodedTrippleProfilePoint createProfilePoint( String line ) throws IOException

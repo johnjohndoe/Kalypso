@@ -16,43 +16,29 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.tuhh.core.ctripple;
+package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfile;
 
 /**
  * @author Holger Albert
  */
-public class CodedTrippleProfileHorizon
+public class CodedTrippleProfileNameLabelProvider extends ColumnLabelProvider
 {
-  private final String m_horizonId;
-
-  private final List<CodedTrippleProfilePoint> m_points;
-
-  public CodedTrippleProfileHorizon( String horizonId )
+  public CodedTrippleProfileNameLabelProvider( )
   {
-    m_horizonId = horizonId;
-    m_points = new ArrayList<>();
   }
 
-  public void addProfilePoint( CodedTrippleProfilePoint point )
+  @Override
+  public String getText( final Object element )
   {
-    m_points.add( point );
-  }
+    if( element instanceof CodedTrippleProfile )
+    {
+      final CodedTrippleProfile profile = (CodedTrippleProfile)element;
+      return profile.getName();
+    }
 
-  public String getHorizonId( )
-  {
-    return m_horizonId;
-  }
-
-  /**
-   * This function returns the profile points of this horizon.
-   * 
-   * @return The profile points of this horizon.
-   */
-  public CodedTrippleProfilePoint[] getProfilePoints( )
-  {
-    return m_points.toArray( new CodedTrippleProfilePoint[] {} );
+    return super.getText( element );
   }
 }
