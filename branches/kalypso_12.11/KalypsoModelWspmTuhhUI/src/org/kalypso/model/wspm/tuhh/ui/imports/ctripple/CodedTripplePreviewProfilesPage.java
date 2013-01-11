@@ -44,7 +44,7 @@ public class CodedTripplePreviewProfilesPage extends WizardPage
 
   private TreeViewer m_profileViewer;
 
-  public CodedTripplePreviewProfilesPage( CodedTrippleImportData data )
+  public CodedTripplePreviewProfilesPage( final CodedTrippleImportData data )
   {
     super( "codedTripplePreviewProfilesPage" ); //$NON-NLS-1$
 
@@ -57,7 +57,7 @@ public class CodedTripplePreviewProfilesPage extends WizardPage
   }
 
   @Override
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     /* Create the main composite. */
     final Composite main = new Composite( parent, SWT.NONE );

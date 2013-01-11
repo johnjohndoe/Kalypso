@@ -41,7 +41,7 @@ public class CodedTrippleCreateProfilesOperation implements ICoreRunnableWithPro
 {
   private final CodedTrippleImportData m_data;
 
-  public CodedTrippleCreateProfilesOperation( CodedTrippleImportData data )
+  public CodedTrippleCreateProfilesOperation( final CodedTrippleImportData data )
   {
     m_data = data;
   }
@@ -60,46 +60,46 @@ public class CodedTrippleCreateProfilesOperation implements ICoreRunnableWithPro
       monitor.subTask( Messages.getString( "CodedTrippleCreateProfilesOperation.1" ) ); //$NON-NLS-1$
 
       /* Get the source file. */
-      File sourceFile = m_data.getSourceFile().getFile();
+      final File sourceFile = m_data.getSourceFile().getFile();
 
       /* Create the mapping files. */
-      String codeToHorizonIdFilename = String.format( "%s_CodeToHorizonId.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
-      String horizonIdToPartIdFilename = String.format( "%s_HorizonIdToPartId.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
-      String codeToCodeDescriptionFilename = String.format( "%s_codeToCodeDescription.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
-      String horizonIdToHorizonIdDescriptionFilename = String.format( "%s_horizonIdToHorizonIdDescription.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
-      File codeToHorizonIdFile = new File( sourceFile.getParentFile(), codeToHorizonIdFilename );
-      File horizonIdToPartIdFile = new File( sourceFile.getParentFile(), horizonIdToPartIdFilename );
-      File codeToCodeDescriptionFile = new File( sourceFile.getParentFile(), codeToCodeDescriptionFilename );
-      File horizonIdToHorizonIdDescriptionFile = new File( sourceFile.getParentFile(), horizonIdToHorizonIdDescriptionFilename );
+      final String codeToHorizonIdFilename = String.format( "%s_CodeToHorizonId.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
+      final String horizonIdToPartIdFilename = String.format( "%s_HorizonIdToPartId.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
+      final String codeToCodeDescriptionFilename = String.format( "%s_codeToCodeDescription.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
+      final String horizonIdToHorizonIdDescriptionFilename = String.format( "%s_horizonIdToHorizonIdDescription.properties", FilenameUtils.getBaseName( sourceFile.getName() ) ); //$NON-NLS-1$
+      final File codeToHorizonIdFile = new File( sourceFile.getParentFile(), codeToHorizonIdFilename );
+      final File horizonIdToPartIdFile = new File( sourceFile.getParentFile(), horizonIdToPartIdFilename );
+      final File codeToCodeDescriptionFile = new File( sourceFile.getParentFile(), codeToCodeDescriptionFilename );
+      final File horizonIdToHorizonIdDescriptionFile = new File( sourceFile.getParentFile(), horizonIdToHorizonIdDescriptionFilename );
 
       /* Create the coded tripple horizon mapper. */
-      CodedTrippleHorizonMapper mapper = new CodedTrippleHorizonMapper();
+      final CodedTrippleHorizonMapper mapper = new CodedTrippleHorizonMapper();
       mapper.loadIdMappings( codeToHorizonIdFile, horizonIdToPartIdFile );
       mapper.loadDescriptionMappings( codeToCodeDescriptionFile, horizonIdToHorizonIdDescriptionFile );
 
       /* Read the source file. */
-      CodedTrippleReader reader = new CodedTrippleReader();
+      final CodedTrippleReader reader = new CodedTrippleReader();
       reader.read( sourceFile, mapper );
 
       /* Monitor. */
       monitor.worked( 500 );
 
       /* Get the coded tripple data object. */
-      CodedTripple data = reader.getCodedTripple();
+      final CodedTripple data = reader.getCodedTripple();
 
       /* Create a status collector. */
-      IStatusCollector collector = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
+      final IStatusCollector collector = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
       /* Get the bad codes. */
-      String[] badCodes = data.getBadCodes();
+      final String[] badCodes = data.getBadCodes();
       if( badCodes.length > 0 )
       {
-        for( String badCode : badCodes )
+        for( final String badCode : badCodes )
           collector.add( new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( Messages.getString( "CodedTrippleCreateProfilesOperation.3" ), badCode ) ) ); //$NON-NLS-1$
       }
 
       /* Create the status. */
-      IStatus status = collector.asMultiStatus( Messages.getString( "CodedTrippleCreateProfilesOperation.2" ) ); //$NON-NLS-1$
+      final IStatus status = collector.asMultiStatus( Messages.getString( "CodedTrippleCreateProfilesOperation.2" ) ); //$NON-NLS-1$
 
       /* Store the coded tripple data object. */
       m_data.setCodedTrippleData( data );

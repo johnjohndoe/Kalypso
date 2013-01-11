@@ -32,7 +32,11 @@ import org.kalypso.contribs.java.lang.NumberUtils;
  */
 public class CodedTrippleProfile
 {
-  private static final String UNKNOWN_POINTS_HORIZON_ID = "unknownPointsHorizon";
+  public static final String UNKNOWN_POINTS_HORIZON_ID = "unknownPointsHorizon";
+
+  public static final String PROFILE_HORIZON_ID = "profileHorizon";
+
+  public static final String BRIDGE_OK_HORIZON_ID = "bridgeOkHorizon";
 
   private final String m_name;
 
@@ -40,14 +44,14 @@ public class CodedTrippleProfile
 
   private final CodedTrippleHorizonMapper m_mapper;
 
-  public CodedTrippleProfile( String name, CodedTrippleHorizonMapper mapper )
+  public CodedTrippleProfile( final String name, final CodedTrippleHorizonMapper mapper )
   {
     m_name = name;
     m_points = new ArrayList<>();
     m_mapper = mapper;
   }
 
-  public void addProfilePoint( CodedTrippleProfilePoint point )
+  public void addProfilePoint( final CodedTrippleProfilePoint point )
   {
     /* Only store points in correct order. */
     m_points.add( point );
@@ -68,16 +72,27 @@ public class CodedTrippleProfile
     return m_points.toArray( new CodedTrippleProfilePoint[] {} );
   }
 
+  public CodedTrippleHorizonMapper getMapper( )
+  {
+    return m_mapper;
+  }
+
+  public BigDecimal getStation( )
+  {
+    final String[] split = m_name.split( "_" );
+    return NumberUtils.parseBigDecimal( split[0] );
+  }
+
   public CodedTrippleProfileHorizon[] getProfileHorizons( )
   {
     /* Memory for the horizons. */
-    Map<String, CodedTrippleProfileHorizon> horizons = new LinkedHashMap<>();
+    final Map<String, CodedTrippleProfileHorizon> horizons = new LinkedHashMap<>();
 
     /* Loop all points. */
-    for( CodedTrippleProfilePoint point : m_points )
+    for( final CodedTrippleProfilePoint point : m_points )
     {
       /* Get the code of the point. */
-      String code = point.getCode();
+      final String code = point.getCode();
 
       /* Get the horizon id for that code. */
       String horizonId = m_mapper.getHorizonId( code );
@@ -89,16 +104,23 @@ public class CodedTrippleProfile
         horizons.put( horizonId, new CodedTrippleProfileHorizon( horizonId ) );
 
       /* Add the profile point to the correct horizon. */
-      CodedTrippleProfileHorizon horizon = horizons.get( horizonId );
+      final CodedTrippleProfileHorizon horizon = horizons.get( horizonId );
       horizon.addProfilePoint( point );
     }
 
     return horizons.values().toArray( new CodedTrippleProfileHorizon[] {} );
   }
 
-  public BigDecimal getStation( )
+  public CodedTrippleProfileHorizon getBaseHorizon( )
   {
-    String[] split = m_name.split( "_" );
-    return NumberUtils.parseBigDecimal( split[0] );
+    final CodedTrippleProfileHorizon[] horizons = getProfileHorizons();
+    for( final CodedTrippleProfileHorizon horizon : horizons )
+    {
+      final String horizonId = horizon.getHorizonId();
+      if( PROFILE_HORIZON_ID.equals( horizonId ) )
+        return horizon;
+    }
+
+    return null;
   }
 }

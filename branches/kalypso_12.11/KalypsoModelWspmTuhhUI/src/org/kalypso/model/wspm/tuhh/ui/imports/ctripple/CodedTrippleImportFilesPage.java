@@ -51,7 +51,7 @@ public class CodedTrippleImportFilesPage extends WizardPage
 {
   private final CodedTrippleImportData m_data;
 
-  public CodedTrippleImportFilesPage( CodedTrippleImportData data )
+  public CodedTrippleImportFilesPage( final CodedTrippleImportData data )
   {
     super( "codedTrippleImportFilesPage" ); //$NON-NLS-1$
 
@@ -62,7 +62,7 @@ public class CodedTrippleImportFilesPage extends WizardPage
   }
 
   @Override
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     /* Create the databinding. */
     final DatabindingWizardPage dataBinding = new DatabindingWizardPage( this, null );

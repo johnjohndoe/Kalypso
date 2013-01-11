@@ -18,17 +18,25 @@
  */
 package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 
+import java.math.BigDecimal;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfile;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
  * @author Holger Albert
@@ -39,28 +47,65 @@ public class CodedTrippleWorker extends AbstractCodedTrippleWorker
 
   private final TuhhWspmProject m_targetProject;
 
-  public CodedTrippleWorker( CommandableWorkspace workspace, TuhhWspmProject targetProject )
+  public CodedTrippleWorker( final CommandableWorkspace workspace, final TuhhWspmProject targetProject )
   {
     m_workspace = workspace;
     m_targetProject = targetProject;
   }
 
   @Override
-  public void updateClassifications( CodedTrippleImportData data ) throws Exception
+  public void updateClassifications( final CodedTrippleImportData data ) throws Exception
   {
     final CodedTrippleClassificationUpdater classificationUpdater = new CodedTrippleClassificationUpdater( m_targetProject, data );
     classificationUpdater.updateClassification();
   }
 
   @Override
-  public IProfileFeature createNewProfile( CodedTrippleImportData data, CodedTrippleProfile profile ) throws CoreException
+  public IProfileFeature createNewProfile( final CodedTrippleImportData data, final CodedTrippleProfile profile ) throws CoreException
   {
-    // TODO
-    return null;
+    final BigDecimal station = profile.getStation();
+
+    try
+    {
+      final CodedTrippleProfileHorizon baseHorizon = profile.getBaseHorizon();
+      if( baseHorizon == null )
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( Messages.getString( "CodedTrippleWorker.0" ), station.doubleValue() ) ) ); //$NON-NLS-1$
+
+      final String name = getName( baseHorizon );
+      final String description = getDescription( profile.getMapper(), baseHorizon );
+
+      final String riverId = "-1"; //$NON-NLS-1$
+      final String riverName = Messages.getString( "CodedTrippleWorker.2" ); //$NON-NLS-1$
+      final GM_Curve riverGeometry = null;
+
+      final IProfileFeature profileFeature = createNewProfile( riverId, data.isDirectionUpstreams() );
+      profileFeature.setName( name );
+      profileFeature.setDescription( description );
+      profileFeature.setSrsName( data.getCoordinateSystem() );
+      profileFeature.setBigStation( station );
+
+      final WspmWaterBody water = profileFeature.getWater();
+      water.setName( riverName );
+      water.setCenterLine( riverGeometry );
+
+      final CodedTrippleProfilePointCreator pointCreator = new CodedTrippleProfilePointCreator( profile.getMapper(), baseHorizon, profileFeature );
+      pointCreator.createProfilePoints();
+
+      final CodedTrippleProfileObjectCreator objectCreator = new CodedTrippleProfileObjectCreator( profile.getMapper(), profile, profileFeature );
+      objectCreator.createProfileObjects();
+
+      return profileFeature;
+    }
+    catch( final Exception ex )
+    {
+      final String message = String.format( Messages.getString( "CodedTrippleWorker.1" ), station.doubleValue() ); //$NON-NLS-1$
+      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message, ex );
+      throw new CoreException( status );
+    }
   }
 
   @Override
-  public void createMarkers( IProfileFeature profileFeature )
+  public void createMarkers( final IProfileFeature profileFeature )
   {
     /* HINT: The profile points must be created already. */
     // TODO

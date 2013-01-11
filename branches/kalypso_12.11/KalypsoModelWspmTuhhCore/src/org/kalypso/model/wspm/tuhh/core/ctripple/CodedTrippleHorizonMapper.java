@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.util.PropertiesUtilities;
 
 /**
@@ -59,13 +60,13 @@ public class CodedTrippleHorizonMapper
    * @param horizonIdToPartIdFile
    *          The file that contains the horizon id to part id mappings.
    */
-  public void loadIdMappings( File codeToHorizonIdFile, File horizonIdToPartIdFile ) throws IOException
+  public void loadIdMappings( final File codeToHorizonIdFile, final File horizonIdToPartIdFile ) throws IOException
   {
     if( codeToHorizonIdFile == null || horizonIdToPartIdFile == null )
       return;
 
-    Properties codeToHorizonId = PropertiesUtilities.load( codeToHorizonIdFile );
-    Properties horizonIdToPartId = PropertiesUtilities.load( horizonIdToPartIdFile );
+    final Properties codeToHorizonId = PropertiesUtilities.load( codeToHorizonIdFile );
+    final Properties horizonIdToPartId = PropertiesUtilities.load( horizonIdToPartIdFile );
 
     m_codeToHorizonId = codeToHorizonId;
     m_horizonIdToPartId = horizonIdToPartId;
@@ -98,7 +99,7 @@ public class CodedTrippleHorizonMapper
    *          The code of the point.
    * @return The horizon id.
    */
-  public String getHorizonId( String code )
+  public String getHorizonId( final String code )
   {
     return m_codeToHorizonId.getProperty( code );
   }
@@ -110,29 +111,44 @@ public class CodedTrippleHorizonMapper
    *          The horizon id.
    * @return The part id of a profile part of Kalypso.
    */
-  public String getPartId( String horizonId )
+  public String getPartId( final String horizonId )
   {
-    return m_horizonIdToPartId.getProperty( horizonId );
+    /* Special case, the base horizon and the bridge ok horizon do not have a part id and are specially handled, so return the horizon id. */
+    if( CodedTrippleProfile.PROFILE_HORIZON_ID.equals( horizonId ) || CodedTrippleProfile.BRIDGE_OK_HORIZON_ID.equals( horizonId ) )
+      return horizonId;
+
+    /* Get the property. */
+    final String property = m_horizonIdToPartId.getProperty( horizonId );
+
+    /* If the property is missing, no mapping for that horizon id exists. */
+    if( property == null )
+      return null;
+
+    /* If the property is blank, a generic horizon should be created, these have no part id, so return the horizon id. */
+    if( StringUtils.isBlank( property ) )
+      return horizonId;
+
+    return property;
   }
 
-  public void loadDescriptionMappings( File codeToCodeDescriptionFile, File horizonIdToHorizonIdDescriptionFile ) throws IOException
+  public void loadDescriptionMappings( final File codeToCodeDescriptionFile, final File horizonIdToHorizonIdDescriptionFile ) throws IOException
   {
     if( codeToCodeDescriptionFile == null || horizonIdToHorizonIdDescriptionFile == null )
       return;
 
-    Properties codeToCodeDescription = PropertiesUtilities.load( codeToCodeDescriptionFile );
-    Properties horizonIdToHorizonIdDescription = PropertiesUtilities.load( horizonIdToHorizonIdDescriptionFile );
+    final Properties codeToCodeDescription = PropertiesUtilities.load( codeToCodeDescriptionFile );
+    final Properties horizonIdToHorizonIdDescription = PropertiesUtilities.load( horizonIdToHorizonIdDescriptionFile );
 
     m_codeToCodeDescription = codeToCodeDescription;
     m_horizonIdToHorizonIdDescription = horizonIdToHorizonIdDescription;
   }
 
-  public String getCodeDescription( String code )
+  public String getCodeDescription( final String code )
   {
     return m_codeToCodeDescription.getProperty( code, code );
   }
 
-  public String getHorizonIdDescription( String horizonId )
+  public String getHorizonIdDescription( final String horizonId )
   {
     return m_horizonIdToHorizonIdDescription.getProperty( horizonId, horizonId );
   }
