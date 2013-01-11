@@ -54,6 +54,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
@@ -73,12 +74,15 @@ public class NutzungWriter
 {
   private final File m_nutzungDir;
 
-  public NutzungWriter( final File nutzungDir )
+  private final INaSimulationData m_data;
+
+  public NutzungWriter( final INaSimulationData data, final File nutzungDir )
   {
+    m_data = data;
     m_nutzungDir = nutzungDir;
   }
 
-  public void writeFile( final Parameter parameter, final HydroHash hydroHash ) throws IOException, NAPreprocessorException
+  public void writeFile( final HydroHash hydroHash ) throws IOException, NAPreprocessorException
   {
     if( hydroHash == null )
       return;
@@ -86,7 +90,8 @@ public class NutzungWriter
     try
     {
       final ParameterHash landuseHash = hydroHash.getParameterHash();
-      final List<Feature> list = (List<Feature>) parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
+      final Parameter parameter = m_data.getParameter();
+      final List<Feature> list = (List<Feature>)parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
       for( final Feature nutzungFE : list )
       {
         writeFeature( nutzungFE, landuseHash );
@@ -111,7 +116,7 @@ public class NutzungWriter
     writer.write( "\nidealisierter jahresgang" );// "ideali" ist Kennung! //$NON-NLS-1$
     writer.write( "\nxxdatum     F EVA    We    BIMAX\n" ); //$NON-NLS-1$
     final Object idealLanduseProp = linkedIdealLanduseFE.getProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML );
-    writeIdealLanduse( (IObservation) idealLanduseProp, writer );
+    writeIdealLanduse( (IObservation)idealLanduseProp, writer );
     writer.write( "993456789012345678901234567890" ); //$NON-NLS-1$
     IOUtils.closeQuietly( writer );
   }
@@ -128,7 +133,7 @@ public class NutzungWriter
     final int yearOffset = 2001;
     for( int row = 0; row < count; row++ )
     {
-      final Date date = (Date) values.get( row, idleDateAxis );
+      final Date date = (Date)values.get( row, idleDateAxis );
       final Calendar calendar = NATimeSettings.getInstance().getCalendar( date );
 
       final int year = calendar.get( Calendar.YEAR ) - yearOffset;
@@ -140,9 +145,9 @@ public class NutzungWriter
       zmlWriter.write( "." ); //$NON-NLS-1$
       zmlWriter.write( FortranFormatHelper.printf( year, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-      final Double kc = (Double) values.get( row, kcAxis );
-      final Double wt = (Double) values.get( row, wtAxis );
-      final Double lai = (Double) values.get( row, laiAxis );
+      final Double kc = (Double)values.get( row, kcAxis );
+      final Double wt = (Double)values.get( row, wtAxis );
+      final Double lai = (Double)values.get( row, laiAxis );
 
       zmlWriter.write( FortranFormatHelper.printf( kc, "f8.2" ) ); //$NON-NLS-1$
       zmlWriter.write( FortranFormatHelper.printf( wt, "f8.2" ) ); //$NON-NLS-1$

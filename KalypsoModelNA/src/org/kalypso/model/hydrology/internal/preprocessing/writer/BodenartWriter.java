@@ -42,15 +42,14 @@
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.INaSimulationData;
+import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -58,34 +57,31 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class BodenartWriter extends AbstractCoreFileWriter
 {
-  private final GMLWorkspace m_parameterWorkspace;
+  private final INaSimulationData m_data;
 
-  public BodenartWriter( final GMLWorkspace parameterWorkspace, final Logger logger )
+  public BodenartWriter( final INaSimulationData data, final Logger logger )
   {
     super( logger );
 
-    m_parameterWorkspace = parameterWorkspace;
+    m_data = data;
   }
 
   @Override
   protected void writeContent( final PrintWriter writer )
   {
-    final Feature rootFeature = m_parameterWorkspace.getRootFeature();
-    final List< ? > list = (List< ? >) rootFeature.getProperty( NaModelConstants.PARA_SOIL_LAYER_MEMBER );
+    final Parameter parameter = m_data.getParameter();
+    final List< ? > list = (List< ? >)parameter.getProperty( Parameter.MEMBER_SOIL_LAYER );
 
     writer.append( Messages.getString( "org.kalypso.convert.namodel.manager.BodenartManager.5" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     writer.append( "BODART_ID ArtKap.  WP     FK     BFMAX     Kf   BF0\n" ); //$NON-NLS-1$
     writer.append( "                [mm/dm] [mm/dm] [mm/dm]  [mm/d] [-]\n" ); //$NON-NLS-1$
-    final List<String> names = new ArrayList<>();
 
     for( final Object object : list )
     {
-      final Feature bodenartFE = (Feature) object;
+      final Feature bodenartFE = (Feature)object;
       // TODO: nur die schreiben, die auch in Bodentyp verwendet werden.
       writeFeature( writer, bodenartFE );
-      names.add( bodenartFE.getName() );
     }
-
   }
 
   private void writeFeature( final PrintWriter writer, final Feature feature )
