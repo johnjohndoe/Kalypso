@@ -703,7 +703,6 @@
      <drainagePipeSlope>0.003</drainagePipeSlope>
      <overflowHeight>70.0</overflowHeight>
      <areaPerOutlet>300.0</areaPerOutlet>
-     <widthOfArea>60.0</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -718,7 +717,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -733,7 +731,6 @@
      <drainagePipeSlope>0.003</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>0.0</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -754,7 +751,6 @@
      <drainagePipeSlope>0.003</drainagePipeSlope>
      <overflowHeight>35.0</overflowHeight>
      <areaPerOutlet>300.0</areaPerOutlet>
-     <widthOfArea>60.0</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -769,7 +765,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -784,7 +779,6 @@
      <drainagePipeSlope>0.003</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>0.0</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -805,7 +799,6 @@
      <drainagePipeSlope>0.0</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>1.8</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -820,7 +813,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -835,7 +827,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -856,7 +847,6 @@
      <drainagePipeSlope>0.0</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>1.8</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -871,7 +861,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -886,7 +875,6 @@
      <drainagePipeSlope>0.003</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>0.0</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -901,7 +889,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -922,7 +909,6 @@
      <drainagePipeSlope>0.0</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>1.8</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -937,7 +923,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -952,7 +937,6 @@
      <drainagePipeSlope>0.003</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>0.0</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -967,7 +951,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -988,7 +971,6 @@
      <drainagePipeSlope>0.0</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>1.8</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1003,7 +985,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1018,7 +999,6 @@
      <drainagePipeSlope>0.003</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>0.0</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1033,7 +1013,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -1054,7 +1033,6 @@
      <drainagePipeSlope>0.0</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>1.8</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1069,7 +1047,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1084,7 +1061,6 @@
      <drainagePipeSlope>0.003</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>0.0</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1099,7 +1075,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -1120,7 +1095,6 @@
      <drainagePipeSlope>0.0</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>1.8</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1135,7 +1109,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1150,7 +1123,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -1171,7 +1143,6 @@
      <drainagePipeSlope>0.0</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>1.8</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1186,7 +1157,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1201,7 +1171,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
@@ -1222,7 +1191,6 @@
      <drainagePipeSlope>0.0</drainagePipeSlope>
      <overflowHeight>0.0</overflowHeight>
      <areaPerOutlet>0.0</areaPerOutlet>
-     <widthOfArea>1.8</widthOfArea>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1237,7 +1205,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
    <soilLayerParameterMember>
@@ -1252,7 +1219,6 @@
      <drainagePipeSlope/>
      <overflowHeight/>
      <areaPerOutlet/>
-     <widthOfArea/>
     </DRWBMSoilLayerParameter>
    </soilLayerParameterMember>
   </DRWBMSoiltype>
