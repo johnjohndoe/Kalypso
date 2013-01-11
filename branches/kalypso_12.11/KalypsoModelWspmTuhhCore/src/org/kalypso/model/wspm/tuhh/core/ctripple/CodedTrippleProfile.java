@@ -20,21 +20,30 @@ package org.kalypso.model.wspm.tuhh.core.ctripple;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Holger Albert
  */
 public class CodedTrippleProfile
 {
+  private static final String UNKNOWN_POINTS_HORIZON_ID = "unknownPointsHorizon";
+
   private final String m_name;
 
   private final List<CodedTrippleProfilePoint> m_points;
+
+  private final CodedTrippleHorizonMapper m_mapper;
 
   public CodedTrippleProfile( String name )
   {
     m_name = name;
     m_points = new ArrayList<>();
+    m_mapper = new CodedTrippleHorizonMapper();
   }
 
   public void addProfilePoint( CodedTrippleProfilePoint point )
@@ -60,17 +69,30 @@ public class CodedTrippleProfile
 
   public CodedTrippleProfileHorizon[] getProfileHorizons( )
   {
-    // String code = point.getCode();
+    /* Memory for the horizons. */
+    Map<String, CodedTrippleProfileHorizon> horizons = new LinkedHashMap<>();
 
-    /* horizon from profiles. */
-    // String horizonId = horizonMapper.getHorizonId( code );
+    /* Loop all points. */
+    for( CodedTrippleProfilePoint point : m_points )
+    {
+      /* Get the code of the point. */
+      String code = point.getCode();
 
-    /* Id of of our profile objects. */
-    // horizonMapper.getPartId(horizontId);
+      /* Get the horizon id for that code. */
+      String horizonId = m_mapper.getHorizonId( code );
+      if( StringUtils.isEmpty( horizonId ) )
+        horizonId = UNKNOWN_POINTS_HORIZON_ID;
 
-    // TODO Create horizons here... because codes may have changed...
-    // TODO hash by horizonId...
-    return null;
+      /* If there is no coded tripple profile horizon for that horizon id, create a new one. */
+      if( !horizons.containsKey( horizonId ) )
+        horizons.put( horizonId, new CodedTrippleProfileHorizon( horizonId ) );
+
+      /* Add the profile point to the correct horizon. */
+      CodedTrippleProfileHorizon horizon = horizons.get( horizonId );
+      horizon.addProfilePoint( point );
+    }
+
+    return horizons.values().toArray( new CodedTrippleProfileHorizon[] {} );
   }
 
   public BigDecimal getStation( )

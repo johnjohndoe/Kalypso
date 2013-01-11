@@ -20,7 +20,7 @@ package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfile;
-import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfileHorizon;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfilePoint;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
@@ -38,9 +38,9 @@ public class CodedTrippleProfileDescriptionLabelProvider extends ColumnLabelProv
     if( element instanceof CodedTrippleProfile )
     {
       final CodedTrippleProfile profile = (CodedTrippleProfile)element;
-      final CodedTrippleProfileHorizon[] horizons = profile.getProfileHorizons();
-      if( horizons != null )
-        return String.format( Messages.getString( "CodedTrippleProfileDescriptionLabelProvider.0" ), horizons.length ); //$NON-NLS-1$
+      final CodedTrippleProfilePoint[] points = profile.getProfilePoints();
+      if( points != null )
+        return String.format( Messages.getString( "CodedTrippleProfileDescriptionLabelProvider.0" ), points.length ); //$NON-NLS-1$
     }
 
     return super.getText( element );

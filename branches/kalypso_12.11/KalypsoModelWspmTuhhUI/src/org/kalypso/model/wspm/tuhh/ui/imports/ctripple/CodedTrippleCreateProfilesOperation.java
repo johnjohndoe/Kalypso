@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTripple;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleReader;
@@ -66,17 +68,28 @@ public class CodedTrippleCreateProfilesOperation implements ICoreRunnableWithPro
       /* Get the coded tripple data object. */
       CodedTripple data = reader.getCodedTripple();
 
-      /* Create a ok status. */
-      final IStatus okStatus = new Status( IStatus.OK, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "CodedTrippleCreateProfilesOperation.2" ) ); //$NON-NLS-1$
+      /* Create a status collector. */
+      IStatusCollector collector = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
+
+      /* Get the bad codes. */
+      String[] badCodes = data.getBadCodes();
+      if( badCodes.length > 0 )
+      {
+        for( String badCode : badCodes )
+          collector.add( new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), String.format( Messages.getString( "CodedTrippleCreateProfilesOperation.3" ), badCode ) ) ); //$NON-NLS-1$
+      }
+
+      /* Create the status. */
+      IStatus status = collector.asMultiStatus( Messages.getString( "CodedTrippleCreateProfilesOperation.2" ) ); //$NON-NLS-1$
 
       /* Store the coded tripple data object. */
       m_data.setCodedTrippleData( data );
-      m_data.setCodedTrippleDataStatus( okStatus );
+      m_data.setCodedTrippleDataStatus( status );
 
       /* Monitor. */
       monitor.worked( 500 );
 
-      return okStatus;
+      return status;
     }
     catch( final Exception ex )
     {

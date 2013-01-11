@@ -30,11 +30,11 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class CodedTripple
 {
-  final Map<String, CodedTrippleProfile> m_profiles;
+  private final Map<String, CodedTrippleProfile> m_profiles;
 
   private final CodedTrippleHorizonMapper m_mapper;
 
-  final Set<String> m_badCodes;
+  private final Set<String> m_badCodes;
 
   public CodedTripple( )
   {
@@ -77,5 +77,10 @@ public class CodedTripple
   public CodedTrippleProfile[] getProfiles( )
   {
     return m_profiles.values().toArray( new CodedTrippleProfile[] {} );
+  }
+
+  public String[] getBadCodes( )
+  {
+    return m_badCodes.toArray( new String[] {} );
   }
 }

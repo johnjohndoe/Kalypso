@@ -101,12 +101,22 @@ public class CodedTripplePreviewProfilesPage extends WizardPage
 
   private void configureTreeViewer( final TreeViewer viewer )
   {
+    /* Name. */
+    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    nameColumn.setLabelProvider( new CodedTrippleProfileNameLabelProvider() );
+
+    final ViewerColumnItem nameItem = new ViewerColumnItem( nameColumn );
+    nameItem.setText( Messages.getString( "CodedTripplePreviewProfilesPage.4" ) ); //$NON-NLS-1$
+    nameItem.setResizable( false );
+
+    ColumnsResizeControlListener.setMinimumPackWidth( nameItem.getColumn() );
+
     /* Station. */
     final ViewerColumn stationColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     stationColumn.setLabelProvider( new CodedTrippleProfileStationLabelProvider() );
 
     final ViewerColumnItem stationItem = new ViewerColumnItem( stationColumn );
-    stationItem.setText( Messages.getString( "CodedTripplePreviewProfilesPage.4" ) ); //$NON-NLS-1$
+    stationItem.setText( Messages.getString( "CodedTripplePreviewProfilesPage.5" ) ); //$NON-NLS-1$
     stationItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( stationItem.getColumn() );
@@ -116,7 +126,7 @@ public class CodedTripplePreviewProfilesPage extends WizardPage
     descriptionColumn.setLabelProvider( new CodedTrippleProfileDescriptionLabelProvider() );
 
     final ViewerColumnItem descriptionItem = new ViewerColumnItem( descriptionColumn );
-    descriptionItem.setText( Messages.getString( "CodedTripplePreviewProfilesPage.5" ) ); //$NON-NLS-1$
+    descriptionItem.setText( Messages.getString( "CodedTripplePreviewProfilesPage.6" ) ); //$NON-NLS-1$
     descriptionItem.setResizable( false );
 
     ColumnsResizeControlListener.setMinimumPackWidth( descriptionItem.getColumn() );
