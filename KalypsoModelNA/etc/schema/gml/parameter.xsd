@@ -311,13 +311,61 @@
         <extension base="par:SoilLayerParameterType">
           <sequence>
             <!-- TODO: Wertebereich einschränken > 0 -->
-            <element name="diameterPipe" type="double" />
-            <element name="roughnessPipe" type="double" />
-            <element name="drainagePipeKFvalue" type="double" />
-            <element name="drainagePipeSlope" type="double" />
-            <element name="overflowHeight" type="double" />
-            <element name="areaPerOutlet" type="double" />
-            <element name="widthOfArea" type="double" />
+            <element name="diameterPipe" nillable="true" minOccurs="0">
+                <simpleType>
+                    <restriction base="double">
+                        <minExclusive value="0.0"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element name="roughnessPipe" nillable="true" minOccurs="0">
+                <simpleType>
+                    <restriction base="double">
+                        <minExclusive value="0.0"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element name="drainagePipeKFvalue" nillable="true" minOccurs="0">
+                <simpleType>
+                    <restriction base="double">
+                        <minExclusive value="0.0"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element name="drainagePipeSlope" nillable="true" minOccurs="0">
+                <simpleType>
+                    <restriction base="double">
+                        <minExclusive value="0.0"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element name="overflowHeight" nillable="true" minOccurs="0">
+                <simpleType>
+                    <restriction base="double">
+                        <minExclusive value="0.0"/>
+                    </restriction>
+                </simpleType>
+            </element>
+
+            <!-- Kopplung Überlaufrohr Schicht [1-n, # der Schicht; Standard = 0] -->
+            <element name="overflowOutletLayer" nillable="true" minOccurs="0">
+                <simpleType>
+                    <restriction base="int">
+                        <minExclusive value="0"/>
+                    </restriction>
+                </simpleType>
+            </element>
+
+            <element name="areaPerOutlet" nillable="true" minOccurs="0">
+                <simpleType>
+                    <restriction base="double">
+                        <minExclusive value="0.0"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            
+            <!-- Abdichtung unterhalb der Maßnahme: 1/0 ; Standard = 0 -->
+            <element name="sealedLayer" type="boolean" nillable="true" minOccurs="0"/>
           </sequence>
         </extension>
       </complexContent>
