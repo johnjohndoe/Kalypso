@@ -18,22 +18,77 @@
  */
 package org.kalypso.model.wspm.tuhh.core.ctripple;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.kalypso.commons.java.util.PropertiesUtilities;
 
 /**
  * @author Holger Albert
  */
 public class CodedTrippleHorizonMapper
 {
-  private final Map<String, String> m_codeToHorizonId;
+  /**
+   * The code to horizon id mappings.
+   */
+  private Properties m_codeToHorizonId;
 
-  private final Map<String, String> m_horizonIdToPartId;
+  /**
+   * Horizon id to part id mappings.
+   */
+  private Properties m_horizonIdToPartId;
+
+  private Properties m_codeToCodeDescription;
+
+  private Properties m_horizonIdToHorizonIdDescription;
 
   public CodedTrippleHorizonMapper( )
   {
-    m_codeToHorizonId = new HashMap<>();
-    m_horizonIdToPartId = new HashMap<>();
+    m_codeToHorizonId = new Properties();
+    m_horizonIdToPartId = new Properties();
+    m_codeToCodeDescription = new Properties();
+    m_horizonIdToHorizonIdDescription = new Properties();
+  }
+
+  /**
+   * This function loads the id mappings. If one file is null, nothing is loaded.
+   * 
+   * @param codeToHorizonIdFile
+   *          The file that contains the code to horizon id mappings.
+   * @param horizonIdToPartIdFile
+   *          The file that contains the horizon id to part id mappings.
+   */
+  public void loadIdMappings( File codeToHorizonIdFile, File horizonIdToPartIdFile ) throws IOException
+  {
+    if( codeToHorizonIdFile == null || horizonIdToPartIdFile == null )
+      return;
+
+    Properties codeToHorizonId = PropertiesUtilities.load( codeToHorizonIdFile );
+    Properties horizonIdToPartId = PropertiesUtilities.load( horizonIdToPartIdFile );
+
+    m_codeToHorizonId = codeToHorizonId;
+    m_horizonIdToPartId = horizonIdToPartId;
+  }
+
+  /**
+   * This function returns the codes of code to horizon id mappings.
+   * 
+   * @return The codes of code to horizon id mappings.
+   */
+  public String[] getCodes( )
+  {
+    return m_codeToHorizonId.stringPropertyNames().toArray( new String[] {} );
+  }
+
+  /**
+   * This function returns the horizon ids of the horizon id to part id mappings.
+   * 
+   * @return The horizon ids of the horizon id to part id mappings.
+   */
+  public String[] getHorizonIds( )
+  {
+    return m_horizonIdToPartId.stringPropertyNames().toArray( new String[] {} );
   }
 
   /**
@@ -45,8 +100,7 @@ public class CodedTrippleHorizonMapper
    */
   public String getHorizonId( String code )
   {
-    // TODO
-    return null;
+    return m_codeToHorizonId.getProperty( code );
   }
 
   /**
@@ -58,7 +112,28 @@ public class CodedTrippleHorizonMapper
    */
   public String getPartId( String horizonId )
   {
-    // TODO
-    return null;
+    return m_horizonIdToPartId.getProperty( horizonId );
+  }
+
+  public void loadDescriptionMappings( File codeToCodeDescriptionFile, File horizonIdToHorizonIdDescriptionFile ) throws IOException
+  {
+    if( codeToCodeDescriptionFile == null || horizonIdToHorizonIdDescriptionFile == null )
+      return;
+
+    Properties codeToCodeDescription = PropertiesUtilities.load( codeToCodeDescriptionFile );
+    Properties horizonIdToHorizonIdDescription = PropertiesUtilities.load( horizonIdToHorizonIdDescriptionFile );
+
+    m_codeToCodeDescription = codeToCodeDescription;
+    m_horizonIdToHorizonIdDescription = horizonIdToHorizonIdDescription;
+  }
+
+  public String getCodeDescription( String code )
+  {
+    return m_codeToCodeDescription.getProperty( code, code );
+  }
+
+  public String getHorizonIdDescription( String horizonId )
+  {
+    return m_horizonIdToHorizonIdDescription.getProperty( horizonId, horizonId );
   }
 }

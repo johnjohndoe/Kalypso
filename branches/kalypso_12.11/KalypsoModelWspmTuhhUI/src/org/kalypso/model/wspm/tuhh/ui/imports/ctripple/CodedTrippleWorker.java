@@ -18,8 +18,17 @@
  */
 package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Holger Albert
@@ -34,5 +43,54 @@ public class CodedTrippleWorker extends AbstractCodedTrippleWorker
   {
     m_workspace = workspace;
     m_targetProject = targetProject;
+  }
+
+  @Override
+  public void updateClassifications( CodedTrippleImportData data ) throws Exception
+  {
+    final CodedTrippleClassificationUpdater classificationUpdater = new CodedTrippleClassificationUpdater( m_targetProject, data );
+    classificationUpdater.updateClassification();
+  }
+
+  @Override
+  public IProfileFeature createNewProfile( CodedTrippleImportData data, CodedTrippleProfile profile ) throws CoreException
+  {
+    // TODO
+    return null;
+  }
+
+  @Override
+  public void createMarkers( IProfileFeature profileFeature )
+  {
+    /* HINT: The profile points must be created already. */
+    // TODO
+  }
+
+  @Override
+  public void fireChangeEvents( )
+  {
+    final IFeatureBindingCollection<WspmWaterBody> waterBodies = m_targetProject.getWaterBodies();
+    final WspmWaterBody[] wbs = waterBodies.toArray( new WspmWaterBody[] {} );
+
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_targetProject, wbs, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    try
+    {
+      m_workspace.postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  private IProfileFeature createNewProfile( final String riverId, final boolean isDirectionUpstreams ) throws GMLSchemaException
+  {
+    final WspmWaterBody water = m_targetProject.createOrGetWaterBodyByRefNr( riverId, isDirectionUpstreams );
+
+    final IProfileFeature newProfile = water.createNewProfile();
+    newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+
+    return newProfile;
   }
 }

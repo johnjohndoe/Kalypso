@@ -36,10 +36,10 @@ public class CodedTripple
 
   private final Set<String> m_badCodes;
 
-  public CodedTripple( )
+  public CodedTripple( CodedTrippleHorizonMapper mapper )
   {
     m_profiles = new LinkedHashMap<>();
-    m_mapper = new CodedTrippleHorizonMapper();
+    m_mapper = mapper;
     m_badCodes = new HashSet<>();
   }
 
@@ -68,7 +68,7 @@ public class CodedTripple
     /* Add the profile point to the correct profile. */
     String name = point.getName();
     if( !m_profiles.containsKey( name ) )
-      m_profiles.put( name, new CodedTrippleProfile( name ) );
+      m_profiles.put( name, new CodedTrippleProfile( name, m_mapper ) );
 
     CodedTrippleProfile profile = m_profiles.get( name );
     profile.addProfilePoint( point );
@@ -77,6 +77,11 @@ public class CodedTripple
   public CodedTrippleProfile[] getProfiles( )
   {
     return m_profiles.values().toArray( new CodedTrippleProfile[] {} );
+  }
+
+  public CodedTrippleHorizonMapper getMapper( )
+  {
+    return m_mapper;
   }
 
   public String[] getBadCodes( )

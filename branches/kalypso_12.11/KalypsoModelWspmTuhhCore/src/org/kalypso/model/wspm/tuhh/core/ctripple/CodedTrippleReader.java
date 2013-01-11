@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The coded tripple reader.
@@ -47,8 +48,10 @@ public class CodedTrippleReader
    * 
    * @param sourceFile
    *          The source file.
+   * @param mapper
+   *          The coded tripple horizon mapper.
    */
-  public void read( File sourceFile ) throws IOException
+  public void read( File sourceFile, CodedTrippleHorizonMapper mapper ) throws IOException
   {
     /* The reader. */
     BufferedReader bf = null;
@@ -62,12 +65,16 @@ public class CodedTrippleReader
       bf = new BufferedReader( new FileReader( sourceFile ) );
 
       /* Create the coded tripple. */
-      CodedTripple codedTripple = new CodedTripple();
+      CodedTripple codedTripple = new CodedTripple( mapper );
 
       String line = null;
       while( (line = bf.readLine()) != null )
       {
-        CodedTrippleProfilePoint point = CodedTrippleProfilePoint.createProfilePoint( line );
+        String trimmedLine = line.trim();
+        if( StringUtils.isEmpty( trimmedLine ) )
+          continue;
+
+        CodedTrippleProfilePoint point = CodedTrippleProfilePoint.createProfilePoint( trimmedLine );
         codedTripple.addProfilePoint( point );
       }
 
