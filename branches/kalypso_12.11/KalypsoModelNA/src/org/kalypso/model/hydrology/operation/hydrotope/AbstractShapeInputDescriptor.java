@@ -96,6 +96,7 @@ public abstract class AbstractShapeInputDescriptor<T extends GM_Object> implemen
     return Integer.toString( index );
   }
 
+  @SuppressWarnings( "unused" )
   @Override
   public String getDescription( final int index ) throws CoreException
   {
