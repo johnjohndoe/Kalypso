@@ -121,14 +121,14 @@ public class PrepareShorttermSimulationWorker implements ICoreRunnableWithProgre
       if( !isLongterm )
       {
         /* Update status. */
-        collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "PrepareShorttermSimulationWorker_2" ) ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "PrepareShorttermSimulationWorker_2" ) ) ); //$NON-NLS-1$
 
         /* If a longterm simulation is referenced. */
         final String initialValueSource = simulation.getInitialValueSource();
         if( initialValueSource != null && initialValueSource.length() > 0 )
         {
           /* Update status. */
-          collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "PrepareShorttermSimulationWorker_3" ) ) ); //$NON-NLS-1$
+          collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "PrepareShorttermSimulationWorker_3" ) ) ); //$NON-NLS-1$
 
           /* Update the simulation data. */
           final IStatus status = updateSimulationData( m_rrmSimulation, m_simulationData, simulation );
@@ -137,7 +137,7 @@ public class PrepareShorttermSimulationWorker implements ICoreRunnableWithProgre
         else
         {
           /* Update status. */
-          collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "PrepareShorttermSimulationWorker_4" ) ) ); //$NON-NLS-1$
+          collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "PrepareShorttermSimulationWorker_4" ) ) ); //$NON-NLS-1$
 
           /* HINT: In this case the lzsim data is not copied. */
         }
