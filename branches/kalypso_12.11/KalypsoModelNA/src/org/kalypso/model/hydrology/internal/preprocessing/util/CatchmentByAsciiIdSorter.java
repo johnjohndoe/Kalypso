@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,9 +36,9 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing;
+package org.kalypso.model.hydrology.internal.preprocessing.util;
 
 import java.util.Comparator;
 
@@ -46,28 +46,23 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.IDManager;
 
 /**
- * Compares catchments by its ascii id.
- * 
  * @author Gernot Belger
  */
-public class CatchmentIDComparator implements Comparator<Catchment>
+public class CatchmentByAsciiIdSorter implements Comparator<Catchment>
 {
   private final IDManager m_idManager;
 
-  public CatchmentIDComparator( final IDManager idManager )
+  public CatchmentByAsciiIdSorter( final IDManager idManager )
   {
     m_idManager = idManager;
   }
 
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
   @Override
   public int compare( final Catchment c1, final Catchment c2 )
   {
     final int id1 = m_idManager.getAsciiID( c1 );
     final int id2 = m_idManager.getAsciiID( c2 );
+
     return id1 - id2;
   }
-
 }

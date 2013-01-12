@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.model.hydrology.internal.preprocessing.timeseries;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -45,7 +45,7 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 /**
  * @author doemming
  */
-public class Ext2Writer
+class Ext2Writer
 {
   private final DateFormat m_dateFormat;
 
@@ -66,7 +66,7 @@ public class Ext2Writer
 
     for( int i = 0; i < values.size(); i++ )
     {
-      final Date date = (Date) values.get( i, dateAxis );
+      final Date date = (Date)values.get( i, dateAxis );
       final Object value = values.get( i, valueAxis );
 
       final String formattedDate = m_dateFormat.format( date );

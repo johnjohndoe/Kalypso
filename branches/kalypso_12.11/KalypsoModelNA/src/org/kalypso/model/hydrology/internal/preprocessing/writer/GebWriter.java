@@ -53,12 +53,13 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
+import org.kalypso.model.hydrology.internal.preprocessing.preparation.TimeseriesFileManager;
 import org.kalypso.ogc.sensor.IObservation;
 
 /**
  * @author doemming
  */
-public class GebWriter extends AbstractCoreFileWriter
+class GebWriter extends AbstractCoreFileWriter
 {
   private final Logger m_logger;
 

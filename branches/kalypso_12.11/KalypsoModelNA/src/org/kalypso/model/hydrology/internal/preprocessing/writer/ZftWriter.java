@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 /**
  * @author doemming
  */
-public class ZftWriter extends AbstractCoreFileWriter
+class ZftWriter extends AbstractCoreFileWriter
 {
   public static final String STD_TEMP_FILENAME = "std.tmp"; //$NON-NLS-1$
 
@@ -116,14 +116,14 @@ public class ZftWriter extends AbstractCoreFileWriter
     final IAxis normAreaAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_NORM );
     final ITupleModel values = observation.getValues( null );
     final int count = values.size();
-    final double t0 = ((Double) values.get( 0, hoursAxis )).doubleValue();
-    final double t1 = ((Double) values.get( 1, hoursAxis )).doubleValue();
+    final double t0 = ((Double)values.get( 0, hoursAxis )).doubleValue();
+    final double t1 = ((Double)values.get( 1, hoursAxis )).doubleValue();
     final double dt = t1 - t0;
     zftBuffer.append( FortranFormatHelper.printf( count, "*" ) + " " + FortranFormatHelper.printf( dt, "*" ) + " 2\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     for( int row = 0; row < count; row++ )
     {
-      final Double hoursValue = (Double) values.get( row, hoursAxis );
-      final Double normAreaValue = (Double) values.get( row, normAreaAxis );
+      final Double hoursValue = (Double)values.get( row, hoursAxis );
+      final Double normAreaValue = (Double)values.get( row, normAreaAxis );
       zftBuffer.append( FortranFormatHelper.printf( hoursValue, "*" ) + " " + FortranFormatHelper.printf( normAreaValue, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
   }

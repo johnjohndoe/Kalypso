@@ -38,31 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing.net.visitors;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
-import java.util.logging.Logger;
+import java.util.Date;
+import java.util.SortedMap;
 
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
-
-public abstract class NetElementVisitor
+/**
+ * Simple linear interpolator; receives Date/Double pairs, returns simple linear interpolation from the selected Date
+ * segment
+ * 
+ * @author antanas
+ */
+class Interpolator
 {
-  private Logger m_logger = null;
+  private final SortedMap<Date, Double> m_valuesMap;
 
-  public abstract boolean visit( NetElement netElement ) throws Exception;
-
-  public void log( final String info )
+  public Interpolator( final SortedMap<Date, Double> valuesMap )
   {
-    if( m_logger != null )
-      m_logger.info( info );
+    m_valuesMap = valuesMap;
   }
 
-  public Logger getLogger( )
+  public double getValue( final Date position )
   {
-    return m_logger;
-  }
+    if( m_valuesMap.isEmpty() )
+      return Double.NaN;
+    if( m_valuesMap.firstKey().after( position ) )
+      return m_valuesMap.get( m_valuesMap.firstKey() );
+    if( m_valuesMap.lastKey().before( position ) )
+      return m_valuesMap.get( m_valuesMap.lastKey() );
+    if( m_valuesMap.keySet().contains( position ) )
+      return m_valuesMap.get( position );
 
-  public void setLogger( final Logger logger )
-  {
-    m_logger = logger;
+    final Date lowerKey = m_valuesMap.headMap( position ).lastKey();
+    final Date upperKey = m_valuesMap.tailMap( position ).firstKey();
+    final double valueLower = m_valuesMap.get( lowerKey );
+    final double valueUpper = m_valuesMap.get( upperKey );
+
+    return valueLower + (position.getTime() - lowerKey.getTime()) * (valueUpper - valueLower) / (upperKey.getTime() - lowerKey.getTime());
   }
 }

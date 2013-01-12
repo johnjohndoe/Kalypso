@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing;
+package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,10 +59,6 @@ import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
-import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.CompleteDownstreamNetAsciiWriterVisitor;
-import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.RootNodeCollector;
-import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.SimulationVisitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -74,10 +70,10 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  * das netz fuer die zu generierenden ergebnisse erstellt.<br/>
  * vorhandene ergebnisse oberhalb der zu berechneneden knoten werden als zufluss gerechnet. Wobei zu generierende
  * Ergebnisse stets neu berechnet werden und niemals als Zufluss dienen.
- *
+ * 
  * @author doemming
  */
-public class NetFileAnalyser
+class NetFileAnalyser
 {
   private final Node m_rootNode;
 
@@ -99,7 +95,7 @@ public class NetFileAnalyser
    * Generate NetElements for rrm model: also defines the relation between channels (upstream/downstream). This defines
    * in what order the net is written later.<br/>
    * IMPORTANT: if any relation in the gml-model is changed/added, this methods needs to be updated as well.
-   *
+   * 
    * @param workspace
    *          the rrm workspace
    * @param synthNWorkspace
@@ -196,7 +192,7 @@ public class NetFileAnalyser
     {
       if( channel instanceof StorageChannel )
       {
-        final INode overflowNode = ((StorageChannel) channel).getOverflowNode();
+        final INode overflowNode = ((StorageChannel)channel).getOverflowNode();
         if( overflowNode != null )
         {
           final Channel downstreamChannel = overflowNode.getDownstreamChannel();
@@ -286,7 +282,7 @@ public class NetFileAnalyser
     {
       if( branching instanceof BranchingWithNode )
       {
-        final Node branchRelatedNode = ((BranchingWithNode) branching).getNode();
+        final Node branchRelatedNode = ((BranchingWithNode)branching).getNode();
         if( branchRelatedNode != null )
           relatedNodes.add( branchRelatedNode );
       }
@@ -305,7 +301,7 @@ public class NetFileAnalyser
     for( int i = 0; i < logLabels.length; i++ )
       logLabels[i] = getLogLabel( netElements[i] );
 
-    final String msg = String.format( format, (Object[]) logLabels ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String msg = String.format( format, (Object[])logLabels ); //$NON-NLS-1$ //$NON-NLS-2$
     m_logger.log( Level.WARNING, msg );
   }
 

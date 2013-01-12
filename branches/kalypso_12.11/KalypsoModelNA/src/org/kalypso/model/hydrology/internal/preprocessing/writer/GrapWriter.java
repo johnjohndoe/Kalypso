@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing.timeseries;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 /**
  * @author Gernot Belger
  */
-public class GrapWriter
+class GrapWriter
 {
   private static final DateFormat DF_GRAP_HEADER = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "'\n       'yyyyMMddHHmm'\ngrap\n'" ) ); //$NON-NLS-1$
 
@@ -98,8 +98,8 @@ public class GrapWriter
     final ITupleModel values = m_observation.getValues( null );
     for( int i = 0; i < values.size(); i++ )
     {
-      final Date date = (Date) values.get( i, dateAxis );
-      final double value = (Double) values.get( i, valueAxis );
+      final Date date = (Date)values.get( i, dateAxis );
+      final double value = (Double)values.get( i, valueAxis );
 
       if( i == 0 )
         writeGrapHeader( writer, date );
@@ -136,7 +136,7 @@ public class GrapWriter
     for( int i = 0; i < values.size(); i++ )
     {
       final Date date = new Date( simulationStart.getTime() + i * interpolationStep );
-      final Double value = (Double) values.get( i, valueAxis );
+      final Double value = (Double)values.get( i, valueAxis );
       valuesMap.put( date, value );
     }
 

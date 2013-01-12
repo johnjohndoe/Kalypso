@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,33 +36,38 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
-import java.util.Comparator;
+import java.util.Date;
 
-import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.ogc.sensor.DateRange;
 
 /**
  * @author Gernot Belger
  */
-public class CatchmentByAsciiIdSorter implements Comparator<Catchment>
+class RangeFactor
 {
-  private final IDManager m_idManager;
+  private final DateRange m_range;
 
-  public CatchmentByAsciiIdSorter( final IDManager idManager )
+  private final double m_factor;
+
+  public RangeFactor( final DateRange range, final double factor )
   {
-    m_idManager = idManager;
+    m_range = range;
+    m_factor = factor;
   }
 
-  @Override
-  public int compare( final Catchment c1, final Catchment c2 )
+  /**
+   * Applies this factor to the value. The factor is applied iff the date lies inside our range; else simply the
+   * original value is returned.
+   */
+  public double apply( final Date date, final double value )
   {
-    final int id1 = m_idManager.getAsciiID( c1 );
-    final int id2 = m_idManager.getAsciiID( c2 );
+    if( m_range != null && m_range.containsInclusive( date ) )
+      return value * m_factor;
 
-    return id1 - id2;
+    return value;
   }
 }

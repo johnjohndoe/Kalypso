@@ -46,6 +46,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -109,11 +111,11 @@ public class NAModelSimulation
 
       /* determine calculation core */
       final File naExe = determineCalculationCore( collector );
-      final Version calcCoreVersion = m_data.setCalcCore( naExe );
+      final Version calcCoreVersion = findCalcCoreVersion( naExe.getName() );
       validateVersion( naExe, calcCoreVersion, collector );
 
       /* Pre processing. */
-      final IStatus preProcessStatus = preProcess( m_data, monitor );
+      final IStatus preProcessStatus = preProcess( m_data, calcCoreVersion, monitor );
       collector.add( preProcessStatus );
       if( monitor.isCanceled() )
       {
@@ -196,7 +198,7 @@ public class NAModelSimulation
     postProcess( m_data, null, monitor );
   }
 
-  private IStatus preProcess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
+  private IStatus preProcess( final INaSimulationData simulationData, final Version calcCoreVersion, final ISimulationMonitor monitor ) throws SimulationException
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
@@ -204,7 +206,7 @@ public class NAModelSimulation
     try
     {
       /* Pre processing. */
-      m_preprocessor = new NAModelPreprocessor( m_simDirs.asciiDirs, simulationData, m_logger );
+      m_preprocessor = new NAModelPreprocessor( m_simDirs.asciiDirs, simulationData, calcCoreVersion, m_logger );
       final IStatus status = m_preprocessor.process( monitor );
 
       collector.add( status );
@@ -284,5 +286,26 @@ public class NAModelSimulation
   public INaSimulationData getSimulationData( )
   {
     return m_data;
+  }
+
+  private Version findCalcCoreVersion( final String filename )
+  {
+    final Pattern pattern = Pattern.compile( NAModelSimulation.EXECUTABLES_FILE_PATTERN );
+    final Matcher matcher = pattern.matcher( filename );
+
+    if( !matcher.matches() )
+      return null;
+
+    final String versionString = matcher.group( 1 );
+
+    try
+    {
+      return new Version( versionString );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      System.out.format( "Failed to determine calc core version from filename: %s%n", filename ); //$NON-NLS-1$
+      return null;
+    }
   }
 }

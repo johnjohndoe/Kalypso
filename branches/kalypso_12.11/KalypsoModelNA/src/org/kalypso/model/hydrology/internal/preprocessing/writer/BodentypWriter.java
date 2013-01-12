@@ -47,7 +47,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.parameter.DRWBMSoilLayerParameter;
 import org.kalypso.model.hydrology.binding.parameter.DRWBMSoiltype;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
@@ -61,32 +60,33 @@ import org.osgi.framework.Version;
 /**
  * @author huebsch
  */
-public class BodentypWriter extends AbstractCoreFileWriter
+class BodentypWriter extends AbstractCoreFileWriter
 {
   /* DRWBM soltypes where first supported in this version */
   private static final Version VERSION_MIN_DRWBM_SOIL_TYPES = new Version( 3, 0, 0 );
 
-  private final INaSimulationData m_data;
+  private final Parameter m_parameter;
 
-  public BodentypWriter( final INaSimulationData data, final Logger logger )
+  private final Version m_calcCoreVersion;
+
+  public BodentypWriter( final Parameter parameter, final Version calcCoreVersion, final Logger logger )
   {
     super( logger );
 
-    m_data = data;
+    m_parameter = parameter;
+    m_calcCoreVersion = calcCoreVersion;
   }
 
   @Override
   protected void writeContent( final PrintWriter buffer ) throws NAPreprocessorException
   {
-    final Parameter parameter = m_data.getParameter();
-
     buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
 
     // write normal soil types
-    doWrite( parameter.getSoiltypes(), buffer );
+    doWrite( m_parameter.getSoiltypes(), buffer );
 
     // write DRWBM soil types
-    doWriteDRWBM( parameter.getDRWBMSoiltypes(), buffer );
+    doWriteDRWBM( m_parameter.getDRWBMSoiltypes(), buffer );
   }
 
   private void doWrite( final IFeatureBindingCollection<Soiltype> soiltypes, final PrintWriter buffer ) throws NAPreprocessorException
@@ -147,11 +147,10 @@ public class BodentypWriter extends AbstractCoreFileWriter
       // additional drwbm soil type parameters
       if( parameter instanceof DRWBMSoilLayerParameter )
       {
-        final Version calcCoreVersion = m_data.getCalcCoreVersion();
-        if( calcCoreVersion != null && calcCoreVersion.compareTo( VERSION_MIN_DRWBM_SOIL_TYPES ) < 0 )
+        if( m_calcCoreVersion != null && m_calcCoreVersion.compareTo( VERSION_MIN_DRWBM_SOIL_TYPES ) < 0 )
         {
           // TODO: would be nicer, if we only write elements that are really needed by the model, so we could still calculate with older models int hat case.
-          final String message = String.format( Messages.getString("BodentypWriter.0"), calcCoreVersion, VERSION_MIN_DRWBM_SOIL_TYPES ); //$NON-NLS-1$
+          final String message = String.format( Messages.getString( "BodentypWriter.0" ), m_calcCoreVersion, VERSION_MIN_DRWBM_SOIL_TYPES ); //$NON-NLS-1$
           throw new NAPreprocessorException( message );
         }
 

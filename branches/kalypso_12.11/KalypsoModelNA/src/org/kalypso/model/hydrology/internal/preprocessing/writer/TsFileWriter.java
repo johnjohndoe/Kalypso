@@ -63,9 +63,8 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
-import org.kalypso.model.hydrology.internal.preprocessing.timeseries.GrapWriter;
-import org.kalypso.model.hydrology.internal.preprocessing.timeseries.RangeFactor;
+import org.kalypso.model.hydrology.internal.preprocessing.preparation.NetElement;
+import org.kalypso.model.hydrology.internal.preprocessing.preparation.TimeseriesFileManager;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -84,7 +83,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author Gernot Belger
  */
-public class TsFileWriter
+class TsFileWriter
 {
   private final Logger m_logger;
 
@@ -290,14 +289,14 @@ public class TsFileWriter
       {
         if( statNFE.getName().equals( synthNKey ) )
         {
-          final List< ? > statNParameterList = (List< ? >) statNFE.getProperty( NaModelConstants.STATNPARA_MEMBER );
+          final List< ? > statNParameterList = (List< ? >)statNFE.getProperty( NaModelConstants.STATNPARA_MEMBER );
           for( final Object object : statNParameterList )
           {
-            final Feature fe = (Feature) object;
-            final String annuality = Double.toString( 1d / (Double) fe.getProperty( NaModelConstants.STATN_PROP_XJAH ) );
+            final Feature fe = (Feature)object;
+            final String annuality = Double.toString( 1d / (Double)fe.getProperty( NaModelConstants.STATN_PROP_XJAH ) );
             if( annuality.equals( annualityKey.toString() ) )
             {
-              final IObservation tnProp = (IObservation) fe.getProperty( NaModelConstants.STATN_PROP_STATN_DIAG );
+              final IObservation tnProp = (IObservation)fe.getProperty( NaModelConstants.STATN_PROP_STATN_DIAG );
               if( tnProp != null )
               {
                 final IObservation observation = tnProp;
@@ -313,11 +312,11 @@ public class TsFileWriter
                 // + annualityKey );
                 for( int row = 0; row < count; row++ )
                 {
-                  final Double minutesValue = (Double) values.get( row, minutesAxis );
+                  final Double minutesValue = (Double)values.get( row, minutesAxis );
                   final Double hoursValue = minutesValue / 60d;
                   if( hoursValue.equals( m_metaControl.getDurationHours() ) )
                   {
-                    final Double precipitationValue = (Double) values.get( row, precipitationAxis );
+                    final Double precipitationValue = (Double)values.get( row, precipitationAxis );
                     buffer.append( FortranFormatHelper.printf( hoursValue, "f9.3" ) + " " + FortranFormatHelper.printf( precipitationValue, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                   }
                 }

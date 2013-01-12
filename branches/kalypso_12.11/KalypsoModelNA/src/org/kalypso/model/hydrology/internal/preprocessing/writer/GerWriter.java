@@ -51,13 +51,13 @@ import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.channels.VirtualChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
+import org.kalypso.model.hydrology.internal.preprocessing.preparation.NetElement;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author doemming
  */
-public class GerWriter extends AbstractCoreFileWriter
+class GerWriter extends AbstractCoreFileWriter
 {
   private static final int VIRTUALCHANNEL = 0;
 
@@ -106,7 +106,7 @@ public class GerWriter extends AbstractCoreFileWriter
     {
       writer.println( KMCHANNEL );
 
-      final KMChannel kmChannel = (KMChannel) channel;
+      final KMChannel kmChannel = (KMChannel)channel;
       final double faktorRkf = kmChannel.getFaktorRkf();
       final double faktorRnf = kmChannel.getFaktorRnf();
       final IFeatureBindingCollection<KMParameter> parameters = kmChannel.getParameters();

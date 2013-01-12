@@ -27,19 +27,18 @@
  *
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.model.hydrology.internal.preprocessing.net.visitors;
+package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 /**
  * @author doemming
  */
-public class NetElementCircleFinder
+class NetElementCircleFinder
 {
   private final NetElement m_testNetElement;
 

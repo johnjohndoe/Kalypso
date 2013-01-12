@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing.net;
+package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -48,7 +48,6 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

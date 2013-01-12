@@ -72,9 +72,8 @@ import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
-import org.kalypso.model.hydrology.internal.preprocessing.timeseries.GrapWriter;
+import org.kalypso.model.hydrology.internal.preprocessing.preparation.NetElement;
+import org.kalypso.model.hydrology.internal.preprocessing.preparation.RelevantNetElements;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -88,10 +87,10 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Writes the collected net elements etc. into the .ntz file.
- *
+ * 
  * @author doemming
  */
-public class NetFileWriter extends AbstractCoreFileWriter
+class NetFileWriter extends AbstractCoreFileWriter
 {
   private final IStatusCollector m_log = new StatusCollector( ModelNA.PLUGIN_ID );
 
@@ -106,7 +105,6 @@ public class NetFileWriter extends AbstractCoreFileWriter
   private final NaAsciiDirs m_asciiDirs;
 
   private final URL m_zmlContext;
-
 
   public NetFileWriter( final NaAsciiDirs asciiDirs, final RelevantNetElements relevantElements, final IDManager idManager, final URL zmlContext, final NAControl metaControl, final Logger logger )
   {
@@ -214,7 +212,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     /* validation */
     final int count = countZuflussBeans( qqRelationBean, branchingBean, zuflussLinkBean );
     if( count > 1 )
-      m_log.add( IStatus.WARNING, Messages.getString("NetFileWriter.0"), null, node.getName() ); //$NON-NLS-1$
+      m_log.add( IStatus.WARNING, Messages.getString( "NetFileWriter.0" ), null, node.getName() ); //$NON-NLS-1$
 
     // QQ has the priority over "Verzweigung", and all of them are mutually exclusive so this is safe
     if( qqRelationBean != null )
@@ -400,6 +398,6 @@ public class NetFileWriter extends AbstractCoreFileWriter
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatusOrOK( Messages.getString("NetFileWriter.2") ); //$NON-NLS-1$
+    return m_log.asMultiStatusOrOK( Messages.getString( "NetFileWriter.2" ) ); //$NON-NLS-1$
   }
 }

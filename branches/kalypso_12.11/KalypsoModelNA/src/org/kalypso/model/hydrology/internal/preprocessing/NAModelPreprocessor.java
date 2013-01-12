@@ -56,19 +56,24 @@ import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
-import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
-import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
+import org.kalypso.model.hydrology.internal.preprocessing.preparation.INaPreparedData;
+import org.kalypso.model.hydrology.internal.preprocessing.preparation.NaPreprocessingPreparator;
+import org.kalypso.model.hydrology.internal.preprocessing.resolve.NaModelTweaker;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.NaAsciiWriter;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.osgi.framework.Version;
 
 /**
  * Converts KalypsoHydrology gml files to Kalypso-NA ascii files.
@@ -77,8 +82,6 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class NAModelPreprocessor
 {
-  private RelevantNetElements m_relevantElements;
-
   private final IDManager m_idManager = new IDManager();
 
   private final INaSimulationData m_simulationData;
@@ -87,14 +90,15 @@ public class NAModelPreprocessor
 
   private final NaAsciiDirs m_asciiDirs;
 
-  private TimeseriesFileManager m_tsFileManager;
+  private INaPreparedData m_preparedData;
 
-  private NaCatchmentData m_catchmentData;
+  private final Version m_calcCoreVersion;
 
-  public NAModelPreprocessor( final NaAsciiDirs asciiDirs, final INaSimulationData simulationData, final Logger logger )
+  public NAModelPreprocessor( final NaAsciiDirs asciiDirs, final INaSimulationData simulationData, final Version calcCoreVersion, final Logger logger )
   {
     m_asciiDirs = asciiDirs;
     m_simulationData = simulationData;
+    m_calcCoreVersion = calcCoreVersion;
     m_logger = logger;
   }
 
@@ -134,6 +138,10 @@ public class NAModelPreprocessor
     final NAControl metaControl = m_simulationData.getMetaControl();
     final URL preprocesssedASCII = m_simulationData.getPreprocessedASCII();
     final NaModell naModel = m_simulationData.getNaModel();
+    final NAOptimize optimizeConfig = m_simulationData.getNaOptimize();
+    final InitialValues initialValues = m_simulationData.getInitialValues();
+    final GMLWorkspace syntWorkspace = m_simulationData.getSynthNWorkspace();
+    final Parameter parameter = m_simulationData.getParameter();
 
     final Node rootNode = naOptimize == null ? null : naOptimize.getRootNode();
 
@@ -152,12 +160,13 @@ public class NAModelPreprocessor
 
     monitor.setMessage( Messages.getString( "NAModelPreprocessor.1" ) ); //$NON-NLS-1$
 
-    /* build catchments */
-    m_simulationData.initLanduseHash( m_logger );
+    // step 1: resolve model
 
+    /* build catchments */
+    final ParameterHash landuseHash = new ParameterHash( parameter, m_logger );
+    // FIXME: move into resolve
     /* first, dissolve hydrotopes */
     final HydrotopeCollection hydrotopes = m_simulationData.getHydrotopCollection();
-    final ParameterHash landuseHash = m_simulationData.getLanduseHash();
     final NaCatchmentData catchmentData = new NaCatchmentData( landuseHash );
     final IStatus status = catchmentData.addHydrotopes( naModel, hydrotopes, true );
     if( !status.isOK() )
@@ -167,22 +176,14 @@ public class NAModelPreprocessor
     naModelTweaker.tweakModel();
     checkCancel( monitor );
 
-    monitor.setMessage( Messages.getString( "NAModelPreprocessor.2" ) ); //$NON-NLS-1$
-    final NAControlConverter naControlConverter = new NAControlConverter( metaControl, m_asciiDirs.startDir );
-    naControlConverter.writeFalstart();
-    naControlConverter.writeStartFile( naControl, rootNode, naModel, m_idManager );
-    checkCancel( monitor );
+    // step 2 - final prearation before writing ascii files
+    m_preparedData = NaPreprocessingPreparator.prepareData( naControl, metaControl, naModel, initialValues, syntWorkspace, naOptimize, parameter, landuseHash, rootNode, catchmentData, m_idManager, m_calcCoreVersion, m_logger );
 
-    // write net and so on....
-    monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.23" ) ); //$NON-NLS-1$
-    final NAModellConverter naModellConverter = new NAModellConverter( m_idManager, m_simulationData, m_asciiDirs, m_logger );
+    // step 3 - do write ascii files
+    final NaAsciiWriter asciiWriter = new NaAsciiWriter( m_preparedData, m_asciiDirs );
+    final IStatus asciiStatus = asciiWriter.writeBaseFiles( monitor );
+    log.add( asciiStatus );
 
-    initNetData( rootNode, catchmentData );
-
-    naModellConverter.writeUncalibratedFiles( m_relevantElements, m_tsFileManager, m_catchmentData );
-    log.add( naModellConverter.getStatus() );
-
-    final NAOptimize optimizeConfig = m_simulationData.getNaOptimize();
     processCallibrationFiles( optimizeConfig, monitor );
 
     checkCancel( monitor );
@@ -210,34 +211,8 @@ public class NAModelPreprocessor
   {
     monitor.setMessage( Messages.getString( "NAModelPreprocessor.6" ) ); //$NON-NLS-1$
 
-    final NAModellConverter naModellConverter = new NAModellConverter( m_idManager, m_simulationData, m_asciiDirs, m_logger );
-
-    final CalibrationConfig config = new CalibrationConfig( optimize );
-    config.applyCalibrationFactors();
-
-    naModellConverter.writeCalibratedFiles( m_relevantElements, m_tsFileManager );
-  }
-
-  private void initNetData( final Node rootNode, final NaCatchmentData catchmentData ) throws SimulationException
-  {
-    final NaModell naModel = m_simulationData.getNaModel();
-    final NAControl metaControl = m_simulationData.getMetaControl();
-
-    final NetFileAnalyser nodeManager = new NetFileAnalyser( rootNode, m_logger, naModel, m_idManager );
-    m_relevantElements = nodeManager.analyseNet();
-
-    /* restrict catchment data to relevant elements */
-    m_catchmentData = new NaCatchmentData( m_simulationData.getLanduseHash() );
-
-    final Catchment[] relevantCatchments = m_relevantElements.getCatchmentsSorted( m_idManager );
-    for( final Catchment relevantCatchment : relevantCatchments )
-    {
-      final CatchmentInfo relevantInfo = catchmentData.getInfo( relevantCatchment );
-      m_catchmentData.addInfo( relevantInfo );
-    }
-
-    final boolean usePrecipitationForm = metaControl.isUsePrecipitationForm();
-    m_tsFileManager = new TimeseriesFileManager( m_idManager, usePrecipitationForm );
+    final NaAsciiWriter asciiWriter = new NaAsciiWriter( m_preparedData, m_asciiDirs );
+    asciiWriter.writeCalibrationFiles( optimize );
   }
 
   private void checkCancel( final ISimulationMonitor monitor )
@@ -248,6 +223,6 @@ public class NAModelPreprocessor
 
   public NaCatchmentData getCatchmentData( )
   {
-    return m_catchmentData;
+    return m_preparedData.getCatchmentData();
   }
 }

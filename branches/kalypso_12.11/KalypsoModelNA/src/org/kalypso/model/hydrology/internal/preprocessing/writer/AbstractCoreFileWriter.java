@@ -59,6 +59,7 @@ abstract class AbstractCoreFileWriter
     m_logger = logger;
   }
 
+  @Deprecated
   protected final Logger getLogger( )
   {
     return m_logger;

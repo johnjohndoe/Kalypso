@@ -37,7 +37,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  * @author Gernot Belger
  */
-public class CatchmentIndex
+class CatchmentIndex
 {
   private final Catchment[] m_catchments;
 

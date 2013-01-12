@@ -38,37 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing.timeseries;
+package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
-import java.util.Date;
+import java.util.Comparator;
 
-import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.internal.IDManager;
 
 /**
+ * Compares catchments by its ascii id.
+ * 
  * @author Gernot Belger
  */
-public class RangeFactor
+class CatchmentIDComparator implements Comparator<Catchment>
 {
-  private final DateRange m_range;
+  private final IDManager m_idManager;
 
-  private final double m_factor;
-
-  public RangeFactor( final DateRange range, final double factor )
+  public CatchmentIDComparator( final IDManager idManager )
   {
-    m_range = range;
-    m_factor = factor;
+    m_idManager = idManager;
   }
 
   /**
-   * Applies this factor to the value. The factor is applied iff the date lies inside our range; else simply the
-   * original value is returned.
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public double apply( final Date date, final double value )
+  @Override
+  public int compare( final Catchment c1, final Catchment c2 )
   {
-    if( m_range != null && m_range.containsInclusive( date ) )
-      return value * m_factor;
-
-    return value;
+    final int id1 = m_idManager.getAsciiID( c1 );
+    final int id2 = m_idManager.getAsciiID( c2 );
+    return id1 - id2;
   }
 
 }
