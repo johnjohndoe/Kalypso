@@ -41,8 +41,9 @@
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
-import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.IDManager;
@@ -68,21 +69,21 @@ class ZftWriter extends AbstractCoreFileWriter
 
   private final IDManager m_idManager;
 
-  public ZftWriter( final IDManager idManager, final Logger logger, final Catchment[] catchments )
+  public ZftWriter( final IDManager idManager, final Catchment[] catchments )
   {
-    super( logger );
-
     m_idManager = idManager;
     m_catchments = catchments;
   }
 
   @Override
-  protected void writeContent( final PrintWriter writer ) throws NAPreprocessorException
+  protected IStatus writeContent( final PrintWriter writer ) throws NAPreprocessorException
   {
     try
     {
       for( final Catchment catchment : m_catchments )
         writeCatchment( writer, catchment );
+
+      return Status.OK_STATUS;
     }
     catch( final SensorException e )
     {

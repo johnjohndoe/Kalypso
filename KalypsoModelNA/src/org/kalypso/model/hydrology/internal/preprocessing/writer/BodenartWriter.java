@@ -43,8 +43,9 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -58,15 +59,13 @@ class BodenartWriter extends AbstractCoreFileWriter
 {
   private final Parameter m_parameter;
 
-  public BodenartWriter( final Parameter parameter, final Logger logger )
+  public BodenartWriter( final Parameter parameter )
   {
-    super( logger );
-
     m_parameter = parameter;
   }
 
   @Override
-  protected void writeContent( final PrintWriter writer )
+  protected IStatus writeContent( final PrintWriter writer )
   {
     final List< ? > list = (List< ? >)m_parameter.getProperty( Parameter.MEMBER_SOIL_LAYER );
 
@@ -80,6 +79,8 @@ class BodenartWriter extends AbstractCoreFileWriter
       // TODO: nur die schreiben, die auch in Bodentyp verwendet werden.
       writeFeature( writer, bodenartFE );
     }
+
+    return Status.OK_STATUS;
   }
 
   private void writeFeature( final PrintWriter writer, final Feature feature )

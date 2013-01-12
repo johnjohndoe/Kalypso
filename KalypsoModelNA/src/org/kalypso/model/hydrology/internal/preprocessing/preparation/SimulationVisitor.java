@@ -47,7 +47,7 @@ import java.util.Set;
 
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 
 /**
  * @author doemming
@@ -65,12 +65,8 @@ class SimulationVisitor extends NetElementVisitor
     m_relevantNetElements = relevantElements;
   }
 
-  /**
-   * @throws Exception
-   * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.model.hydrology.internal.preprocessing.net.NetElement)
-   */
   @Override
-  public boolean visit( final NetElement netElement ) throws SimulationException
+  public boolean visit( final NetElement netElement ) throws NAPreprocessorException
   {
     if( m_simulated.contains( netElement ) )
       return false;
@@ -92,7 +88,7 @@ class SimulationVisitor extends NetElementVisitor
     return true;
   }
 
-  private void checkCycle( final NetElement netElement ) throws SimulationException
+  private void checkCycle( final NetElement netElement ) throws NAPreprocessorException
   {
     if( m_cycleTest.contains( netElement ) )
     {
@@ -110,7 +106,7 @@ class SimulationVisitor extends NetElementVisitor
         b.append( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.4", element ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       log( b.toString() );
-      throw new SimulationException( b.toString() );
+      throw new NAPreprocessorException( b.toString() );
     }
 
     m_cycleTest.add( netElement );

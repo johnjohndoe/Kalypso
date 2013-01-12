@@ -18,8 +18,7 @@
  */
 package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
-import java.util.logging.Logger;
-
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
@@ -59,12 +58,6 @@ public interface INaPreparedData
 
   RelevantNetElements getRelevantElements( );
 
-  /**
-   * @deprecated Use new logging mechanism instead
-   */
-  @Deprecated
-  Logger getLogger( );
-
   TimeseriesFileManager getTimeseriesManager( );
 
   Parameter getParameter( );
@@ -74,4 +67,6 @@ public interface INaPreparedData
   InitialValues getInitialValues( );
 
   Version getCalcCoreVersion( );
+
+  IStatus getNetStatus( );
 }

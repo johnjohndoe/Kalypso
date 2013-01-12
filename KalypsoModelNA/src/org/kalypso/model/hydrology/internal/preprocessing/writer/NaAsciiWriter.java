@@ -33,7 +33,6 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.INaPreparedData;
 import org.kalypso.simulation.core.ISimulationMonitor;
-import org.kalypso.simulation.core.SimulationException;
 
 /**
  * @author Gernot
@@ -50,7 +49,7 @@ public class NaAsciiWriter
     m_asciiDirs = asciiDirs;
   }
 
-  public IStatus writeBaseFiles( final ISimulationMonitor monitor ) throws IOException, NAPreprocessorException, SimulationException
+  public IStatus writeBaseFiles( final ISimulationMonitor monitor ) throws IOException, NAPreprocessorException
   {
     monitor.setMessage( Messages.getString( "NAModelPreprocessor.2" ) ); //$NON-NLS-1$
 
@@ -71,17 +70,16 @@ public class NaAsciiWriter
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.23" ) ); //$NON-NLS-1$
 
     final NAModellConverter naModellConverter = new NAModellConverter( m_preparedData, m_asciiDirs );
-    naModellConverter.writeUncalibratedFiles();
-    return naModellConverter.getStatus();
+    return naModellConverter.writeUncalibratedFiles();
   }
 
-  public void writeCalibrationFiles( final NAOptimize optimize ) throws IOException, NAPreprocessorException
+  public IStatus writeCalibrationFiles( final NAOptimize optimize ) throws IOException, NAPreprocessorException
   {
     final NAModellConverter naModellConverter = new NAModellConverter( m_preparedData, m_asciiDirs );
 
     final CalibrationConfig config = new CalibrationConfig( optimize );
     config.applyCalibrationFactors();
 
-    naModellConverter.writeCalibratedFiles();
+    return naModellConverter.writeCalibratedFiles();
   }
 }

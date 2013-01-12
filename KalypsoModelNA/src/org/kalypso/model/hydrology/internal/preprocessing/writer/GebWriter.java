@@ -42,15 +42,16 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Bodenschichtkorrektur;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Grundwasserabfluss;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.TimeseriesFileManager;
@@ -61,8 +62,6 @@ import org.kalypso.ogc.sensor.IObservation;
  */
 class GebWriter extends AbstractCoreFileWriter
 {
-  private final Logger m_logger;
-
   private final Catchment[] m_catchments;
 
   private final TimeseriesFileManager m_fileManager;
@@ -71,30 +70,32 @@ class GebWriter extends AbstractCoreFileWriter
 
   private final IDManager m_idManager;
 
-  public GebWriter( final Logger logger, final Catchment[] catchments, final NAControl naControl, final TimeseriesFileManager fileManager, final IDManager idManager )
+  private StatusCollector m_log;
+
+  public GebWriter( final Catchment[] catchments, final NAControl naControl, final TimeseriesFileManager fileManager, final IDManager idManager )
   {
-    super( logger );
-
     m_idManager = idManager;
-
     m_metaControl = naControl;
-    m_logger = logger;
     m_catchments = catchments;
     m_fileManager = fileManager;
   }
 
   @Override
-  protected void writeContent( final PrintWriter writer ) throws NAPreprocessorException
+  protected IStatus writeContent( final PrintWriter writer ) throws NAPreprocessorException
   {
+    m_log = new StatusCollector( ModelNA.PLUGIN_ID );
+
     for( final Catchment catchment : m_catchments )
       writeFeature( writer, catchment );
+
+    return m_log.asMultiStatusOrOK( Messages.getString("GebWriter.0") ); //$NON-NLS-1$
   }
 
   private void writeFeature( final PrintWriter writer, final Catchment catchment ) throws NAPreprocessorException
   {
     // 0
     final int asciiID = m_idManager.getAsciiID( catchment );
-    writer.append( String.format( Locale.US, "%16d%7d\n", asciiID, 7 ) ); //$NON-NLS-1$
+    writer.printf( Locale.US, "%16d%7d\n", asciiID, 7 ); //$NON-NLS-1$
 
     // 1 (empty line)
     writer.append( "\n" ); //$NON-NLS-1$
@@ -113,33 +114,27 @@ class GebWriter extends AbstractCoreFileWriter
     // 3
     // TODO: getNiederschlagEingabeDateiString is written twice here, check if it is correct
     final String niederschlagFile = m_fileManager.getNiederschlagEingabeDateiString( catchment );
-    writer.append( String.format( Locale.US, "%1$c %2$s %2$s %3$5.2f\n", m_metaControl.isUsePrecipitationForm() ? 's' : 'n', niederschlagFile, catchment.getFaktn() ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    writer.printf( Locale.US, "%1$c %2$s %2$s %3$5.2f\n", m_metaControl.isUsePrecipitationForm() ? 's' : 'n', niederschlagFile, catchment.getFaktn() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // 4-6
     final String temperaturFile = m_fileManager.getTemperaturEingabeDateiString( catchment );
     final String verdunstungFile = m_fileManager.getVerdunstungEingabeFilename( catchment );
-    writer.append( String.format( Locale.US, "%s %s\n", temperaturFile, verdunstungFile ) ); //$NON-NLS-1$
+    writer.printf( Locale.US, "%s %s\n", temperaturFile, verdunstungFile ); //$NON-NLS-1$
 
     // Zeitflächenfunktion
     final IObservation zft = catchment.getZft();
     if( zft == null )
     {
-      final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.0", asciiID ); //$NON-NLS-1$
-      m_logger.log( Level.WARNING, msg );
-
-      writer.append( "we999.zfl\n" ); //$NON-NLS-1$
-
-      // BUG: this can never work, as the we999 file is not available
-      // TODO: copy the we999 into the inp.dat folder or stop calculation!
+      final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.0", catchment.getName() ); //$NON-NLS-1$
+      throw new NAPreprocessorException( msg );
     }
-    else
-      writer.append( "we_nat.zft\n" ); //$NON-NLS-1$
 
+    writer.append( "we_nat.zft\n" ); //$NON-NLS-1$
     writer.append( "we.hyd\n" ); //$NON-NLS-1$
 
     // 7
     // (snowtype,a15)(ftem,*)_(fver,*)
-    writer.format( "%-15s%s %s\n", catchment.getSnowtype(), catchment.getFtem(), catchment.getFver() ); //$NON-NLS-1$
+    writer.printf( "%-15s%s %s\n", catchment.getSnowtype(), catchment.getFtem(), catchment.getFver() ); //$NON-NLS-1$
 
     // 8
     writeBodenKorrektur( writer, catchment );
@@ -147,7 +142,7 @@ class GebWriter extends AbstractCoreFileWriter
     // 10 (____(f_eva,f4.2)_(aint,f3.1)__(aigw,f6.2)____(fint,f4.2)____(ftra,f4.2))
     // JH: only "aigw" from gml. other parameters are not used by fortran program - dummys!
     final double aigw = catchment.getFaktorAigw() * catchment.getAigw();
-    writer.append( String.format( Locale.US, "%8.2f %3.1f %7.2f %7.2f %7.2f\n", 1.0, 0.0, aigw, 0.0, 0.0 ) ); //$NON-NLS-1$
+    writer.printf( Locale.US, "%8.2f %3.1f %7.2f %7.2f %7.2f\n", 1.0, 0.0, aigw, 0.0, 0.0 ); //$NON-NLS-1$
 
     // 11 (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*))
     // if correction factors of retention constants are choosen, retention constants correction
@@ -164,13 +159,13 @@ class GebWriter extends AbstractCoreFileWriter
     final double retgw = catchment.getRetgw() * catchment.getFaktorRetgw();
     final double retklu = catchment.getRetklu() * catchment.getFaktorRetklu();
 
-    writer.append( String.format( Locale.US, "%f %f %f %f %f %f\n", retvs, retob, retint, retbas, retgw, retklu ) ); //$NON-NLS-1$
+    writer.printf( Locale.US, "%f %f %f %f %f %f\n", retvs, retob, retint, retbas, retgw, retklu ); //$NON-NLS-1$
 
     // 12-14
     writeGrundwasserabfluss( catchment, writer );
 
     // 15
-    writer.append( String.format( Locale.US, "%f %f %f %f %f %f", catchment.getHgru(), catchment.getHgro(), catchment.getRtr(), catchment.getPors(), catchment.getGwsent(), catchment.getKlupor() ) ); //$NON-NLS-1$
+    writer.printf( Locale.US, "%f %f %f %f %f %f", catchment.getHgru(), catchment.getHgro(), catchment.getRtr(), catchment.getPors(), catchment.getGwsent(), catchment.getKlupor() ); //$NON-NLS-1$
 
     // tiefengrundwasser
     final Node izknNode = catchment.getIzknNode();
@@ -178,7 +173,7 @@ class GebWriter extends AbstractCoreFileWriter
     if( izknNode == null )
       writer.append( " 0\n" ); //$NON-NLS-1$
     else
-      writer.append( String.format( Locale.US, " %4d\n", m_idManager.getAsciiID( izknNode ) ) ); //$NON-NLS-1$
+      writer.printf( Locale.US, " %4d\n", m_idManager.getAsciiID( izknNode ) ); //$NON-NLS-1$
 
     // KommentarZeile
     writer.append( "ende gebietsdatensatz\n" ); //$NON-NLS-1$//$NON-NLS-2$
@@ -193,14 +188,14 @@ class GebWriter extends AbstractCoreFileWriter
       return;
 
     final double sumGwwi = catchment.getSumGwwi();
+    final String catchmentName = catchment.getName();
     if( sumGwwi > 1.001 )
-      throw new NAPreprocessorException( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", catchment.getName() ) ); //$NON-NLS-1$
+      throw new NAPreprocessorException( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", catchmentName ) ); //$NON-NLS-1$
 
     if( sumGwwi < 0.999 )
     {
-      final int asciiID = m_idManager.getAsciiID( catchment );
-      m_logger.log( Level.WARNING, String.format( Locale.US, Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ), catchment.getName(), asciiID, sumGwwi * 100.0 ) ); //$NON-NLS-1$
-      m_logger.log( Level.WARNING, String.format( Locale.US, Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.92" ), 1 - sumGwwi * 100.0 ) ); //$NON-NLS-1$
+      final String formatString = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ); //$NON-NLS-1$
+      m_log.add( IStatus.WARNING, formatString, null, catchmentName, sumGwwi * 100.0 );
     }
 
     writeLine13( catchment, sumGwwi, writer );

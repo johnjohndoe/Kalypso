@@ -41,8 +41,9 @@
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
-import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.Snow;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -55,15 +56,13 @@ class SnowtypWriter extends AbstractCoreFileWriter
 {
   private final Parameter m_parameter;
 
-  public SnowtypWriter( final Parameter parameter, final Logger logger )
+  public SnowtypWriter( final Parameter parameter )
   {
-    super( logger );
-
     m_parameter = parameter;
   }
 
   @Override
-  protected void writeContent( final PrintWriter writer )
+  protected IStatus writeContent( final PrintWriter writer )
   {
     writer.append( Messages.getString( "org.kalypso.convert.namodel.manager.SchneeManager.0" ) ); //$NON-NLS-1$
     writer.append( "\n/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
@@ -75,6 +74,8 @@ class SnowtypWriter extends AbstractCoreFileWriter
       // TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
       writeSnow( writer, snow );
     }
+
+    return Status.OK_STATUS;
   }
 
   private void writeSnow( final PrintWriter snowBuffer, final Snow snow )

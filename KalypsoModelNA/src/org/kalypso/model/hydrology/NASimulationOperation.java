@@ -104,9 +104,6 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     m_simulationData = simulationData;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
@@ -151,7 +148,7 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     catch( final SimulationException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_0"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString( "NASimulationOperation_0" ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -181,11 +178,11 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     }
     catch( final MalformedURLException e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_1"), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString( "NASimulationOperation_1" ), e ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_2"), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString( "NASimulationOperation_2" ), e ) ); //$NON-NLS-1$
     }
   }
 
@@ -208,7 +205,7 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
       final File logDir = new File( resultDir, "Log" ); //$NON-NLS-1$
       simulationLogFile = new File( logDir, "simulationLog.gml" ); //$NON-NLS-1$
       if( !simulationLogFile.exists() )
-        return new Status( IStatus.INFO, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_6") ); //$NON-NLS-1$
+        return new Status( IStatus.INFO, ModelNA.PLUGIN_ID, Messages.getString( "NASimulationOperation_6" ) ); //$NON-NLS-1$
 
       /* Load the workspace. */
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( simulationLogFile, null );
@@ -217,13 +214,13 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
       final Feature rootFeature = workspace.getRootFeature();
 
       /* Cast to status collection. */
-      final StatusCollection statusCollection = (StatusCollection) rootFeature;
+      final StatusCollection statusCollection = (StatusCollection)rootFeature;
 
       return statusCollection.toStatus();
     }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_7"), ex ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString( "NASimulationOperation_7" ), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -261,7 +258,7 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     }
     catch( final IOException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString("NASimulationOperation_8"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, Messages.getString( "NASimulationOperation_8" ), e ); //$NON-NLS-1$
       ModelNA.getDefault().getLog().log( status );
     }
   }

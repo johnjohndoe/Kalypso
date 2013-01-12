@@ -50,13 +50,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.KontEntnahme;
@@ -68,7 +66,6 @@ import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.model.nodes.Verzweigung;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
@@ -92,8 +89,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 class NetFileWriter extends AbstractCoreFileWriter
 {
-  private final IStatusCollector m_log = new StatusCollector( ModelNA.PLUGIN_ID );
-
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
   private final RelevantNetElements m_relevantElements;
@@ -106,10 +101,8 @@ class NetFileWriter extends AbstractCoreFileWriter
 
   private final URL m_zmlContext;
 
-  public NetFileWriter( final NaAsciiDirs asciiDirs, final RelevantNetElements relevantElements, final IDManager idManager, final URL zmlContext, final NAControl metaControl, final Logger logger )
+  public NetFileWriter( final NaAsciiDirs asciiDirs, final RelevantNetElements relevantElements, final IDManager idManager, final URL zmlContext, final NAControl metaControl )
   {
-    super( logger );
-
     m_asciiDirs = asciiDirs;
 
     m_relevantElements = relevantElements;
@@ -119,7 +112,7 @@ class NetFileWriter extends AbstractCoreFileWriter
   }
 
   @Override
-  protected void writeContent( final PrintWriter writer ) throws IOException, NAPreprocessorException
+  protected IStatus writeContent( final PrintWriter writer ) throws IOException, NAPreprocessorException
   {
     final NetElement[] channels = m_relevantElements.getChannels();
     for( final NetElement netElement : channels )
@@ -139,6 +132,8 @@ class NetFileWriter extends AbstractCoreFileWriter
       writer.append( "99999\n" ); //$NON-NLS-1$
       appendNodeList( nodeCollector, writer );
       writer.append( "99999\n" ); //$NON-NLS-1$
+
+      return Status.OK_STATUS;
     }
     catch( final SensorException e )
     {
@@ -147,7 +142,7 @@ class NetFileWriter extends AbstractCoreFileWriter
     }
   }
 
-  private void appendNodeList( final Node[] nodes, final PrintWriter netBuffer ) throws IOException, SensorException
+  private void appendNodeList( final Node[] nodes, final PrintWriter netBuffer ) throws IOException, SensorException, NAPreprocessorException
   {
     // FIXME: theses nodes do not contain the branching nodes
     final Map<Node, ZuflussBean> nodeInfos = new LinkedHashMap<>();
@@ -202,7 +197,7 @@ class NetFileWriter extends AbstractCoreFileWriter
     netBuffer.append( "10000    0    0    0    0    0\n" ); //$NON-NLS-1$
   }
 
-  private ZuflussBean createZuflussBean( final Node node ) throws SensorException, IOException
+  private ZuflussBean createZuflussBean( final Node node ) throws SensorException, IOException, NAPreprocessorException
   {
     /* first create all possible beans, so we can check if we have multiple branchings */
     final ZuflussBean qqRelationBean = createQQRelationZuflussBean( node );
@@ -212,7 +207,10 @@ class NetFileWriter extends AbstractCoreFileWriter
     /* validation */
     final int count = countZuflussBeans( qqRelationBean, branchingBean, zuflussLinkBean );
     if( count > 1 )
-      m_log.add( IStatus.WARNING, Messages.getString( "NetFileWriter.0" ), null, node.getName() ); //$NON-NLS-1$
+    {
+      final String message = String.format( Messages.getString( "NetFileWriter.0" ), node.getName() ); //$NON-NLS-1$
+      throw new NAPreprocessorException( message );
+    }
 
     // QQ has the priority over "Verzweigung", and all of them are mutually exclusive so this is safe
     if( qqRelationBean != null )
@@ -394,10 +392,5 @@ class NetFileWriter extends AbstractCoreFileWriter
   {
     final int asciiID = m_idManager.getAsciiID( nodeFE );
     return "Z_" + Integer.toString( asciiID ).trim() + ".zufluss"; //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  public IStatus getStatus( )
-  {
-    return m_log.asMultiStatusOrOK( Messages.getString( "NetFileWriter.2" ) ); //$NON-NLS-1$
   }
 }

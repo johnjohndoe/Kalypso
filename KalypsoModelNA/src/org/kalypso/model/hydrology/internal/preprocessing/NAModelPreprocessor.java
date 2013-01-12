@@ -43,7 +43,6 @@ package org.kalypso.model.hydrology.internal.preprocessing;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -71,7 +70,6 @@ import org.kalypso.model.hydrology.internal.preprocessing.preparation.NaPreproce
 import org.kalypso.model.hydrology.internal.preprocessing.resolve.NaModelTweaker;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NaAsciiWriter;
 import org.kalypso.simulation.core.ISimulationMonitor;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.osgi.framework.Version;
 
@@ -86,20 +84,17 @@ public class NAModelPreprocessor
 
   private final INaSimulationData m_simulationData;
 
-  private final Logger m_logger;
-
   private final NaAsciiDirs m_asciiDirs;
 
   private INaPreparedData m_preparedData;
 
   private final Version m_calcCoreVersion;
 
-  public NAModelPreprocessor( final NaAsciiDirs asciiDirs, final INaSimulationData simulationData, final Version calcCoreVersion, final Logger logger )
+  public NAModelPreprocessor( final NaAsciiDirs asciiDirs, final INaSimulationData simulationData, final Version calcCoreVersion )
   {
     m_asciiDirs = asciiDirs;
     m_simulationData = simulationData;
     m_calcCoreVersion = calcCoreVersion;
-    m_logger = logger;
   }
 
   public IDManager getIdManager( )
@@ -107,17 +102,13 @@ public class NAModelPreprocessor
     return m_idManager;
   }
 
-  public IStatus process( final ISimulationMonitor monitor ) throws NAPreprocessorException, SimulationException
+  public IStatus process( final ISimulationMonitor monitor ) throws NAPreprocessorException
   {
     try
     {
       return doProcess( monitor );
     }
     catch( final NAPreprocessorException e )
-    {
-      throw e;
-    }
-    catch( final SimulationException e )
     {
       throw e;
     }
@@ -129,7 +120,7 @@ public class NAModelPreprocessor
     }
   }
 
-  private IStatus doProcess( final ISimulationMonitor monitor ) throws SimulationException, NAPreprocessorException, IOException
+  private IStatus doProcess( final ISimulationMonitor monitor ) throws NAPreprocessorException, IOException
   {
     final IStatusCollector log = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
 
@@ -163,7 +154,11 @@ public class NAModelPreprocessor
     // step 1: resolve model
 
     /* build catchments */
-    final ParameterHash landuseHash = new ParameterHash( parameter, m_logger );
+    final ParameterHash landuseHash = new ParameterHash( parameter );
+    final IStatus parameterStatus = landuseHash.getStatus();
+    if( !parameterStatus.isOK() )
+      log.add( parameterStatus );
+
     // FIXME: move into resolve
     /* first, dissolve hydrotopes */
     final HydrotopeCollection hydrotopes = m_simulationData.getHydrotopCollection();
@@ -177,21 +172,35 @@ public class NAModelPreprocessor
     checkCancel( monitor );
 
     // step 2 - final prearation before writing ascii files
-    m_preparedData = NaPreprocessingPreparator.prepareData( naControl, metaControl, naModel, initialValues, syntWorkspace, naOptimize, parameter, landuseHash, rootNode, catchmentData, m_idManager, m_calcCoreVersion, m_logger );
+    m_preparedData = NaPreprocessingPreparator.prepareData( naControl, metaControl, naModel, initialValues, syntWorkspace, naOptimize, parameter, landuseHash, rootNode, catchmentData, m_idManager, m_calcCoreVersion );
+    final IStatus netStatus = m_preparedData.getNetStatus();
+    if( !netStatus.isOK() )
+      log.add( netStatus );
 
     // step 3 - do write ascii files
     final NaAsciiWriter asciiWriter = new NaAsciiWriter( m_preparedData, m_asciiDirs );
-    final IStatus asciiStatus = asciiWriter.writeBaseFiles( monitor );
-    log.add( asciiStatus );
+    final IStatus basicStatus = asciiWriter.writeBaseFiles( monitor );
+    addAllNonOk( log, basicStatus );
 
-    processCallibrationFiles( optimizeConfig, monitor );
+    final IStatus calibrationStatus = processCallibrationFiles( optimizeConfig, monitor );
+    addAllNonOk( log, calibrationStatus );
 
     checkCancel( monitor );
 
     return log.asMultiStatus( Messages.getString( "NAModelSimulation.10" ) ); //$NON-NLS-1$
   }
 
-  private void handlePreprocessedAsciiFiles( final URL preprocesssedASCII, final File asciiDir ) throws SimulationException
+  private void addAllNonOk( final IStatusCollector log, final IStatus basicStatus )
+  {
+    final IStatus[] children = basicStatus.getChildren();
+    for( final IStatus child : children )
+    {
+      if( !child.isOK() )
+        log.add( child );
+    }
+  }
+
+  private void handlePreprocessedAsciiFiles( final URL preprocesssedASCII, final File asciiDir ) throws NAPreprocessorException
   {
     try
     {
@@ -203,16 +212,16 @@ public class NAModelPreprocessor
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new SimulationException( Messages.getString( "NAModelPreprocessor.5" ), e ); //$NON-NLS-1$
+      throw new NAPreprocessorException( Messages.getString( "NAModelPreprocessor.5" ), e ); //$NON-NLS-1$
     }
   }
 
-  public void processCallibrationFiles( final NAOptimize optimize, final ISimulationMonitor monitor ) throws IOException, NAPreprocessorException
+  public IStatus processCallibrationFiles( final NAOptimize optimize, final ISimulationMonitor monitor ) throws IOException, NAPreprocessorException
   {
     monitor.setMessage( Messages.getString( "NAModelPreprocessor.6" ) ); //$NON-NLS-1$
 
     final NaAsciiWriter asciiWriter = new NaAsciiWriter( m_preparedData, m_asciiDirs );
-    asciiWriter.writeCalibrationFiles( optimize );
+    return asciiWriter.writeCalibrationFiles( optimize );
   }
 
   private void checkCancel( final ISimulationMonitor monitor )

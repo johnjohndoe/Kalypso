@@ -43,13 +43,15 @@ package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -67,20 +69,24 @@ public class ParameterHash
 
   private final Map<String, Soiltype> m_soilTypeNameHash = new HashMap<>();
 
-  private final Logger m_logger;
+  private final IStatusCollector m_log = new StatusCollector( ModelNA.PLUGIN_ID );
 
   private final Parameter m_parameter;
 
-  public ParameterHash( final Parameter parameter, final Logger logger ) throws NAPreprocessorException
+  public ParameterHash( final Parameter parameter ) throws NAPreprocessorException
   {
     m_parameter = parameter;
-    m_logger = logger;
 
     if( parameter != null )
     {
       initLanduseHash( parameter );
       initSoilTypeHash( parameter );
     }
+  }
+
+  public IStatus getStatus( )
+  {
+    return m_log.asMultiStatusOrOK( Messages.getString("ParameterHash.1") ); //$NON-NLS-1$
   }
 
   /** Build soiltype hash for faster lookup later */
@@ -91,7 +97,7 @@ public class ParameterHash
     {
       final String name = soiltype.getName();
       if( m_soilTypeNameHash.containsKey( name ) )
-        m_logger.log( Level.WARNING, String.format( "Duplicate soil type name: %s. Second soil type will be ignored.", name ) ); //$NON-NLS-1$
+        m_log.add( IStatus.WARNING, String.format( Messages.getString("ParameterHash.2"), name ) ); //$NON-NLS-1$
       else
         m_soilTypeNameHash.put( name, soiltype );
     }
@@ -101,17 +107,17 @@ public class ParameterHash
   {
     int shortNameCounter = 0;
 
-    final List< ? > landuseList = (List< ? >) parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
+    final List< ? > landuseList = (List< ? >)parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
     for( final Object landuseElement : landuseList )
     {
-      final Feature landuseClass = (Feature) landuseElement;
+      final Feature landuseClass = (Feature)landuseElement;
       final String landuseName = landuseClass.getName();
 
       if( StringUtils.isBlank( landuseName ) )
-        throw new NAPreprocessorException( Messages.getString("ParameterHash.0") ); //$NON-NLS-1$
+        throw new NAPreprocessorException( Messages.getString( "ParameterHash.0" ) ); //$NON-NLS-1$
 
       if( m_landuseClassMap.containsKey( landuseName ) )
-        m_logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.0", landuseName ) ); //$NON-NLS-1$
+        m_log.add( IStatus.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.0", landuseName ) ); //$NON-NLS-1$
       else
       {
         final String shortName = shortenLanduseName( landuseName, shortNameCounter );
@@ -136,7 +142,7 @@ public class ParameterHash
   {
     final Feature linkedSealingFE = FeatureHelper.resolveLink( landuseClass, NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK );
 
-    return (Double) linkedSealingFE.getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING );
+    return (Double)linkedSealingFE.getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING );
   }
 
   /**

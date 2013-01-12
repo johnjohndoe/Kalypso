@@ -47,6 +47,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.binding.parameter.DRWBMSoilLayerParameter;
 import org.kalypso.model.hydrology.binding.parameter.DRWBMSoiltype;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
@@ -69,16 +71,14 @@ class BodentypWriter extends AbstractCoreFileWriter
 
   private final Version m_calcCoreVersion;
 
-  public BodentypWriter( final Parameter parameter, final Version calcCoreVersion, final Logger logger )
+  public BodentypWriter( final Parameter parameter, final Version calcCoreVersion )
   {
-    super( logger );
-
     m_parameter = parameter;
     m_calcCoreVersion = calcCoreVersion;
   }
 
   @Override
-  protected void writeContent( final PrintWriter buffer ) throws NAPreprocessorException
+  protected IStatus writeContent( final PrintWriter buffer ) throws NAPreprocessorException
   {
     buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
 
@@ -87,6 +87,8 @@ class BodentypWriter extends AbstractCoreFileWriter
 
     // write DRWBM soil types
     doWriteDRWBM( m_parameter.getDRWBMSoiltypes(), buffer );
+
+    return Status.OK_STATUS;
   }
 
   private void doWrite( final IFeatureBindingCollection<Soiltype> soiltypes, final PrintWriter buffer ) throws NAPreprocessorException

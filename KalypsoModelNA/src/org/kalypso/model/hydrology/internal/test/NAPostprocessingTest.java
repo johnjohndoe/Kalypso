@@ -138,7 +138,7 @@ public class NAPostprocessingTest
 
     final NaModell model = (NaModell)modelWorkspace.getRootFeature();
 
-    final ParameterHash landuseHash = new ParameterHash( parameter, logger );
+    final ParameterHash landuseHash = new ParameterHash( parameter );
 
     final NaCatchmentData catchmentData = new NaCatchmentData( landuseHash );
     catchmentData.addHydrotopes( model, naHydrotop, false );

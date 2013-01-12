@@ -44,10 +44,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Grundwasserabfluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -59,7 +59,7 @@ import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -77,18 +77,18 @@ class NetFileAnalyser
 {
   private final Node m_rootNode;
 
-  private final Logger m_logger;
-
   private final IDManager m_idManager;
 
   private final NaModell m_model;
 
-  public NetFileAnalyser( final Node rootNode, final Logger logger, final NaModell model, final IDManager idManager )
+  private final IStatusCollector m_log;
+
+  public NetFileAnalyser( final Node rootNode, final NaModell model, final IDManager idManager, final IStatusCollector log )
   {
     m_rootNode = rootNode;
-    m_logger = logger;
     m_model = model;
     m_idManager = idManager;
+    m_log = log;
   }
 
   /**
@@ -102,7 +102,7 @@ class NetFileAnalyser
    *          the synth precipitation workspace
    * @return a HashMap containing Channel-FeatureID (key) and NetElements (value)
    */
-  private NetElement[] generateNetElements( ) throws SimulationException
+  private NetElement[] generateNetElements( ) throws NAPreprocessorException
   {
     // x -> rootNode
     // |
@@ -135,20 +135,19 @@ class NetFileAnalyser
         if( upstreamNodeChannel == null )
         {
           final String message = String.format( Messages.getString( "NetFileAnalyser_0" ), upStreamNode.getName() ); //$NON-NLS-1$
-          throw new SimulationException( message );
+          throw new NAPreprocessorException( message );
         }
 
         if( downStreamChannelFE == null )
         {
           final String message = String.format( Messages.getString( "NetFileAnalyser_1" ), upStreamNode.getName() ); //$NON-NLS-1$
-          throw new SimulationException( message );
+          throw new NAPreprocessorException( message );
         }
 
         if( upstreamNodeChannel == downStreamChannelFE )
         {
-          logWarning( Messages.getString( "NetFileAnalyser_2" ), upstreamNodeChannel ); //$NON-NLS-1$
-          // FIXME: shouldn't we throw an exception here?
-          continue;
+          final String message = String.format( Messages.getString("NetFileAnalyser.0"), upStreamNode.getName() ); //$NON-NLS-1$
+          throw new NAPreprocessorException( message );
         }
 
         // set dependency
@@ -302,7 +301,7 @@ class NetFileAnalyser
       logLabels[i] = getLogLabel( netElements[i] );
 
     final String msg = String.format( format, (Object[])logLabels ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_logger.log( Level.WARNING, msg );
+    m_log.add( IStatus.WARNING, msg );
   }
 
   /**
@@ -326,7 +325,7 @@ class NetFileAnalyser
     return name;
   }
 
-  public RelevantNetElements analyseNet( ) throws SimulationException
+  public RelevantNetElements analyseNet( ) throws NAPreprocessorException
   {
     final RelevantNetElements relevantElements = new RelevantNetElements();
 
