@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing.writer;
+package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
 import java.io.File;
 import java.util.HashMap;
@@ -87,7 +87,7 @@ public class TimeseriesFileManager
 
   private String getEingabeFilename( final Feature feature, final String propName, final String axisType )
   {
-    final TimeseriesLinkType link = (TimeseriesLinkType) feature.getProperty( new QName( NaModelConstants.NS_NAMODELL, propName ) );
+    final TimeseriesLinkType link = (TimeseriesLinkType)feature.getProperty( new QName( NaModelConstants.NS_NAMODELL, propName ) );
     final String key = propName + link.getHref();
     return getFilename( feature, axisType, key );
   }
@@ -137,5 +137,4 @@ public class TimeseriesFileManager
 
     return STD_VERD_FILENAME;
   }
-
 }

@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,9 +57,10 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
-public class NAControlConverter
+class NAControlConverter
 {
   private static final String FILENAME_START_FILE = "we_nat_start.txt"; //$NON-NLS-1$
 

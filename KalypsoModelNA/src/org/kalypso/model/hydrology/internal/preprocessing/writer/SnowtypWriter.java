@@ -43,7 +43,6 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 import java.io.PrintWriter;
 import java.util.logging.Logger;
 
-import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.Snow;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -52,15 +51,15 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 /**
  * @author huebsch
  */
-public class SnowtypWriter extends AbstractCoreFileWriter
+class SnowtypWriter extends AbstractCoreFileWriter
 {
-  private final INaSimulationData m_data;
+  private final Parameter m_parameter;
 
-  public SnowtypWriter( final INaSimulationData data, final Logger logger )
+  public SnowtypWriter( final Parameter parameter, final Logger logger )
   {
     super( logger );
 
-    m_data = data;
+    m_parameter = parameter;
   }
 
   @Override
@@ -70,9 +69,7 @@ public class SnowtypWriter extends AbstractCoreFileWriter
     writer.append( "\n/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
     writer.append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
 
-    final Parameter parameter = m_data.getParameter();
-
-    final IFeatureBindingCollection<Snow> snowMembers = parameter.getSnow();
+    final IFeatureBindingCollection<Snow> snowMembers = m_parameter.getSnow();
     for( final Snow snow : snowMembers )
     {
       // TODO: nur die schreiben, die auch in Gebietsdatei vorkommen

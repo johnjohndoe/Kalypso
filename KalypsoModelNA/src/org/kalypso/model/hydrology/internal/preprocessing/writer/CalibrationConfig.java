@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -47,7 +47,7 @@ import org.kalypso.model.hydrology.binding.model.KMChannel;
 /**
  * @author doemming
  */
-public class CalibrationConfig
+class CalibrationConfig
 {
   private final NAOptimize m_naOptimize;
 

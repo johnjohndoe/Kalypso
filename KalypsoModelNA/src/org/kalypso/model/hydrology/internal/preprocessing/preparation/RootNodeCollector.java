@@ -38,15 +38,14 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing.net.visitors;
+package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
-public class RootNodeCollector
+class RootNodeCollector
 {
   private final List<NetElement> m_rootNetElements = new ArrayList<>();
 
@@ -59,7 +58,7 @@ public class RootNodeCollector
    * visitor also updates generate result status of nodes <br>
    * sets given root node generate result status to "true" <br>
    * sets all other nodes generate result status to "false"
-   *
+   * 
    * @author doemming
    */
   public RootNodeCollector( final NetElement[] netElements, final Node singleResultNode )

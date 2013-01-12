@@ -54,7 +54,6 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
@@ -69,15 +68,15 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
-public class NutzungWriter
+class NutzungWriter
 {
   private final File m_nutzungDir;
 
-  private final INaSimulationData m_data;
+  private final Parameter m_parameter;
 
-  public NutzungWriter( final INaSimulationData data, final File nutzungDir )
+  public NutzungWriter( final Parameter parameter, final File nutzungDir )
   {
-    m_data = data;
+    m_parameter = parameter;
     m_nutzungDir = nutzungDir;
   }
 
@@ -88,8 +87,7 @@ public class NutzungWriter
 
     try
     {
-      final Parameter parameter = m_data.getParameter();
-      final List<Feature> list = (List<Feature>)parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
+      final List<Feature> list = (List<Feature>)m_parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
       for( final Feature nutzungFE : list )
       {
         writeFeature( nutzungFE, landuseHash );

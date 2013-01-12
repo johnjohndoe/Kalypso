@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing;
+package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,11 +49,10 @@ import java.util.Map.Entry;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 /**
  * Collects the relevant net elements, that needs to be written to ascii files.
- *
+ * 
  * @author Gernot Belger
  */
 public class RelevantNetElements
@@ -66,21 +65,16 @@ public class RelevantNetElements
 
   private final List<Node> m_nodes = new ArrayList<>();
 
-  public void addChannel( final NetElement channel )
+  void addChannel( final NetElement channel )
   {
     if( !m_channels.contains( channel ) )
       m_channels.add( channel );
   }
 
-  public void addCatchment( final Catchment channel )
+  void addCatchment( final Catchment channel )
   {
     if( !m_catchments.contains( channel ) )
       m_catchments.add( channel );
-  }
-
-  public boolean containsCatchment( final Catchment catchment )
-  {
-    return m_catchments.contains( catchment );
   }
 
   public NetElement[] getChannels( )
@@ -112,7 +106,7 @@ public class RelevantNetElements
     return catchments;
   }
 
-  public void addRootChannel( final NetElement netElement, final int virtualChannelId )
+  void addRootChannel( final NetElement netElement, final int virtualChannelId )
   {
     final Entry<NetElement, Integer> rootChannelEntry = Collections.singletonMap( netElement, virtualChannelId ).entrySet().iterator().next();
 
@@ -124,7 +118,7 @@ public class RelevantNetElements
     return m_rootChannels.toArray( new Entry[m_rootChannels.size()] );
   }
 
-  public void addNode( final Node node )
+  void addNode( final Node node )
   {
     if( m_nodes.contains( node ) )
       return;
@@ -136,5 +130,4 @@ public class RelevantNetElements
   {
     return m_nodes.toArray( new Node[m_nodes.size()] );
   }
-
 }

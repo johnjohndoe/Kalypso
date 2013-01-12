@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing;
+package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
 import java.util.Comparator;
 
@@ -47,14 +47,13 @@ import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.channels.VirtualChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 /**
  * Sorts channels by type and then by ascii id
  * 
  * @author Gernot Belger
  */
-public class ChannelTypeComparator implements Comparator<NetElement>
+class ChannelTypeComparator implements Comparator<NetElement>
 {
   private final IDManager m_idManager;
 

@@ -52,16 +52,16 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.parameter.ISoilType;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentByAsciiIdSorter;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.Sealing;
+import org.kalypso.model.hydrology.internal.preprocessing.util.CatchmentByAsciiIdSorter;
 
 /**
  * @author Dejan Antanaskovic
  */
-public class HydrotopeWriter extends AbstractCoreFileWriter
+class HydrotopeWriter extends AbstractCoreFileWriter
 {
   private final IDManager m_idManager;
 

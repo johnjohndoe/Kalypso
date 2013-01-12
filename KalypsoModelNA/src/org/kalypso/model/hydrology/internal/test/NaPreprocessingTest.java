@@ -66,10 +66,11 @@ import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.simulation.core.NullSimulationMonitor;
+import org.osgi.framework.Version;
 
 /**
  * Tests preprocessing of KalypsoHydrology simulation.
- *
+ * 
  * @author Gernot Belger
  */
 public class NaPreprocessingTest
@@ -132,7 +133,9 @@ public class NaPreprocessingTest
 
     final INaSimulationData simulationData = createDemoModelsimulationData( baseURL );
 
-    return new NAModelPreprocessor( outputDirs, simulationData, logger );
+    final Version calcCoreVersion = new Version( "2.2.0.1" ); //$NON-NLS-1$
+
+    return new NAModelPreprocessor( outputDirs, simulationData, calcCoreVersion, logger );
   }
 
   private INaSimulationData createDemoModelsimulationData( final URL base ) throws Exception

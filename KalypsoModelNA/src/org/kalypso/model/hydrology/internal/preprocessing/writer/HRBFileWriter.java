@@ -56,7 +56,7 @@ import org.kalypso.model.hydrology.gml.ZmlWQVInlineTypeHandler;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
+import org.kalypso.model.hydrology.internal.preprocessing.preparation.NetElement;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -68,7 +68,7 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 /**
  * @author Dejan Antanaskovic
  */
-public class HRBFileWriter extends AbstractCoreFileWriter
+class HRBFileWriter extends AbstractCoreFileWriter
 {
   private static final double HECTO_CUBIC_METER = 1000000.0;
 
@@ -97,7 +97,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     {
       final Channel channel = element.getChannel();
       if( channel instanceof StorageChannel )
-        writeChannel( writer, (StorageChannel) channel );
+        writeChannel( writer, (StorageChannel)channel );
     }
   }
 
@@ -233,7 +233,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
 
     final Object value = values.get( row, axis );
     if( value instanceof Number )
-      return ((Number) value).doubleValue();
+      return ((Number)value).doubleValue();
 
     final String message = String.format( Messages.getString( "HRBFileWriter_4" ), axis.getName(), row ); //$NON-NLS-1$
     throw new SensorException( message );

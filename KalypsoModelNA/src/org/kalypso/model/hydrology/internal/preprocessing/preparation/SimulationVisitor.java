@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing.net.visitors;
+package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,14 +47,12 @@ import java.util.Set;
 
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.simulation.core.SimulationException;
 
 /**
  * @author doemming
  */
-public class SimulationVisitor extends NetElementVisitor
+class SimulationVisitor extends NetElementVisitor
 {
   private final RelevantNetElements m_relevantNetElements;
 

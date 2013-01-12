@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
@@ -55,22 +54,21 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author hübsch
  */
-public class BodenartWriter extends AbstractCoreFileWriter
+class BodenartWriter extends AbstractCoreFileWriter
 {
-  private final INaSimulationData m_data;
+  private final Parameter m_parameter;
 
-  public BodenartWriter( final INaSimulationData data, final Logger logger )
+  public BodenartWriter( final Parameter parameter, final Logger logger )
   {
     super( logger );
 
-    m_data = data;
+    m_parameter = parameter;
   }
 
   @Override
   protected void writeContent( final PrintWriter writer )
   {
-    final Parameter parameter = m_data.getParameter();
-    final List< ? > list = (List< ? >)parameter.getProperty( Parameter.MEMBER_SOIL_LAYER );
+    final List< ? > list = (List< ? >)m_parameter.getProperty( Parameter.MEMBER_SOIL_LAYER );
 
     writer.append( Messages.getString( "org.kalypso.convert.namodel.manager.BodenartManager.5" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     writer.append( "BODART_ID ArtKap.  WP     FK     BFMAX     Kf   BF0\n" ); //$NON-NLS-1$

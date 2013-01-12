@@ -48,7 +48,6 @@ import java.util.Calendar;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
-import org.kalypso.model.hydrology.internal.preprocessing.timeseries.Ext2Writer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -61,7 +60,7 @@ import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
  * 
  * @author Gernot Belger
  */
-public class Ext2InterpolationWriter
+class Ext2InterpolationWriter
 {
   private final IObservation m_observation;
 
