@@ -30,6 +30,7 @@ import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -65,7 +66,7 @@ public class NaCatchmentData
       final Catchment originalCatchment = catchmentIndex.findCatchment( hydrotope );
       if( originalCatchment == null )
       {
-        final String message = String.format( "Hydrotope '%s' invalid: unable to find associated catchment. Please check parameters of hydrotope." );
+        final String message = String.format( Messages.getString("NaCatchmentData_0") ); //$NON-NLS-1$
         log.add( IStatus.WARNING, message );
       }
 
@@ -73,7 +74,7 @@ public class NaCatchmentData
       info.add( hydrotope );
     }
 
-    return log.asMultiStatus( "Dissolving hydrotopes" );
+    return log.asMultiStatus( Messages.getString("NaCatchmentData_1") ); //$NON-NLS-1$
   }
 
   private CatchmentInfo getOrCreateInfo( final Catchment catchment, final boolean doAttributeDissolve )

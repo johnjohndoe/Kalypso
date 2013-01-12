@@ -52,11 +52,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.initialValues.Catchment;
 import org.kalypso.model.hydrology.binding.initialValues.Channel;
 import org.kalypso.model.hydrology.binding.initialValues.IniHyd;
@@ -64,9 +62,9 @@ import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -83,37 +81,26 @@ class LzsimWriter
 
   private final IDManager m_idManager;
 
-  private final NAControl m_metaControl;
-
-  private final Logger m_logger;
-
   private final NaCatchmentData m_catchmentData;
 
-  public LzsimWriter( final IDManager idManager, final NaCatchmentData catchmentData, final InitialValues initialValues, final NAControl metaControl, final Logger logger )
+  public LzsimWriter( final IDManager idManager, final NaCatchmentData catchmentData, final InitialValues initialValues )
   {
     m_idManager = idManager;
     m_catchmentData = catchmentData;
     m_initialValues = initialValues;
-    m_metaControl = metaControl;
-    m_logger = logger;
   }
 
-  public void writeLzsimFiles( final File lzsimDir ) throws SimulationException
+  public void writeLzsimFiles( final File lzsimDir ) throws NAPreprocessorException
   {
     doWriteLzsimFiles( lzsimDir );
   }
 
-  private void doWriteLzsimFiles( final File lzsimDir ) throws SimulationException
+  private void doWriteLzsimFiles( final File lzsimDir ) throws NAPreprocessorException
   {
     lzsimDir.mkdirs();
 
     if( m_initialValues == null )
-    {
-      final Date simulationStart = m_metaControl.getSimulationStart();
-      final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.26", simulationStart ); //$NON-NLS-1$
-      m_logger.info( msg );
       return;
-    }
 
     // Initial value date
     final Date initialDate = m_initialValues.getInitialDate();
@@ -124,12 +111,12 @@ class LzsimWriter
     writeLzs( lzsimDir, iniDate );
   }
 
-  private void writeLzg( final File lzsimDir, final String iniDate ) throws SimulationException
+  private void writeLzg( final File lzsimDir, final String iniDate ) throws NAPreprocessorException
   {
     final Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> naChannelHash = buildChannelHash( m_idManager );
 
     // write initial conditions for the strands
-    // TODO:write only for strands of the actual calculation
+    // TODO: write only for strands of the actual calculation
     final IFeatureBindingCollection<Channel> channels = m_initialValues.getChannels();
     for( final Channel iniChannel : channels )
     {
@@ -154,7 +141,7 @@ class LzsimWriter
     return naChannelHash;
   }
 
-  private static void writeLzgFile( final Channel iniChannel, final File lzgFile, final String iniDate ) throws SimulationException
+  private static void writeLzgFile( final Channel iniChannel, final File lzgFile, final String iniDate ) throws NAPreprocessorException
   {
     try
     {
@@ -164,11 +151,11 @@ class LzsimWriter
     catch( final IOException e )
     {
       final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.55", iniChannel.getId() ); //$NON-NLS-1$
-      throw new SimulationException( msg, e );
+      throw new NAPreprocessorException( msg, e );
     }
   }
 
-  private void writeLzs( final File lzsimDir, final String iniDate ) throws SimulationException
+  private void writeLzs( final File lzsimDir, final String iniDate ) throws NAPreprocessorException
   {
     final Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> iniCatchmentHash = buildCatchmentHash();
 
@@ -189,7 +176,7 @@ class LzsimWriter
     }
   }
 
-  private Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> buildCatchmentHash( ) throws SimulationException
+  private Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> buildCatchmentHash( ) throws NAPreprocessorException
   {
     final List<Feature> allNACatchmentFeatures = m_idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
 
@@ -212,7 +199,7 @@ class LzsimWriter
       {
         // FIXME: better? only log...
         final String msg = Messages.getString( "LzsimWriter.5", catchment.getName() ); //$NON-NLS-1$
-        throw new SimulationException( msg );
+        throw new NAPreprocessorException( msg );
       }
       else
         result.put( (org.kalypso.model.hydrology.binding.model.Catchment)catchment, iniCatchment );
@@ -221,7 +208,7 @@ class LzsimWriter
     return result;
   }
 
-  private static void writeLzsFile( final File lzsFile, final Catchment iniCatchment, final String iniDate, final IniHyd[] iniHyds ) throws SimulationException
+  private static void writeLzsFile( final File lzsFile, final Catchment iniCatchment, final String iniDate, final IniHyd[] iniHyds ) throws NAPreprocessorException
   {
     PrintWriter writer = null;
 
@@ -261,7 +248,7 @@ class LzsimWriter
     catch( final Throwable e )
     {
       final String msg = String.format( Messages.getString( "LzsimWriter.7" ), iniCatchment.getNaCatchmentID() ); //$NON-NLS-1$
-      throw new SimulationException( msg, e );
+      throw new NAPreprocessorException( msg, e );
     }
     finally
     {
@@ -269,7 +256,7 @@ class LzsimWriter
     }
   }
 
-  private IniHyd[] getIniHyds( final org.kalypso.model.hydrology.binding.model.Catchment naCatchment, final Catchment iniCatchment ) throws SimulationException
+  private IniHyd[] getIniHyds( final org.kalypso.model.hydrology.binding.model.Catchment naCatchment, final Catchment iniCatchment ) throws NAPreprocessorException
   {
     /*
      * Special case: if the hydro hash does not know this catchment, it was actually never written. This happens e.g.
@@ -300,7 +287,7 @@ class LzsimWriter
       if( iniHyd == null )
       {
         final String msg = Messages.getString( "LzsimWriter.4", naHydrotopID, naCatchment.getName() ); //$NON-NLS-1$
-        throw new SimulationException( msg );
+        throw new NAPreprocessorException( msg );
       }
       iniHydMap.put( localID, iniHyd );
     }

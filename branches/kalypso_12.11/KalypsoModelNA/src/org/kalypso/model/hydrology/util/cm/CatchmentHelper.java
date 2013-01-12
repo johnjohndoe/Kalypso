@@ -56,9 +56,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class CatchmentHelper
 {
-  /**
-   * The constructor.
-   */
   private CatchmentHelper( )
   {
   }
@@ -68,7 +65,7 @@ public class CatchmentHelper
    * <br/>
    * A hash is generated from the catchment. It takes the factors/timeseries into account. An equal combination of
    * factors and timeseries creates the same hash.
-   *
+   * 
    * @param catchment
    *          The catchment.
    * @return The hash.

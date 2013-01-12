@@ -43,7 +43,6 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -65,7 +64,6 @@ import org.kalypso.model.hydrology.internal.preprocessing.preparation.INaPrepare
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.RelevantNetElements;
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.TimeseriesFileManager;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.osgi.framework.Version;
 
@@ -77,8 +75,6 @@ import org.osgi.framework.Version;
  */
 class NAModellConverter
 {
-  private final IStatusCollector m_log = new StatusCollector( ModelNA.PLUGIN_ID );
-
   private final INaPreparedData m_data;
 
   private final NaAsciiDirs m_asciiDirs;
@@ -89,15 +85,16 @@ class NAModellConverter
     m_asciiDirs = asciiDirs;
   }
 
-  public void writeUncalibratedFiles( ) throws IOException, NAPreprocessorException, SimulationException
+  public IStatus writeUncalibratedFiles( ) throws IOException, NAPreprocessorException
   {
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
     final NaModell naModel = m_data.getModel();
     final NAControl metaControl = m_data.getMetaControl();
     final GMLWorkspace synthNWorkspace = m_data.getSynthNWorkspace();
     final NAOptimize naOptimize = m_data.getNaOptimize();
     final IDManager idManager = m_data.getIdManager();
     final RelevantNetElements relevantElements = m_data.getRelevantElements();
-    final Logger logger = m_data.getLogger();
     final TimeseriesFileManager tsFileManager = m_data.getTimeseriesManager();
     final Parameter parameter = m_data.getParameter();
     final ParameterHash landuseHash = m_data.getLanduseHash();
@@ -110,48 +107,50 @@ class NAModellConverter
     final NetElement[] channels = relevantElements.getChannelsSorted( idManager );
     final Catchment[] catchments = relevantElements.getCatchmentsSorted( idManager );
 
-    final NetFileWriter netWriter = new NetFileWriter( m_asciiDirs, relevantElements, idManager, zmlContext, metaControl, logger );
-    netWriter.write( m_asciiDirs.netFile );
-    m_log.add( netWriter.getStatus() );
+    final NetFileWriter netWriter = new NetFileWriter( m_asciiDirs, relevantElements, idManager, zmlContext, metaControl );
+    netWriter.write( m_asciiDirs.netFile, log );
 
-    final TsFileWriter tsWriter = new TsFileWriter( synthNWorkspace, metaControl, naOptimize, channels, zmlContext, tsFileManager, logger );
+    final TsFileWriter tsWriter = new TsFileWriter( synthNWorkspace, metaControl, naOptimize, channels, zmlContext, tsFileManager );
     tsWriter.write( m_asciiDirs.klimaDatDir );
 
     // HACK: for performance optimization: if the zft file already exists, we assume it is ok and just return
     if( !m_asciiDirs.zftFile.exists() )
     {
-      final ZftWriter zftWriter = new ZftWriter( idManager, logger, catchments );
-      zftWriter.write( m_asciiDirs.zftFile );
+      final ZftWriter zftWriter = new ZftWriter( idManager, catchments );
+      zftWriter.write( m_asciiDirs.zftFile, log );
     }
 
-    final BodenartWriter bodenartManager = new BodenartWriter( parameter, logger );
-    bodenartManager.write( m_asciiDirs.bodenartFile );
+    final BodenartWriter bodenartManager = new BodenartWriter( parameter );
+    bodenartManager.write( m_asciiDirs.bodenartFile, log );
 
-    final BodentypWriter bodentypManager = new BodentypWriter( parameter, calcCoreVersion, logger );
-    bodentypManager.write( m_asciiDirs.bodentypFile );
+    final BodentypWriter bodentypManager = new BodentypWriter( parameter, calcCoreVersion );
+    bodentypManager.write( m_asciiDirs.bodentypFile, log );
 
-    final SnowtypWriter schneeManager = new SnowtypWriter( parameter, logger );
-    schneeManager.write( m_asciiDirs.schneeFile );
+    final SnowtypWriter schneeManager = new SnowtypWriter( parameter );
+    schneeManager.write( m_asciiDirs.schneeFile, log );
 
-    final HRBFileWriter hrbFileWriter = new HRBFileWriter( channels, idManager, m_asciiDirs.klimaDatDir, logger );
-    hrbFileWriter.write( m_asciiDirs.hrbFile );
+    final HRBFileWriter hrbFileWriter = new HRBFileWriter( channels, idManager, m_asciiDirs.klimaDatDir );
+    hrbFileWriter.write( m_asciiDirs.hrbFile, log );
 
     final NutzungWriter nutzungManager = new NutzungWriter( parameter, m_asciiDirs.hydroTopDir );
     nutzungManager.writeFile( landuseHash );
 
-    final HydrotopeWriter hydrotopManager = new HydrotopeWriter( idManager, catchmentData, logger );
-    hydrotopManager.write( m_asciiDirs.hydrotopFile );
+    final HydrotopeWriter hydrotopManager = new HydrotopeWriter( idManager, catchmentData );
+    hydrotopManager.write( m_asciiDirs.hydrotopFile, log );
 
-    final LzsimWriter lzsimWriter = new LzsimWriter( idManager, catchmentData, initialValues, metaControl, logger );
+    final LzsimWriter lzsimWriter = new LzsimWriter( idManager, catchmentData, initialValues );
     lzsimWriter.writeLzsimFiles( m_asciiDirs.lzsimDir );
+
+    return log.asMultiStatusOrOK( "Writing basic files" ); //$NON-NLS-1$
   }
 
-  public void writeCalibratedFiles( ) throws IOException, NAPreprocessorException
+  public IStatus writeCalibratedFiles( ) throws IOException, NAPreprocessorException
   {
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
     final NAControl naControl = m_data.getMetaControl();
     final IDManager idManager = m_data.getIdManager();
     final RelevantNetElements relevantElements = m_data.getRelevantElements();
-    final Logger logger = m_data.getLogger();
     final TimeseriesFileManager tsFileManager = m_data.getTimeseriesManager();
 
     final Entry<NetElement, Integer>[] rootChannels = relevantElements.getRootChannels();
@@ -159,15 +158,12 @@ class NAModellConverter
     final Catchment[] catchments = relevantElements.getCatchmentsSorted( idManager );
 
     /* Write files that are changed by calibration factors */
-    final GerWriter gerWriter = new GerWriter( idManager, rootChannels, channels, logger );
-    gerWriter.write( m_asciiDirs.channelFile );
+    final GerWriter gerWriter = new GerWriter( idManager, rootChannels, channels );
+    gerWriter.write( m_asciiDirs.channelFile, log );
 
-    final GebWriter catchmentManager = new GebWriter( logger, catchments, naControl, tsFileManager, idManager );
-    catchmentManager.write( m_asciiDirs.catchmentFile );
-  }
+    final GebWriter catchmentManager = new GebWriter( catchments, naControl, tsFileManager, idManager );
+    catchmentManager.write( m_asciiDirs.catchmentFile, log );
 
-  public IStatus getStatus( )
-  {
-    return m_log.asMultiStatusOrOK( Messages.getString( "NAModellConverter_0" ) ); //$NON-NLS-1$
+    return log.asMultiStatusOrOK( Messages.getString("NAModellConverter_0") ); //$NON-NLS-1$
   }
 }

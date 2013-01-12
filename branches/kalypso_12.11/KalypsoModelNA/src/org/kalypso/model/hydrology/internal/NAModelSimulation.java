@@ -112,11 +112,13 @@ public class NAModelSimulation
       /* determine calculation core */
       final File naExe = determineCalculationCore( collector );
       final Version calcCoreVersion = findCalcCoreVersion( naExe.getName() );
-      validateVersion( naExe, calcCoreVersion, collector );
+      validateVersion( calcCoreVersion, collector );
 
       /* Pre processing. */
       final IStatus preProcessStatus = preProcess( m_data, calcCoreVersion, monitor );
-      collector.add( preProcessStatus );
+      if( !preProcessStatus.isOK() )
+        collector.add( preProcessStatus );
+
       if( monitor.isCanceled() )
       {
         collector.add( new Status( IStatus.CANCEL, ModelNA.PLUGIN_ID, Messages.getString( "NAModelSimulation.4" ) ) ); //$NON-NLS-1$
@@ -134,7 +136,8 @@ public class NAModelSimulation
 
       /* Post processing. */
       final IStatus postProcessStatus = postProcess( m_data, processStatus, monitor );
-      collector.add( postProcessStatus );
+      if( !postProcessStatus.isOK() )
+        collector.add( postProcessStatus );
 
       return collector.asMultiStatus( Messages.getString( "NAModelSimulation.8" ) ); //$NON-NLS-1$
     }
@@ -145,11 +148,8 @@ public class NAModelSimulation
     }
   }
 
-  private void validateVersion( final File naExe, final Version calcCoreVersion, final IStatusCollector log )
+  private void validateVersion( final Version calcCoreVersion, final IStatusCollector log )
   {
-    final String filename = naExe.getName();
-    log.add( IStatus.OK, Messages.getString( "NAModelSimulation.1" ), null, filename ); //$NON-NLS-1$
-
     if( calcCoreVersion == null )
     {
       final String coreExample = String.format( EXECUTABLES_FILE_TEMPLATE, Messages.getString( "NAModelSimulation.13" ) ); //$NON-NLS-1$
@@ -187,7 +187,8 @@ public class NAModelSimulation
   public void rerunForOptimization( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
   {
     // FIXME: clear old result file (we_nat_out etc.)
-    m_preprocessor.processCallibrationFiles( optimize, monitor );
+    // TODO: handle status
+    /* IStatus status = */m_preprocessor.processCallibrationFiles( optimize, monitor );
     if( monitor.isCanceled() )
       return;
 
@@ -200,21 +201,17 @@ public class NAModelSimulation
 
   private IStatus preProcess( final INaSimulationData simulationData, final Version calcCoreVersion, final ISimulationMonitor monitor ) throws SimulationException
   {
-    /* The status collector. */
-    final IStatusCollector collector = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
-
     try
     {
       /* Pre processing. */
-      m_preprocessor = new NAModelPreprocessor( m_simDirs.asciiDirs, simulationData, calcCoreVersion, m_logger );
-      final IStatus status = m_preprocessor.process( monitor );
+      m_preprocessor = new NAModelPreprocessor( m_simDirs.asciiDirs, simulationData, calcCoreVersion );
 
-      collector.add( status );
+      final IStatus status = m_preprocessor.process( monitor );
 
       final File idMapFile = new File( m_simDirs.simulationDir, "IdMap.txt" ); //$NON-NLS-1$
       m_preprocessor.getIdManager().dump( idMapFile );
 
-      return collector.asMultiStatus( Messages.getString( "NAModelSimulation.10" ) ); //$NON-NLS-1$
+      return status;
     }
     catch( final NAPreprocessorException e )
     {
@@ -241,7 +238,8 @@ public class NAModelSimulation
       collector.add( IStatus.ERROR, e.getLocalizedMessage(), e );
     }
 
-    return collector.asMultiStatus( Messages.getString( "NAModelSimulation.11" ) ); //$NON-NLS-1$
+    final String message = Messages.getString( "NAModelSimulation.1", naExe.getName() ); //$NON-NLS-1$
+    return collector.asMultiStatus( message );
   }
 
   private IStatus postProcess( final INaSimulationData simulationData, final MultiStatus processStatus, final ISimulationMonitor monitor ) throws Exception

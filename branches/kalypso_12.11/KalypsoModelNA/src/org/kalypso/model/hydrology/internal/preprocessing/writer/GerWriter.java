@@ -43,8 +43,9 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
@@ -73,17 +74,15 @@ class GerWriter extends AbstractCoreFileWriter
 
   private final NetElement[] m_channels;
 
-  public GerWriter( final IDManager idManager, final Entry<NetElement, Integer>[] rootChannels, final NetElement[] channels, final Logger logger )
+  public GerWriter( final IDManager idManager, final Entry<NetElement, Integer>[] rootChannels, final NetElement[] channels )
   {
-    super( logger );
-
     m_idManager = idManager;
     m_rootChannels = rootChannels;
     m_channels = channels;
   }
 
   @Override
-  protected void writeContent( final PrintWriter writer )
+  protected IStatus writeContent( final PrintWriter writer )
   {
     for( final Entry<NetElement, Integer> rootChannel : m_rootChannels )
     {
@@ -93,6 +92,8 @@ class GerWriter extends AbstractCoreFileWriter
 
     for( final NetElement element : m_channels )
       writeChannel( writer, element.getChannel() );
+
+    return Status.OK_STATUS;
   }
 
   private void writeChannel( final PrintWriter writer, final Channel channel )

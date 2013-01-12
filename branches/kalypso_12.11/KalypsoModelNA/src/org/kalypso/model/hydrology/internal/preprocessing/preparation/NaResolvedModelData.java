@@ -18,8 +18,9 @@
  */
 package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
-import java.util.logging.Logger;
-
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
@@ -29,10 +30,12 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.osgi.framework.Version;
 
@@ -59,8 +62,6 @@ class NaResolvedModelData implements INaPreparedData
 
   private final IDManager m_idManager;
 
-  private final Logger m_logger;
-
   private final NAOptimize m_optimize;
 
   private final InitialValues m_initialValues;
@@ -73,7 +74,9 @@ class NaResolvedModelData implements INaPreparedData
 
   private final Version m_calcCoreVersion;
 
-  public NaResolvedModelData( final NAModellControl control, final NAControl metaControl, final NaModell model, final InitialValues initialValue, final GMLWorkspace synthWorkspace, final NAOptimize optimize, final Parameter parameter, final ParameterHash landuseHash, final Node rootNode, final NaCatchmentData catchmentData, final IDManager idManager, final Version calcCoreVersion, final Logger logger ) throws SimulationException
+  private final IStatus m_status;
+
+  public NaResolvedModelData( final NAModellControl control, final NAControl metaControl, final NaModell model, final InitialValues initialValue, final GMLWorkspace synthWorkspace, final NAOptimize optimize, final Parameter parameter, final ParameterHash landuseHash, final Node rootNode, final NaCatchmentData catchmentData, final IDManager idManager, final Version calcCoreVersion ) throws NAPreprocessorException
   {
     m_control = control;
     m_metaControl = metaControl;
@@ -86,9 +89,10 @@ class NaResolvedModelData implements INaPreparedData
     m_landuseHash = landuseHash;
     m_idManager = idManager;
     m_calcCoreVersion = calcCoreVersion;
-    m_logger = logger;
 
-    final NetFileAnalyser nodeManager = new NetFileAnalyser( rootNode, logger, model, idManager );
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
+    final NetFileAnalyser nodeManager = new NetFileAnalyser( rootNode, model, idManager, log );
     m_relevantElements = nodeManager.analyseNet();
 
     /* restrict catchment data to relevant elements */
@@ -103,6 +107,14 @@ class NaResolvedModelData implements INaPreparedData
 
     final boolean usePrecipitationForm = metaControl.isUsePrecipitationForm();
     m_tsFileManager = new TimeseriesFileManager( idManager, usePrecipitationForm );
+
+    m_status = log.asMultiStatusOrOK( Messages.getString("NaResolvedModelData_0") ); //$NON-NLS-1$
+  }
+
+  @Override
+  public IStatus getNetStatus( )
+  {
+    return m_status;
   }
 
   @Override
@@ -157,13 +169,6 @@ class NaResolvedModelData implements INaPreparedData
   public RelevantNetElements getRelevantElements( )
   {
     return m_relevantElements;
-  }
-
-  @Override
-  @Deprecated
-  public Logger getLogger( )
-  {
-    return m_logger;
   }
 
   @Override

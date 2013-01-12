@@ -43,8 +43,9 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 
 /**
@@ -52,26 +53,15 @@ import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorExceptio
  */
 abstract class AbstractCoreFileWriter
 {
-  private final Logger m_logger;
-
-  public AbstractCoreFileWriter( final Logger logger )
-  {
-    m_logger = logger;
-  }
-
-  @Deprecated
-  protected final Logger getLogger( )
-  {
-    return m_logger;
-  }
-
-  public final void write( final File outputFile ) throws IOException, NAPreprocessorException
+  public final void write( final File outputFile, final IStatusCollector log ) throws IOException, NAPreprocessorException
   {
     try( final PrintWriter writer = new PrintWriter( outputFile ); )
     {
-      writeContent( writer );
+      final IStatus status = writeContent( writer );
+      if( !status.isOK() )
+        log.add( status );
     }
   }
 
-  protected abstract void writeContent( final PrintWriter writer ) throws IOException, NAPreprocessorException;
+  protected abstract IStatus writeContent( final PrintWriter writer ) throws IOException, NAPreprocessorException;
 }

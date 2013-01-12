@@ -53,7 +53,6 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -81,6 +80,7 @@ public class NaPostProcessor
 
   private static final String FILENAME_OUTPUT_RES = "output.res"; //$NON-NLS-1$
 
+  @Deprecated
   private final Logger m_logger;
 
   private final GMLWorkspace m_modelWorkspace;
@@ -135,10 +135,8 @@ public class NaPostProcessor
 
   private void copyNaExeLogs( final NaAsciiDirs asciiDirs, final NaResultDirs currentResultDirs )
   {
-    ZipOutputStream zos = null;
-    try
+    try( ZipOutputStream zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( currentResultDirs.exe_logs_zip ) ) ) )
     {
-      zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( currentResultDirs.exe_logs_zip ) ) );
       // REMARK: We rename the files in the zip, else the windoes explorer will show an empty zip by default (unknown
       // extensions)
       ZipUtilities.writeZipEntry( zos, asciiDirs.output_res, "output.txt" ); //$NON-NLS-1$
@@ -150,10 +148,6 @@ public class NaPostProcessor
       e.printStackTrace();
       final String msg = String.format( Messages.getString( "NaPostProcessor.4" ), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.severe( msg );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( zos );
     }
   }
 

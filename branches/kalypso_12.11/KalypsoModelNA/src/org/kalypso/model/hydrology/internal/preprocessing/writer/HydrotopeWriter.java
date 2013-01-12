@@ -45,13 +45,16 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.parameter.ISoilType;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
@@ -67,17 +70,17 @@ class HydrotopeWriter extends AbstractCoreFileWriter
 
   private final NaCatchmentData m_catchmentData;
 
-  public HydrotopeWriter( final IDManager idManager, final NaCatchmentData catchmentData, final Logger logger )
+  public HydrotopeWriter( final IDManager idManager, final NaCatchmentData catchmentData )
   {
-    super( logger );
-
     m_idManager = idManager;
     m_catchmentData = catchmentData;
   }
 
   @Override
-  protected void writeContent( final PrintWriter writer )
+  protected IStatus writeContent( final PrintWriter writer ) throws NAPreprocessorException
   {
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
     final String hydrotopeFileTile = Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.2" ); //$NON-NLS-1$
     writer.append( hydrotopeFileTile ).append( '\n' );
 
@@ -90,13 +93,15 @@ class HydrotopeWriter extends AbstractCoreFileWriter
       final CatchmentInfo catchmentInfo = m_catchmentData.getInfo( catchment );
       final String checkMsg = catchmentInfo.checkArea();
       if( checkMsg != null )
-        getLogger().warning( checkMsg );
+        log.add( IStatus.WARNING, checkMsg );
 
       writeCatchment( writer, catchmentInfo );
     }
+
+    return log.asMultiStatusOrOK( Messages.getString("HydrotopeWriter.2") ); //$NON-NLS-1$
   }
 
-  private void writeCatchment( final PrintWriter writer, final CatchmentInfo info )
+  private void writeCatchment( final PrintWriter writer, final CatchmentInfo info ) throws NAPreprocessorException
   {
     final Catchment catchment = info.getCatchment();
     final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
@@ -117,7 +122,7 @@ class HydrotopeWriter extends AbstractCoreFileWriter
       writeHydrotope( writer, catchment, hydrotopInfo );
   }
 
-  private void writeHydrotope( final PrintWriter writer, final Catchment catchment, final HydrotopeInfo hydrotopInfo )
+  private void writeHydrotope( final PrintWriter writer, final Catchment catchment, final HydrotopeInfo hydrotopInfo ) throws NAPreprocessorException
   {
     final String landuseShortName = hydrotopInfo.getLanduseShortName();
     final double maxPerkolationRate = hydrotopInfo.getMaxPercolationRate();
@@ -134,7 +139,7 @@ class HydrotopeWriter extends AbstractCoreFileWriter
     writer.format( Locale.US, "%-10.10g %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f 0%n", naturalArea, landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopID, totalSealingRate ); //$NON-NLS-1$
   }
 
-  private String getSoilTypeName( final Catchment catchment, final HydrotopeInfo hydrotopInfo )
+  private String getSoilTypeName( final Catchment catchment, final HydrotopeInfo hydrotopInfo ) throws NAPreprocessorException
   {
     final ISoilType soiltype = hydrotopInfo.getSoilType();
 
@@ -148,8 +153,11 @@ class HydrotopeWriter extends AbstractCoreFileWriter
     {
       final String hydrotopeName = hydrotopInfo.getName();
       final String catchmentName = catchment.getName();
-      final String message = String.format( Messages.getString( "HydrotopeWriter.1" ), countSoilLayers, hydrotopeName, countSoilFactors, catchmentName ); //$NON-NLS-1$
-      getLogger().log( Level.WARNING, message );
+
+      final String formatString = Messages.getString( "HydrotopeWriter.1" ); //$NON-NLS-1$
+      final String message = String.format( formatString, catchmentName, countSoilFactors, countSoilLayers, hydrotopeName );
+
+      throw new NAPreprocessorException( message );
     }
     return soiltypeName;
   }

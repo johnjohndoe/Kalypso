@@ -43,7 +43,6 @@ package org.kalypso.model.hydrology.internal.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
@@ -126,7 +125,6 @@ public class NaPreprocessingTest
   private NAModelPreprocessor initPreprocessor( final String baseResourceLocation, final File asciiDir ) throws Exception
   {
     final NaAsciiDirs outputDirs = new NaAsciiDirs( asciiDir );
-    final Logger logger = Logger.getAnonymousLogger();
 
     final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" ); //$NON-NLS-1$
     final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) ); //$NON-NLS-1$
@@ -135,7 +133,7 @@ public class NaPreprocessingTest
 
     final Version calcCoreVersion = new Version( "2.2.0.1" ); //$NON-NLS-1$
 
-    return new NAModelPreprocessor( outputDirs, simulationData, calcCoreVersion, logger );
+    return new NAModelPreprocessor( outputDirs, simulationData, calcCoreVersion );
   }
 
   private INaSimulationData createDemoModelsimulationData( final URL base ) throws Exception

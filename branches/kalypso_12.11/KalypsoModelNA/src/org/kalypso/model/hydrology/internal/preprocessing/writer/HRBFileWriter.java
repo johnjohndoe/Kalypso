@@ -46,9 +46,10 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
@@ -81,17 +82,15 @@ class HRBFileWriter extends AbstractCoreFileWriter
 
   private final NetElement[] m_channels;
 
-  public HRBFileWriter( final NetElement[] channels, final IDManager idManager, final File klimaDir, final Logger logger )
+  public HRBFileWriter( final NetElement[] channels, final IDManager idManager, final File klimaDir )
   {
-    super( logger );
-
     m_channels = channels;
     m_klimaDir = klimaDir;
     m_idManager = idManager;
   }
 
   @Override
-  protected void writeContent( final PrintWriter writer ) throws NAPreprocessorException
+  protected IStatus writeContent( final PrintWriter writer ) throws NAPreprocessorException
   {
     for( final NetElement element : m_channels )
     {
@@ -99,6 +98,8 @@ class HRBFileWriter extends AbstractCoreFileWriter
       if( channel instanceof StorageChannel )
         writeChannel( writer, (StorageChannel)channel );
     }
+
+    return Status.OK_STATUS;
   }
 
   private void writeChannel( final PrintWriter writer, final StorageChannel channel ) throws NAPreprocessorException

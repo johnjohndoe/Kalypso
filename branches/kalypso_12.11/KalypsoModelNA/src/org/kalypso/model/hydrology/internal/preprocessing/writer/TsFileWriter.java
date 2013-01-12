@@ -49,8 +49,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -85,8 +83,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 class TsFileWriter
 {
-  private final Logger m_logger;
-
   private final URL m_zmlContext;
 
   private final NetElement[] m_channels;
@@ -105,7 +101,7 @@ class TsFileWriter
     EX2
   }
 
-  public TsFileWriter( final GMLWorkspace synthNWorkspace, final NAControl naControl, final NAOptimize naOptimize, final NetElement[] channels, final URL zmlContext, final TimeseriesFileManager tsFileManager, final Logger logger )
+  public TsFileWriter( final GMLWorkspace synthNWorkspace, final NAControl naControl, final NAOptimize naOptimize, final NetElement[] channels, final URL zmlContext, final TimeseriesFileManager tsFileManager )
   {
     m_synthNWorkspace = synthNWorkspace;
     m_metaControl = naControl;
@@ -113,7 +109,6 @@ class TsFileWriter
     m_channels = channels;
     m_zmlContext = zmlContext;
     m_tsFileManager = tsFileManager;
-    m_logger = logger;
   }
 
   public void write( final File targetDir ) throws NAPreprocessorException
@@ -148,7 +143,7 @@ class TsFileWriter
     }
   }
 
-  private void writeCatchmentTimeseries( final File klimaDir, final DateRange simulationRange, final Catchment catchment ) throws SensorException, IOException
+  private void writeCatchmentTimeseries( final File klimaDir, final DateRange simulationRange, final Catchment catchment ) throws SensorException, IOException, NAPreprocessorException
   {
     final File targetFileN = m_tsFileManager.getNiederschlagEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
 
@@ -270,12 +265,13 @@ class TsFileWriter
   }
 
   // FIXME: does not belong here -> move into own writer
-  private void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws SensorException, IOException
+  private void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws SensorException, IOException, NAPreprocessorException
   {
     final List<Feature> statNList = new ArrayList<>();
 
     final StringBuffer buffer = new StringBuffer();
     final Double annualityKey = m_metaControl.getAnnuality();
+
     // Kostra-Kachel/ synth. N gebietsabängig
     final String synthNKey = catchment.getSynthZR();
 
@@ -285,10 +281,13 @@ class TsFileWriter
 
     for( final Feature statNFE : statNList )
     {
-      if( statNFE.getName() != null )
+      final String statFNEname = statNFE.getName();
+      if( statFNEname != null )
       {
-        if( statNFE.getName().equals( synthNKey ) )
+        if( statFNEname.equals( synthNKey ) )
         {
+          // FIXME: probably one one file should be written, stop when rainfall was found and written
+
           final List< ? > statNParameterList = (List< ? >)statNFE.getProperty( NaModelConstants.STATNPARA_MEMBER );
           for( final Object object : statNParameterList )
           {
@@ -330,8 +329,9 @@ class TsFileWriter
               }
               else
               {
-                final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.143", synthNKey, annualityKey ); //$NON-NLS-1$
-                m_logger.log( Level.WARNING, msg );
+                final String msg = String.format( Messages.getString("TsFileWriter.1"), catchment.getName(), annualityKey ); //$NON-NLS-1$
+                // TODO: CHECK: simulation continued at this point before, but probably simulation should stop now.
+                throw new NAPreprocessorException( msg );
               }
             }
           }
@@ -339,5 +339,4 @@ class TsFileWriter
       }
     }
   }
-
 }

@@ -18,8 +18,6 @@
  */
 package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
-import java.util.logging.Logger;
-
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
@@ -28,9 +26,9 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.osgi.framework.Version;
 
@@ -39,8 +37,8 @@ import org.osgi.framework.Version;
  */
 public final class NaPreprocessingPreparator
 {
-  public static INaPreparedData prepareData( final NAModellControl control, final NAControl metaControl, final NaModell model, final InitialValues initialValue, final GMLWorkspace synthWorkspace, final NAOptimize optimize, final Parameter parameter, final ParameterHash landuseHash, final Node rootNode, final NaCatchmentData catchmentData, final IDManager idManager, final Version calcCoreVersion, final Logger logger ) throws SimulationException
+  public static INaPreparedData prepareData( final NAModellControl control, final NAControl metaControl, final NaModell model, final InitialValues initialValue, final GMLWorkspace synthWorkspace, final NAOptimize optimize, final Parameter parameter, final ParameterHash landuseHash, final Node rootNode, final NaCatchmentData catchmentData, final IDManager idManager, final Version calcCoreVersion ) throws NAPreprocessorException
   {
-    return new NaResolvedModelData( control, metaControl, model, initialValue, synthWorkspace, optimize, parameter, landuseHash, rootNode, catchmentData, idManager, calcCoreVersion, logger );
+    return new NaResolvedModelData( control, metaControl, model, initialValue, synthWorkspace, optimize, parameter, landuseHash, rootNode, catchmentData, idManager, calcCoreVersion );
   }
 }
