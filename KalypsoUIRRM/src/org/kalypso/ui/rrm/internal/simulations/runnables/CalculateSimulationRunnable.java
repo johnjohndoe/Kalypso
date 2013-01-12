@@ -235,7 +235,10 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         /* Clean up. */
         final CleanupSimulationWorker cleanupWorker = new CleanupSimulationWorker( rrmSimulation, calculateCatchmentModels );
         final IStatus cleanupStatus = cleanupWorker.execute( new SubProgressMonitor( monitor, 200 ) );
-        collector.add( cleanupStatus );
+
+        if( !cleanupStatus.isOK() )
+          collector.add( cleanupStatus );
+
         if( cleanupStatus.getSeverity() >= IStatus.ERROR )
           return collector.asMultiStatus( errorMessage );
       }
@@ -248,7 +251,10 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
         /* Create. */
         final CreateSimulationWorker createWorker = new CreateSimulationWorker( rrmSimulation );
         final IStatus createStatus = createWorker.execute( new SubProgressMonitor( monitor, 200 ) );
-        collector.add( createStatus );
+
+        if( !createStatus.isOK() )
+          collector.add( createStatus );
+
         if( createStatus.getSeverity() >= IStatus.ERROR )
           return collector.asMultiStatus( errorMessage );
       }
@@ -270,48 +276,38 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
       /* Clone the simulation. */
       simulationWorkspace = FeatureFactory.createGMLWorkspace( simulation.getFeatureType(), modelURL, simulationData.getFeatureProviderFactory() );
-      final NAControl simulationFeature = (NAControl) simulationWorkspace.getRootFeature();
+      final NAControl simulationFeature = (NAControl)simulationWorkspace.getRootFeature();
       FeatureHelper.copyData( simulation, simulationFeature );
 
       /* Set the meta control to the simulation data. */
       simulationData.setMetaControl( simulationFeature );
 
       /* Prepare longterm/shortterm simulation. */
-      final boolean isLongterm = SimulationUtilities.isLongterm( simulation );
-      if( isLongterm )
-      {
-        /* Prepare longterm simulation. */
-        final PrepareLongtermSimulationWorker prepareLongtermWorker = new PrepareLongtermSimulationWorker( calculateStartConditions, simulationData, new SimulationAccessor( simulation ) );
-        final IStatus prepareLongtermStatus = prepareLongtermWorker.execute( new SubProgressMonitor( monitor, 200 ) );
-        collector.add( prepareLongtermStatus );
-        if( prepareLongtermStatus.getSeverity() >= IStatus.ERROR )
-          return collector.asMultiStatus( errorMessage );
-      }
-      else
-      {
-        /* Prepare shortterm simulation. */
-        final PrepareShorttermSimulationWorker prepareShorttermWorker = new PrepareShorttermSimulationWorker( rrmSimulation, simulationData );
-        final IStatus prepareShorttermStatus = prepareShorttermWorker.execute( new SubProgressMonitor( monitor, 200 ) );
-        collector.add( prepareShorttermStatus );
-        if( prepareShorttermStatus.getSeverity() >= IStatus.ERROR )
-          return collector.asMultiStatus( errorMessage );
-      }
+      final IStatus prepareStatus = prepareSimulation( simulation, calculateStartConditions, simulationData, rrmSimulation, monitor );
+      collector.addAll( Arrays.asList( prepareStatus.getChildren() ) );
+
+      if( prepareStatus.getSeverity() >= IStatus.ERROR )
+        return collector.asMultiStatus( errorMessage );
 
       /* Monitor. */
       monitor.subTask( Messages.getString( "CalculateSimulationRunnable_10" ) ); //$NON-NLS-1$
 
       final boolean isDesignRainfall = simulation.isUsePrecipitationForm();
       final IStatus catchmentCheckStatus = checkTimeseriesMappings( simulationFeature, isDesignRainfall );
-      if( catchmentCheckStatus.matches( IStatus.ERROR ) )
-      {
+
+      if( !catchmentCheckStatus.isOK() )
         collector.add( catchmentCheckStatus );
+
+      if( catchmentCheckStatus.matches( IStatus.ERROR ) )
         return collector.asMultiStatus( errorMessage );
-      }
 
       /* Calculate the catchment models. */
       final CalculateCatchmentModelsWorker catchmentModelsWorker = new CalculateCatchmentModelsWorker( rrmSimulation, calculateCatchmentModels, simulationData );
       final IStatus catchmentModelsStatus = catchmentModelsWorker.execute( new SubProgressMonitor( monitor, 200 ) );
-      collector.add( catchmentModelsStatus );
+
+      if( !catchmentModelsStatus.isOK() )
+        collector.add( catchmentModelsStatus );
+
       if( catchmentModelsStatus.getSeverity() >= IStatus.ERROR )
         return collector.asMultiStatus( errorMessage );
 
@@ -324,7 +320,8 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
       /* Calculate the simulation. */
       final CalculateSimulationWorker calculateWorker = new CalculateSimulationWorker( rrmSimulation, simulationData );
       final IStatus calculateStatus = calculateWorker.execute( new SubProgressMonitor( monitor, 200 ) );
-      collector.add( calculateStatus );
+      // REMARK: flatten out status log in order to avoid too many levels
+      collector.addAll( Arrays.asList( calculateStatus.getChildren() ) );
       if( calculateStatus.getSeverity() >= IStatus.ERROR )
         return collector.asMultiStatus( errorMessage );
 
@@ -354,6 +351,23 @@ public class CalculateSimulationRunnable implements ICoreRunnableWithProgress
 
       /* Monitor. */
       monitor.done();
+    }
+  }
+
+  private IStatus prepareSimulation( final NAControl simulation, final boolean calculateStartConditions, final INaSimulationData simulationData, final RrmSimulation rrmSimulation, final IProgressMonitor monitor )
+  {
+    final boolean isLongterm = SimulationUtilities.isLongterm( simulation );
+    if( isLongterm )
+    {
+      /* Prepare longterm simulation. */
+      final PrepareLongtermSimulationWorker prepareLongtermWorker = new PrepareLongtermSimulationWorker( calculateStartConditions, simulationData, new SimulationAccessor( simulation ) );
+      return prepareLongtermWorker.execute( new SubProgressMonitor( monitor, 200 ) );
+    }
+    else
+    {
+      /* Prepare shortterm simulation. */
+      final PrepareShorttermSimulationWorker prepareShorttermWorker = new PrepareShorttermSimulationWorker( rrmSimulation, simulationData );
+      return prepareShorttermWorker.execute( new SubProgressMonitor( monitor, 200 ) );
     }
   }
 

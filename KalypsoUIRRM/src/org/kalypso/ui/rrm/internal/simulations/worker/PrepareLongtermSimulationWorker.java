@@ -99,9 +99,6 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
     m_simulationAccessor = simulationAccessor;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( IProgressMonitor monitor )
   {
@@ -127,13 +124,13 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
       if( isLongterm )
       {
         /* Update status. */
-        collector.add( IStatus.INFO, Messages.getString( "PrepareLongtermSimulationWorker_2" ) ); //$NON-NLS-1$
+        collector.add( IStatus.OK, Messages.getString( "PrepareLongtermSimulationWorker_2" ) ); //$NON-NLS-1$
 
         /* If the start conditions should be calculated. */
         if( m_calculateStartConditions )
         {
           /* Update status. */
-          collector.add( IStatus.INFO, Messages.getString( "PrepareLongtermSimulationWorker_3" ) ); //$NON-NLS-1$
+          collector.add( IStatus.OK, Messages.getString( "PrepareLongtermSimulationWorker_3" ) ); //$NON-NLS-1$
 
           /* We need to manipulate the model.gml, activating all result flags. */
           final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
@@ -163,14 +160,14 @@ public class PrepareLongtermSimulationWorker implements ICoreRunnableWithProgres
             else
             {
               final String referencingLabel = referencingSimulation.getDescription();
-              collector.add( IStatus.WARNING, Messages.getString("PrepareLongtermSimulationWorker.0"), null, referencingLabel ); //$NON-NLS-1$
+              collector.add( IStatus.WARNING, Messages.getString( "PrepareLongtermSimulationWorker.0" ), null, referencingLabel ); //$NON-NLS-1$
             }
           }
         }
         else
         {
           /* Update status. */
-          collector.add( IStatus.INFO, Messages.getString( "PrepareLongtermSimulationWorker_4" ) ); //$NON-NLS-1$
+          collector.add( IStatus.OK, Messages.getString( "PrepareLongtermSimulationWorker_4" ) ); //$NON-NLS-1$
 
           /* HINT: Longterm simulations without calculation of the start conditions */
           /* HINT: will use an unchanged expertControl.gml later. */
