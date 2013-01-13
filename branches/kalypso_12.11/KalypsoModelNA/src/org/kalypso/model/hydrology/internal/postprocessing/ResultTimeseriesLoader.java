@@ -42,13 +42,16 @@ package org.kalypso.model.hydrology.internal.postprocessing;
 
 import java.io.File;
 import java.util.Date;
-import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatisticsData;
@@ -73,7 +76,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts result timeseries of Kalypso-NA.exe to zml's.
- *
+ * 
  * @author Gernot Belger
  */
 public class ResultTimeseriesLoader
@@ -84,34 +87,35 @@ public class ResultTimeseriesLoader
 
   private final IDManager m_idManager;
 
-  private final Logger m_logger;
-
   private final File m_outputDir;
 
   private final NAStatistics m_naStatistics;
 
   private final ENACoreResultsFormat m_resultsFormat;
 
-  public ResultTimeseriesLoader( final File inputDir, final File outputDir, final GMLWorkspace modelWorkspace, final IDManager idManager, final ENACoreResultsFormat resultsFormat, final Logger logger )
+  public ResultTimeseriesLoader( final File inputDir, final File outputDir, final GMLWorkspace modelWorkspace, final IDManager idManager, final ENACoreResultsFormat resultsFormat )
   {
     m_inputDir = inputDir;
     m_outputDir = outputDir;
     m_modelWorkspace = modelWorkspace;
     m_idManager = idManager;
     m_resultsFormat = resultsFormat;
-    m_logger = logger;
 
-    m_naStatistics = new NAStatistics( logger );
+    m_naStatistics = new NAStatistics();
   }
 
-  public void processResults( ) throws SensorException
+  public IStatus processResults( ) throws SensorException
   {
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
     final TSResultDescriptor[] descriptors = TSResultDescriptor.values();
     for( final TSResultDescriptor descriptor : descriptors )
-      loadTSResults( descriptor );
+      loadTSResults( descriptor, log );
+
+    return log.asMultiStatus( Messages.getString("ResultTimeseriesLoader.0") ); //$NON-NLS-1$
   }
 
-  private void loadTSResults( final TSResultDescriptor descriptor ) throws SensorException
+  private void loadTSResults( final TSResultDescriptor descriptor, final IStatusCollector log ) throws SensorException
   {
     final String suffix = descriptor.name();
 
@@ -120,25 +124,18 @@ public class ResultTimeseriesLoader
     if( qgsFiles.length == 0 )
       return;
 
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" ); //$NON-NLS-1$//$NON-NLS-2$
-
     final BlockTimeSeries ts = new BlockTimeSeries( m_resultsFormat );
     ts.importBlockFile( qgsFiles[0] );
 
     final Feature[] resultFeatures = FeatureHelper.getFeaturesWithName( m_modelWorkspace, descriptor.getFeatureType() );
     for( final Feature resultFeature : resultFeatures )
-      processResultFeature( resultFeature, descriptor, ts );
+      processResultFeature( resultFeature, descriptor, ts, log );
   }
 
-  private void processResultFeature( final Feature resultFeature, final TSResultDescriptor descriptor, final BlockTimeSeries ts ) throws SensorException
+  private void processResultFeature( final Feature resultFeature, final TSResultDescriptor descriptor, final BlockTimeSeries ts, final IStatusCollector log ) throws SensorException
   {
-    if( resultFeature instanceof Node && !((Node) resultFeature).isGenerateResults() )
-      return;
-
-    if( resultFeature instanceof Catchment && !((Catchment) resultFeature).isGenerateResults() )
-      return;
-
-    if( resultFeature instanceof StorageChannel && !((StorageChannel) resultFeature).isGenerateResults() )
+    final boolean isGenerateResults = isGenerateResults( resultFeature );
+    if( !isGenerateResults )
       return;
 
     // FIXME: wrong: we must consider the element type here: else we might read a catchment node for a result result
@@ -147,11 +144,15 @@ public class ResultTimeseriesLoader
     final ITupleModel qTuppelModel = readBlockDataForKey( ts, key, descriptor );
     if( qTuppelModel == null )
     {
-      m_logger.info( String.format( "Missing result data for element: %s", key ) ); //$NON-NLS-1$
+      // FIXME: check: spv has type 'Catchment' but this makes no sense in my opinion. Is this correct?
+      // FIXME: if spi is set, spv, sph, spn and spb are produces by calc core, but contain no data
+      if( descriptor == TSResultDescriptor.spv || descriptor == TSResultDescriptor.sph /* || descriptor == TSResultDescriptor.spn || descriptor == TSResultDescriptor.spb */)
+        return;
+
+      // TODO: actually, this would be a problem of the calculation core...
+      log.add( IStatus.WARNING, String.format( Messages.getString("ResultTimeseriesLoader.1"), resultFeature.getName(), descriptor.name() ) ); // $NON-NLS-1$ //$NON-NLS-1$
       return;
     }
-
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), descriptor ) + "\n" ); //$NON-NLS-1$//$NON-NLS-2$
 
     final String resultPathRelative = DefaultPathGenerator.generateResultPathFor( resultFeature, descriptor, null );
 
@@ -173,21 +174,35 @@ public class ResultTimeseriesLoader
     }
   }
 
+  private boolean isGenerateResults( final Feature resultFeature )
+  {
+    if( resultFeature instanceof Node )
+      return ((Node)resultFeature).isGenerateResults();
+
+    if( resultFeature instanceof Catchment )
+      return ((Catchment)resultFeature).isGenerateResults();
+
+    if( resultFeature instanceof StorageChannel )
+      return ((StorageChannel)resultFeature).isGenerateResults();
+
+    throw new IllegalStateException();
+  }
+
   /**
    * For nodes, we copy the metadata of the pegel.
    */
   private MetadataList getMetadata( final Feature resultFeature ) throws SensorException
   {
-    // TODO: this is mainly needed for hwv; we could use the naoptimize-schema instead and copy the data during creation
-// of the official result timeseries.
+    // TODO: this is mainly needed for hwv; we should use the naoptimize-schema instead and copy the data during creation
+    // of the official result timeseries.
 
     // TODO: read every input timeseries (again) to get the metadata. Better: keep metadata from pre-processing instead.
     if( resultFeature instanceof Node )
     {
-      final ZmlLink pegelLink = ((Node) resultFeature).getPegelLink();
+      final ZmlLink pegelLink = ((Node)resultFeature).getPegelLink();
       final IObservation pegelObservation = pegelLink.loadObservation();
       if( pegelObservation != null )
-        return (MetadataList) pegelObservation.getMetadataList().clone();
+        return (MetadataList)pegelObservation.getMetadataList().clone();
     }
 
     return new MetadataList();
@@ -243,10 +258,11 @@ public class ResultTimeseriesLoader
 
     // FIXME: Arrg! Is this really possible to happen? Most probably something else is wrong. We should not
     // do such terrible things here!
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.136", resultPathRelative ) ); //$NON-NLS-1$
+    // TODO: no one (except developers) is interested in this kind of information anyways...
+    //m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.136", resultPathRelative ) ); //$NON-NLS-1$
     final String extra = "(ID" + Integer.toString( m_idManager.getAsciiID( resultFeature ) ).trim() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     final String resultPath = DefaultPathGenerator.generateResultPathFor( resultFeature, descriptor, extra ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.140", resultPath ) ); //$NON-NLS-1$
+    //m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.140", resultPath ) ); //$NON-NLS-1$
 
     return new File( resultDir, resultPath ); //$NON-NLS-1$
   }

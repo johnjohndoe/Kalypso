@@ -51,7 +51,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {http://www.tuhh.de/initialValues}Catchment.
- *
+ * 
  * @author Gernot Belger
  */
 public class Catchment extends Feature_Impl
@@ -97,9 +97,19 @@ public class Catchment extends Feature_Impl
     return getProperty( PROP_H, Double.class );
   }
 
+  public void setH( final Double h )
+  {
+    setProperty( PROP_H, h );
+  }
+
   public Double getWS( )
   {
     return getProperty( PROP_WS, Double.class );
+  }
+
+  public void setWS( final Double ws )
+  {
+    setProperty( PROP_WS, ws );
   }
 
   public Double getHwgs( )
@@ -107,9 +117,19 @@ public class Catchment extends Feature_Impl
     return getProperty( PROP_HWGS, Double.class );
   }
 
+  public void setHwgs( final Double hwgs )
+  {
+    setProperty( PROP_HWGS, hwgs );
+  }
+
   public Double getQb( )
   {
     return getProperty( PROP_QB, Double.class );
+  }
+
+  public void setQb( final Double qb )
+  {
+    setProperty( PROP_QB, qb );
   }
 
   public synchronized IFeatureBindingCollection<IniHyd> getIniHyds( )
@@ -119,5 +139,4 @@ public class Catchment extends Feature_Impl
 
     return m_iniHyds;
   }
-
 }

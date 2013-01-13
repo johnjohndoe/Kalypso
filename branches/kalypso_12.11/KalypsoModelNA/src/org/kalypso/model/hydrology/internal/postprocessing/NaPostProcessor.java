@@ -47,18 +47,21 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaResultDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
@@ -66,7 +69,6 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -80,9 +82,6 @@ public class NaPostProcessor
 
   private static final String FILENAME_OUTPUT_RES = "output.res"; //$NON-NLS-1$
 
-  @Deprecated
-  private final Logger m_logger;
-
   private final GMLWorkspace m_modelWorkspace;
 
   private final NAModellControl m_naControl;
@@ -91,49 +90,57 @@ public class NaPostProcessor
 
   private ENACoreResultsFormat m_coreResultsFormat;
 
-  private IStatusCollector m_errorLog;
-
   private final NaCatchmentData m_catchmentData;
 
-  public NaPostProcessor( final IDManager idManager, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final NaCatchmentData catchmentData )
+  private final MultiStatus m_processStatus;
+
+  public NaPostProcessor( final IDManager idManager, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final NaCatchmentData catchmentData, final MultiStatus processStatus )
   {
     m_idManager = idManager;
-    m_logger = logger;
     m_modelWorkspace = modelWorkspace;
     m_naControl = naControl;
     m_catchmentData = catchmentData;
-    m_errorLog = null;
+    m_processStatus = processStatus;
   }
 
-  // FIXME: we need (much) better error handling! and error recovery...
-  public void process( final NaAsciiDirs asciiDirs, final NaSimulationDirs simDirs ) throws Exception
+  public IStatus process( final NaAsciiDirs asciiDirs, final NaSimulationDirs simDirs ) throws NaPostProcessingException
   {
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
+    /* read error.gml and trasnlate as status */
+    // FIXME: as this is part of the process, we should move this to the NaProcessor
     final NaResultDirs currentResultDirs = simDirs.currentResultDirs;
     translateErrorGml( asciiDirs, currentResultDirs );
 
-    copyNaExeLogs( asciiDirs, currentResultDirs );
+    final IStatus naExeLogsStatus = copyNaExeLogs( asciiDirs, currentResultDirs );
+    if( !naExeLogsStatus.isOK() )
+      log.add( naExeLogsStatus );
 
     try
     {
       checkSuccessAndResultsFormat( asciiDirs );
 
-      final NAStatistics statistics = loadTSResults( asciiDirs.outWeNatDir, simDirs.currentResultDir );
-      statistics.writeStatistics( simDirs.currentResultDir, currentResultDirs.reportDir );
+      loadTSResults( asciiDirs.outWeNatDir, simDirs, log );
 
-      copyStatisticResultFile( asciiDirs, currentResultDirs );
+      final IStatus statisticResultFileStatus = copyStatisticResultFile( asciiDirs, currentResultDirs );
+      if( !statisticResultFileStatus.isOK() )
+        log.add( statisticResultFileStatus );
 
       final Date[] initialDates = m_naControl.getInitialDatesToBeWritten();
       final LzsimReader lzsimManager = new LzsimReader( initialDates, currentResultDirs.anfangswertDir );
-      lzsimManager.readInitialValues( m_idManager, m_catchmentData, asciiDirs.lzsimDir, m_logger );
+      final IStatus status = lzsimManager.readInitialValues( m_idManager, m_catchmentData, asciiDirs.lzsimDir );
+      if( !status.isOK() )
+        log.add( status );
+
+      return log.asMultiStatus( Messages.getString( "NAModelSimulation.12" ) ); //$NON-NLS-1$
     }
-    catch( final SimulationException e )
+    catch( final SensorException e )
     {
-      e.printStackTrace();
-      m_errorLog.add( IStatus.ERROR, Messages.getString( "NaPostProcessor.2" ), e ); //$NON-NLS-1$
+      throw new NaPostProcessingException( Messages.getString("NaPostProcessor.3"), e ); //$NON-NLS-1$
     }
   }
 
-  private void copyNaExeLogs( final NaAsciiDirs asciiDirs, final NaResultDirs currentResultDirs )
+  private IStatus copyNaExeLogs( final NaAsciiDirs asciiDirs, final NaResultDirs currentResultDirs )
   {
     try( ZipOutputStream zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( currentResultDirs.exe_logs_zip ) ) ) )
     {
@@ -142,12 +149,13 @@ public class NaPostProcessor
       ZipUtilities.writeZipEntry( zos, asciiDirs.output_res, "output.txt" ); //$NON-NLS-1$
       ZipUtilities.writeZipEntry( zos, asciiDirs.output_err, "error.txt" ); //$NON-NLS-1$
       zos.close();
+
+      return Status.OK_STATUS;
     }
     catch( final IOException e )
     {
-      e.printStackTrace();
-      final String msg = String.format( Messages.getString( "NaPostProcessor.4" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-      m_logger.severe( msg );
+      final String msg = Messages.getString( "NaPostProcessor.4" ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, msg, e );
     }
   }
 
@@ -156,26 +164,24 @@ public class NaPostProcessor
    */
   private void translateErrorGml( final NaAsciiDirs asciiDirs, final NaResultDirs resultDirs )
   {
-    final NaFortranLogTranslater logTranslater = new NaFortranLogTranslater( asciiDirs.asciiDir, m_idManager, m_logger );
+    final NaFortranLogTranslater logTranslater = new NaFortranLogTranslater( asciiDirs.asciiDir, m_idManager, m_processStatus );
 
     final File resultFile = new File( resultDirs.logDir, "error.gml" ); //$NON-NLS-1$
     resultFile.getParentFile().mkdirs();
 
     logTranslater.translate( resultFile );
-
-    final IStatusCollector errorLog = logTranslater.getErrorLog();
-    m_errorLog = errorLog;
   }
 
   /**
    * Checks if the calculation was successful or not; if yes, checks for the results file version. Starting from NA core
    * 2.2 dates for block time series are written as YYYYMMDD, older versions are using YYMMDD format.
    */
-  private void checkSuccessAndResultsFormat( final NaAsciiDirs asciiDirs ) throws SimulationException
+  // FIXME: does not belong here!, move to processor
+  private void checkSuccessAndResultsFormat( final NaAsciiDirs asciiDirs ) throws NaPostProcessingException
   {
     final List<String> logContent = readOutputRes( asciiDirs.startDir );
     if( logContent == null || logContent.size() == 0 )
-      throw new SimulationException( Messages.getString( "NaPostProcessor.0" ) ); //$NON-NLS-1$
+      throw new NaPostProcessingException( Messages.getString( "NaPostProcessor.0" ) ); //$NON-NLS-1$
 
     checkLogForSuccess( logContent );
 
@@ -184,6 +190,9 @@ public class NaPostProcessor
 
   private ENACoreResultsFormat findCoreResultsFormat( final List<String> logContent )
   {
+    // FIXME: use Version class instead
+    // TODO: check against exe filename
+
     final Pattern versionPattern = Pattern.compile( VERSION_PATTERN );
     for( int i = 0; i < logContent.size(); i++ )
     {
@@ -210,7 +219,7 @@ public class NaPostProcessor
     return ENACoreResultsFormat.FMT_2_2_AND_NEWER;
   }
 
-  private void checkLogForSuccess( final List<String> logContent ) throws SimulationException
+  private void checkLogForSuccess( final List<String> logContent ) throws NaPostProcessingException
   {
     for( int i = logContent.size() - 1; i >= 0; i-- )
     {
@@ -219,7 +228,7 @@ public class NaPostProcessor
         return;
     }
 
-    throw new SimulationException( Messages.getString( "NaPostProcessor.1" ) ); //$NON-NLS-1$
+    throw new NaPostProcessingException( Messages.getString( "NaPostProcessor.1" ) ); //$NON-NLS-1$
   }
 
   private List<String> readOutputRes( final File startDir )
@@ -237,9 +246,13 @@ public class NaPostProcessor
 
   /** kopiere statistische Ergebnis-Dateien */
   // FIXME: why copy? bilanz does not belong to ascii and should be directly written to result dirs
-  private void copyStatisticResultFile( final NaAsciiDirs asciiDirs, final NaResultDirs resultDirs )
+  private IStatus copyStatisticResultFile( final NaAsciiDirs asciiDirs, final NaResultDirs resultDirs )
   {
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
     resultDirs.reportDir.mkdirs();
+
+    // FIXME: how many 'bil' files can there be?
 
     final String[] wildcards = new String[] { "*bil*" }; //$NON-NLS-1$
     final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( wildcards, false, false, true );
@@ -250,35 +263,40 @@ public class NaPostProcessor
     {
       try
       {
-        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.220", bilFile.getName() ) ); //$NON-NLS-1$
-
         FileUtils.copyFile( bilFile, resultDirs.bilanceFile );
       }
       catch( final IOException e )
       {
-        final String inputPath = outWeNatDir.getName() + bilFile.getName();
-        e.printStackTrace();
-
-        final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.224", inputPath, e.getLocalizedMessage() ); //$NON-NLS-1$
-        m_logger.severe( msg );
+        final String inputPath = bilFile.getAbsolutePath();
+        final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.224", inputPath ); //$NON-NLS-1$
+        log.add( IStatus.ERROR, msg, e );
       }
     }
+
+    return log.asMultiStatus( Messages.getString("NaPostProcessor.5") ); //$NON-NLS-1$
   }
 
-  private NAStatistics loadTSResults( final File outWeNatDir, final File resultDir ) throws SensorException
+  private void loadTSResults( final File outWeNatDir, final NaSimulationDirs simDirs, final IStatusCollector log ) throws SensorException
   {
-    final ResultTimeseriesLoader resultProcessor = new ResultTimeseriesLoader( outWeNatDir, resultDir, m_modelWorkspace, m_idManager, getCoreResultsFormat(), m_logger );
-    resultProcessor.processResults();
-    return resultProcessor.getStatistics();
+    /* read result timeseries */
+    final File outputDir = simDirs.currentResultDir;
+
+    final ResultTimeseriesLoader resultProcessor = new ResultTimeseriesLoader( outWeNatDir, outputDir, m_modelWorkspace, m_idManager, getCoreResultsFormat() );
+    final IStatus status = resultProcessor.processResults();
+    if( !status.isOK() )
+      log.add( status );
+
+    /* process statistics */
+    final NAStatistics statistics = resultProcessor.getStatistics();
+
+    final NaResultDirs currentResultDirs = simDirs.currentResultDirs;
+    final IStatus statisticsStatus = statistics.writeStatistics( simDirs.currentResultDir, currentResultDirs.reportDir );
+    if( !statisticsStatus.isOK() )
+      log.add( statisticsStatus );
   }
 
   public ENACoreResultsFormat getCoreResultsFormat( )
   {
     return m_coreResultsFormat;
-  }
-
-  public IStatusCollector getErrorLog( )
-  {
-    return m_errorLog;
   }
 }

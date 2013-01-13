@@ -41,17 +41,37 @@
 package org.kalypso.model.hydrology.internal.postprocessing;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Logger;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.core.KalypsoCorePreferences;
+import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.NATimeSettings;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+
+import com.google.common.base.Charsets;
 
 /**
  * @author huebsch
  */
 public class LzsimReader
 {
+  private final DateFormat m_dateTimeInstance = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
+
+  private final DateFormat m_formatFileName = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd'.gml'" ) ); //$NON-NLS-1$
+
   private final Date[] m_initialDates;
 
   private final File m_outputDir;
@@ -60,21 +80,77 @@ public class LzsimReader
   {
     m_initialDates = initialDates;
     m_outputDir = outputDir;
+    m_dateTimeInstance.setTimeZone( KalypsoCorePreferences.getTimeZone() );
   }
 
   /**
    * Reads the initial values back from the ascii files, if any have been ordered.
    */
-  public void readInitialValues( final IDManager idManager, final NaCatchmentData catchmentData, final File lzsimDir, final Logger logger ) throws Exception
+  public IStatus readInitialValues( final IDManager idManager, final NaCatchmentData catchmentData, final File lzsimDir ) throws NaPostProcessingException
   {
     if( m_initialDates.length == 0 )
-      return;
+      return Status.OK_STATUS;
+
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
     for( final Date initialDate : m_initialDates )
     {
-      final LzsToGml lzsToGml = new LzsToGml( lzsimDir, initialDate, idManager, catchmentData, logger );
-      lzsToGml.readLzs();
-      lzsToGml.writeGml( m_outputDir );
+      final LzsToGml lzsToGml = new LzsToGml( lzsimDir, initialDate, idManager, catchmentData );
+      final Pair<InitialValues, IStatus> result = lzsToGml.readLzs();
+
+      final InitialValues initialValues = result.getLeft();
+      final IStatus status = result.getRight();
+      if( !status.isOK() )
+        log.add( status );
+
+      if( !status.matches( IStatus.ERROR ) )
+      {
+        final IStatus gmlStatus = writeGml( initialValues );
+        if( !gmlStatus.isOK() )
+          log.add( gmlStatus );
+      }
+
+      initialValues.getWorkspace().dispose();
+    }
+
+    return log.asMultiStatus( Messages.getString("LzsimReader_0") ); //$NON-NLS-1$
+  }
+
+  // REMARK: we omit any hour here, as the calculation core does not support it. Probably this is a bug of the
+  // calculation core, even if the people responsible for this do not recognize it. In the input file of the
+  // calculation core the hour is specified, but the produced date is always written without hour information ('00').
+  public IStatus writeGml( final InitialValues initialValues )
+  {
+    final Date initialDate = initialValues.getInitialDate();
+    final String initialDateText = m_dateTimeInstance.format( initialDate );
+
+    // TODO: check, if we read any data for this date, else do not write gml
+    final int catchments = initialValues.getCatchments().size();
+    final int channels = initialValues.getChannels().size();
+    if( catchments == 0 && channels == 0 )
+    {
+      final String message = String.format( Messages.getString("LzsimReader_1"), initialDateText ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message );
+    }
+
+    try
+    {
+
+      final String resultFilename = m_formatFileName.format( initialDate ); //$NON-NLS-1$
+      final File resultFile = new File( m_outputDir, resultFilename );
+      resultFile.getParentFile().mkdirs();
+
+      GmlSerializer.serializeWorkspace( resultFile, initialValues.getWorkspace(), Charsets.UTF_8.name() );
+
+      // final String iniDate = m_dateFormat.format( initialDate );
+      // m_logger.info( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.42", iniDate ) ); //$NON-NLS-1$
+
+      return Status.OK_STATUS;
+    }
+    catch( IOException | GmlSerializeException e )
+    {
+      final String message = String.format( Messages.getString("LzsimReader_2"), initialDateText ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, message, e );
     }
   }
 }

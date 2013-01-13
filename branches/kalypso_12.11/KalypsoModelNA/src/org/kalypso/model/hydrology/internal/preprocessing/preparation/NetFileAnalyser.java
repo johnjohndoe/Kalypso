@@ -146,7 +146,7 @@ class NetFileAnalyser
 
         if( upstreamNodeChannel == downStreamChannelFE )
         {
-          final String message = String.format( Messages.getString("NetFileAnalyser.0"), upStreamNode.getName() ); //$NON-NLS-1$
+          final String message = String.format( Messages.getString( "NetFileAnalyser.0" ), upStreamNode.getName() ); //$NON-NLS-1$
           throw new NAPreprocessorException( message );
         }
 
@@ -162,20 +162,23 @@ class NetFileAnalyser
     {
       final Node downStreamNode = channel.getDownstreamNode();
       if( downStreamNode == null )
-      {
+      {// FIXME: throw an exception instead
         logWarning( Messages.getString( "NetFileAnalyser_3" ), channel ); //$NON-NLS-1$
         continue;
       }
 
       final Channel downStreamChannel = downStreamNode.getDownstreamChannel();
       if( downStreamChannel == null )
-      {
-        logWarning( Messages.getString( "NetFileAnalyser_4" ), downStreamNode ); //$NON-NLS-1$
+      {// TODO: this is totally normal: end node of net!
+       // FIXME: check, if ok to remove this warning
+       //logWarning( Messages.getString( "NetFileAnalyser_4" ), downStreamNode ); //$NON-NLS-1$
         continue;
       }
+
       // set dependency
       if( channel == downStreamChannel )
       {
+        // FIXME: we should throw an exception in this case
         logWarning( Messages.getString( "NetFileAnalyser_5" ), channel ); //$NON-NLS-1$
         continue;
       }
@@ -211,14 +214,14 @@ class NetFileAnalyser
     for( final Catchment catchment : catchments )
     {
       // upstream
-      final Channel upstreamChannel = catchment.getChannel();
-      if( upstreamChannel == null )
+      final Channel catchmentChannel = catchment.getChannel();
+      if( catchmentChannel == null )
       {
         logWarning( Messages.getString( "NetFileAnalyser_6" ), catchment ); //$NON-NLS-1$
         continue;
       }
 
-      final NetElement upStreamElement = netElements.get( upstreamChannel.getId() );
+      final NetElement upStreamElement = netElements.get( catchmentChannel.getId() );
 
       final Node overflowNode = catchment.getOverflowNode();
       if( overflowNode != null )
@@ -258,7 +261,7 @@ class NetFileAnalyser
           continue;
         }
 
-        if( upstreamChannel == downStreamChannelFE )
+        if( catchmentChannel == downStreamChannelFE )
         {
           // two catchments discharges to the same channel, no need to generate
           // dependency cause it is the same channel

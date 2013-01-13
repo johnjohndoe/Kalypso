@@ -41,11 +41,7 @@
 package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,12 +50,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessingException;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
@@ -79,24 +77,18 @@ public class NAModelSimulation
 
   static final String EXECUTABLES_FILE_PATTERN = "Kalypso-NA_(.+)\\.exe"; //$NON-NLS-1$
 
-  private static final DateFormat START_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" ); //$NON-NLS-1$
-
   private final NaSimulationDirs m_simDirs;
 
   private final INaSimulationData m_data;
-
-  private final Logger m_logger;
 
   private NAModelPreprocessor m_preprocessor;
 
   private KalypsoNaProcessor m_processor;
 
-  public NAModelSimulation( final NaSimulationDirs simDirs, final INaSimulationData data, final Logger logger )
+  public NAModelSimulation( final NaSimulationDirs simDirs, final INaSimulationData data )
   {
     m_simDirs = simDirs;
     m_data = data;
-    m_logger = logger;
-    m_logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.13", START_DATE_FORMAT.format( new Date() ) ) ); //$NON-NLS-1$
   }
 
   public IStatus runSimulation( final ISimulationMonitor monitor )
@@ -184,41 +176,43 @@ public class NAModelSimulation
     }
   }
 
-  public void rerunForOptimization( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
+  public IStatus rerunForOptimization( final NAOptimize optimize, final ISimulationMonitor monitor ) throws SimulationException, IOException, NAPreprocessorException, NaPostProcessingException
   {
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
     // FIXME: clear old result file (we_nat_out etc.)
     // TODO: handle status
-    /* IStatus status = */m_preprocessor.processCallibrationFiles( optimize, monitor );
+    final IStatus preProcessStatus = m_preprocessor.processCallibrationFiles( optimize, monitor );
     if( monitor.isCanceled() )
-      return;
+      return Status.CANCEL_STATUS;
+    log.add( preProcessStatus );
 
     m_processor.run( monitor );
     if( monitor.isCanceled() )
-      return;
+      return Status.CANCEL_STATUS;
 
-    postProcess( m_data, null, monitor );
+    // HACK: move error gml processing into processor
+    final MultiStatus processStatus = new MultiStatus( ModelNA.PLUGIN_ID, 0, "PsotProcessing", null ); //$NON-NLS-1$
+
+    final IStatus postProcessStatus = postProcess( m_data, processStatus, monitor );
+
+    log.add( processStatus );
+    log.add( postProcessStatus );
+
+    return log.asMultiStatus( "Optimize run" );
   }
 
-  private IStatus preProcess( final INaSimulationData simulationData, final Version calcCoreVersion, final ISimulationMonitor monitor ) throws SimulationException
+  private IStatus preProcess( final INaSimulationData simulationData, final Version calcCoreVersion, final ISimulationMonitor monitor ) throws NAPreprocessorException
   {
-    try
-    {
-      /* Pre processing. */
-      m_preprocessor = new NAModelPreprocessor( m_simDirs.asciiDirs, simulationData, calcCoreVersion );
+    /* Pre processing. */
+    m_preprocessor = new NAModelPreprocessor( m_simDirs.asciiDirs, simulationData, calcCoreVersion );
 
-      final IStatus status = m_preprocessor.process( monitor );
+    final IStatus status = m_preprocessor.process( monitor );
 
-      final File idMapFile = new File( m_simDirs.simulationDir, "IdMap.txt" ); //$NON-NLS-1$
-      m_preprocessor.getIdManager().dump( idMapFile );
+    final File idMapFile = new File( m_simDirs.simulationDir, "IdMap.txt" ); //$NON-NLS-1$
+    m_preprocessor.getIdManager().dump( idMapFile );
 
-      return status;
-    }
-    catch( final NAPreprocessorException e )
-    {
-      final String msg = String.format( Messages.getString( "NAModelSimulation.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-      m_logger.log( Level.SEVERE, msg, e );
-      throw new SimulationException( msg, e );
-    }
+    return status;
   }
 
   private MultiStatus process( final File naExe, final ISimulationMonitor monitor )
@@ -242,15 +236,11 @@ public class NAModelSimulation
     return collector.asMultiStatus( message );
   }
 
-  private IStatus postProcess( final INaSimulationData simulationData, final MultiStatus processStatus, final ISimulationMonitor monitor ) throws Exception
+  private IStatus postProcess( final INaSimulationData simulationData, final MultiStatus processStatus, final ISimulationMonitor monitor ) throws NaPostProcessingException
   {
-    /* The status collector. */
-    final IStatusCollector collector = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
-
     /* Monitor. */
     final String messageStartPostprocess = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.28" ); //$NON-NLS-1$
     monitor.setMessage( messageStartPostprocess );
-    m_logger.log( Level.FINEST, messageStartPostprocess );
 
     /* Post processing. */
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
@@ -259,21 +249,8 @@ public class NAModelSimulation
     final NaCatchmentData catchmentData = m_preprocessor.getCatchmentData();
     final IDManager idManager = m_preprocessor.getIdManager();
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( idManager, m_logger, modelWorkspace, naControl, catchmentData );
-    postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
-
-    if( processStatus != null )
-    {
-      final IStatusCollector errorLog = postProcessor.getErrorLog();
-      if( errorLog != null )
-      {
-        final IStatus[] allStati = errorLog.getAllStati();
-        for( final IStatus status : allStati )
-          processStatus.add( status );
-      }
-    }
-
-    return collector.asMultiStatus( Messages.getString( "NAModelSimulation.12" ) ); //$NON-NLS-1$
+    final NaPostProcessor postProcessor = new NaPostProcessor( idManager, modelWorkspace, naControl, catchmentData, processStatus );
+    return postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
   }
 
   public NaSimulationDirs getSimulationDirs( )

@@ -56,9 +56,11 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class IniHyd extends Feature_Impl
 {
-  private static final QName PROP_BOFS = new QName( NaModelConstants.NS_INIVALUES, "bofs" );//$NON-NLS-1$
-
   private static final String NS_INIVALUES = NaModelConstants.NS_INIVALUES;
+
+  public static final QName FEATURE_INI_HYD = new QName( NS_INIVALUES, "IniHyd" ); //$NON-NLS-1$
+
+  private static final QName PROP_BOFS = new QName( NaModelConstants.NS_INIVALUES, "bofs" );//$NON-NLS-1$
 
   private static final QName PROP_FEATUREID = new QName( NS_INIVALUES, "featureId" ); //$NON-NLS-1$
 
@@ -74,13 +76,28 @@ public class IniHyd extends Feature_Impl
     return getProperty( PROP_FEATUREID, String.class );
   }
 
+  public void setNaHydrotopID( final String gmlID )
+  {
+    setProperty( PROP_FEATUREID, gmlID );
+  }
+
   public Double getBi( )
   {
     return getProperty( PROP_BI, Double.class );
   }
 
+  public void setBi( final Double bi )
+  {
+    setProperty( PROP_BI, bi );
+  }
+
   public List<Double> getBofs( )
   {
     return getProperty( PROP_BOFS, List.class );
+  }
+
+  public void setBofs( final List<Double> bofs )
+  {
+    setProperty( PROP_BOFS, bofs );
   }
 }

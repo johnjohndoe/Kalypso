@@ -98,7 +98,7 @@ import de.renew.workflow.connector.worklist.ITaskExecutor;
 
 /**
  * The simulation calculation feature control.
- *
+ * 
  * @author Holger Albert
  */
 public class SimulationCalculationFeatureControl extends AbstractFeatureControl
@@ -143,7 +143,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       final Group validationGroup = new Group( main, SWT.NONE );
       GridLayoutFactory.swtDefaults().applyTo( validationGroup );
       validationGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      validationGroup.setText( Messages.getString("SimulationCalculationFeatureControl.14") ); //$NON-NLS-1$
+      validationGroup.setText( Messages.getString( "SimulationCalculationFeatureControl.14" ) ); //$NON-NLS-1$
 
       /* Calculation validation status */
       m_validationStatusComposite = new StatusComposite( validationGroup, StatusComposite.DETAILS );
@@ -168,7 +168,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       final Label emptyLabel2 = new Label( resultsGroup, SWT.NONE );
       emptyLabel2.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-      addAction( resultsGroup, new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_CALC_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_LOG_TOOLTIP, current.getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      addAction( resultsGroup, new OpenOutputZipAction( MessageConstants.STR_ACTION_OPEN_CALC_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_LOG_TOOLTIP, current.getOutputZip(), false ) ); //$NON-NLS-1$ //$NON-NLS-2$
       addAction( resultsGroup, new OpenOutputZipAction( MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TOOLTIP, current.getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       // addAction( resultsGroup, new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.",
       // simulation, false ) );
@@ -229,7 +229,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     for( final IAction action : m_actions )
     {
       if( action instanceof IUpdateable )
-        ((IUpdateable) action).update();
+        ((IUpdateable)action).update();
     }
   }
 
@@ -261,7 +261,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
 
     m_simulationAction.updateStatus();
 
-    m_validationJob = new ValidateSimulationJob( simulation, (NAControl) getFeature() );
+    m_validationJob = new ValidateSimulationJob( simulation, (NAControl)getFeature() );
     m_validationJob.setUser( false );
     m_validationJob.addJobChangeListener( new JobChangeAdapter()
     {
@@ -279,7 +279,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
           return;
         }
 
-        final ValidateSimulationJob task = (ValidateSimulationJob) job;
+        final ValidateSimulationJob task = (ValidateSimulationJob)job;
         final IStatus validationStatus = task.getValidationStatus();
         setValidationStatus( validationStatus );
       }
@@ -293,8 +293,8 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
   {
     final Collection<NAControl> results = new ArrayList<>();
 
-    final NAControl naControl = (NAControl) getFeature();
-    final SimulationCollection owner = (SimulationCollection) naControl.getOwner();
+    final NAControl naControl = (NAControl)getFeature();
+    final SimulationCollection owner = (SimulationCollection)naControl.getOwner();
 
     final IFeatureBindingCollection<NAControl> simulations = owner.getSimulations();
     for( final NAControl simulation : simulations )
@@ -313,7 +313,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     final String title = Messages.getString( "SimulationCalculationFeatureControl.13" ); //$NON-NLS-1$
 
     /* Get the na control. */
-    final NAControl naControl = (NAControl) getFeature();
+    final NAControl naControl = (NAControl)getFeature();
     final NAControl[] simulations = new NAControl[] { naControl };
 
     /* Create the simulation handler. */

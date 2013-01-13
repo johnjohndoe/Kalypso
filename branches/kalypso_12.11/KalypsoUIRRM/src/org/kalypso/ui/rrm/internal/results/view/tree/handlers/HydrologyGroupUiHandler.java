@@ -56,7 +56,6 @@ import org.kalypso.ui.rrm.internal.results.view.ResultManagementView;
  */
 public class HydrologyGroupUiHandler extends AbstractResultTreeNodeUiHandler
 {
-
   private final String m_label;
 
   private final DESCRIPTORS m_icon;
@@ -83,8 +82,6 @@ public class HydrologyGroupUiHandler extends AbstractResultTreeNodeUiHandler
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    // TODO Auto-generated method stub
     return null;
   }
-
 }
