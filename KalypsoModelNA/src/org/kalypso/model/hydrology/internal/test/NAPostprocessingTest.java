@@ -49,6 +49,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
 import org.kalypso.commons.compare.DifferenceDumper;
@@ -65,6 +66,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
@@ -149,7 +151,9 @@ public class NAPostprocessingTest
     for( final Catchment catchment : catchments )
       idManager.getAsciiID( catchment );
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( idManager, logger, modelWorkspace, naControl, catchmentData );
+    final MultiStatus processStatus = new MultiStatus( ModelNA.PLUGIN_ID, 0, "Processing", null ); //$NON-NLS-1$
+
+    final NaPostProcessor postProcessor = new NaPostProcessor( idManager, modelWorkspace, naControl, catchmentData, processStatus );
     postProcessor.process( naAsciiDirs, naSimulationDirs );
 
     return resultsDir;

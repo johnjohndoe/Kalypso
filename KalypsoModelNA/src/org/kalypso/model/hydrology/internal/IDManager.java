@@ -45,7 +45,7 @@ import java.util.TreeSet;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -138,7 +138,7 @@ public class IDManager
     return testMap;
   }
 
-  public void dump( final File idMapFile ) throws SimulationException
+  public void dump( final File idMapFile ) throws NAPreprocessorException
   {
     Writer idWriter = null;
     try
@@ -149,7 +149,7 @@ public class IDManager
     }
     catch( final IOException e )
     {
-      throw new SimulationException( "Failed to dump idManager", e ); //$NON-NLS-1$
+      throw new NAPreprocessorException( "Failed to dump idManager", e ); //$NON-NLS-1$
     }
     finally
     {
@@ -169,7 +169,7 @@ public class IDManager
       final Object value = m_idMapFeature.get( idmap );
       if( value instanceof Feature )
       {
-        final Feature feature = (Feature) value;
+        final Feature feature = (Feature)value;
         final String type = feature.getFeatureType().getQName().getLocalPart().toString();
         writer.write( String.format( Locale.US, "%-16s %-32s %-32s %-32s\n", type, feature.getId(), feature.getName(), feature.getDescription() ) ); //$NON-NLS-1$
       }
@@ -185,8 +185,8 @@ public class IDManager
     final List<Feature> result = new ArrayList<>();
     for( final Object featureObject : m_featureIDMap.keySet() )
     {
-      if( featureObject instanceof Feature && getType( (Feature) featureObject ) == type )
-        result.add( (Feature) featureObject );
+      if( featureObject instanceof Feature && getType( (Feature)featureObject ) == type )
+        result.add( (Feature)featureObject );
     }
     return result;
   }

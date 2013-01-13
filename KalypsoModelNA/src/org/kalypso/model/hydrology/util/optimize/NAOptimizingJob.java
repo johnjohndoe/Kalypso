@@ -64,7 +64,6 @@ import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
@@ -93,7 +92,7 @@ import org.w3c.dom.Node;
 
 /**
  * encapsulates an NAModellCalculation job to optimize it
- *
+ * 
  * @author doemming
  */
 public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
@@ -140,8 +139,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   /**
    * Run myself in the {@link OptimizerRunner}.
-   *
-   * @see org.kalypso.simulation.core.ISimulationRunnable#run(org.kalypso.simulation.core.ISimulationMonitor)
    */
   @Override
   public boolean run( final ISimulationMonitor monitor ) throws SimulationException
@@ -192,8 +189,10 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     try
     {
       if( m_counter == 0 )
+      {
         // FIXME: if first run fails, we cannot 'runAgain', as the processor may not be initialized.
         runFirst( monitor );
+      }
       else
         runAgain( monitor );
 
@@ -224,27 +223,16 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     }
   }
 
-  private void runFirst( final ISimulationMonitor monitor ) throws Exception
+  private IStatus runFirst( final ISimulationMonitor monitor ) throws Exception
   {
-    final NACalculationLogger naCalculationLogger = new NACalculationLogger( new File( m_tmpDir, "logRun_" + m_counter ) ); //$NON-NLS-1$
-
-    final Logger logger = naCalculationLogger.getLogger();
-
-    try
-    {
-      m_simulation = new NAModelSimulation( m_simDirs, m_data, logger );
-      m_simulation.runSimulation( monitor );
-    }
-    finally
-    {
-      naCalculationLogger.stopLogging();
-    }
+    m_simulation = new NAModelSimulation( m_simDirs, m_data );
+    return m_simulation.runSimulation( monitor );
   }
 
-  private void runAgain( final ISimulationMonitor monitor ) throws Exception
+  private IStatus runAgain( final ISimulationMonitor monitor ) throws Exception
   {
     final NAOptimize optimize = m_data.getNaOptimize();
-    m_simulation.rerunForOptimization( optimize, monitor );
+    return m_simulation.rerunForOptimization( optimize, monitor );
   }
 
   /**
@@ -301,9 +289,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     FileUtils.deleteQuietly( dir );
   }
 
-  /**
-   * @see org.kalypso.optimize.IOptimizingJob#optimize(org.kalypso.optimizer.Parameter[], double[])
-   */
   @Override
   public void optimize( final Parameter[] parameterConf, final double[] values ) throws Exception
   {
@@ -334,7 +319,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
       t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
 
       final Node naOptimizeDom = m_data.getOptimizeData().getOptimizeDom();
-      final Document ownerDocument = naOptimizeDom instanceof Document ? (Document) naOptimizeDom : naOptimizeDom.getOwnerDocument();
+      final Document ownerDocument = naOptimizeDom instanceof Document ? (Document)naOptimizeDom : naOptimizeDom.getOwnerDocument();
       final String encoding = ownerDocument.getInputEncoding();
       t.setOutputProperty( OutputKeys.ENCODING, encoding );
       t.transform( new DOMSource( ownerDocument ), new StreamResult( file ) );
@@ -368,8 +353,8 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
       final ITupleModel values = observation.getValues( null );
       for( int i = 0; i < values.size(); i++ )
       {
-        final Date date = (Date) values.get( i, dateAxis );
-        final Double value = (Double) values.get( i, qAxis );
+        final Date date = (Date)values.get( i, dateAxis );
+        final Double value = (Double)values.get( i, qAxis );
         result.put( date, value );
       }
       m_measuredTS = result;
@@ -399,8 +384,8 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     final ITupleModel values = observation.getValues( null );
     for( int i = 0; i < values.size(); i++ )
     {
-      final Date date = (Date) values.get( i, dateAxis );
-      final Double value = (Double) values.get( i, qAxis );
+      final Date date = (Date)values.get( i, dateAxis );
+      final Double value = (Double)values.get( i, qAxis );
       result.put( date, value );
     }
     return result;

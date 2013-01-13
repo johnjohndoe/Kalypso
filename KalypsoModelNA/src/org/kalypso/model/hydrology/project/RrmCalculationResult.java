@@ -53,8 +53,6 @@ public class RrmCalculationResult
 {
   public static final String FILE_STATISTICS_CSV = "statistics.txt"; //$NON-NLS-1$
 
-  public static final String FILE_CALCULATION_LOG = "calculation.log"; //$NON-NLS-1$
-
   public static final String FILE_BILANZ_TXT = "balance.txt"; //$NON-NLS-1$
 
   public static final String FOLDER_INITIAL_VALUES = "InitialValues"; //$NON-NLS-1$
@@ -90,11 +88,6 @@ public class RrmCalculationResult
   public String getName( )
   {
     return m_folder.getName();
-  }
-
-  public IFile getCalculationLog( )
-  {
-    return getLogFolder().getFile( FILE_CALCULATION_LOG );
   }
 
   public IFile getOutputZip( )

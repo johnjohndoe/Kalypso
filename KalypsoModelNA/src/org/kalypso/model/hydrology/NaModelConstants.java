@@ -241,8 +241,6 @@ public interface NaModelConstants
   /** initalValues.xsd */
   QName INI_HYD_MEMBER_PROP = new QName( NS_INIVALUES, "IniHyd" ); //$NON-NLS-1$
 
-  QName INI_CATCHMENT_LINK_HYD_PROP = new QName( NS_INIVALUES, "hyd" ); //$NON-NLS-1$
-
   /** synthN.xsd */
   QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" ); //$NON-NLS-1$
 

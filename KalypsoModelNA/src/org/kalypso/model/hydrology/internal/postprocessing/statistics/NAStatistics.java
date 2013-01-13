@@ -52,12 +52,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.statistics.INaStatistics;
 import org.kalypso.ogc.sensor.IAxis;
@@ -103,19 +106,18 @@ public class NAStatistics implements INaStatistics
 
   private final Map<Feature, NAStatisticsData> m_resultMap = new TreeMap<>( new NAStatisticComparator() );
 
-  private final Logger m_logger;
-
-  public NAStatistics( final Logger logger )
+  public NAStatistics( )
   {
-    m_logger = logger;
     m_csvDateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
   }
 
-  public void writeStatistics( final File inputDir, final File reportDir )
+  public IStatus writeStatistics( final File inputDir, final File reportDir )
   {
     try
     {
-      final Object[][] result = gatherData( inputDir );
+      final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
+      final Object[][] result = gatherData( inputDir, log );
 
       reportDir.mkdirs();
 
@@ -123,12 +125,13 @@ public class NAStatistics implements INaStatistics
 
       writeZml( observation, reportDir );
       writeCsv( observation, reportDir );
+
+      return log.asMultiStatus( Messages.getString("NAStatistics.7") ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
       final String msg = String.format( Messages.getString( "NAStatistics.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-      m_logger.severe( msg );
+      return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, msg, e );
     }
   }
 
@@ -139,7 +142,7 @@ public class NAStatistics implements INaStatistics
     return new SimpleObservation( FILENAME_ZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), new MetadataList(), resultTuppleModel ); //$NON-NLS-1$
   }
 
-  private Object[][] gatherData( final File inputDir ) throws SensorException
+  private Object[][] gatherData( final File inputDir, final IStatusCollector log ) throws SensorException
   {
     final List<Object[]> resultValuesList = new ArrayList<>();
 
@@ -158,7 +161,7 @@ public class NAStatistics implements INaStatistics
       final Date maxValueDate = data.getMaxValueDate();
       final Double volume = data.getVolume();
       if( maxValueDate == null )
-        m_logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.157", resultFile.getAbsolutePath() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        log.add( IStatus.WARNING, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.157", resultFile.getAbsolutePath() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final String relativePath = getResultRelativePath( inputDir, resultFile );
 
@@ -228,20 +231,20 @@ public class NAStatistics implements INaStatistics
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
     final String timezoneName = timeZone.getDisplayName();
 
-    try (PrintWriter pw = new PrintWriter( reportFileCSV ))
+    try( PrintWriter pw = new PrintWriter( reportFileCSV ) )
     {
       /* Header */
-      pw.print( Messages.getString("NAStatistics.1") ); //$NON-NLS-1$
+      pw.print( Messages.getString( "NAStatistics.1" ) ); //$NON-NLS-1$
       pw.print( SEPARATOR_CSV );
-      pw.print( Messages.getString("NAStatistics.2") ); //$NON-NLS-1$
+      pw.print( Messages.getString( "NAStatistics.2" ) ); //$NON-NLS-1$
       pw.print( SEPARATOR_CSV );
-      pw.format( Messages.getString("NAStatistics.3"), timezoneName ); //$NON-NLS-1$
+      pw.format( Messages.getString( "NAStatistics.3" ), timezoneName ); //$NON-NLS-1$
       pw.print( SEPARATOR_CSV );
-      pw.print( Messages.getString("NAStatistics.4") ); //$NON-NLS-1$
+      pw.print( Messages.getString( "NAStatistics.4" ) ); //$NON-NLS-1$
       pw.print( SEPARATOR_CSV );
-      pw.print( Messages.getString("NAStatistics.5") ); //$NON-NLS-1$
+      pw.print( Messages.getString( "NAStatistics.5" ) ); //$NON-NLS-1$
       pw.print( SEPARATOR_CSV );
-      pw.println( Messages.getString("NAStatistics.6") ); //$NON-NLS-1$
+      pw.println( Messages.getString( "NAStatistics.6" ) ); //$NON-NLS-1$
 
       // REMARK/BUGFIX: using the default charset here, because this file is usually intended to be opened with excel
       // Excel automatically assumes the default charset of the platform
@@ -284,7 +287,7 @@ public class NAStatistics implements INaStatistics
       case 3:
       case 5:
       {
-        final Double value = (Double) currentElement;
+        final Double value = (Double)currentElement;
 
         // REMARK: using platform default (',' in german) because we want excel to open the file
 

@@ -142,7 +142,8 @@ public abstract class AbstractResultTreeNodeUiHandler extends AbstractTreeNodeUi
       actions.add( openStatusLogAction );
       openStatusLogAction.updateStatus();
 
-      actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_CALC_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_LOG_TOOLTIP, getCalculation().getCalculationLog() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      // FIXME: better layout of actions
+      actions.add( new OpenOutputZipAction( MessageConstants.STR_ACTION_OPEN_CALC_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_CALC_LOG_TOOLTIP, getCalculation().getOutputZip(), false ) ); //$NON-NLS-1$ //$NON-NLS-2$
       actions.add( new OpenOutputZipAction( MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TEXT, MessageConstants.STR_ACTION_OPEN_ERROR_LOG_TOOLTIP, getCalculation().getOutputZip(), true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       // actions.add( new OpenOutputZipAction( "Open output log (calculation core)", "Displays the output log.", m_simulation, false ) );
       actions.add( new OpenTextLogAction( MessageConstants.STR_ACTION_OPEN_MASS_BALANCE_TEXT, MessageConstants.STR_ACTION_OPEN_MASS_BALANCE_TOOLTIP, getCalculation().getBilanzTxt() ) ); //$NON-NLS-1$ //$NON-NLS-2$

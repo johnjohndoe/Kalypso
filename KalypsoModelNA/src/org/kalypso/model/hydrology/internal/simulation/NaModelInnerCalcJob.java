@@ -41,13 +41,10 @@
 package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.model.hydrology.INaSimulationData;
-import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -77,15 +74,12 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
   @Override
   public boolean run( final ISimulationMonitor monitor ) throws SimulationException
   {
-    final NACalculationLogger naCalculationLogger = new NACalculationLogger( m_simDirs.currentResultDirs.logDir );
-    final Logger logger = naCalculationLogger.getLogger();
-
     NAModelSimulation simulation = null;
     IStatus status = null;
 
     try
     {
-      simulation = new NAModelSimulation( m_simDirs, m_data, logger );
+      simulation = new NAModelSimulation( m_simDirs, m_data );
       status = simulation.runSimulation( monitor );
 
       if( status.getSeverity() == IStatus.CANCEL )
@@ -98,20 +92,17 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
       // FIXME: in future return status, the client should be responsible to save it to a file
 
       final String msg = Messages.getString( "NaModelInnerCalcJob.0" ); //$NON-NLS-1$
-      logger.log( Level.INFO, msg );
       monitor.setFinishInfo( IStatus.CANCEL, msg );
       return false;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      logger.log( Level.SEVERE, STRING_SIMULATION_FAILED, e );
       throw new SimulationException( STRING_SIMULATION_FAILED, e );
     }
     finally
     {
       saveSimulationLog( status );
-      naCalculationLogger.stopLogging();
     }
   }
 

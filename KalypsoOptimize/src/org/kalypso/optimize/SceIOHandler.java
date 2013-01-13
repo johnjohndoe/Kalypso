@@ -59,7 +59,7 @@ import org.kalypso.simulation.core.SimulationException;
 
 /**
  * this class handles the comunication between optimizer routine (SCE) and calcjob routine
- *
+ * 
  * @author doemming
  */
 public class SceIOHandler
@@ -135,7 +135,7 @@ public class SceIOHandler
           m_parameter.clear();
         }
       }
-      break;
+        break;
       case STATUS_READ_PARAMETER:
       {
         final Matcher m = PARAMETER.matcher( line );
@@ -150,7 +150,7 @@ public class SceIOHandler
             status = STATUS_CALCULATE_AND_EVALUATE;
         }
       }
-      break;
+        break;
       default:
         break;
     }

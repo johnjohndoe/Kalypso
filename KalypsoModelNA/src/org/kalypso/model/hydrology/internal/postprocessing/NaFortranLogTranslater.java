@@ -42,7 +42,6 @@ package org.kalypso.model.hydrology.internal.postprocessing;
 
 import java.io.File;
 import java.util.Date;
-import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
@@ -51,9 +50,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatusWithTime;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.IDManager;
@@ -85,19 +82,20 @@ public class NaFortranLogTranslater
 
   private final IDManager m_idManager;
 
-  private final Logger m_logger;
-
   private GMLWorkspace m_workspace;
 
-  private final IStatusCollector m_errorLog;
+  private final MultiStatus m_targetStatus;
 
-  public NaFortranLogTranslater( final File asciiDir, final IDManager idManager, final Logger logger )
+  /**
+   * @param targetStatus
+   *          Log entries of error.gml get added into this status.
+   */
+  public NaFortranLogTranslater( final File asciiDir, final IDManager idManager, final MultiStatus targetStatus )
   {
+    m_targetStatus = targetStatus;
     m_logFile = new File( asciiDir, "start/error.gml" ); //$NON-NLS-1$
     m_idManager = idManager;
-    m_logger = logger;
     m_workspace = null;
-    m_errorLog = new StatusCollectorWithTime( ModelNA.PLUGIN_ID );
   }
 
   public void translate( final File resultFile )
@@ -105,11 +103,6 @@ public class NaFortranLogTranslater
     readLog();
     translateLog();
     writeLog( resultFile );
-  }
-
-  public IStatusCollector getErrorLog( )
-  {
-    return m_errorLog;
   }
 
   private void readLog( )
@@ -121,9 +114,9 @@ public class NaFortranLogTranslater
     catch( final Exception e )
     {
       e.printStackTrace();
+
       final String msg = String.format( Messages.getString( "NaFortranLogTranslater.2" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-      m_logger.warning( msg );
-      m_errorLog.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, msg, e ) );
+      m_targetStatus.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, msg, e ) );
     }
   }
 
@@ -135,7 +128,7 @@ public class NaFortranLogTranslater
     final Feature[] recordFEs = FeatureHelper.getFeaturesWithName( m_workspace, QNAME_ERRLOG_RECORD );
     for( final Feature feature : recordFEs )
     {
-      final String elementString = (String) feature.getProperty( QNAME_ERRLOG_ELEMENT ); //$NON-NLS-1$
+      final String elementString = (String)feature.getProperty( QNAME_ERRLOG_ELEMENT ); //$NON-NLS-1$
       final int i = elementString.indexOf( "       " ); //$NON-NLS-1$
       final String fortranID = elementString.substring( i ).trim();
       if( !StringUtils.isBlank( fortranID ) )
@@ -150,7 +143,7 @@ public class NaFortranLogTranslater
         {
           final String element = elementString.substring( 0, i );
           final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.242", element, fortranID ); //$NON-NLS-1$ //$NON-NLS-2$
-          m_logger.warning( msg );
+          m_targetStatus.add( new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, msg ) );
           continue;
         }
 
@@ -158,17 +151,17 @@ public class NaFortranLogTranslater
         feature.setName( asciiType + " " + gmlName.trim() ); //$NON-NLS-1$
         feature.setDescription( "FeatureID: " + gmlName.trim() ); //$NON-NLS-1$
 
-        m_errorLog.add( toStatus( feature ) );
+        m_targetStatus.add( toStatus( feature ) );
       }
     }
   }
 
   private IStatus toStatus( final Feature feature )
   {
-    final String level = (String) feature.getProperty( QNAME_ERRLOG_LEVEL );
-    final String message = (String) feature.getProperty( QNAME_ERRLOG_MESSAGE );
-    final String element = (String) feature.getProperty( QNAME_ERRLOG_ELEMENT );
-    final String param = (String) feature.getProperty( QNAME_ERRLOG_PARAM );
+    final String level = (String)feature.getProperty( QNAME_ERRLOG_LEVEL );
+    final String message = (String)feature.getProperty( QNAME_ERRLOG_MESSAGE );
+    final String element = (String)feature.getProperty( QNAME_ERRLOG_ELEMENT );
+    final String param = (String)feature.getProperty( QNAME_ERRLOG_PARAM );
 
     final int severity = findSeverity( level );
     final String text = String.format( "%s: %s", element, message ); //$NON-NLS-1$
@@ -235,7 +228,7 @@ public class NaFortranLogTranslater
       if( m_workspace == null )
       {
         final String msg = String.format( Messages.getString( "NaFortranLogTranslater.3" ) ); //$NON-NLS-1$
-        m_logger.warning( msg );
+        m_targetStatus.add( new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, msg ) );
         FileUtils.copyFile( m_logFile, resultFile );
 
         return;
@@ -245,9 +238,8 @@ public class NaFortranLogTranslater
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
       final String msg = String.format( Messages.getString( "NaFortranLogTranslater.4" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-      m_logger.severe( msg );
+      m_targetStatus.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, msg, e ) );
     }
   }
 }
