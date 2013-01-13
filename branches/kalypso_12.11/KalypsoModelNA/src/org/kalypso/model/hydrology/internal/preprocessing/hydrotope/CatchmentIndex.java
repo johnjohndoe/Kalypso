@@ -95,7 +95,7 @@ class CatchmentIndex
     final SpatialIndexExt index = new JSISpatialIndex();
     for( final Catchment catchment : catchments )
     {
-      final GM_Envelope envelope = catchment.getEnvelope();
+      final GM_Envelope envelope = catchment.getBoundedBy();
       final Envelope boundingBox = JTSAdapter.export( envelope );
 
       index.insert( boundingBox, catchment );
