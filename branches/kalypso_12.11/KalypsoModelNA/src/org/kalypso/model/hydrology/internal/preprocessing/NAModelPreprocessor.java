@@ -67,7 +67,7 @@ import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentD
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.INaPreparedData;
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.NaPreprocessingPreparator;
-import org.kalypso.model.hydrology.internal.preprocessing.resolve.NaModelTweaker;
+import org.kalypso.model.hydrology.internal.preprocessing.resolve.NaModelResolver;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NaAsciiWriter;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -133,6 +133,7 @@ public class NAModelPreprocessor
     final InitialValues initialValues = m_simulationData.getInitialValues();
     final GMLWorkspace syntWorkspace = m_simulationData.getSynthNWorkspace();
     final Parameter parameter = m_simulationData.getParameter();
+    final HydrotopeCollection hydrotopes = m_simulationData.getHydrotopCollection();
 
     final Node rootNode = naOptimize == null ? null : naOptimize.getRootNode();
 
@@ -151,25 +152,20 @@ public class NAModelPreprocessor
 
     monitor.setMessage( Messages.getString( "NAModelPreprocessor.1" ) ); //$NON-NLS-1$
 
-    // step 1: resolve model
-
-    /* build catchments */
+    /* prepare some data */
     final ParameterHash landuseHash = new ParameterHash( parameter );
     final IStatus parameterStatus = landuseHash.getStatus();
     if( !parameterStatus.isOK() )
       log.add( parameterStatus );
 
-    // FIXME: move into resolve
-    /* first, dissolve hydrotopes */
-    final HydrotopeCollection hydrotopes = m_simulationData.getHydrotopCollection();
-    final NaCatchmentData catchmentData = new NaCatchmentData( landuseHash );
-    final IStatus status = catchmentData.addHydrotopes( naModel, hydrotopes, true );
-    if( !status.isOK() )
-      log.add( status );
-
-    final NaModelTweaker naModelTweaker = new NaModelTweaker( naModel, rootNode );
-    naModelTweaker.tweakModel();
+    // step 1: resolve model
+    final NaModelResolver naModelTweaker = new NaModelResolver( naModel, rootNode, landuseHash, hydrotopes );
+    final IStatus resolveStatus = naModelTweaker.execute();
+    if( !resolveStatus.isOK() )
+      log.add( resolveStatus );
     checkCancel( monitor );
+
+    final NaCatchmentData catchmentData = naModelTweaker.getResolvedCatchmentData();
 
     // step 2 - final prearation before writing ascii files
     m_preparedData = NaPreprocessingPreparator.prepareData( naControl, metaControl, naModel, initialValues, syntWorkspace, naOptimize, parameter, landuseHash, rootNode, catchmentData, m_idManager, m_calcCoreVersion );

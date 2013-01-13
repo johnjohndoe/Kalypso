@@ -145,7 +145,7 @@ public class NAPostprocessingTest
 
     // REMARK: for backards compatibility: touch each catchment id, so it is known
     final IDManager idManager = new IDManager();
-    final Catchment[] catchments = catchmentData.getCatchmentsAndSubCatchments();
+    final Catchment[] catchments = catchmentData.getCatchments();
     for( final Catchment catchment : catchments )
       idManager.getAsciiID( catchment );
 

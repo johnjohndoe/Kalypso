@@ -84,7 +84,7 @@ class HydrotopeWriter extends AbstractCoreFileWriter
     final String hydrotopeFileTile = Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.2" ); //$NON-NLS-1$
     writer.append( hydrotopeFileTile ).append( '\n' );
 
-    final Catchment[] catchments = m_catchmentData.getCatchmentsAndSubCatchments();
+    final Catchment[] catchments = m_catchmentData.getCatchments();
     // REMARK: sort by id, so we can compare ascii files more easily
     Arrays.sort( catchments, new CatchmentByAsciiIdSorter( m_idManager ) );
 
