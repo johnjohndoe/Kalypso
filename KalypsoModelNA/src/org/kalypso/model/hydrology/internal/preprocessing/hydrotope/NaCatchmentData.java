@@ -94,7 +94,7 @@ public class NaCatchmentData
   }
 
   // FIXME: collect all catchments and 'virtual' catchments
-  public Catchment[] getCatchmentsAndSubCatchments( )
+  public Catchment[] getCatchments( )
   {
     return m_catchmentInfos.keySet().toArray( new Catchment[m_catchmentInfos.size()] );
   }
