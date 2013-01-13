@@ -18,15 +18,22 @@
  */
 package org.kalypso.model.hydrology.internal.preprocessing.preparation;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -39,6 +46,26 @@ public final class NaPreprocessingPreparator
 {
   public static INaPreparedData prepareData( final NAModellControl control, final NAControl metaControl, final NaModell model, final InitialValues initialValue, final GMLWorkspace synthWorkspace, final NAOptimize optimize, final Parameter parameter, final ParameterHash landuseHash, final Node rootNode, final NaCatchmentData catchmentData, final IDManager idManager, final Version calcCoreVersion ) throws NAPreprocessorException
   {
-    return new NaResolvedModelData( control, metaControl, model, initialValue, synthWorkspace, optimize, parameter, landuseHash, rootNode, catchmentData, idManager, calcCoreVersion );
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
+    final NetFileAnalyser nodeManager = new NetFileAnalyser( rootNode, model, idManager, log );
+    final RelevantNetElements relevantElements = nodeManager.analyseNet();
+
+    /* restrict catchment data to relevant elements */
+    final NaCatchmentData relevantCatchmentData = new NaCatchmentData( landuseHash );
+
+    final Catchment[] relevantCatchments = relevantElements.getCatchmentsSorted( idManager );
+    for( final Catchment relevantCatchment : relevantCatchments )
+    {
+      final CatchmentInfo relevantInfo = catchmentData.getInfo( relevantCatchment );
+      relevantCatchmentData.addInfo( relevantInfo );
+    }
+
+    final boolean usePrecipitationForm = metaControl.isUsePrecipitationForm();
+    final TimeseriesFileManager tsFileManager = new TimeseriesFileManager( idManager, usePrecipitationForm );
+
+    final IStatus status = log.asMultiStatusOrOK( Messages.getString( "NaResolvedModelData_0" ) ); //$NON-NLS-1$
+
+    return new NaResolvedModelData( control, metaControl, model, initialValue, synthWorkspace, optimize, parameter, landuseHash, rootNode, relevantElements, relevantCatchmentData, idManager, calcCoreVersion, tsFileManager, status );
   }
 }
