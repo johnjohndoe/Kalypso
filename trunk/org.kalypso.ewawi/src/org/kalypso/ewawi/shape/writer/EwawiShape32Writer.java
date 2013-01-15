@@ -106,7 +106,7 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
     final Path relativeFotoPath = getRelativeFotoPath();
 
     final String alias = key.getAlias();
-    final String aufn_richt = getAufnRicht( fotoListData.getFilename() );
+    final String aufn_richt = getAufnRicht( fotoListData.getFilename(), logger );
     final String comment = "";
     final String bildname = fotoListData.getFilename();
     final Date datum = fotoListData.getDatum();
@@ -175,15 +175,28 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
     return byPath.getParent().relativize( absoluteFotoPath );
   }
 
-  private String getAufnRicht( final String filename )
+  private String getAufnRicht( final String filename, final XyzEwawiLogger logger )
   {
     final String baseName = FilenameUtils.removeExtension( filename );
     final String[] splittedBaseName = baseName.split( "_" );
-    final String aufn_richt = splittedBaseName[splittedBaseName.length - 1];
-    if( aufn_richt.length() != 1 )
-      throw new IllegalStateException( String.format( "Die Aufnahmerichtung muss am Ende des Dateinamens angehängt sein und darf nur ein Zeichen lang sein. Gefunden: %s (%s)", filename, aufn_richt ) );
+    if( splittedBaseName.length < 2 )
+    {
+      logger.logXyzLine( -9999.0, -9999.0, -9999.0, String.format( "Der Dateiname '%s' entspricht nicht dem Format <name>_<aufnahmerichtung>.<ext> oder <name>_<aufnahmerichtung>_<freitext>.<ext>.", filename ), "", -9999.0 );
+      return "-";
+    }
 
-    return aufn_richt;
+    /* Check the last token. If it is only one character, this is the direction. */
+    final String lastToken = splittedBaseName[splittedBaseName.length - 1];
+    if( lastToken.length() == 1 )
+      return lastToken;
+
+    /* Check the previous token. If it is only one character, this is the direction. */
+    final String previousToken = splittedBaseName[splittedBaseName.length - 2];
+    if( previousToken.length() == 1 )
+      return previousToken;
+
+    logger.logXyzLine( -9999.0, -9999.0, -9999.0, String.format( "Eines der letzten beiden Segmente muss der Aufnahmerichtung entsprechen. Dateiname: '%s'", filename ), "", -9999.0 );
+    return "-";
   }
 
   private void checkFotoLink( final String link, final XyzEwawiLogger logger, final BigDecimal x, final BigDecimal y, final BigDecimal z )
