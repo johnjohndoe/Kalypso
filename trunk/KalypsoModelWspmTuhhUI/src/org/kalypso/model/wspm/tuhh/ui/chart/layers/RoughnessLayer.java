@@ -64,7 +64,7 @@ import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
@@ -95,11 +95,11 @@ public class RoughnessLayer extends AbstractProfilePointsLayer
     if( !hasRoughnessProperties() )
       return;
 
-    final int baseLine = chartImageInfo.getLayerRect().y + chartImageInfo.getLayerRect().height;
+    // final int baseLine = chartImageInfo.getLayerRect().y + chartImageInfo.getLayerRect().height;
     final FullRectangleFigure fr = new FullRectangleFigure( getAreaStyle() );
 
-    final IAxis dom = getDomainAxis();
-    final IAxis tar = getTargetAxis();
+//    final IAxis dom = getDomainAxis();
+//    final IAxis tar = getTargetAxis();
 
     final IProfileRecord[] points = profil.getPoints();
 
@@ -115,12 +115,17 @@ public class RoughnessLayer extends AbstractProfilePointsLayer
       final Double px2 = next.getBreite();
       if( Objects.isNull( px1, py1, px2 ) )
         continue;
+//
+//      final int x1 = dom.logicalToScreen( px1 );
+//      final int y1 = tar.logicalToScreen( py1 );
+//      final int x2 = dom.logicalToScreen( px2 );
+      final ICoordinateMapper< ? , ? > mapper = getCoordinateMapper();
+      final Point bottomRightCorner = mapper.normalizedToScreen( 1.0, 0.0 );
+      final Point topLeft = mapper.numericToScreen( px1, py1.doubleValue() );
+      final Point topRight = mapper.numericToScreen(px2, py1.doubleValue() );
 
-      final int x1 = dom.logicalToScreen( px1 );
-      final int y1 = tar.logicalToScreen( py1 );
-      final int x2 = dom.logicalToScreen( px2 );
-
-      fr.setRectangle( new Rectangle( x1, y1, Math.abs( x2 - x1 ), Math.abs( baseLine - y1 ) ) );
+      fr.setRectangle( new Rectangle( topLeft.x, topLeft.y, Math.abs( topLeft.x - topRight.x ), Math.abs( bottomRightCorner.y - topRight.y ) ) );
+      // fr.setRectangle( new Rectangle( x1, y1, Math.abs( x2 - x1 ), Math.abs( baseLine - y1 ) ) );
       fr.paint( gc );
     }
   }

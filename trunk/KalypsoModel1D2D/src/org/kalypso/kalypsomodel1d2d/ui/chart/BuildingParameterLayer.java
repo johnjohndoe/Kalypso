@@ -186,7 +186,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   @Override
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
-    final IPair<Object, Object> logical = getCoordinateMapper().screenToLogical( point );
+    final IPair<Object, Object> logical = getCoordinateMapper().screenToLogical( point.x,point.y );
 
     final IRecord record = (IRecord)dragStartData.getData();
     if( record == null )
