@@ -36,8 +36,6 @@ public class CodedTrippleProfile
 
   public static final String PROFILE_HORIZON_ID = "profileHorizon";
 
-  public static final String BRIDGE_OK_HORIZON_ID = "bridgeOkHorizon";
-
   private final String m_name;
 
   private final List<CodedTrippleProfilePoint> m_points;

@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.pdb.internal.wspm;
+package org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -25,7 +25,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.GenericProfileHorizon;
-import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingBruecke;
 
 /**
  * @author Holger Albert

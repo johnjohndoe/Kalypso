@@ -21,17 +21,21 @@ package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleHorizonMapper;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfile;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfileHorizon;
 import org.kalypso.model.wspm.tuhh.core.ctripple.CodedTrippleProfilePoint;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingUtilities;
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -89,8 +93,19 @@ public class CodedTrippleProfileObjectCreator
 
     if( profileObjects.size() > 0 )
     {
+      /* Add the profile objects to the profile. */
+      /* Add all in one step, to reduce events. */
       final IProfile profile = m_profileFeature.getProfile();
       profile.addProfileObjects( profileObjects.toArray( new IProfileObject[] {} ) );
+
+      /* Search one bridge and one ok without id and repair. */
+      final IProfileObject[] pos = profile.getProfileObjects();
+      BuildingUtilities.repairBridges( pos );
+
+      /* Update the components in the profile. */
+      final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+      for( final IProfileObject po : pos )
+        BuildingUtilities.updateComponents( po, profile, provider );
     }
   }
 

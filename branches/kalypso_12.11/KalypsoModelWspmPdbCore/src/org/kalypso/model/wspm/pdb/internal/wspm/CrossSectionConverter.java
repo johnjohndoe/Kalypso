@@ -51,13 +51,8 @@ import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.IBeanValueProperty;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
-import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
-import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
-import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
@@ -66,9 +61,7 @@ import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPartParameter;
@@ -86,10 +79,10 @@ import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.Building
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingUtilities;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.profileobjects.building.ICulvertBuilding;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -142,8 +135,8 @@ public class CrossSectionConverter implements IProfileTransaction
       final IProfileRecord record = m_profile.createProfilPoint();
       m_profile.addPoint( record );
 
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_BREITE, asDouble( point.getWidth() ) );
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_HOEHE, asDouble( point.getHeight() ) );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_BREITE, asDouble( point.getWidth() ), m_provider );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_HOEHE, asDouble( point.getHeight() ), m_provider );
 
       convertStandardProperties( point, record );
 
@@ -212,26 +205,6 @@ public class CrossSectionConverter implements IProfileTransaction
     return decimal.doubleValue();
   }
 
-  private void setValue( final IRecord record, final String componentID, final Object value )
-  {
-    if( value == null )
-      return;
-
-    final int component = ensureComponent( record, componentID );
-    record.setValue( component, value );
-  }
-
-  private int ensureComponent( final IRecord record, final String componentID )
-  {
-    final TupleResult owner = record.getOwner();
-    final int index = owner.indexOfComponent( componentID );
-    if( index != -1 )
-      return index;
-
-    owner.addComponent( m_provider.getPointProperty( componentID ) );
-    return owner.indexOfComponent( componentID );
-  }
-
   private List<Point> sortPoints( final Set<Point> points )
   {
     final ArrayList<Point> sortedPoints = new ArrayList<>( points );
@@ -241,46 +214,46 @@ public class CrossSectionConverter implements IProfileTransaction
 
   private void convertStandardProperties( final Point point, final IRecord record )
   {
-    setValue( record, IWspmPointProperties.POINT_PROPERTY_ID, point.getName() );
-    setValue( record, IWspmPointProperties.POINT_PROPERTY_CODE, point.getCode() );
-    setValue( record, IWspmPointProperties.POINT_PROPERTY_COMMENT, point.getDescription() );
+    BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_ID, point.getName(), m_provider );
+    BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_CODE, point.getCode(), m_provider );
+    BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_COMMENT, point.getDescription(), m_provider );
 
     final com.vividsolutions.jts.geom.Point location = point.getLocation();
     if( location != null )
     {
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, location.getX() );
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_HOCHWERT, location.getY() );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, location.getX(), m_provider );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_HOCHWERT, location.getY(), m_provider );
     }
 
     /* REMARK: The checkout operation makes sure that all necessary classes are present. */
     final Roughness roughness = point.getRoughness();
     if( roughness != null )
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, roughness.getId().getName() );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, roughness.getId().getName(), m_provider );
 
     final BigDecimal roughnessKst = point.getRoughnessKstValue();
     if( roughnessKst != null )
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, roughnessKst.doubleValue() );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, roughnessKst.doubleValue(), m_provider );
 
     final BigDecimal roughnessK = point.getRoughnessKValue();
     if( roughnessK != null )
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, roughnessK.doubleValue() );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, roughnessK.doubleValue(), m_provider );
 
     /* REMARK: The checkout operation makes sure that all necessary classes are present. */
     final Vegetation vegetation = point.getVegetation();
     if( vegetation != null )
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, vegetation.getId().getName() );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, vegetation.getId().getName(), m_provider );
 
     final BigDecimal vegetationAx = point.getVegetationAx();
     if( vegetationAx != null )
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, vegetationAx.doubleValue() );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, vegetationAx.doubleValue(), m_provider );
 
     final BigDecimal vegetationAy = point.getVegetationAy();
     if( vegetationAy != null )
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, vegetationAy.doubleValue() );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, vegetationAy.doubleValue(), m_provider );
 
     final BigDecimal vegetationDp = point.getVegetationDp();
     if( vegetationDp != null )
-      setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, vegetationDp.doubleValue() );
+      BuildingUtilities.setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, vegetationDp.doubleValue(), m_provider );
   }
 
   private void convertParts( )
@@ -310,11 +283,11 @@ public class CrossSectionConverter implements IProfileTransaction
 
     /* Search one bridge and one ok without id and repair. */
     final IProfileObject[] pos = m_profile.getProfileObjects();
-    repairBridges( pos );
+    BuildingUtilities.repairBridges( pos );
 
     /* Update the components in the profile. */
     for( final IProfileObject po : pos )
-      updateComponents( po );
+      BuildingUtilities.updateComponents( po, m_profile, m_provider );
   }
 
   private IProfileObject convertPart( final CrossSectionPart part )
@@ -341,7 +314,7 @@ public class CrossSectionConverter implements IProfileTransaction
   {
     final String wspmPartType = new GafPartsMapping().kind2partType( partCategory );
 
-    // REMARK: special case for OK-parts: if we have an OK but no culvert and no bridge, we assume that we have a weir. Problem is, that GAf does not distinguish between weirs and 'oberkanten'.
+    // REMARK: special case for OK-parts: if we have an OK but no culvert and no bridge, we assume that we have a weir. Problem is, that GAF does not distinguish between weirs and 'oberkanten'.
     if( BuildingBruecke.ID_OK.equals( wspmPartType ) )
     {
       final boolean hasCulvertOrBridge = hasCategory( GafKind.UK.toString(), GafKind.K.toString(), GafKind.EI.toString(), GafKind.MA.toString(), GafKind.AR.toString(), GafKind.HA.toString(), IGafConstants.KIND_TR );
@@ -392,108 +365,6 @@ public class CrossSectionConverter implements IProfileTransaction
       record.setRechtswert( location.getX() );
       record.setHochwert( location.getY() );
       record.setCode( code );
-    }
-  }
-
-  private void repairBridges( final IProfileObject[] profileObjects )
-  {
-    /* The used ids. */
-    final Set<String> usedIds = BridgeIdHelper.findUsedIds( profileObjects );
-
-    /* Check each profile object. */
-    for( final IProfileObject profileObject : profileObjects )
-    {
-      /* Repair bridges. */
-      if( profileObject instanceof BuildingBruecke )
-      {
-        /* Cast. */
-        final BuildingBruecke bridge = (BuildingBruecke)profileObject;
-
-        /* If a ok profile object was found, both, bridge and ok profile object have an id. */
-        final IProfileObject okProfileObject = BuildingBruecke.findOkProfileObject( bridge, profileObjects );
-        if( okProfileObject != null )
-          continue;
-
-        /* We create/reuse the bridge id. */
-        final String bridgeId = BridgeIdHelper.findFreeId( bridge, usedIds );
-        bridge.setBrueckeId( bridgeId );
-
-        /* Search for ok profile object without bridge id and use it. */
-        final IProfileObject okPO = BridgeIdHelper.findOkProfileObjectWithoutId( profileObjects );
-        if( okPO != null )
-        {
-          okPO.setValue( BuildingBruecke.KEY_BRUECKE_ID, bridgeId );
-          continue;
-        }
-
-        /* REMARK: We do not create new ok profile objects. */
-      }
-    }
-  }
-
-  private void updateComponents( final IProfileObject profileObject )
-  {
-    if( profileObject instanceof BuildingBruecke )
-    {
-      final BuildingBruecke bridge = (BuildingBruecke)profileObject;
-      insertRecordsAs( bridge, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-
-      final IProfileObject ok = bridge.findOkProfileObject( m_profile );
-      if( ok != null )
-        insertRecordsAs( ok, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    }
-
-    if( profileObject instanceof BuildingWehr )
-    {
-      final BuildingWehr weir = (BuildingWehr)profileObject;
-      insertRecordsAs( weir, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-    }
-  }
-
-  private void insertRecordsAs( final IProfileObject profileObject, final String asComponent )
-  {
-    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
-    final IVegetationClass unknownVegetationClass = classification.findUnknownVegetationClass();
-    final IRoughnessClass unknownRoughnessClass = classification.findUnknownRoughnessClass();
-
-    final String unknownVegetation = unknownVegetationClass == null ? null : unknownVegetationClass.getName();
-    final String unknownRoughness = unknownRoughnessClass == null ? null : unknownRoughnessClass.getName();
-
-    final IProfileObjectRecords records = profileObject.getRecords();
-    for( int i = 0; i < records.size(); i++ )
-    {
-      final IProfileObjectRecord record = records.getRecord( i );
-      final String id = record.getId();
-      final String comment = record.getComment();
-      final Double breite = record.getBreite();
-      final Double hoehe = record.getHoehe();
-      final Double rechtswert = record.getRechtswert();
-      final Double hochwert = record.getHochwert();
-      final String code = record.getCode();
-
-      /* Find or insert point at 'width'. */
-      final boolean insert = Objects.isNull( ProfileVisitors.findPoint( m_profile, breite.doubleValue() ) );
-      final IProfileRecord pRecord = Profiles.addOrFindPoint( m_profile, breite );
-
-      setValue( pRecord, asComponent, hoehe );
-
-      // TODO: Check: If we have the same width, but different rw/hw, we just forget the old rw/hw here, which is bad...
-      // TODO: Same holds for ID, Code, etc.
-      if( insert )
-      {
-        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_ID, id );
-        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_COMMENT, comment );
-        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, rechtswert );
-        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_HOCHWERT, hochwert );
-        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_CODE, code );
-
-        // HOTFIX: if a new point is inserted we need a roughness/vegetation class. Unfortunately, the class values
-        // are not stored ni the corresponding profile object...
-        // For now, we just set the 'unknown' classes here, assuming, that the buildings never have associated roughness values
-        // TODO: either remember the real clases from the profile part; or a t least, use the class of the previous point.
-        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, unknownRoughness );
-        setValue( pRecord, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, unknownVegetation );
-      }
     }
   }
 

@@ -18,9 +18,15 @@
  */
 package org.kalypso.model.wspm.tuhh.ui.imports.ctripple;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
+import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
+import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -60,6 +66,8 @@ public class CodedTrippleProfilePointCreator
     final IComponent breiteComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent hoeheComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent codeComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_CODE );
+    final IComponent roughnessComponent = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+    final IComponent bewuchsComponent = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
 
     final IProfile profil = m_profileFeature.getProfile();
     profil.addPointProperty( idComponent );
@@ -69,6 +77,15 @@ public class CodedTrippleProfilePointCreator
     profil.addPointProperty( breiteComponent );
     profil.addPointProperty( hoeheComponent );
     profil.addPointProperty( codeComponent );
+    profil.addPointProperty( roughnessComponent );
+    profil.addPointProperty( bewuchsComponent );
+
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profileFeature.getProfile() );
+    final IRoughnessClass unknownRoughnessClass = classification.findUnknownRoughnessClass();
+    final IVegetationClass unknownVegetationClass = classification.findUnknownVegetationClass();
+
+    final String unknownRoughness = unknownRoughnessClass == null ? null : unknownRoughnessClass.getName();
+    final String unknownVegetation = unknownVegetationClass == null ? null : unknownVegetationClass.getName();
 
     final CodedTrippleProfilePoint[] points = m_baseHorizon.getProfilePoints();
     for( int i = 0; i < points.length; i++ )
@@ -79,7 +96,7 @@ public class CodedTrippleProfilePointCreator
       final String comment = m_mapper.getCodeDescription( point.getCode() );
       final double rechtswert = point.getEasting();
       final double hochwert = point.getNorthing();
-      final double breite = calculateWidth( i, points, breiteComponent, profil.getLastPoint() );
+      final double breite = calculateWidth( i, points, profil.getLastPoint() );
       final double hoehe = point.getHeight();
       final String code = point.getCode();
 
@@ -91,8 +108,17 @@ public class CodedTrippleProfilePointCreator
       record.setValue( record.indexOfProperty( breiteComponent ), breite );
       record.setValue( record.indexOfProperty( hoeheComponent ), hoehe );
       record.setValue( record.indexOfProperty( codeComponent ), code );
+      record.setValue( record.indexOfProperty( roughnessComponent ), unknownRoughness );
+      record.setValue( record.indexOfProperty( bewuchsComponent ), unknownVegetation );
 
       profil.addPoint( record );
+    }
+
+    final int shiftRecordIndex = findShiftRecordIndex( profil.getPoints() );
+    if( shiftRecordIndex >= 0 )
+    {
+      final double shift = getShift( profil.getPoints(), shiftRecordIndex );
+      doShift( profil.getPoints(), shift );
     }
   }
 
@@ -100,7 +126,7 @@ public class CodedTrippleProfilePointCreator
    * @param lastRecord
    *          The last inserted record should be the record for the previous point.
    */
-  private double calculateWidth( final int i, final CodedTrippleProfilePoint[] points, final IComponent breiteComponent, final IProfileRecord lastRecord )
+  private double calculateWidth( final int i, final CodedTrippleProfilePoint[] points, final IProfileRecord lastRecord )
   {
     /* If it is the first point, it has a width of 0.0. */
     if( i == 0 )
@@ -118,11 +144,77 @@ public class CodedTrippleProfilePointCreator
     final double distance = currentGMPoint.distance( previousGMPoint );
 
     /* Get the width of the previus point. */
-    final Double breite = (Double)lastRecord.getValue( lastRecord.indexOfProperty( breiteComponent ) );
+    final Double breite = lastRecord.getBreite();
 
     /* Add them to the distance of the previous point. */
     final double width = breite.doubleValue() + distance;
 
     return width;
+  }
+
+  private int findShiftRecordIndex( final IProfileRecord[] records )
+  {
+    final String zeroWidthPointCode = m_mapper.getZeroWidthPointCode();
+    if( !StringUtils.isBlank( zeroWidthPointCode ) )
+    {
+      final int shiftRecordIndex = findZeroWidthRecordIndex( records, zeroWidthPointCode );
+      if( shiftRecordIndex >= 0 )
+        return shiftRecordIndex;
+
+      return -1;
+    }
+
+    return findLowestHeightRecordIndex( records );
+  }
+
+  private int findZeroWidthRecordIndex( final IProfileRecord[] records, final String zeroWidthPointCode )
+  {
+    for( int i = 0; i < records.length; i++ )
+    {
+      final IProfileRecord record = records[i];
+
+      final String code = record.getCode();
+      if( zeroWidthPointCode.equals( code ) )
+        return i;
+    }
+
+    return -1;
+  }
+
+  private int findLowestHeightRecordIndex( final IProfileRecord[] records )
+  {
+    double currentMinimumHoehe = Double.MAX_VALUE;
+    int lowestHeightRecordIndex = -1;
+
+    for( int i = 0; i < records.length; i++ )
+    {
+      final IProfileRecord record = records[i];
+
+      final Double hoehe = record.getHoehe();
+      if( hoehe.doubleValue() < currentMinimumHoehe )
+      {
+        currentMinimumHoehe = hoehe.doubleValue();
+        lowestHeightRecordIndex = i;
+      }
+    }
+
+    return lowestHeightRecordIndex;
+  }
+
+  private double getShift( final IProfileRecord[] records, final int shiftRecordIndex )
+  {
+    final IProfileRecord record = records[shiftRecordIndex];
+    final Double breite = record.getBreite();
+    return breite.doubleValue();
+  }
+
+  private void doShift( final IProfileRecord[] records, final double shift )
+  {
+    for( final IProfileRecord record : records )
+    {
+      final Double breite = record.getBreite();
+      final double newBreite = breite.doubleValue() - shift;
+      record.setBreite( new Double( newBreite ) );
+    }
   }
 }
