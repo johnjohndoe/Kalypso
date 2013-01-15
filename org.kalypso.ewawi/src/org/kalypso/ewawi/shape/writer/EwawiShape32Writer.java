@@ -57,9 +57,9 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
     fields.add( new DBFField( "PFAD", FieldType.C, (short)254, (short)0 ) );
     fields.add( new DBFField( "SL_BEARB", FieldType.C, (short)3, (short)0 ) );
     fields.add( new DBFField( "Uhrzeit", FieldType.C, (short)8, (short)0 ) );
-    fields.add( new DBFField( "x", FieldType.N, (short)12, (short)3 ) );
-    fields.add( new DBFField( "y", FieldType.N, (short)12, (short)3 ) );
-    fields.add( new DBFField( "z", FieldType.N, (short)7, (short)3 ) );
+    fields.add( new DBFField( "x", FieldType.N, (short)13, (short)3 ) ); // TODO Differs from the requirements-pdf, because ArcGis shows always one field length less...
+    fields.add( new DBFField( "y", FieldType.N, (short)13, (short)3 ) ); // TODO Differs from the requirements-pdf, because ArcGis shows always one field length less...
+    fields.add( new DBFField( "z", FieldType.N, (short)8, (short)3 ) ); // TODO Differs from the requirements-pdf, because ArcGis shows always one field length less...
 
     return fields.toArray( new IDBFField[] {} );
   }
