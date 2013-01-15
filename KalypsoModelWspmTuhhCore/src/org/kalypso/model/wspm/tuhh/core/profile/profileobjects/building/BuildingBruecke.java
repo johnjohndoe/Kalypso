@@ -56,7 +56,7 @@ public class BuildingBruecke extends AbstractProfileObject implements IProfileBu
 {
   public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#BRUECKE"; //$NON-NLS-1$
 
-  /** constant for bridge 'oberkante', does not really belong here, but the ok object is using a generic horzon just for now. */
+  /** constant for bridge 'oberkante', does not really belong here, but the ok object is using a generic horizon just for now. */
   public static final String ID_OK = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#OK"; //$NON-NLS-1$
 
   private static final String PROPERTY_BREITE = "breite"; //$NON-NLS-1$
@@ -100,16 +100,16 @@ public class BuildingBruecke extends AbstractProfileObject implements IProfileBu
   public String getPropertyLabel( final String property )
   {
     if( PROPERTY_BREITE.equals( property ) )
-      return Messages.getString("BuildingBruecke_0"); // Largest Width //$NON-NLS-1$
+      return Messages.getString( "BuildingBruecke_0" ); // Largest Width //$NON-NLS-1$
 
     if( PROPERTY_UNTERWASSER.equals( property ) )
-      return Messages.getString("BuildingBruecke_1"); // Downstream Height //$NON-NLS-1$
+      return Messages.getString( "BuildingBruecke_1" ); // Downstream Height //$NON-NLS-1$
 
     if( PROPERTY_FORMBEIWERT.equals( property ) )
-      return Messages.getString("BuildingBruecke_2"); // Pillar Shape Coefficient //$NON-NLS-1$
+      return Messages.getString( "BuildingBruecke_2" ); // Pillar Shape Coefficient //$NON-NLS-1$
 
     if( PROPERTY_RAUHEIT.equals( property ) )
-      return Messages.getString("BuildingBruecke_3"); // Roughness //$NON-NLS-1$
+      return Messages.getString( "BuildingBruecke_3" ); // Roughness //$NON-NLS-1$
 
     return property;
   }

@@ -113,8 +113,8 @@ public class CodedTrippleHorizonMapper
    */
   public String getPartId( final String horizonId )
   {
-    /* Special case, the base horizon and the bridge ok horizon do not have a part id and are specially handled, so return the horizon id. */
-    if( CodedTrippleProfile.PROFILE_HORIZON_ID.equals( horizonId ) || CodedTrippleProfile.BRIDGE_OK_HORIZON_ID.equals( horizonId ) )
+    /* Special case, the base horizon does not have a part id and is specially handled, so return the horizon id. */
+    if( CodedTrippleProfile.PROFILE_HORIZON_ID.equals( horizonId ) )
       return horizonId;
 
     /* Get the property. */
@@ -151,5 +151,11 @@ public class CodedTrippleHorizonMapper
   public String getHorizonIdDescription( final String horizonId )
   {
     return m_horizonIdToHorizonIdDescription.getProperty( horizonId, horizonId );
+  }
+
+  public String getZeroWidthPointCode( )
+  {
+    // FIXME: Should be configurable...
+    return "9045"; //$NON-NLS-1$
   }
 }
