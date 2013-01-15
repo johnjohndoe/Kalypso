@@ -73,7 +73,7 @@ public class EwawiShape244Writer extends AbstractEwawiShapeWriter
     fields.add( new DBFField( "ABRECHNUNG", FieldType.N, (short)3, (short)0 ) );
     fields.add( new DBFField( "ALIAS", FieldType.C, (short)6, (short)0 ) );
     fields.add( new DBFField( "BEMERKUNG", FieldType.C, (short)254, (short)0 ) );
-    fields.add( new DBFField( "FKM", FieldType.N, (short)8, (short)3 ) );
+    fields.add( new DBFField( "FKM", FieldType.N, (short)9, (short)3 ) ); // TODO Differs from the requirements-pdf, because ArcGis shows always one field length less...
     fields.add( new DBFField( "HORIZONT", FieldType.N, (short)3, (short)0 ) );
     fields.add( new DBFField( "ID_Profil", FieldType.N, (short)4, (short)0 ) );
     fields.add( new DBFField( "KLASSE", FieldType.C, (short)1, (short)0 ) );
