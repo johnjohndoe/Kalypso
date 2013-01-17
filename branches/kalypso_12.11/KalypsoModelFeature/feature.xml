@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.model.product"
       label="%Feature.featureName"
-      version="12.11.0.qualifier"
+      version="12.11.1.qualifier"
       provider-name="%Feature.providerName"
       plugin="org.kalypso.model.product">
 
