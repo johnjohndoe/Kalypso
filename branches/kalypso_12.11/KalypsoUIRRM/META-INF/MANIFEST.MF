@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.kalypso.model.rrm.ui;singleton:=true
-Bundle-Version: 12.11.0.qualifier
+Bundle-Version: 12.11.1.qualifier
 Bundle-Activator: org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
