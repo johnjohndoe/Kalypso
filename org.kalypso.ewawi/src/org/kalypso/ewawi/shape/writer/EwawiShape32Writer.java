@@ -223,8 +223,8 @@ public class EwawiShape32Writer extends AbstractEwawiShapeWriter
     final File file = absoluteFotoPath.toFile();
     if( !file.exists() )
     {
-      final String message = "Die Datei '%s' existiert nicht...";
-      System.out.println( String.format( message, file.getPath() ) );
+      final String message = String.format( "Die Datei '%s' existiert nicht...", file.getPath() );
+      System.out.println( message );
 
       if( logger != null )
         logger.logXyzLine( x.doubleValue(), y.doubleValue(), z.doubleValue(), message, "", -9999.0 );
