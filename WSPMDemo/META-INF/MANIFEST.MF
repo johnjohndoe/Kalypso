@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.project.demo;singleton:=true
-Bundle-Version: 12.11.0.qualifier
+Bundle-Version: 12.11.1.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.kalypso.contribs.eclipseplatform
 Bundle-Localization: plugin

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoManualWSPM Plug-in
 Bundle-SymbolicName: org.kalypso.KalypsoManualWSPM;singleton:=true
-Bundle-Version: 12.11.0.qualifier
+Bundle-Version: 12.11.1.qualifier
 Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Require-Bundle: org.eclipse.help
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
