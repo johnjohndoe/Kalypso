@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: FloodDemo Plug-in
 Bundle-SymbolicName: org.kalypso.model.flood.project.demo;singleton:=true
-Bundle-Version: 11.6.2.qualifier
+Bundle-Version: 13.1.0.qualifier
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.contribs.eclipseplatform
 Bundle-Localization: plugin
