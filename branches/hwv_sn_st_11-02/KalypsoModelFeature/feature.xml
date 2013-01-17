@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.model.product"
       label="%Feature.featureName"
-      version="11.6.2.qualifier"
+      version="13.1.0.qualifier"
       provider-name="%Feature.providerName">
 
    <description url="http://kalypso.bjoernsen.de">

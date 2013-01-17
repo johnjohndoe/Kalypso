@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoDatacenterAdapter
 Bundle-SymbolicName: org.kalypso.dcadapter; singleton:=true
-Bundle-Version: 11.4.0.qualifier
+Bundle-Version: 13.1.0.qualifier
 Bundle-ClassPath: lib/edbc.jar,
  kalypsodc.jar
 Bundle-Activator: org.kalypso.dcadapter.DataCenterPlugin
