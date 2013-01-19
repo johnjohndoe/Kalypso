@@ -64,10 +64,6 @@ public class HydrotopeInfo
 {
   private final IHydrotope m_hydrotope;
 
-  private final ParameterHash m_landuseHash;
-
-  private final int m_localID;
-
   private final double m_gwFactor;
 
   private final double m_maxPerc;
@@ -80,19 +76,21 @@ public class HydrotopeInfo
 
   private final ISoilType m_soilType;
 
-  public HydrotopeInfo( final IHydrotope hydrotop, final ParameterHash landuseHash, final int localID ) throws NAPreprocessorException
+  private final String m_landuseShortName;
+
+  public HydrotopeInfo( final IHydrotope hydrotop, final ParameterHash landuseHash ) throws NAPreprocessorException
   {
     m_hydrotope = hydrotop;
-    m_landuseHash = landuseHash;
-    m_localID = localID;
     m_area = calculateHydrotopeArea();
 
     m_gwFactor = calculateGWFactor();
     m_maxPerc = calculateMaxPerkolationRate();
-    m_landuseClass = calculateLanduseClass();
-    m_soilType = calculateSoiltype();
+    m_landuseClass = calculateLanduseClass( landuseHash );
+    m_landuseShortName = landuseHash.getLanduseFeatureShortedName( m_landuseClass );
 
-    m_totalSealingRate = calculateTotalSealingRate();
+    m_soilType = calculateSoiltype( landuseHash );
+
+    m_totalSealingRate = calculateTotalSealingRate( landuseHash );
 
     validateAttributes();
   }
@@ -105,11 +103,6 @@ public class HydrotopeInfo
   public String getName( )
   {
     return m_hydrotope.getName();
-  }
-
-  public int getLocalID( )
-  {
-    return m_localID;
   }
 
   public double getGwFactor( )
@@ -127,7 +120,7 @@ public class HydrotopeInfo
     return m_soilType;
   }
 
-  private Feature calculateLanduseClass( ) throws NAPreprocessorException
+  private Feature calculateLanduseClass( final ParameterHash landuseHash ) throws NAPreprocessorException
   {
     /* overlay always wins */
     final DRWBMDefinition drwbm = getDrwbmDefinition();
@@ -154,7 +147,7 @@ public class HydrotopeInfo
 
     /* last resort, the old direct value */
     final String landuseName = m_hydrotope.getLanduse();
-    final Feature landuseClass = m_landuseHash.getLanduseClass( landuseName );
+    final Feature landuseClass = landuseHash.getLanduseClass( landuseName );
     if( landuseClass != null )
       return landuseClass;
 
@@ -162,9 +155,9 @@ public class HydrotopeInfo
     throw new NAPreprocessorException( msg );
   }
 
-  private double getLanduseSealingRate( ) throws NAPreprocessorException
+  private double getLanduseSealingRate( final ParameterHash landuseHash ) throws NAPreprocessorException
   {
-    final Double landuseSealing = m_landuseHash.getSealingRate( m_landuseClass );
+    final Double landuseSealing = landuseHash.getSealingRate( m_landuseClass );
     if( landuseSealing == null )
     {
       final String landuseName = m_landuseClass.getName();
@@ -264,7 +257,7 @@ public class HydrotopeInfo
     return linkedCatchment.getCorrGwInflowRate();
   }
 
-  private ISoilType calculateSoiltype( ) throws NAPreprocessorException
+  private ISoilType calculateSoiltype( final ParameterHash landuseHash ) throws NAPreprocessorException
   {
     /* overlay always wins */
     final DRWBMDefinition drwbm = getDrwbmDefinition();
@@ -289,7 +282,7 @@ public class HydrotopeInfo
 
     /* last resort, use direct value in hydrotope */
     final String soilTypeID = m_hydrotope.getSoilType();
-    final Soiltype soiltype = m_landuseHash.getSoilType( soilTypeID );
+    final Soiltype soiltype = landuseHash.getSoilType( soilTypeID );
     if( soiltype != null )
       return soiltype;
 
@@ -352,9 +345,9 @@ public class HydrotopeInfo
     return corrSealing;
   }
 
-  private double calculateTotalSealingRate( ) throws NAPreprocessorException
+  private double calculateTotalSealingRate( final ParameterHash landuseHash ) throws NAPreprocessorException
   {
-    final double landuseSealing = getLanduseSealingRate();
+    final double landuseSealing = getLanduseSealingRate( landuseHash );
 
     final double corrSealing = getSealingCorrection();
 
@@ -363,7 +356,7 @@ public class HydrotopeInfo
 
   public String getLanduseShortName( )
   {
-    return m_landuseHash.getLanduseFeatureShortedName( m_landuseClass );
+    return m_landuseShortName;
   }
 
   public void addArea( final HydrotopeInfo hydrotopInfo )

@@ -43,7 +43,7 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.IStatus;
@@ -98,7 +98,7 @@ class HydrotopeWriter extends AbstractCoreFileWriter
       writeCatchment( writer, catchmentInfo );
     }
 
-    return log.asMultiStatusOrOK( Messages.getString("HydrotopeWriter.2") ); //$NON-NLS-1$
+    return log.asMultiStatusOrOK( Messages.getString( "HydrotopeWriter.2" ) ); //$NON-NLS-1$
   }
 
   private void writeCatchment( final PrintWriter writer, final CatchmentInfo info ) throws NAPreprocessorException
@@ -108,26 +108,28 @@ class HydrotopeWriter extends AbstractCoreFileWriter
 
     final Sealing totalSealing = info.getTotalSealing();
 
-    final Collection<HydrotopeInfo> hydrotops = info.getHydrotops();
+    final List<HydrotopeInfo> hydrotopes = info.getHydrotops();
 
     writer.print( catchmentAsciiID );
     writer.append( ' ' );
-    writer.print( hydrotops.size() );
+    writer.print( hydrotopes.size() );
     writer.append( ' ' );
     writer.format( Locale.US, "%.3f %.3f %.3f", totalSealing.getSealedArea(), totalSealing.getNaturalArea(), totalSealing.getArea() ); //$NON-NLS-1$
 
     writer.append( '\n' );
 
-    for( final HydrotopeInfo hydrotopInfo : hydrotops )
-      writeHydrotope( writer, catchment, hydrotopInfo );
+    for( int i = 0; i < hydrotopes.size(); i++ )
+    {
+      final HydrotopeInfo hydrotopeInfo = hydrotopes.get( i );
+      writeHydrotope( writer, catchment, hydrotopeInfo, i );
+    }
   }
 
-  private void writeHydrotope( final PrintWriter writer, final Catchment catchment, final HydrotopeInfo hydrotopInfo ) throws NAPreprocessorException
+  private void writeHydrotope( final PrintWriter writer, final Catchment catchment, final HydrotopeInfo hydrotopInfo, final int hydrotopeIndex ) throws NAPreprocessorException
   {
     final String landuseShortName = hydrotopInfo.getLanduseShortName();
     final double maxPerkolationRate = hydrotopInfo.getMaxPercolationRate();
     final double gwFactor = hydrotopInfo.getGwFactor();
-    final int hydrotopID = hydrotopInfo.getLocalID();
 
     final double totalSealingRate = hydrotopInfo.getTotalSealingRate();
     final double naturalArea = hydrotopInfo.getNaturalArea();
@@ -136,7 +138,7 @@ class HydrotopeWriter extends AbstractCoreFileWriter
 
     /* Write hydrotope line */
     /* REMARK: last 0 is for the old calculation core - otherwise hydrotope file can't be read */
-    writer.format( Locale.US, "%-10.10g %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f 0%n", naturalArea, landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopID, totalSealingRate ); //$NON-NLS-1$
+    writer.format( Locale.US, "%-10.10g %-10s %-10s %-10.3g %-10.3g %-10d %-10.3f 0%n", naturalArea, landuseShortName, soiltypeName, maxPerkolationRate, gwFactor, hydrotopeIndex + 1, totalSealingRate ); //$NON-NLS-1$
   }
 
   private String getSoilTypeName( final Catchment catchment, final HydrotopeInfo hydrotopInfo ) throws NAPreprocessorException
