@@ -44,14 +44,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -263,7 +262,7 @@ class LzsimWriter
      * for catchments that are targets of groundwater flow, but which are not part of the currently written sub-net. We
      * ignore this case silently for now.
      */
-    final Collection<HydrotopeInfo> hydrotops = m_catchmentData.getHydrotops( naCatchment );
+    final List<HydrotopeInfo> hydrotops = m_catchmentData.getHydrotops( naCatchment );
     if( hydrotops.size() == 0 )
       return null;
 
@@ -277,10 +276,10 @@ class LzsimWriter
     }
 
     /* Build result map */
-    final Map<Integer, IniHyd> iniHydMap = new TreeMap<>();
+    final List<IniHyd> iniHys = new ArrayList<>( hydrotops.size() );
+
     for( final HydrotopeInfo hydrotopeInfo : hydrotops )
     {
-      final Integer localID = hydrotopeInfo.getLocalID();
       final String naHydrotopID = hydrotopeInfo.getFeatureId();
 
       final IniHyd iniHyd = iniHydHash.get( naHydrotopID );
@@ -289,9 +288,8 @@ class LzsimWriter
         final String msg = Messages.getString( "LzsimWriter.4", naHydrotopID, naCatchment.getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( msg );
       }
-      iniHydMap.put( localID, iniHyd );
     }
 
-    return iniHydMap.values().toArray( new IniHyd[iniHydMap.size()] );
+    return iniHys.toArray( new IniHyd[iniHys.size()] );
   }
 }

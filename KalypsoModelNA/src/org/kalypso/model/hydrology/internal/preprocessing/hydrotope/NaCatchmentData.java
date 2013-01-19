@@ -18,8 +18,8 @@
  */
 package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -66,15 +66,21 @@ public class NaCatchmentData
       final Catchment originalCatchment = catchmentIndex.findCatchment( hydrotope );
       if( originalCatchment == null )
       {
-        final String message = String.format( Messages.getString("NaCatchmentData_0") ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "NaCatchmentData_0" ) ); //$NON-NLS-1$
         log.add( IStatus.WARNING, message );
       }
 
+      /* create and validate hydrotope info */
+      final HydrotopeInfo hydrotopeInfo = new HydrotopeInfo( hydrotope, m_landuseHash );
+      hydrotopeInfo.validateAttributes();
+
+      // FIXME: split by drwbms
+
       final CatchmentInfo info = getOrCreateInfo( originalCatchment, doAttributeDissolve );
-      info.add( hydrotope );
+      info.add( hydrotopeInfo );
     }
 
-    return log.asMultiStatus( Messages.getString("NaCatchmentData_1") ); //$NON-NLS-1$
+    return log.asMultiStatus( Messages.getString( "NaCatchmentData_1" ) ); //$NON-NLS-1$
   }
 
   private CatchmentInfo getOrCreateInfo( final Catchment catchment, final boolean doAttributeDissolve )
@@ -83,7 +89,7 @@ public class NaCatchmentData
     if( info != null )
       return info;
 
-    final CatchmentInfo newInfo = new CatchmentInfo( catchment, m_landuseHash, doAttributeDissolve );
+    final CatchmentInfo newInfo = new CatchmentInfo( catchment, doAttributeDissolve );
     m_catchmentInfos.put( catchment, newInfo );
     return newInfo;
   }
@@ -99,7 +105,7 @@ public class NaCatchmentData
     return m_catchmentInfos.keySet().toArray( new Catchment[m_catchmentInfos.size()] );
   }
 
-  public Collection<HydrotopeInfo> getHydrotops( final Catchment catchment )
+  public List<HydrotopeInfo> getHydrotops( final Catchment catchment )
   {
     final CatchmentInfo catchmentInfo = getInfo( catchment );
     return catchmentInfo.getHydrotops();

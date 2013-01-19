@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.resolve;
 
+import java.util.Arrays;
+
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -55,7 +57,6 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.ogc.sensor.util.ZmlLink;
@@ -105,11 +106,9 @@ public class NaModelResolver
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final NaCatchmentData catchmentData = buildCatchmentData( log );
+    m_resolvedCatchmentData = resolveCatchments( log );
 
-    m_resolvedCatchmentData = splitDrwbmCatchments( catchmentData );
-
-    // - resolve catchment - catchment relations
+    // TODO: branching with catchment as target
 
     updateGWNet();
     updateNode2NodeNet();
@@ -119,32 +118,17 @@ public class NaModelResolver
     return log.asMultiStatusOrOK( "Resolving model" );
   }
 
-  private NaCatchmentData buildCatchmentData( final IStatusCollector log ) throws NAPreprocessorException
+  /**
+   * Resolves catchments that contain drwbm soil types. For each distinguished dwwbm soil type, a new catchment is created.
+   */
+  private NaCatchmentData resolveCatchments( final IStatusCollector log ) throws NAPreprocessorException
   {
-    /* first, dissolve hydrotopes */
-    final NaCatchmentData catchmentData = new NaCatchmentData( m_landuseHash );
-    final IStatus status = catchmentData.addHydrotopes( m_model, m_hydrotopes, true );
+    final CatchmentResolver resolver = new CatchmentResolver( m_model, m_landuseHash, m_hydrotopes );
+    final IStatus status = resolver.execute();
     if( !status.isOK() )
-      log.add( status );
+      log.addAll( Arrays.asList( status.getChildren() ) );
 
-    return catchmentData;
-  }
-
-  private NaCatchmentData splitDrwbmCatchments( final NaCatchmentData catchmentData )
-  {
-    final NaCatchmentData resolvedCatchmentData = new NaCatchmentData( m_landuseHash );
-
-    final Catchment[] catchments = catchmentData.getCatchments();
-    for( final Catchment catchment : catchments )
-    {
-      final CatchmentInfo info = catchmentData.getInfo( catchment );
-
-      // FIXME: introduce mother-daughter catchments according to overlay
-
-      resolvedCatchmentData.addInfo( info );
-    }
-
-    return resolvedCatchmentData;
+    return resolver.getResolvedCatchments();
   }
 
   /**

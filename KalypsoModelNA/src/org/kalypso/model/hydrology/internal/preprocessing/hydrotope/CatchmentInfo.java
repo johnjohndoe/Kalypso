@@ -41,21 +41,18 @@
 package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * Infos about all hydrotops belonging to one catchment.
- *
+ * 
  * @author Gernot Belger
  */
 public class CatchmentInfo
@@ -66,8 +63,6 @@ public class CatchmentInfo
 
   private final Catchment m_catchment;
 
-  private final ParameterHash m_landuseHash;
-
   private Sealing m_totalSealing = null;
 
   private final boolean m_doAttributeDissolve;
@@ -77,19 +72,14 @@ public class CatchmentInfo
    *          If hydrotopes with same attributes should be combined into a single one. Set to <code>false</code> for
    *          debug purpose only.
    */
-  public CatchmentInfo( final Catchment catchment, final ParameterHash landuseHash, final boolean doAttributeDissolve )
+  public CatchmentInfo( final Catchment catchment, final boolean doAttributeDissolve )
   {
     m_catchment = catchment;
-    m_landuseHash = landuseHash;
     m_doAttributeDissolve = doAttributeDissolve;
   }
 
-  public void add( final IHydrotope hydrotop ) throws NAPreprocessorException
+  public void add( final HydrotopeInfo hydrotopeInfo )
   {
-    final HydrotopeInfo hydrotopeInfo = new HydrotopeInfo( hydrotop, m_landuseHash, m_hydrotopeHash.size() + 1 );
-
-    hydrotopeInfo.validateAttributes();
-
     final String attributeHashKey = hydrotopeInfo.getAttributeHash();
 
     if( m_doAttributeDissolve && m_hydrotopeHash.containsKey( attributeHashKey ) )
@@ -141,9 +131,9 @@ public class CatchmentInfo
     return m_totalSealing;
   }
 
-  public Collection<HydrotopeInfo> getHydrotops( )
+  public List<HydrotopeInfo> getHydrotops( )
   {
-    return Collections.unmodifiableCollection( m_hydrotopes );
+    return Collections.unmodifiableList( m_hydrotopes );
   }
 
   public Catchment getCatchment( )
