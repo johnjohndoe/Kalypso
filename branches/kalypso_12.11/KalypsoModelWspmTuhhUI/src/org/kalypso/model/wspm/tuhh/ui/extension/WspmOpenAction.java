@@ -45,10 +45,24 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveRegistry;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.navigator.CommonViewer;
+import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory;
-import org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction;
+import org.kalypso.module.welcome.actions.AbstractModuleProjectOpenAction;
 
 /**
  * @author Dirk Kuch
@@ -60,33 +74,60 @@ public class WspmOpenAction extends AbstractModuleProjectOpenAction
     super( KalypsoWspmTuhhModule.ID );
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction#doOpen(org.eclipse.ui.IWorkbenchPage,
-   *      org.eclipse.core.resources.IProject)
-   */
   @Override
-  protected IStatus doOpen( final IWorkbenchPage page, final IProject project ) throws CoreException
+  protected IStatus doOpen( final Shell shell, final Point mousePosition, final IWorkbenchPage page, final IProject project ) throws CoreException
   {
+    openPerspective( page );
+
+    revealProjectInExplorer( page, project );
+
     final IFile iFile = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
     IDE.openEditor( page, iFile );
     return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#getFinalPerspective()
-   */
-  @Override
-  public String getFinalPerspective( )
+  private void openPerspective( final IWorkbenchPage page )
   {
-    return WspmPerspectiveFactory.ID;
+    /* hide intro */
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IIntroManager introManager = workbench.getIntroManager();
+    introManager.closeIntro( introManager.getIntro() );
+
+    /* Open desired perspective */
+    if( page == null )
+      return;
+
+    final IPerspectiveRegistry perspectiveRegistry = workbench.getPerspectiveRegistry();
+
+    final IPerspectiveDescriptor descriptor = perspectiveRegistry.findPerspectiveWithId( WspmPerspectiveFactory.ID );
+    if( descriptor != null )
+      page.setPerspective( descriptor );
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#revealProjectInExplorer()
-   */
-  @Override
-  public boolean revealProjectInExplorer( )
+  private void revealProjectInExplorer( final IWorkbenchPage page, final IProject project ) throws PartInitException
   {
-    return true;
+    // At least show project in Resource Navigator
+    final StructuredSelection projectSelection = new StructuredSelection( project );
+
+    final CommonNavigator projectExplorer = (CommonNavigator)page.findView( IPageLayout.ID_PROJECT_EXPLORER );
+    if( projectExplorer != null )
+    {
+      page.showView( IPageLayout.ID_PROJECT_EXPLORER, null, IWorkbenchPage.VIEW_ACTIVATE );
+      final CommonViewer commonViewer = projectExplorer.getCommonViewer();
+      commonViewer.collapseAll();
+      commonViewer.setSelection( projectSelection );
+      commonViewer.expandToLevel( project, 1 );
+    }
+    else
+    {
+      final ResourceNavigator view = (ResourceNavigator)page.showView( IPageLayout.ID_RES_NAV );
+      if( view != null )
+      {
+        final TreeViewer treeViewer = view.getTreeViewer();
+        treeViewer.collapseAll();
+        view.selectReveal( projectSelection );
+        treeViewer.expandToLevel( project, 1 );
+      }
+    }
   }
 }

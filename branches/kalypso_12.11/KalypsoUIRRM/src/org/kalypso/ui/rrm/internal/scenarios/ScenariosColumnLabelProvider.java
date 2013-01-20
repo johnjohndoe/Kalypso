@@ -44,7 +44,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.afgui.ui.workflow.WorkflowBreadCrumbLabelProvider;
+import org.kalypso.afgui.workflow.WorkflowBreadcrumbLabelProvider;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 import de.renew.workflow.connector.cases.IScenario;
@@ -64,7 +64,7 @@ public class ScenariosColumnLabelProvider extends ColumnLabelProvider
   /**
    * The delegate label provider.
    */
-  private final WorkflowBreadCrumbLabelProvider m_delegateLabelProvider;
+  private final WorkflowBreadcrumbLabelProvider m_delegateLabelProvider;
 
   /**
    * The constructor.
@@ -75,34 +75,25 @@ public class ScenariosColumnLabelProvider extends ColumnLabelProvider
   public ScenariosColumnLabelProvider( final IScenario targetScenario )
   {
     m_targetScenario = targetScenario;
-    m_delegateLabelProvider = new WorkflowBreadCrumbLabelProvider();
+    m_delegateLabelProvider = new WorkflowBreadcrumbLabelProvider();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
-   */
   @Override
   public Image getImage( final Object element )
   {
     return m_delegateLabelProvider.getImage( element );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
   @Override
   public String getText( final Object element )
   {
     final String text = m_delegateLabelProvider.getText( element );
     if( element.equals( m_targetScenario ) )
-      return String.format( Messages.getString("ScenariosColumnLabelProvider_0"), text ); //$NON-NLS-1$
+      return String.format( Messages.getString( "ScenariosColumnLabelProvider_0" ), text ); //$NON-NLS-1$
 
     return text;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getFont(java.lang.Object)
-   */
   @Override
   public Font getFont( final Object element )
   {

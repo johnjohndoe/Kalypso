@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.handlers.AddScenarioHandler;
+import org.kalypso.afgui.helper.ScenarioHandlerUtils;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -80,11 +80,11 @@ public class MergeScenariosHandler extends AbstractHandler
     final Shell shell = display.getActiveShell();
 
     /* Find scenario */
-    final IScenario scenario = AddScenarioHandler.findScenario( event );
+    final IScenario scenario = ScenarioHandlerUtils.findScenario( event );
     if( scenario == null )
     {
       final String commandName = HandlerUtils.getCommandName( event );
-      final String message = Messages.getString("MergeScenariosHandler_0"); //$NON-NLS-1$
+      final String message = Messages.getString( "MergeScenariosHandler_0" ); //$NON-NLS-1$
       MessageDialog.openInformation( shell, commandName, message );
       return null;
     }
