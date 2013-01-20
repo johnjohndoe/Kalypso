@@ -50,6 +50,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -60,10 +61,10 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.ogc.gml.compare.FeatureListComparator;
+import org.kalypso.ogc.gml.compare.GmlComparator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -238,15 +239,13 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     final long selectedLength = selectedFileInfo.getLength();
 
     if( referenceLength != selectedLength )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("CompareScenariosOperation.0") ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "CompareScenariosOperation.0" ) ); //$NON-NLS-1$
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CompareScenariosOperation.1") ); //$NON-NLS-1$
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "CompareScenariosOperation.1" ) ); //$NON-NLS-1$
   }
 
   private IStatus compareModel( final IFile referenceFile, final CompareData compareData ) throws Exception
   {
-    /* The status collector. */
-    final IStatusCollector collector = new StatusCollectorWithTime( KalypsoUIRRMPlugin.getID() );
 
     /* Get some data. */
     final IFile selectedFile = compareData.getFile();
@@ -257,35 +256,26 @@ public class CompareScenariosOperation implements ICoreRunnableWithProgress
     final GMLWorkspace referenceWorkspace = GmlSerializer.createGMLWorkspace( referenceFile );
     final GMLWorkspace selectedWorkspace = GmlSerializer.createGMLWorkspace( selectedFile );
 
-    /* Get the models. */
-    final Feature referenceModel = referenceWorkspace.getRootFeature();
-    final Feature selectedModel = selectedWorkspace.getRootFeature();
-
-    /* Compare each configured list. */
-    for( int i = 0; i < listPaths.length; i++ )
-    {
-      final GMLXPath listPath = listPaths[i];
-      final QName uniqueProperty = uniqueProperties[i];
-
-      final IStatus listStatus = compareList( referenceModel, selectedModel, listPath, uniqueProperty );
-      collector.add( listStatus );
-    }
+    final GmlComparator comparator = new GmlComparator( listPaths, uniqueProperties );
+    final IStatus compareStatus = comparator.compare( referenceWorkspace, selectedWorkspace );
 
     /* Dispose the workspaces. */
     referenceWorkspace.dispose();
     selectedWorkspace.dispose();
 
     /* Return with 'Changed' message. */
-    if( !collector.isOK() )
-      return collector.asMultiStatus( Messages.getString("CompareScenariosOperation.2") ); //$NON-NLS-1$
+    if( !compareStatus.isOK() )
+    {
+      final String message = Messages.getString( "CompareScenariosOperation.2" ); //$NON-NLS-1$
+      final MultiStatus status = new MultiStatus( KalypsoUIRRMPlugin.getID(), 0, message, null );
+      status.addAll( status );
+      return status;
+    }
 
     /* Return with 'Not changed' message. */
-    return collector.asMultiStatus( Messages.getString("CompareScenariosOperation.3") ); //$NON-NLS-1$
-  }
-
-  private IStatus compareList( final Feature referenceFeature, final Feature selectedFeature, final GMLXPath listPath, final QName uniqueProperty ) throws Exception
-  {
-    final FeatureListComparator comparator = new FeatureListComparator( referenceFeature, selectedFeature, listPath, uniqueProperty );
-    return comparator.compareList();
+    final String message = Messages.getString( "CompareScenariosOperation.3" ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( KalypsoUIRRMPlugin.getID(), 0, message, null );
+    status.addAll( status );
+    return status;
   }
 }

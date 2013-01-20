@@ -160,6 +160,7 @@ public class MergeScenariosWizardPage extends WizardPage
     deleteButton.setText( Messages.getString( "MergeScenariosWizardPage_2" ) ); //$NON-NLS-1$
 
     /* Create a button. */
+    // FIXME: use actions!
     final Button compareButton = new Button( main, SWT.PUSH );
     compareButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
     compareButton.setText( String.format( Messages.getString( "MergeScenariosWizardPage_3" ), m_scenariosData.getTargetScenario().getName() ) ); //$NON-NLS-1$
