@@ -4,6 +4,7 @@ import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.afgui.scenarios.SzenarioProjectOpenAction;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard;
 import org.kalypso.model.flood.ui.wizards.NewProjectWizard;
@@ -13,7 +14,6 @@ import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
 import org.kalypso.module.ISetAsBaseScenarioHandler;
 import org.kalypso.module.welcome.INewProjectWizard;
 import org.kalypso.module.welcome.INewProjectWizardProvider;
-import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
