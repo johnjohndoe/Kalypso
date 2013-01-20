@@ -61,18 +61,21 @@ class LzgReader
 
   public Pair<Double, IStatus> read( final File lzgFile )
   {
-    // FIXME: warum haben virtuell channel keine anfangswerte?! dubios!
-    if( m_channel instanceof VirtualChannel )
-      return Pair.of( null, Status.OK_STATUS );
+    // REMARK: alle channel haben die gleiche Art Anfangswerte -> seltsames Verhalten des Rechenkern, sollte verschiedene Parameterarten untercheiden
 
-    // FIXME: warum haben storage und km channel die gleiche art von anfangswerten?
+    if( !lzgFile.exists() )
+    {
+      // Virtuelle Channel, welche nie berechnet wurden (vermutlich am Anfang) haben keine Anfangswert
+      if( m_channel instanceof VirtualChannel )
+        return Pair.of( null, Status.OK_STATUS );
+    }
 
-    try( FileReader fileReader = new FileReader( lzgFile ) )
+    try( final FileReader fileReader = new FileReader( lzgFile ) )
     {
       final Double value = readLzgFile( fileReader );
       if( Doubles.isNullOrInfinite( value ) )
       {
-        final String message = String.format( Messages.getString("LzgReader.0"), m_channel.getName(), lzgFile.getName() ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "LzgReader.0" ), m_channel.getName(), lzgFile.getName() ); //$NON-NLS-1$
         final IStatus noValueStatus = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, message );
         return Pair.of( null, noValueStatus );
       }
@@ -81,7 +84,7 @@ class LzgReader
     }
     catch( final FileNotFoundException e )
     {
-      final String message = String.format( Messages.getString("LzgReader.1"), m_channel.getName() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "LzgReader.1" ), m_channel.getName() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message, e );
       return Pair.of( null, status );
     }
