@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * * Binding class for {http://www.tuhh.de/initialValues}InitialValues
- *
+ * 
  * @author Gernot Belger
  */
 public class InitialValues extends Feature_Impl
@@ -63,9 +63,9 @@ public class InitialValues extends Feature_Impl
 
   private static final QName PROP_INI_DATE = new QName( NS_INIVALUES, "iniDate" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_CATCHMENT = new QName( NS_INIVALUES, "catchmentMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_CATCHMENT = new QName( NS_INIVALUES, "catchmentMember" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_CHANNEL = new QName( NS_INIVALUES, "channelMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_CHANNEL = new QName( NS_INIVALUES, "channelMember" ); //$NON-NLS-1$
 
   private FeatureBindingCollection<Channel> m_channels;
 
