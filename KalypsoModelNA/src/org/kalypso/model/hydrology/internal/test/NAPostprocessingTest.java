@@ -46,6 +46,8 @@ import java.net.URL;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
@@ -62,8 +64,10 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.model.hydrology.binding.HydrotopeCollection;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
+import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -73,7 +77,10 @@ import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
@@ -150,6 +157,9 @@ public class NAPostprocessingTest
     final Catchment[] catchments = catchmentData.getCatchments();
     for( final Catchment catchment : catchments )
       idManager.getAsciiID( catchment );
+    final IFeatureBindingCollection<Channel> channels = model.getChannels();
+    for( final Channel channel : channels )
+      idManager.getAsciiID( channel );
 
     final MultiStatus processStatus = new MultiStatus( ModelNA.PLUGIN_ID, 0, "Processing", null ); //$NON-NLS-1$
 
@@ -179,7 +189,13 @@ public class NAPostprocessingTest
     final FileStructureComparator actualComparator = new FileStructureComparator( currentResultsDir );
     final FileStructureComparator expectedComparator = new FileStructureComparator( resultExpectedDir );
 
-    final Differencer differencer = new Differencer();
+    // Special case: lzsim file must be compared as gml
+    final String lzsimFilename = "20020728.gml";
+    final GMLXPath[] lzsimPaths = new GMLXPath[] { new GMLXPath( InitialValues.MEMBER_CATCHMENT ), new GMLXPath( InitialValues.MEMBER_CHANNEL ) };
+    final QName[] lzsimProperties = new QName[] { Feature.QN_NAME, Feature.QN_NAME };
+
+    final Differencer differencer = new DifferencerExt( lzsimFilename, lzsimPaths, lzsimProperties );
+
     final Object differences = differencer.findDifferences( false, new NullProgressMonitor(), null, null, expectedComparator, actualComparator );
 
     final IElementDumper elementDumper = new IElementDumper()
@@ -187,10 +203,6 @@ public class NAPostprocessingTest
       @Override
       public void dumpElement( final ICompareInput input )
       {
-        // We ignore this gml file at the moment. It is different, as the gml-id changes each time.
-        if( "20020728.gml".equals( input.getName() ) ) //$NON-NLS-1$
-          return;
-
         new FileContentAssertDumper().dumpElement( input );
       }
     };
