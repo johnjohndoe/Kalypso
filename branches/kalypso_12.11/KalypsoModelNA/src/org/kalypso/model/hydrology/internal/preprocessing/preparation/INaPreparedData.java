@@ -27,7 +27,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.osgi.framework.Version;
@@ -50,7 +50,7 @@ public interface INaPreparedData
 
   IDManager getIdManager( );
 
-  NaCatchmentData getCatchmentData( );
+  ICatchmentInfos getCatchmentData( );
 
   NAOptimize getNaOptimize( );
 

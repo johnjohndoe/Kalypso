@@ -41,14 +41,11 @@
 package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * Infos about all hydrotops belonging to one catchment.
@@ -59,54 +56,32 @@ public class CatchmentInfo
 {
   private final List<HydrotopeInfo> m_hydrotopes = new ArrayList<>();
 
-  private final Map<String, HydrotopeInfo> m_hydrotopeHash = new LinkedHashMap<>();
-
   private final Catchment m_catchment;
 
   private Sealing m_totalSealing = null;
 
-  private final boolean m_doAttributeDissolve;
+  private final String m_label;
 
-  /**
-   * @param doAttributeDissolve
-   *          If hydrotopes with same attributes should be combined into a single one. Set to <code>false</code> for
-   *          debug purpose only.
-   */
-  public CatchmentInfo( final Catchment catchment, final boolean doAttributeDissolve )
+  private final String m_lzsID;
+
+  public CatchmentInfo( final Catchment catchment, final String label, final String lzsID )
+  {
+    this( catchment, label, lzsID, new HydrotopeInfo[0], null );
+  }
+
+  public CatchmentInfo( final Catchment catchment, final String label, final String lzsID, final HydrotopeInfo[] hydrotopes, final Sealing totalSealing )
   {
     m_catchment = catchment;
-    m_doAttributeDissolve = doAttributeDissolve;
+    m_label = label;
+    m_lzsID = lzsID;
+    m_totalSealing = totalSealing;
+
+    m_hydrotopes.addAll( Arrays.asList( hydrotopes ) );
   }
 
   public void add( final HydrotopeInfo hydrotopeInfo )
   {
-    final String attributeHashKey = hydrotopeInfo.getAttributeHash();
-
-    if( m_doAttributeDissolve && m_hydrotopeHash.containsKey( attributeHashKey ) )
-    {
-      final HydrotopeInfo existingInfo = m_hydrotopeHash.get( attributeHashKey );
-      existingInfo.addArea( hydrotopeInfo );
-    }
-    else
-    {
-      m_hydrotopeHash.put( attributeHashKey, hydrotopeInfo );
-      m_hydrotopes.add( hydrotopeInfo );
-    }
-  }
-
-  public String checkArea( )
-  {
-    final GM_Polygon geometry = m_catchment.getGeometry();
-    final double catchmentAre = geometry.getArea();
-
-    final double hydrotopArea = getTotalSealing().getArea();
-
-    final double fehler = Math.abs( catchmentAre - hydrotopArea );
-    final double fehlerinProzent = 100.0 * fehler / hydrotopArea;
-    if( fehlerinProzent > 1.0 )
-      return Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3", hydrotopArea, m_catchment.getId(), catchmentAre, fehler, fehlerinProzent ); //$NON-NLS-1$
-
-    return null;
+    m_hydrotopes.add( hydrotopeInfo );
   }
 
   public String getHydroFeatureId( final int pos )
@@ -117,21 +92,12 @@ public class CatchmentInfo
   public Sealing getTotalSealing( )
   {
     if( m_totalSealing == null )
-    {
-      m_totalSealing = new Sealing();
-
-      for( final HydrotopeInfo hydrotopeInfo : m_hydrotopes )
-      {
-        final Sealing hydrotopeSealing = hydrotopeInfo.createSealing();
-
-        m_totalSealing = m_totalSealing.add( hydrotopeSealing );
-      }
-    }
+      m_totalSealing = HydrotopeInfo.calculateSealing( m_hydrotopes );
 
     return m_totalSealing;
   }
 
-  public List<HydrotopeInfo> getHydrotops( )
+  public List<HydrotopeInfo> getHydrotopes( )
   {
     return Collections.unmodifiableList( m_hydrotopes );
   }
@@ -139,5 +105,15 @@ public class CatchmentInfo
   public Catchment getCatchment( )
   {
     return m_catchment;
+  }
+
+  public String getLabel( )
+  {
+    return m_label;
+  }
+
+  public String getLzsId( )
+  {
+    return m_lzsID;
   }
 }

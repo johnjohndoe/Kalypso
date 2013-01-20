@@ -32,10 +32,10 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.binding.initialValues.IniHyd;
-import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -104,19 +104,16 @@ class LzsReader
 
   private final org.kalypso.model.hydrology.binding.initialValues.Catchment m_iniCatchment;
 
-  private final Catchment m_catchment;
+  private final CatchmentInfo m_catchmentInfo;
 
   private final Date m_initialDate;
 
-  private final NaCatchmentData m_catchmentData;
-
-  public LzsReader( final NaCatchmentData catchmentData, final DateFormat dateFormat, final Date initialDate, final org.kalypso.model.hydrology.binding.initialValues.Catchment iniCatchment, final Catchment catchment )
+  public LzsReader( final DateFormat dateFormat, final Date initialDate, final org.kalypso.model.hydrology.binding.initialValues.Catchment iniCatchment, final CatchmentInfo catchment )
   {
-    m_catchmentData = catchmentData;
     m_dateFormat = dateFormat;
     m_initialDate = initialDate;
     m_iniCatchment = iniCatchment;
-    m_catchment = catchment;
+    m_catchmentInfo = catchment;
   }
 
   public IStatus read( final File lzsFile )
@@ -127,7 +124,7 @@ class LzsReader
     }
     catch( final FileNotFoundException e )
     {
-      final String message = Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", m_catchment.getName() ); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", m_catchmentInfo.getLabel() ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message, e );
     }
     catch( final Exception e )
@@ -188,7 +185,8 @@ class LzsReader
         final String[] strings = line.split( " " ); //$NON-NLS-1$
         final int pos = Integer.parseInt( strings[0] ) - 1;
 
-        final String hydroID = m_catchmentData.getHydroFeatureId( m_catchment, pos );
+        final HydrotopeInfo hydrotopeInfo = m_catchmentInfo.getHydrotopes().get( pos );
+        final String hydroID = hydrotopeInfo.getFeatureId();
         iniHyd.setNaHydrotopID( hydroID );
 
         final Double interception = Double.valueOf( strings[1] );

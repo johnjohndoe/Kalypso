@@ -33,7 +33,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +43,6 @@ import java.util.TreeSet;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -113,7 +111,7 @@ public class IDManager
     {
       if( !StringUtils.isBlank( property ) )
       {
-        final int testID = NumberUtils.toInteger( property );
+        final int testID = Integer.parseInt( property );
         if( testID >= 1000 && testID < 10000 )
         {
           final IDMap map = new IDMap( testID, type );
@@ -122,7 +120,7 @@ public class IDManager
         }
       }
     }
-    catch( final ParseException e )
+    catch( final NumberFormatException e )
     {
       // ignore exception and generate new id
     }

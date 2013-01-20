@@ -127,6 +127,8 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
 
       final File resultDir = m_simDirs.currentResultDir;
       final File logDir = new File( resultDir, "Log" ); //$NON-NLS-1$
+      logDir.mkdirs();
+
       final File simulationLogFile = new File( logDir, "simulationLog.gml" ); //$NON-NLS-1$
 
       final GeoStatusLog geoStatusLog = new GeoStatusLog( simulationLogFile );

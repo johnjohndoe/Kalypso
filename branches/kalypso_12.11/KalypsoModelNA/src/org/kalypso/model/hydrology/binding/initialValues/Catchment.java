@@ -87,9 +87,9 @@ public class Catchment extends Feature_Impl
     return getProperty( PROP_FEATURE_ID, String.class );
   }
 
-  public void setNaCatchmentID( final org.kalypso.model.hydrology.binding.model.Catchment catchment )
+  public void setNaCatchmentID( final String id )
   {
-    setProperty( PROP_FEATURE_ID, catchment.getId() );
+    setProperty( PROP_FEATURE_ID, id );
   }
 
   public Double getH( )

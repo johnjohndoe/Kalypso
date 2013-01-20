@@ -27,7 +27,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.osgi.framework.Version;
@@ -41,7 +41,7 @@ class NaResolvedModelData implements INaPreparedData
 {
   private final RelevantNetElements m_relevantElements;
 
-  private final NaCatchmentData m_catchmentData;
+  private final ICatchmentInfos m_catchmentData;
 
   private final TimeseriesFileManager m_tsFileManager;
 
@@ -69,7 +69,7 @@ class NaResolvedModelData implements INaPreparedData
 
   private final IStatus m_status;
 
-  NaResolvedModelData( final NAModellControl control, final NAControl metaControl, final NaModell model, final InitialValues initialValue, final GMLWorkspace synthWorkspace, final NAOptimize optimize, final Parameter parameter, final ParameterHash landuseHash, final Node rootNode, final RelevantNetElements relevantElements, final NaCatchmentData catchmentData, final IDManager idManager, final Version calcCoreVersion, final TimeseriesFileManager tsFileManager, final IStatus status )
+  NaResolvedModelData( final NAModellControl control, final NAControl metaControl, final NaModell model, final InitialValues initialValue, final GMLWorkspace synthWorkspace, final NAOptimize optimize, final Parameter parameter, final ParameterHash landuseHash, final Node rootNode, final RelevantNetElements relevantElements, final ICatchmentInfos catchmentData, final IDManager idManager, final Version calcCoreVersion, final TimeseriesFileManager tsFileManager, final IStatus status )
   {
     m_control = control;
     m_metaControl = metaControl;
@@ -125,7 +125,7 @@ class NaResolvedModelData implements INaPreparedData
   }
 
   @Override
-  public NaCatchmentData getCatchmentData( )
+  public ICatchmentInfos getCatchmentData( )
   {
     return m_catchmentData;
   }

@@ -61,7 +61,7 @@ import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessingExcep
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.model.hydrology.internal.processing.KalypsoNaProcessor;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
@@ -246,7 +246,7 @@ public class NAModelSimulation
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
     final NAModellControl naControl = simulationData.getNaControl();
 
-    final NaCatchmentData catchmentData = m_preprocessor.getCatchmentData();
+    final ICatchmentInfos catchmentData = m_preprocessor.getCatchmentData();
     final IDManager idManager = m_preprocessor.getIdManager();
 
     final NaPostProcessor postProcessor = new NaPostProcessor( idManager, modelWorkspace, naControl, catchmentData, processStatus );

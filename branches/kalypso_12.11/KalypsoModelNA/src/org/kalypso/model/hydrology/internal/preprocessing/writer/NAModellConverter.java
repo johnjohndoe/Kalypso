@@ -58,7 +58,7 @@ import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.INaPreparedData;
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.NetElement;
@@ -98,7 +98,7 @@ class NAModellConverter
     final TimeseriesFileManager tsFileManager = m_data.getTimeseriesManager();
     final Parameter parameter = m_data.getParameter();
     final ParameterHash landuseHash = m_data.getLanduseHash();
-    final NaCatchmentData catchmentData = m_data.getCatchmentData();
+    final ICatchmentInfos catchmentData = m_data.getCatchmentData();
     final InitialValues initialValues = m_data.getInitialValues();
     final Version calcCoreVersion = m_data.getCalcCoreVersion();
 
@@ -164,6 +164,6 @@ class NAModellConverter
     final GebWriter catchmentManager = new GebWriter( catchments, naControl, tsFileManager, idManager );
     catchmentManager.write( m_asciiDirs.catchmentFile, log );
 
-    return log.asMultiStatusOrOK( Messages.getString("NAModellConverter_0") ); //$NON-NLS-1$
+    return log.asMultiStatusOrOK( Messages.getString( "NAModellConverter_0" ) ); //$NON-NLS-1$
   }
 }

@@ -57,7 +57,7 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -78,7 +78,7 @@ public class NaModelResolver
 
   private final HydrotopeCollection m_hydrotopes;
 
-  private NaCatchmentData m_resolvedCatchmentData;
+  private ICatchmentInfos m_resolvedCatchmentData;
 
   private final NaModelManipulator m_manipulator;
 
@@ -92,7 +92,7 @@ public class NaModelResolver
     m_hydrotopes = hydrotopes;
   }
 
-  public NaCatchmentData getResolvedCatchmentData( )
+  public ICatchmentInfos getResolvedCatchmentData( )
   {
     return m_resolvedCatchmentData;
   }
@@ -121,7 +121,7 @@ public class NaModelResolver
   /**
    * Resolves catchments that contain drwbm soil types. For each distinguished dwwbm soil type, a new catchment is created.
    */
-  private NaCatchmentData resolveCatchments( final IStatusCollector log ) throws NAPreprocessorException
+  private ICatchmentInfos resolveCatchments( final IStatusCollector log ) throws NAPreprocessorException
   {
     final CatchmentResolver resolver = new CatchmentResolver( m_model, m_landuseHash, m_hydrotopes );
     final IStatus status = resolver.execute();
