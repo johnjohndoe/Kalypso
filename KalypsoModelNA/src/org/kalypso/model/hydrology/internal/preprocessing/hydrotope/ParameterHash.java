@@ -86,7 +86,7 @@ public class ParameterHash
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatusOrOK( Messages.getString("ParameterHash.1") ); //$NON-NLS-1$
+    return m_log.asMultiStatusOrOK( Messages.getString( "ParameterHash.1" ) ); //$NON-NLS-1$
   }
 
   /** Build soiltype hash for faster lookup later */
@@ -97,7 +97,7 @@ public class ParameterHash
     {
       final String name = soiltype.getName();
       if( m_soilTypeNameHash.containsKey( name ) )
-        m_log.add( IStatus.WARNING, String.format( Messages.getString("ParameterHash.2"), name ) ); //$NON-NLS-1$
+        m_log.add( IStatus.WARNING, String.format( Messages.getString( "ParameterHash.2" ), name ) ); //$NON-NLS-1$
       else
         m_soilTypeNameHash.put( name, soiltype );
     }

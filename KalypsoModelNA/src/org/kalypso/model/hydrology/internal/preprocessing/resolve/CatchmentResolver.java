@@ -27,7 +27,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 
 /**
@@ -43,7 +43,7 @@ class CatchmentResolver
 
   private final HydrotopeCollection m_hydrotopes;
 
-  private NaCatchmentData m_resolvedCatchmentData;
+  private ICatchmentInfos m_resolvedCatchmentData;
 
   public CatchmentResolver( final NaModell model, final ParameterHash landuseHash, final HydrotopeCollection hydrotopes )
   {
@@ -52,7 +52,7 @@ class CatchmentResolver
     m_hydrotopes = hydrotopes;
   }
 
-  public NaCatchmentData getResolvedCatchments( )
+  public ICatchmentInfos getResolvedCatchments( )
   {
     return m_resolvedCatchmentData;
   }
@@ -61,38 +61,47 @@ class CatchmentResolver
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final NaCatchmentData catchmentData = buildCatchmentData( log );
-
-    m_resolvedCatchmentData = splitDrwbmCatchments( catchmentData );
+    m_resolvedCatchmentData = buildCatchmentData( log );
 
     return log.asMultiStatus( "Resolving catchments" ); //$NON-NLS-1$
   }
 
-  private NaCatchmentData buildCatchmentData( final IStatusCollector log ) throws NAPreprocessorException
+  private ICatchmentInfos buildCatchmentData( final IStatusCollector log ) throws NAPreprocessorException
   {
-    /* first, dissolve hydrotopes */
-    final NaCatchmentData catchmentData = new NaCatchmentData( m_landuseHash );
-    final IStatus status = catchmentData.addHydrotopes( m_model, m_hydrotopes, true );
+    /* first, dissolve hydrotopes including drwbm */
+    final CatchmentDissolver dissolver = new CatchmentDissolver( m_landuseHash, m_model );
+    dissolver.addHydrotopes( m_hydrotopes );
+
+    /* create new catchments and also create info objects */
+    final CatchmentInfos infos = new CatchmentInfos();
+
+    final Catchment[] catchments = dissolver.getCatchments();
+    for( final Catchment catchment : catchments )
+    {
+      final DissolvedCatchment[] dissolvedInfos = dissolver.getDissolvedInfos( catchment );
+      for( final DissolvedCatchment dissolvedInfo : dissolvedInfos )
+      {
+        final CatchmentInfo info = dissolvedInfo.createInfo();
+        infos.addInfo( info );
+
+        // REMARK: it is possible that the whole catchment is covered by the same overlay, so we only have onem we treat it as the default element
+        if( dissolvedInfos.length == 0 || !dissolvedInfo.hasDrwbm() )
+        {
+          // nothing to do , old catchment remains
+        }
+        else
+        {
+          // FIXME: create new catchment in model
+          throw new UnsupportedOperationException();
+        }
+      }
+    }
+
+    final CatchmentDissolver catchmentData = new CatchmentDissolver( m_landuseHash, m_model );
+    final IStatus status = catchmentData.addHydrotopes( m_hydrotopes );
     if( !status.isOK() )
       log.add( status );
 
-    return catchmentData;
-  }
-
-  private NaCatchmentData splitDrwbmCatchments( final NaCatchmentData catchmentData )
-  {
-    final NaCatchmentData resolvedCatchmentData = new NaCatchmentData( m_landuseHash );
-
-    final Catchment[] catchments = catchmentData.getCatchments();
-    for( final Catchment catchment : catchments )
-    {
-      final CatchmentInfo info = catchmentData.getInfo( catchment );
-
-      // FIXME: introduce mother-daughter catchments according to overlay
-
-      resolvedCatchmentData.addInfo( info );
-    }
-
-    return resolvedCatchmentData;
+    return infos;
   }
 }

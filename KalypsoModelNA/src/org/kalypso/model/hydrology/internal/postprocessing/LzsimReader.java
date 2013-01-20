@@ -57,7 +57,7 @@ import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 
@@ -86,7 +86,7 @@ public class LzsimReader
   /**
    * Reads the initial values back from the ascii files, if any have been ordered.
    */
-  public IStatus readInitialValues( final IDManager idManager, final NaCatchmentData catchmentData, final File lzsimDir ) throws NaPostProcessingException
+  public IStatus readInitialValues( final IDManager idManager, final ICatchmentInfos catchmentData, final File lzsimDir ) throws NaPostProcessingException
   {
     if( m_initialDates.length == 0 )
       return Status.OK_STATUS;
@@ -113,7 +113,7 @@ public class LzsimReader
       initialValues.getWorkspace().dispose();
     }
 
-    return log.asMultiStatus( Messages.getString("LzsimReader_0") ); //$NON-NLS-1$
+    return log.asMultiStatus( Messages.getString( "LzsimReader_0" ) ); //$NON-NLS-1$
   }
 
   // REMARK: we omit any hour here, as the calculation core does not support it. Probably this is a bug of the
@@ -129,7 +129,7 @@ public class LzsimReader
     final int channels = initialValues.getChannels().size();
     if( catchments == 0 && channels == 0 )
     {
-      final String message = String.format( Messages.getString("LzsimReader_1"), initialDateText ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "LzsimReader_1" ), initialDateText ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, ModelNA.PLUGIN_ID, message );
     }
 
@@ -149,7 +149,7 @@ public class LzsimReader
     }
     catch( IOException | GmlSerializeException e )
     {
-      final String message = String.format( Messages.getString("LzsimReader_2"), initialDateText ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "LzsimReader_2" ), initialDateText ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, message, e );
     }
   }

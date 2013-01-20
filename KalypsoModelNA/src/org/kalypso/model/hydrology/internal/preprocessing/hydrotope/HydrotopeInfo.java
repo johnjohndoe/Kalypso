@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
 
+import java.util.Collection;
+
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
@@ -282,7 +284,7 @@ public class HydrotopeInfo
 
     /* last resort, use direct value in hydrotope */
     final String soilTypeID = m_hydrotope.getSoilType();
-    final Soiltype soiltype = landuseHash.getSoilType( soilTypeID );
+    final ISoilType soiltype = landuseHash.getSoilType( soilTypeID );
     if( soiltype != null )
       return soiltype;
 
@@ -364,23 +366,6 @@ public class HydrotopeInfo
     m_area += hydrotopInfo.m_area;
   }
 
-  public String getAttributeHash( )
-  {
-    final StringBuilder buffer = new StringBuilder();
-
-    buffer.append( m_gwFactor );
-    buffer.append( '#' );
-    buffer.append( m_landuseClass.getId() );
-    buffer.append( '#' );
-    buffer.append( m_maxPerc );
-    buffer.append( '#' );
-    buffer.append( m_totalSealingRate );
-    buffer.append( '#' );
-    buffer.append( m_soilType.getId() );
-
-    return buffer.toString();
-  }
-
   public double getTotalSealingRate( )
   {
     return m_totalSealingRate;
@@ -432,7 +417,13 @@ public class HydrotopeInfo
     return (SoilType)pedologyLink.getFeature();
   }
 
-  private OverlayElement getLinkedOverlay( )
+  public boolean isDrwbmOverlay( )
+  {
+    final DRWBMDefinition definition = getDrwbmDefinition();
+    return definition != null;
+  }
+
+  public OverlayElement getLinkedOverlay( )
   {
     final IXLinkedFeature overlayLink = m_hydrotope.getOverlayLink();
     if( overlayLink == null )
@@ -475,5 +466,19 @@ public class HydrotopeInfo
 
     if( m_totalSealingRate < 0.0 || m_totalSealingRate > maxSealing )
       throw new NAPreprocessorException( String.format( Messages.getString( "HydrotopeInfo.2" ), m_totalSealingRate, maxSealing, getName() ) ); //$NON-NLS-1$
+  }
+
+  public static Sealing calculateSealing( final Collection<HydrotopeInfo> hydrotopes )
+  {
+    Sealing totalSealing = new Sealing();
+
+    for( final HydrotopeInfo hydrotopeInfo : hydrotopes )
+    {
+      final Sealing hydrotopeSealing = hydrotopeInfo.createSealing();
+
+      totalSealing = totalSealing.add( hydrotopeSealing );
+    }
+
+    return totalSealing;
   }
 }

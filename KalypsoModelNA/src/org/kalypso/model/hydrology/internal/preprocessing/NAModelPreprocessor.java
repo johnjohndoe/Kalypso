@@ -63,7 +63,7 @@ import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.INaPreparedData;
 import org.kalypso.model.hydrology.internal.preprocessing.preparation.NaPreprocessingPreparator;
@@ -165,7 +165,7 @@ public class NAModelPreprocessor
       log.add( resolveStatus );
     checkCancel( monitor );
 
-    final NaCatchmentData catchmentData = naModelTweaker.getResolvedCatchmentData();
+    final ICatchmentInfos catchmentData = naModelTweaker.getResolvedCatchmentData();
 
     // step 2 - final prearation before writing ascii files
     m_preparedData = NaPreprocessingPreparator.prepareData( naControl, metaControl, naModel, initialValues, syntWorkspace, naOptimize, parameter, landuseHash, rootNode, catchmentData, m_idManager, m_calcCoreVersion );
@@ -226,7 +226,7 @@ public class NAModelPreprocessor
       throw new OperationCanceledException();
   }
 
-  public NaCatchmentData getCatchmentData( )
+  public ICatchmentInfos getCatchmentData( )
   {
     return m_preparedData.getCatchmentData();
   }

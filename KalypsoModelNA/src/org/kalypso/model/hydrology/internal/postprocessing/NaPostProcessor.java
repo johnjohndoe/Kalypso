@@ -67,7 +67,7 @@ import org.kalypso.model.hydrology.internal.NaResultDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -90,11 +90,11 @@ public class NaPostProcessor
 
   private ENACoreResultsFormat m_coreResultsFormat;
 
-  private final NaCatchmentData m_catchmentData;
+  private final ICatchmentInfos m_catchmentData;
 
   private final MultiStatus m_processStatus;
 
-  public NaPostProcessor( final IDManager idManager, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final NaCatchmentData catchmentData, final MultiStatus processStatus )
+  public NaPostProcessor( final IDManager idManager, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final ICatchmentInfos catchmentData, final MultiStatus processStatus )
   {
     m_idManager = idManager;
     m_modelWorkspace = modelWorkspace;
@@ -136,7 +136,7 @@ public class NaPostProcessor
     }
     catch( final SensorException e )
     {
-      throw new NaPostProcessingException( Messages.getString("NaPostProcessor.3"), e ); //$NON-NLS-1$
+      throw new NaPostProcessingException( Messages.getString( "NaPostProcessor.3" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -273,7 +273,7 @@ public class NaPostProcessor
       }
     }
 
-    return log.asMultiStatus( Messages.getString("NaPostProcessor.5") ); //$NON-NLS-1$
+    return log.asMultiStatus( Messages.getString( "NaPostProcessor.5" ) ); //$NON-NLS-1$
   }
 
   private void loadTSResults( final File outWeNatDir, final NaSimulationDirs simDirs, final IStatusCollector log ) throws SensorException

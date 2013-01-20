@@ -62,8 +62,9 @@ import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -80,9 +81,9 @@ class LzsimWriter
 
   private final IDManager m_idManager;
 
-  private final NaCatchmentData m_catchmentData;
+  private final ICatchmentInfos m_catchmentData;
 
-  public LzsimWriter( final IDManager idManager, final NaCatchmentData catchmentData, final InitialValues initialValues )
+  public LzsimWriter( final IDManager idManager, final ICatchmentInfos catchmentData, final InitialValues initialValues )
   {
     m_idManager = idManager;
     m_catchmentData = catchmentData;
@@ -279,7 +280,8 @@ class LzsimWriter
      * for catchments that are targets of groundwater flow, but which are not part of the currently written sub-net. We
      * ignore this case silently for now.
      */
-    final List<HydrotopeInfo> hydrotops = m_catchmentData.getHydrotops( naCatchment );
+    final CatchmentInfo info = m_catchmentData.getInfo( naCatchment );
+    final List<HydrotopeInfo> hydrotops = info.getHydrotopes();
     if( hydrotops.size() == 0 )
       return null;
 

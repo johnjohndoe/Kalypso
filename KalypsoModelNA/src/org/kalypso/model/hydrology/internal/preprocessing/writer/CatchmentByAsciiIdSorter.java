@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing.util;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.util.Comparator;
 
@@ -48,7 +48,7 @@ import org.kalypso.model.hydrology.internal.IDManager;
 /**
  * @author Gernot Belger
  */
-public class CatchmentByAsciiIdSorter implements Comparator<Catchment>
+class CatchmentByAsciiIdSorter implements Comparator<Catchment>
 {
   private final IDManager m_idManager;
 

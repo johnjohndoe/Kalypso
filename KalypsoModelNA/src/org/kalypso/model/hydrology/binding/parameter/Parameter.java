@@ -119,10 +119,9 @@ public class Parameter extends UnversionedModel
   public Soiltype findSoiltypeByID( final String featureID )
   {
     final Feature feature = getWorkspace().getFeature( featureID );
-    if( feature instanceof Soiltype )
+    if( feature instanceof ISoilType )
       return (Soiltype)feature;
 
     return null;
   }
-
 }

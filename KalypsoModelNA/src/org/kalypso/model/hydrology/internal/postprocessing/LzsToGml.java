@@ -61,7 +61,8 @@ import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -83,9 +84,9 @@ public class LzsToGml
 
   private final File m_lzsimDir;
 
-  private final NaCatchmentData m_catchmentData;
+  private final ICatchmentInfos m_catchmentData;
 
-  public LzsToGml( final File lzsimDir, final Date initialDate, final IDManager idManager, final NaCatchmentData catchmentData )
+  public LzsToGml( final File lzsimDir, final Date initialDate, final IDManager idManager, final ICatchmentInfos catchmentData )
   {
     m_lzsimDir = lzsimDir;
     m_initialDate = initialDate;
@@ -105,7 +106,7 @@ public class LzsToGml
       final InitialValues initialValues = (InitialValues)lzWorkspace.getRootFeature();
 
       initialValues.setInitialDate( m_initialDate );
-
+      // FIXME: use catchments of m_catchmentData instead
       final List<Feature> catchments = m_idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
       for( final Feature feature : catchments )
       {
@@ -137,15 +138,18 @@ public class LzsToGml
   {
     final IFeatureBindingCollection<org.kalypso.model.hydrology.binding.initialValues.Catchment> catchments = initialValues.getCatchments();
     final org.kalypso.model.hydrology.binding.initialValues.Catchment iniCatchment = catchments.addNew( org.kalypso.model.hydrology.binding.initialValues.Catchment.FEATURE_CATCHMENT );
-    iniCatchment.setNaCatchmentID( catchment );
+
+    final CatchmentInfo info = m_catchmentData.getInfo( catchment );
+    final String lzsID = info.getLzsId();
+
+    iniCatchment.setNaCatchmentID( lzsID );
+    iniCatchment.setName( info.getLabel() );
 
     final int asciiID = m_idManager.getAsciiID( catchment );
-    iniCatchment.setName( Integer.toString( asciiID ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
     final String fileName = String.format( "we%s.lzs", asciiID ); //$NON-NLS-1$
     final File lzsFile = new File( m_lzsimDir, fileName );
 
-    final LzsReader reader = new LzsReader( m_catchmentData, m_dateFormat, m_initialDate, iniCatchment, catchment );
+    final LzsReader reader = new LzsReader( m_dateFormat, m_initialDate, iniCatchment, info );
     return reader.read( lzsFile );
   }
 

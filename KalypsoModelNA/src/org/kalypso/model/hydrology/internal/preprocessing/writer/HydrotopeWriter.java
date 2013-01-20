@@ -47,19 +47,16 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.parameter.ISoilType;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.Sealing;
-import org.kalypso.model.hydrology.internal.preprocessing.util.CatchmentByAsciiIdSorter;
 
 /**
  * @author Dejan Antanaskovic
@@ -68,9 +65,9 @@ class HydrotopeWriter extends AbstractCoreFileWriter
 {
   private final IDManager m_idManager;
 
-  private final NaCatchmentData m_catchmentData;
+  private final ICatchmentInfos m_catchmentData;
 
-  public HydrotopeWriter( final IDManager idManager, final NaCatchmentData catchmentData )
+  public HydrotopeWriter( final IDManager idManager, final ICatchmentInfos catchmentData )
   {
     m_idManager = idManager;
     m_catchmentData = catchmentData;
@@ -79,8 +76,6 @@ class HydrotopeWriter extends AbstractCoreFileWriter
   @Override
   protected IStatus writeContent( final PrintWriter writer ) throws NAPreprocessorException
   {
-    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
-
     final String hydrotopeFileTile = Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.2" ); //$NON-NLS-1$
     writer.append( hydrotopeFileTile ).append( '\n' );
 
@@ -89,26 +84,20 @@ class HydrotopeWriter extends AbstractCoreFileWriter
     Arrays.sort( catchments, new CatchmentByAsciiIdSorter( m_idManager ) );
 
     for( final Catchment catchment : catchments )
-    {
-      final CatchmentInfo catchmentInfo = m_catchmentData.getInfo( catchment );
-      final String checkMsg = catchmentInfo.checkArea();
-      if( checkMsg != null )
-        log.add( IStatus.WARNING, checkMsg );
+      writeCatchment( writer, catchment );
 
-      writeCatchment( writer, catchmentInfo );
-    }
-
-    return log.asMultiStatusOrOK( Messages.getString( "HydrotopeWriter.2" ) ); //$NON-NLS-1$
+    return Status.OK_STATUS;
   }
 
-  private void writeCatchment( final PrintWriter writer, final CatchmentInfo info ) throws NAPreprocessorException
+  private void writeCatchment( final PrintWriter writer, final Catchment catchment ) throws NAPreprocessorException
   {
-    final Catchment catchment = info.getCatchment();
     final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
+
+    final CatchmentInfo info = m_catchmentData.getInfo( catchment );
 
     final Sealing totalSealing = info.getTotalSealing();
 
-    final List<HydrotopeInfo> hydrotopes = info.getHydrotops();
+    final List<HydrotopeInfo> hydrotopes = info.getHydrotopes();
 
     writer.print( catchmentAsciiID );
     writer.append( ' ' );

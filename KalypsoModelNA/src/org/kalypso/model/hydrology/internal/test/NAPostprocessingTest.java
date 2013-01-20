@@ -74,7 +74,7 @@ import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.NaCatchmentData;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -149,8 +149,7 @@ public class NAPostprocessingTest
 
     final ParameterHash landuseHash = new ParameterHash( parameter );
 
-    final NaCatchmentData catchmentData = new NaCatchmentData( landuseHash );
-    catchmentData.addHydrotopes( model, naHydrotop, false );
+    final ICatchmentInfos catchmentData = new CatchmentInfosMock( landuseHash, model, naHydrotop );
 
     // REMARK: for backards compatibility: touch each catchment id, so it is known
     final IDManager idManager = new IDManager();
