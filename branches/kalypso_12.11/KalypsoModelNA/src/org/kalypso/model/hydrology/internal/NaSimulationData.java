@@ -306,18 +306,12 @@ public class NaSimulationData implements INaSimulationData
     return (InitialValues)m_lzsimWorkspace.getRootFeature();
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.INaSimulationData#setLzsimWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
-   */
   @Override
   public void setLzsimWorkspace( final GMLWorkspace lzsimWorkspace )
   {
     m_lzsimWorkspace = lzsimWorkspace;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.INaSimulationData#getOptimizeData()
-   */
   @Override
   public NaOptimizeData getOptimizeData( )
   {
