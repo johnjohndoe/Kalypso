@@ -155,17 +155,21 @@ public class LzsToGml
     final String fileName = String.format( "we%s.lzg", asciiID ); //$NON-NLS-1$//$NON-NLS-2$
     final File lzgFile = new File( m_lzsimDir, fileName );
 
-    final IFeatureBindingCollection<org.kalypso.model.hydrology.binding.initialValues.Channel> channels = initialValues.getChannels();
-    final org.kalypso.model.hydrology.binding.initialValues.Channel iniChannel = channels.addNew( org.kalypso.model.hydrology.binding.initialValues.Channel.FEATURE_CHANNEL );
-    iniChannel.setNaChannelID( channel );
-    iniChannel.setName( Integer.toString( asciiID ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
     final LzgReader reader = new LzgReader( m_dateFormat, m_initialDate, channel );
     final Pair<Double, IStatus> result = reader.read( lzgFile );
 
     final Double qgs = result.getLeft();
     if( qgs != null )
+    {
+      /* create new entry in lzsim.gml */
+      final IFeatureBindingCollection<org.kalypso.model.hydrology.binding.initialValues.Channel> channels = initialValues.getChannels();
+
+      final org.kalypso.model.hydrology.binding.initialValues.Channel iniChannel = channels.addNew( org.kalypso.model.hydrology.binding.initialValues.Channel.FEATURE_CHANNEL );
+
+      iniChannel.setNaChannelID( channel );
+      iniChannel.setName( Integer.toString( asciiID ) ); //$NON-NLS-1$ //$NON-NLS-2$
       iniChannel.setQgs( qgs );
+    }
 
     return result.getRight();
   }
