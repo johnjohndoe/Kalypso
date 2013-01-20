@@ -116,18 +116,35 @@ class LzsimWriter
 
     // write initial conditions for the strands
     // TODO: write only for strands of the actual calculation
+
     final IFeatureBindingCollection<Channel> channels = m_initialValues.getChannels();
     for( final Channel iniChannel : channels )
     {
       final String naChannelID = iniChannel.getNaChannelID();
       final org.kalypso.model.hydrology.binding.model.channels.Channel naChannel = naChannelHash.get( naChannelID );
-      if( naChannel != null )
+
+//      if( naChannel instanceof VirtualChannel )
+//        continue;
+
+      if( naChannel == null )
       {
-        final int asciiChannelID = m_idManager.getAsciiID( naChannel );
-        final String fileName = String.format( "we%s.lzg", asciiChannelID ); //$NON-NLS-1$
-        final File lzgFile = new File( lzsimDir, fileName );
-        writeLzgFile( iniChannel, lzgFile, iniDate );
+        // FIXME: we can only check this, if we iterate over the relevant model-channels
+        // throw new NAPreprocessorException( "Missing " );
+        continue;
       }
+
+      final int asciiChannelID = m_idManager.getAsciiID( naChannel );
+      final String fileName = String.format( "we%s.lzg", asciiChannelID ); //$NON-NLS-1$
+      final File lzgFile = new File( lzsimDir, fileName );
+
+      final Double qgs = iniChannel.getQgs();
+      if( qgs == null )
+      {
+        final String msg = String.format( "Channel '%s': missing start condition value (qgs)", naChannel.getName() ); //$NON-NLS-1$
+        throw new NAPreprocessorException( msg );
+      }
+
+      writeLzgFile( iniChannel, lzgFile, iniDate, qgs );
     }
   }
 
@@ -140,11 +157,11 @@ class LzsimWriter
     return naChannelHash;
   }
 
-  private static void writeLzgFile( final Channel iniChannel, final File lzgFile, final String iniDate ) throws NAPreprocessorException
+  private static void writeLzgFile( final Channel iniChannel, final File lzgFile, final String iniDate, final Double qgs ) throws NAPreprocessorException
   {
     try
     {
-      final String lzgContent = String.format( Locale.US, LZG_FORMAT_STRING, iniDate, "qgs", iniChannel.getQgs() ); //$NON-NLS-1$
+      final String lzgContent = String.format( Locale.US, LZG_FORMAT_STRING, iniDate, "qgs", qgs ); //$NON-NLS-1$
       FileUtils.writeStringToFile( lzgFile, lzgContent );
     }
     catch( final IOException e )
@@ -176,7 +193,7 @@ class LzsimWriter
   }
 
   private Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> buildCatchmentHash( ) throws NAPreprocessorException
-  {
+  {// FIXME: use catchmentData instead!
     final List<Feature> allNACatchmentFeatures = m_idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
 
     /* Hash ini catchments for quicker access */
@@ -276,7 +293,7 @@ class LzsimWriter
     }
 
     /* Build result map */
-    final List<IniHyd> iniHys = new ArrayList<>( hydrotops.size() );
+    final List<IniHyd> result = new ArrayList<>( hydrotops.size() );
 
     for( final HydrotopeInfo hydrotopeInfo : hydrotops )
     {
@@ -288,8 +305,10 @@ class LzsimWriter
         final String msg = Messages.getString( "LzsimWriter.4", naHydrotopID, naCatchment.getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( msg );
       }
+
+      result.add( iniHyd );
     }
 
-    return iniHys.toArray( new IniHyd[iniHys.size()] );
+    return result.toArray( new IniHyd[result.size()] );
   }
 }
