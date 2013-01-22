@@ -45,9 +45,6 @@ package org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones;
  */
 public abstract class AbstractFlowZoneType implements IFlowZoneType
 {
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

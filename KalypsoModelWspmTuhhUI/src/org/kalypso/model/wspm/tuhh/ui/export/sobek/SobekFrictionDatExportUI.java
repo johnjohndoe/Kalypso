@@ -74,13 +74,10 @@ public class SobekFrictionDatExportUI
 {
   private static final LabelProvider LABELPROVIDER = new LabelProvider()
   {
-    /**
-     * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-     */
     @Override
     public String getText( final Object element )
     {
-      final IComponent component = ProfileUtil.getFeatureComponent( (String) element );
+      final IComponent component = ProfileUtil.getFeatureComponent( (String)element );
       return ComponentUtilities.getComponentLabel( component );
     }
   };
@@ -129,13 +126,13 @@ public class SobekFrictionDatExportUI
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleRoughnessSelectionChanged( (IStructuredSelection) event.getSelection() );
+        handleRoughnessSelectionChanged( (IStructuredSelection)event.getSelection() );
       }
     } );
 
     final Button buttonClasses = new Button( parent, SWT.CHECK );
     buttonClasses.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false ) );
-    buttonClasses.setText( Messages.getString("SobekFrictionDatExportUI.1") ); //$NON-NLS-1$
+    buttonClasses.setText( Messages.getString( "SobekFrictionDatExportUI.1" ) ); //$NON-NLS-1$
     buttonClasses.setSelection( m_info.getPreferRoughnessClasses() );
 
     buttonClasses.addSelectionListener( new SelectionAdapter()
@@ -154,7 +151,7 @@ public class SobekFrictionDatExportUI
 
   protected void handleRoughnessSelectionChanged( final IStructuredSelection selection )
   {
-    final String roughnessId = (String) selection.getFirstElement();
+    final String roughnessId = (String)selection.getFirstElement();
     m_info.setRoughnessID( roughnessId );
   }
 
@@ -194,7 +191,7 @@ public class SobekFrictionDatExportUI
     final IFlowZoneType[] zoneTypes = new IFlowZoneType[objects.length];
     for( int i = 0; i < objects.length; i++ )
     {
-      zoneTypes[i] = (IFlowZoneType) objects[i];
+      zoneTypes[i] = (IFlowZoneType)objects[i];
     }
 
     m_info.setRoughnessZoneTypes( zoneTypes );

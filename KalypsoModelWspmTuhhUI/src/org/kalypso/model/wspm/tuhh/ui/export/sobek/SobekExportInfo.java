@@ -65,10 +65,11 @@ import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.MainChannel;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.RightBank;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.RightForeland;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypsodeegree.KalypsoDeegreePreferences;
 
 /**
  * Basic data for all sobek export operations.
- *
+ * 
  * @author Gernot Belger
  */
 public class SobekExportInfo
@@ -174,7 +175,7 @@ public class SobekExportInfo
     return m_roughnessId;
   }
 
-  public Boolean getPreferRoughnessClasses( )
+  public boolean getPreferRoughnessClasses( )
   {
     return m_preferRoughnessClasses;
   }
@@ -425,4 +426,8 @@ public class SobekExportInfo
     m_dirChooser.setFile( targetDir );
   }
 
+  public String getExportSrsName( )
+  {
+    return KalypsoDeegreePreferences.getCoordinateSystem();
+  }
 }

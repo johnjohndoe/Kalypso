@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
@@ -64,25 +63,21 @@ public class SobekShapePoint
 {
   private final GM_Object2Shape m_gm2shp;
 
-  private ShapeFile m_shapeFile;
+  private final ShapeFile m_shapeFile;
 
   private final String m_baseName;
 
-  public SobekShapePoint( final IProfileFeature[] profilesToExport, final String baseName )
+  public SobekShapePoint( final String srsName, final File targetDir, final String baseName ) throws DBaseException, IOException
   {
     m_baseName = baseName;
-    final String crs = profilesToExport.length == 0 ? null : profilesToExport[0].getSrsName();
-    m_gm2shp = new GM_Object2Shape( ShapeType.POINTZ, crs );
-  }
+    m_gm2shp = new GM_Object2Shape( ShapeType.POINTZ, srsName );
 
-  public void create( final File targetDir ) throws DBaseException, IOException
-  {
     final File shapeFileBase = new File( targetDir, m_baseName );
     final String basePath = shapeFileBase.getAbsolutePath();
 
     final IDBFField[] fields = new IDBFField[2];
-    fields[0] = new DBFField( "ID", FieldType.C, (short) 128, (short) 0 ); //$NON-NLS-1$
-    fields[1] = new DBFField( "NAME", FieldType.C, (short) 128, (short) 0 ); //$NON-NLS-1$
+    fields[0] = new DBFField( "ID", FieldType.C, (short)128, (short)0 ); //$NON-NLS-1$
+    fields[1] = new DBFField( "NAME", FieldType.C, (short)128, (short)0 ); //$NON-NLS-1$
 
     m_shapeFile = ShapeFile.create( basePath, ShapeType.POINTZ, Charset.defaultCharset(), fields );
   }
@@ -95,23 +90,10 @@ public class SobekShapePoint
     }
   }
 
-  public void closeQuiet( )
-  {
-    try
-    {
-      close();
-    }
-    catch( final IOException e )
-    {
-      // ignored
-    }
-  }
-
   public void addEntry( final GM_Point lowPoint, final String id, final String name ) throws ShapeDataException, IOException, DBaseException, SHPException
   {
     final ISHPGeometry point = m_gm2shp.convert( lowPoint );
     final Object[] dbfData = new Object[] { id, name };
     m_shapeFile.addFeature( point, dbfData );
   }
-
 }

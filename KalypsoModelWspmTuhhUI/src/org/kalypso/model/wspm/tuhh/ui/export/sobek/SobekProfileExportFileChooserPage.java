@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -65,6 +62,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.ui.export.ValidatingWizardPage;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -92,9 +90,6 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
     setDescription( Messages.getString( "SobekProfileExportFileChooserPage_6" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -113,9 +108,10 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
     createBuildingSuffixControl( idPanel );
     createNamePatternControl( idPanel );
     createZoneControls( idPanel );
-    createTubeControls( parent );
 
     new SobekFrictionDatExportUI( m_info ).createControl( comp );
+
+    createTubeControls( comp );
 
     setControl( comp );
 
@@ -137,7 +133,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
       @Override
       public String getText( final Object element )
       {
-        final String componentID = (String) element;
+        final String componentID = (String)element;
         if( StringUtils.isBlank( componentID ) )
           return Messages.getString( "SobekProfileFileChooser_2" ); //$NON-NLS-1$
 
@@ -158,8 +154,8 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        handleZoneChanged( (String) selection.getFirstElement() );
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+        handleZoneChanged( (String)selection.getFirstElement() );
       }
     } );
   }
@@ -172,9 +168,6 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
 
     bridgeCheck.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -284,24 +277,19 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
     m_info.setFlowZone( flowZone );
   }
 
-  public ISobekProfileExportOperation[] getOperations( final IProfileFeature[] profiles )
+  public final SobekExportOperation getOperation( final IProfileFeature[] profiles )
   {
     m_info.setProfiles( profiles );
-
-    final Collection<ISobekProfileExportOperation> ops = new ArrayList<>();
 
     // FIXME: check if files exist and ask user to overwrite
     m_info.getTargetDir().mkdirs();
 
-    ops.add( new SobekProfileDefExportOperation( m_info ) );
-    ops.add( new SobekProfileDatExportOperation( m_info ) );
-    ops.add( new SobekProfileShapeExportOperation( m_info ) );
-    ops.add( new SobekFrictionDatExportOperation( m_info ) );
-    ops.add( new SobekStructDefExportOperation( m_info ) );
-    ops.add( new SobekStructDatExportOperation( m_info ) );
-    ops.add( new SobekStructShapeExportOperation( m_info ) );
+    final SobekModel sobekModel = new SobekModel();
 
-    return ops.toArray( new ISobekProfileExportOperation[ops.size()] );
+    final SobekProfileExportOperation converterOp = new SobekProfileExportOperation( m_info, sobekModel );
+    final SobekProfileWriterOperation writerOp = new SobekProfileWriterOperation( m_info, sobekModel );
+
+    return new SobekExportOperation( new ISobekProfileExportOperation[] { converterOp, writerOp } );
   }
 
   @Override
@@ -309,5 +297,4 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   {
     return m_info.validate();
   }
-
 }

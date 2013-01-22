@@ -74,13 +74,13 @@ public class SobekImportOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( Messages.getString("SobekImportOperation.0"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "SobekImportOperation.0" ), 100 ); //$NON-NLS-1$
 
     try
     {
       // find files for parsing
       final FileAndHistoryData inputDir = m_data.getInputDir();
-      final SobekModelParser modelParser = new SobekModelParser( inputDir.getFile() );
+      final SobekModelParser modelParser = new SobekModelParser( inputDir.getFile(), m_data.getSrs() );
       final SobekModel model = modelParser.read( new SubProgressMonitor( monitor, 30 ) );
 
       final Sobek2Wspm sobek2Wspm = new Sobek2Wspm( m_data );

@@ -50,11 +50,8 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
  */
 public interface ISobekProfileExportOperation extends ICoreRunnableWithProgress
 {
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public IStatus execute( IProgressMonitor monitor ) throws CoreException;
+  String getLabel( );
 
-  public String getLabel( );
+  @Override
+  IStatus execute( IProgressMonitor monitor ) throws CoreException;
 }

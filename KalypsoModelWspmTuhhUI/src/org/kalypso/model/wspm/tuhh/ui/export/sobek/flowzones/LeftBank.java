@@ -51,18 +51,12 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
  */
 public class LeftBank extends AbstractFlowZoneType
 {
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return Messages.getString( "LeftBank_0" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType#createFlowZone(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public FlowZone createFlowZone( final IProfile profile )
   {
@@ -82,9 +76,8 @@ public class LeftBank extends AbstractFlowZoneType
   public static FlowZone createZone( final IProfile profile, final IProfilePointMarker leftMarker, final IProfilePointMarker rightMarker, final String label )
   {
     final int indexWidth = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double left = ((Number) leftMarker.getPoint().getValue( indexWidth )).doubleValue();
-    final double right = ((Number) rightMarker.getPoint().getValue( indexWidth )).doubleValue();
+    final double left = ((Number)leftMarker.getPoint().getValue( indexWidth )).doubleValue();
+    final double right = ((Number)rightMarker.getPoint().getValue( indexWidth )).doubleValue();
     return new FlowZone( left, right, label );
   }
-
 }
