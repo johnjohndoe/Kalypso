@@ -43,30 +43,33 @@ package org.kalypso.model.wspm.tuhh.ui.export.sobek.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.compare.structuremergeviewer.Differencer;
+import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.kalypso.commons.compare.DifferenceDumper;
+import org.kalypso.commons.compare.FileContentAssertDumper;
+import org.kalypso.commons.compare.IElementDumper;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
+import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportInfo;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekFrictionDatExportOperation;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekProfileDatExportOperation;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekProfileDefExportOperation;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekStructDatExportOperation;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekStructDefExportOperation;
+import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportOperation;
+import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekProfileExportOperation;
+import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekProfileWriterOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -76,8 +79,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class SobekExportTest extends Assert
 {
-  private String m_platformEncoding;
-
   private TuhhWspmProject m_project;
 
   private SobekExportInfo m_info;
@@ -89,12 +90,10 @@ public class SobekExportTest extends Assert
   @Before
   public void setup( ) throws Exception
   {
-    m_platformEncoding = Charset.defaultCharset().name();
-
-    m_targetDir = FileUtilities.createNewTempDir( "sobekExportText" ); //$NON-NLS-1$
+    m_targetDir = FileUtilities.createNewTempDir( "sobekExportTest" ); //$NON-NLS-1$
 
     m_info = new SobekExportInfo( null, null );
-    m_info.setIdPattern( "<Name>" ); //$NON-NLS-1$
+    m_info.setIdPattern( "<Station>_<Name>" ); //$NON-NLS-1$
     m_info.setIdSuffix( "_building" ); //$NON-NLS-1$
     m_info.setNamePattern( "<Name>" ); //$NON-NLS-1$
     m_info.setFlowZone( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
@@ -106,7 +105,7 @@ public class SobekExportTest extends Assert
     final URL dataLocation = getClass().getResource( "/etc/test/resources/sobekexport/modell.gml.gz" ); //$NON-NLS-1$
 
     final GMLWorkspace wspmWorkspace = GmlSerializer.createGMLWorkspace( dataLocation, null );
-    m_project = (TuhhWspmProject) wspmWorkspace.getRootFeature();
+    m_project = (TuhhWspmProject)wspmWorkspace.getRootFeature();
 
     final IFeatureBindingCollection<WspmWaterBody> waterBodies = m_project.getWaterBodies();
     final IFeatureBindingCollection<IProfileFeature> profiles = waterBodies.get( 0 ).getProfiles();
@@ -124,52 +123,48 @@ public class SobekExportTest extends Assert
     }
   }
 
-  private void testOperation( final ISobekProfileExportOperation exportOperation, final String filename ) throws IOException, CoreException
+  @Test
+  public void exportAll( ) throws IOException, CoreException
   {
-    final File targetFile = new File( m_targetDir, filename );
+    final SobekModel sobekModel = new SobekModel();
+
+    final SobekProfileExportOperation converterOp = new SobekProfileExportOperation( m_info, sobekModel );
+    final SobekProfileWriterOperation writerOp = new SobekProfileWriterOperation( m_info, sobekModel );
+
+    final SobekExportOperation exportOperation = new SobekExportOperation( new ISobekProfileExportOperation[] { converterOp, writerOp } );
 
     exportOperation.execute( new NullProgressMonitor() );
 
-    final String actualContent = FileUtils.readFileToString( targetFile, m_platformEncoding );
+    /* unzip expected results */
+    final File expectedDir = FileUtilities.createNewTempDir( "sobekExportTestExpected" ); //$NON-NLS-1$
+    final URL expectedResource = getClass().getResource( "/etc/test/resources/sobekexport/expectedResults.zip" ); //$NON-NLS-1$
 
-    final URL expectedContentLocation = getClass().getResource( "/etc/test/resources/sobekexport/" + filename ); //$NON-NLS-1$
-    final String expectedContent = UrlUtilities.readUrlToString( expectedContentLocation, m_platformEncoding );
+//    final File xx = new File( "D:\\Temp\\expectedResults.zip" );
+//    ZipUtilities.zip( xx, m_info.getTargetDir() );
 
-    assertEquals( expectedContent, actualContent );
-  }
+    ZipUtilities.unzip( expectedResource, expectedDir );
 
-  @Test
-  public void exportProfileDef( ) throws IOException, CoreException
-  {
-    final ISobekProfileExportOperation exportOperation = new SobekProfileDefExportOperation( m_info );
-    testOperation( exportOperation, ISobekConstants.PROFILE_DEF );
-  }
+    /* compare with expected results */
+    final Differencer differencer = new Differencer();
 
-  @Test
-  public void exportProfileDat( ) throws IOException, CoreException
-  {
-    final ISobekProfileExportOperation exportOperation = new SobekProfileDatExportOperation( m_info );
-    testOperation( exportOperation, ISobekConstants.PROFILE_DAT );
-  }
+    final FileStructureComparator actualComparator = new FileStructureComparator( m_info.getTargetDir() );
+    final FileStructureComparator expectedComparator = new FileStructureComparator( expectedDir );
 
-  @Test
-  public void exportStructDef( ) throws IOException, CoreException
-  {
-    final ISobekProfileExportOperation exportOperation = new SobekStructDefExportOperation( m_info );
-    testOperation( exportOperation, SobekStructDefExportOperation.STRUCT_DEF );
-  }
+    final Object differences = differencer.findDifferences( false, new NullProgressMonitor(), null, null, expectedComparator, actualComparator );
 
-  @Test
-  public void exportStructDat( ) throws IOException, CoreException
-  {
-    final ISobekProfileExportOperation exportOperation = new SobekStructDatExportOperation( m_info );
-    testOperation( exportOperation, SobekStructDatExportOperation.STRUCT_DAT );
-  }
+    final IElementDumper elementDumper = new IElementDumper()
+    {
+      @Override
+      public void dumpElement( final ICompareInput input )
+      {
+        new FileContentAssertDumper().dumpElement( input );
+      }
+    };
 
-  @Test
-  public void exportFrictionDef( ) throws IOException, CoreException
-  {
-    final ISobekProfileExportOperation exportOperation = new SobekFrictionDatExportOperation( m_info );
-    testOperation( exportOperation, ISobekConstants.FRICTION_DAT );
+    final DifferenceDumper dumper = new DifferenceDumper( differences, elementDumper );
+    dumper.dumpDifferences();
+
+    /* clean up */
+    FileUtils.deleteDirectory( expectedDir );
   }
 }
