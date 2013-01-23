@@ -98,7 +98,7 @@ class DissolvedCatchment
 
   public boolean hasDrwbm( )
   {
-    return m_overlay != null;
+    return m_overlay.hasDrainageFunction();
   }
 
   public void add( final HydrotopeInfo hydrotopeInfo )

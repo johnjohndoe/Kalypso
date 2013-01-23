@@ -75,4 +75,17 @@ public class DRWBMSoiltype extends Feature_Impl implements ISoilType
 
     return m_parameters;
   }
+
+  public boolean hasDrainageFunction( )
+  {
+    final IFeatureBindingCollection<DRWBMSoilLayerParameter> parameters = getParameters();
+    for( final DRWBMSoilLayerParameter parameter : parameters )
+    {
+      final boolean isDrainage = parameter.isDrainageFunction();
+      if( isDrainage )
+        return true;
+    }
+
+    return false;
+  }
 }
