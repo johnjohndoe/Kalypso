@@ -106,11 +106,11 @@ public class LzsToGml
       final InitialValues initialValues = (InitialValues)lzWorkspace.getRootFeature();
 
       initialValues.setInitialDate( m_initialDate );
-      // FIXME: use catchments of m_catchmentData instead
-      final List<Feature> catchments = m_idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
-      for( final Feature feature : catchments )
+
+      final Catchment[] catchments = m_catchmentData.getCatchments();
+      for( final Catchment catchment : catchments )
       {
-        final IStatus status = readCatchmentStartCondition( (Catchment)feature, initialValues );
+        final IStatus status = readCatchmentStartCondition( catchment, initialValues );
         if( !status.isOK() )
           log.add( status );
       }

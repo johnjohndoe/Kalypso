@@ -134,7 +134,6 @@ class DissolvedCatchment
 
     buffer.append( hydrotopeInfo.getGwFactor() );
     buffer.append( '#' );
-//    buffer.append( m_landuseClass.getId() );
     buffer.append( hydrotopeInfo.getLanduseShortName() );
     buffer.append( '#' );
     buffer.append( hydrotopeInfo.getMaxPercolationRate() );
