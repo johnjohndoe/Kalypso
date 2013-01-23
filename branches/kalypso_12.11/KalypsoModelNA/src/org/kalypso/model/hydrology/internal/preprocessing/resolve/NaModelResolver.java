@@ -54,6 +54,7 @@ import org.kalypso.model.hydrology.binding.model.nodes.Branching;
 import org.kalypso.model.hydrology.binding.model.nodes.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
@@ -82,9 +83,12 @@ public class NaModelResolver
 
   private final NaModelManipulator m_manipulator;
 
-  public NaModelResolver( final NaModell model, final Node rootNode, final ParameterHash landuseHash, final HydrotopeCollection hydrotopes )
+  private final IDManager m_idManager;
+
+  public NaModelResolver( final NaModell model, final Node rootNode, final ParameterHash landuseHash, final HydrotopeCollection hydrotopes, final IDManager idManager )
   {
     m_model = model;
+    m_idManager = idManager;
     m_manipulator = new NaModelManipulator( model );
 
     m_rootNode = rootNode;
@@ -105,6 +109,14 @@ public class NaModelResolver
   public IStatus execute( ) throws NAPreprocessorException
   {
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
+    /*
+     * 'touch' all ascii ids here, so original catchment always get the same id,
+     * regardless if new catchments will be created later
+     */
+    final IFeatureBindingCollection<Catchment> catchments = m_model.getCatchments();
+    for( final Catchment catchment : catchments )
+      m_idManager.getAsciiID( catchment );
 
     m_resolvedCatchmentData = resolveCatchments( log );
 

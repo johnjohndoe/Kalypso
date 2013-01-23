@@ -24,6 +24,7 @@ import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.IVirtualChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -111,5 +112,44 @@ class NaModelManipulator
     /* Connect the new channel into the net */
     final Node node = channel.getDownstreamNode();
     newChannel.setDownstreamNode( node );
+  }
+
+  /**
+   * Creates a new catchment in the model by cloning a given catchment.<br/>
+   * The cloned catchment inherits all parameters (including relations to other model elements) <br/>
+   * 
+   * <pre>
+   *     -C- (existing channel c with catchment T)
+   *      ^
+   *      T
+   * </pre>
+   * 
+   * after:
+   * 
+   * <pre>
+   * 
+   *     -C-o
+   *     ^ ^  
+   *     T T' (new catchment T, with same downstream channel C)
+   * </pre>
+   */
+  public Catchment insertClonedCatchment( final Catchment catchment ) throws NAPreprocessorException
+  {
+    try
+    {
+      // FIXME: we need a stable gml-id, else we get problems with associating the start conditions later
+      // Idea: use 'name's instead of gml:id's; TODO: check, if all catchments have unique names
+
+      final Catchment clone = m_model.getCatchments().cloneInto( catchment );
+
+      // FIXME: what about links from other elements?
+
+      return clone;
+    }
+    catch( final Exception e )
+    {
+      // should never happen
+      throw new NAPreprocessorException( "Failed to create cloned catchment", e ); //$NON-NLS-1$
+    }
   }
 }

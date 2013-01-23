@@ -145,7 +145,18 @@ class DissolvedCatchment
     return buffer.toString();
   }
 
+  /**
+   * Associates all hydrotopes of this dissolver to its own catchment and return a {@link CatchmentInfo} for this constellation.
+   */
   public CatchmentInfo createInfo( )
+  {
+    return createInfo( m_catchment );
+  }
+
+  /**
+   * Associates all hydrotopes of this dissolver to the given catchment and return a {@link CatchmentInfo} for this constellation.
+   */
+  public CatchmentInfo createInfo( final Catchment catchment )
   {
     final String label = getLabel();
     final String lzsID = getLzsID();
@@ -153,6 +164,6 @@ class DissolvedCatchment
 
     final HydrotopeInfo[] hydrotopes = m_hydrotopeHash.values().toArray( new HydrotopeInfo[m_hydrotopeHash.size()] );
 
-    return new CatchmentInfo( m_catchment, label, lzsID, hydrotopes, totalSealing );
+    return new CatchmentInfo( catchment, label, lzsID, hydrotopes, totalSealing );
   }
 }
