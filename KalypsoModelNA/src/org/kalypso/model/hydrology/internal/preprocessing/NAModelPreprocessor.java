@@ -159,7 +159,7 @@ public class NAModelPreprocessor
       log.add( parameterStatus );
 
     // step 1: resolve model
-    final NaModelResolver naModelTweaker = new NaModelResolver( naModel, rootNode, landuseHash, hydrotopes );
+    final NaModelResolver naModelTweaker = new NaModelResolver( naModel, rootNode, landuseHash, hydrotopes, m_idManager );
     final IStatus resolveStatus = naModelTweaker.execute();
     if( !resolveStatus.isOK() )
       log.add( resolveStatus );
