@@ -81,13 +81,12 @@ class CatchmentResolver
       final DissolvedCatchment[] dissolvedInfos = dissolver.getDissolvedInfos( catchment );
       for( final DissolvedCatchment dissolvedInfo : dissolvedInfos )
       {
-        final CatchmentInfo info = dissolvedInfo.createInfo();
-        infos.addInfo( info );
-
         // REMARK: it is possible that the whole catchment is covered by the same overlay, so if we only have one, we treat it as the default element
-        if( dissolvedInfos.length == 0 || !dissolvedInfo.hasDrwbm() )
+        if( !dissolvedInfo.hasDrwbm() || dissolvedInfos.length == 1 )
         {
           // nothing to do, old catchment remains
+          final CatchmentInfo info = dissolvedInfo.createInfo();
+          infos.addInfo( info );
         }
         else
         {

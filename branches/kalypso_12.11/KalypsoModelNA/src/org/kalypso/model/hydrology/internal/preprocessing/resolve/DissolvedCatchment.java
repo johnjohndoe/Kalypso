@@ -78,7 +78,7 @@ class DissolvedCatchment
   {
     final String catchmentID = m_catchment.getId();
 
-    if( m_overlay == null )
+    if( !hasDrainageFunction() )
       return catchmentID;
 
     final String overlayID = m_overlay.getId();
@@ -89,15 +89,26 @@ class DissolvedCatchment
   {
     final String catchmentLabel = m_catchment.getName();
 
-    if( m_overlay == null )
+    if( !hasDrainageFunction() )
       return catchmentLabel;
 
     final String overlayLabel = m_overlay.getName();
-    return String.format( "%s - %s", catchmentLabel, overlayLabel );
+    return String.format( "%s - Overlay %s", catchmentLabel, overlayLabel );
+  }
+
+  private boolean hasDrainageFunction( )
+  {
+    if( m_overlay == null )
+      return false;
+
+    return m_overlay.hasDrainageFunction();
   }
 
   public boolean hasDrwbm( )
   {
+    if( m_overlay == null )
+      return false;
+
     return m_overlay.hasDrainageFunction();
   }
 

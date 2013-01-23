@@ -89,5 +89,4 @@ public class Channel extends Feature_Impl
   {
     setProperty( PROP_QGS, qgs );
   }
-
 }
