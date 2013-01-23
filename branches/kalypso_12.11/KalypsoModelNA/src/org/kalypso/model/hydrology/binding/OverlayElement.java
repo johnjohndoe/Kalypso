@@ -97,7 +97,7 @@ public class OverlayElement extends Feature_Impl
     if( drwbmLink == null )
       return false;
 
-    final DRWBMDefinition drwbmDefinition = (DRWBMDefinition)drwbmLink;
+    final DRWBMDefinition drwbmDefinition = (DRWBMDefinition)drwbmLink.getFeature();
     return drwbmDefinition.hasDrainageFunction();
   }
 }
