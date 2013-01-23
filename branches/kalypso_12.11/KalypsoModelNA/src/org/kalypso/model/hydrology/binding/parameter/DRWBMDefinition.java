@@ -74,12 +74,12 @@ public class DRWBMDefinition extends Feature_Impl
 
   public IXLinkedFeature getLanduse( )
   {
-    return (IXLinkedFeature) getMember( LINK_LANDUSE_CLASS );
+    return (IXLinkedFeature)getMember( LINK_LANDUSE_CLASS );
   }
 
   public IXLinkedFeature getSoiltype( )
   {
-    return (IXLinkedFeature) getMember( LINK_SOILTYPE );
+    return (IXLinkedFeature)getMember( LINK_SOILTYPE );
   }
 
   public void setMaxPerkulationsRate( final Double value )
@@ -100,5 +100,19 @@ public class DRWBMDefinition extends Feature_Impl
   public Double getGWFactor( )
   {
     return getProperty( PROPERTY_GW_INFLOW_RATE, Double.class );
+  }
+
+  public boolean hasDrainageFunction( )
+  {
+    final IXLinkedFeature soiltypeLink = getSoiltype();
+    if( soiltypeLink == null )
+      return false;
+
+    final ISoilType soilType = (ISoilType)soiltypeLink.getFeature();
+    if( !(soilType instanceof DRWBMSoiltype) )
+      return false;
+
+    final DRWBMSoiltype drwbmSoilType = (DRWBMSoiltype)soilType;
+    return drwbmSoilType.hasDrainageFunction();
   }
 }

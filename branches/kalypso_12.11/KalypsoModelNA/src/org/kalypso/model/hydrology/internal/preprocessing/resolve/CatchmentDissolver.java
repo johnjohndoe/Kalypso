@@ -148,7 +148,11 @@ class CatchmentDissolver
   {
     final String catchmentID = catchment.getId();
 
+    /* exactly the overlays having a drainage function will go into an own (new) catchment */
     if( overlay == null )
+      return catchmentID;
+
+    if( !overlay.hasDrainageFunction() )
       return catchmentID;
 
     final String overlayID = overlay.getId();

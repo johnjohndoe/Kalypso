@@ -84,10 +84,10 @@ class CatchmentResolver
         final CatchmentInfo info = dissolvedInfo.createInfo();
         infos.addInfo( info );
 
-        // REMARK: it is possible that the whole catchment is covered by the same overlay, so we only have onem we treat it as the default element
+        // REMARK: it is possible that the whole catchment is covered by the same overlay, so if we only have one, we treat it as the default element
         if( dissolvedInfos.length == 0 || !dissolvedInfo.hasDrwbm() )
         {
-          // nothing to do , old catchment remains
+          // nothing to do, old catchment remains
         }
         else
         {

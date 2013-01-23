@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.parameter.DRWBMDefinition;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -84,6 +85,19 @@ public class OverlayElement extends Feature_Impl
 
   public IXLinkedFeature getDRWBMDefinition( )
   {
-    return (IXLinkedFeature) getMember( LINK_DRWBM_DEFINITION );
+    return (IXLinkedFeature)getMember( LINK_DRWBM_DEFINITION );
+  }
+
+  /**
+   * Check if this overlay contains a DRWBMDefinition that contains soil layers having drainage elements.
+   */
+  public boolean hasDrainageFunction( )
+  {
+    final IXLinkedFeature drwbmLink = getDRWBMDefinition();
+    if( drwbmLink == null )
+      return false;
+
+    final DRWBMDefinition drwbmDefinition = (DRWBMDefinition)drwbmLink;
+    return drwbmDefinition.hasDrainageFunction();
   }
 }
