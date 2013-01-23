@@ -135,6 +135,9 @@ public class NAModelSimulation
     }
     catch( final Exception ex )
     {
+      // REMARK: needed, else this exception is probably lost, as the status serialization cannot serialize legacy exceptions
+      ex.printStackTrace();
+
       collector.add( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, ex.getLocalizedMessage(), ex ) );
       return collector.asMultiStatus( Messages.getString( "NAModelSimulation.9" ) ); //$NON-NLS-1$
     }
