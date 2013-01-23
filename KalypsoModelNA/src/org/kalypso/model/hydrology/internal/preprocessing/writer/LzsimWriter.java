@@ -50,10 +50,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.kalypso.model.hydrology.binding.initialValues.Catchment;
 import org.kalypso.model.hydrology.binding.initialValues.Channel;
 import org.kalypso.model.hydrology.binding.initialValues.IniHyd;
@@ -124,9 +122,6 @@ class LzsimWriter
       final String naChannelID = iniChannel.getNaChannelID();
       final org.kalypso.model.hydrology.binding.model.channels.Channel naChannel = naChannelHash.get( naChannelID );
 
-//      if( naChannel instanceof VirtualChannel )
-//        continue;
-
       if( naChannel == null )
       {
         // FIXME: we can only check this, if we iterate over the relevant model-channels
@@ -141,7 +136,7 @@ class LzsimWriter
       final Double qgs = iniChannel.getQgs();
       if( qgs == null )
       {
-        final String msg = String.format( "Channel '%s': missing start condition value (qgs)", naChannel.getName() ); //$NON-NLS-1$
+        final String msg = String.format( "Channel '%s': missing start condition value (qgs)", naChannel.getName() );
         throw new NAPreprocessorException( msg );
       }
 
@@ -174,65 +169,60 @@ class LzsimWriter
 
   private void writeLzs( final File lzsimDir, final String iniDate ) throws NAPreprocessorException
   {
-    final Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> iniCatchmentHash = buildCatchmentHash();
+    final Map<String, Catchment> iniCatchmentHash = buildIniCatchmentHash();
 
-    // in the catchmentIDToFeatureHash (HashMap<featureID, feature>) are all channels in the model. if this run is
-    // only a subnet of the total model the idManager only knows the featuers in the submodel
-    for( final Entry<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> entry : iniCatchmentHash.entrySet() )
+    // FIXME: use catchmentData instead!
+    final org.kalypso.model.hydrology.binding.model.Catchment[] naCatchments = m_catchmentData.getCatchments();
+
+    /* build the result mapping */
+    for( final org.kalypso.model.hydrology.binding.model.Catchment naCatchment : naCatchments )
     {
-      final org.kalypso.model.hydrology.binding.model.Catchment naCatchment = entry.getKey();
-      final Catchment iniCatchment = entry.getValue();
+      final String catchmentID = naCatchment.getId();
+      final Catchment iniCatchment = iniCatchmentHash.get( catchmentID );
+      if( iniCatchment == null )
+      {
+        // FIXME: better? only log...
+        final String msg = Messages.getString( "LzsimWriter.5", naCatchment.getName() ); //$NON-NLS-1$
+        throw new NAPreprocessorException( msg );
+      }
 
-      final int asciiCatchmentID = m_idManager.getAsciiID( naCatchment );
-      final String fileName = String.format( "we%s.lzs", asciiCatchmentID ); //$NON-NLS-1$
-      final File lzsFile = new File( lzsimDir, fileName );
-
+      /* find hydrotopes */
       final IniHyd[] iniHyds = getIniHyds( naCatchment, iniCatchment );
       if( iniHyds != null )
+      {
+        /* write the lzs file */
+        final int asciiCatchmentID = m_idManager.getAsciiID( naCatchment );
+        final String fileName = String.format( "we%s.lzs", asciiCatchmentID ); //$NON-NLS-1$
+        final File lzsFile = new File( lzsimDir, fileName );
+
         writeLzsFile( lzsFile, iniCatchment, iniDate, iniHyds );
+      }
     }
   }
 
-  private Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> buildCatchmentHash( ) throws NAPreprocessorException
-  {// FIXME: use catchmentData instead!
-    final List<Feature> allNACatchmentFeatures = m_idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
-
-    /* Hash ini catchments for quicker access */
-    final IFeatureBindingCollection<Catchment> iniCatchments = m_initialValues.getCatchments();
+  /**
+   * Hash ini catchments for quicker access
+   * 
+   * @return map catchment-id -> ini-catchment
+   */
+  private Map<String, Catchment> buildIniCatchmentHash( )
+  {
     final Map<String, Catchment> iniCatchmentHash = new HashMap<>();
+
+    final IFeatureBindingCollection<Catchment> iniCatchments = m_initialValues.getCatchments();
     for( final Catchment iniCatchment : iniCatchments )
     {
       final String naCatchmentID = iniCatchment.getNaCatchmentID();
       iniCatchmentHash.put( naCatchmentID, iniCatchment );
     }
 
-    /* build the result mapping */
-    final Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> result = new HashMap<>();
-    for( final Feature catchment : allNACatchmentFeatures )
-    {
-      final String catchmentID = catchment.getId();
-      final Catchment iniCatchment = iniCatchmentHash.get( catchmentID );
-      if( iniCatchment == null )
-      {
-        // FIXME: better? only log...
-        final String msg = Messages.getString( "LzsimWriter.5", catchment.getName() ); //$NON-NLS-1$
-        throw new NAPreprocessorException( msg );
-      }
-      else
-        result.put( (org.kalypso.model.hydrology.binding.model.Catchment)catchment, iniCatchment );
-    }
-
-    return result;
+    return iniCatchmentHash;
   }
 
   private static void writeLzsFile( final File lzsFile, final Catchment iniCatchment, final String iniDate, final IniHyd[] iniHyds ) throws NAPreprocessorException
   {
-    PrintWriter writer = null;
-
-    try
+    try( PrintWriter writer = new PrintWriter( lzsFile ) )
     {
-      writer = new PrintWriter( lzsFile );
-
       // snow
       final Double h = iniCatchment.getH();
       final Double ws = iniCatchment.getWS();
@@ -266,10 +256,6 @@ class LzsimWriter
     {
       final String msg = String.format( Messages.getString( "LzsimWriter.7" ), iniCatchment.getNaCatchmentID() ); //$NON-NLS-1$
       throw new NAPreprocessorException( msg, e );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
     }
   }
 
