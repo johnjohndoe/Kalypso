@@ -171,17 +171,16 @@ class LzsimWriter
   {
     final Map<String, Catchment> iniCatchmentHash = buildIniCatchmentHash();
 
-    // FIXME: use catchmentData instead!
     final org.kalypso.model.hydrology.binding.model.Catchment[] naCatchments = m_catchmentData.getCatchments();
 
     /* build the result mapping */
     for( final org.kalypso.model.hydrology.binding.model.Catchment naCatchment : naCatchments )
     {
-      final String catchmentID = naCatchment.getId();
-      final Catchment iniCatchment = iniCatchmentHash.get( catchmentID );
+      final CatchmentInfo info = m_catchmentData.getInfo( naCatchment );
+      final String lzsId = info.getLzsId();
+      final Catchment iniCatchment = iniCatchmentHash.get( lzsId );
       if( iniCatchment == null )
       {
-        // FIXME: better? only log...
         final String msg = Messages.getString( "LzsimWriter.5", naCatchment.getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( msg );
       }
