@@ -73,13 +73,16 @@ class CatchmentResolver
     if( !status.isOK() )
       log.add( status );
 
+    /* helper for finding incoming groundwater releations */
+    final CatchmentGroundwaterFinder relationFinder = new CatchmentGroundwaterFinder( m_model );
+
     /* create new catchments and also create info objects */
     final CatchmentInfos infos = new CatchmentInfos();
 
     final Catchment[] catchments = dissolver.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      final CatchmentResolverWorker worker = new CatchmentResolverWorker( m_model, catchment, dissolver, infos );
+      final CatchmentResolverWorker worker = new CatchmentResolverWorker( m_model, catchment, dissolver, relationFinder, infos );
       worker.execute();
     }
 
