@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns0:observation editable="false" xmlns:ns2="obstableview.template.kalypso.org" xmlns:ns1="gistableview.template.kalypso.org" xmlns:ns0="zml.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org">
+    <ns0:name>Zeitungsbericht</ns0:name>
+    <ns0:metadataList>
+        <ns0:metadata value="Europe/Berlin" name="Zeitzone"/>
+    </ns0:metadataList>
+    <ns0:axis datatype="TYPE=double" key="false" unit="m³/s" type="Q" name="DISCHARGE">
+        <ns0:valueArray separator=";">0.208641;1.166094;1.117142;0.645229;1.96839;0.707252;0.707097</ns0:valueArray>
+    </ns0:axis>
+    <ns0:axis datatype="TYPE=double" key="false" unit="m³" type="V" name="VOLUME">
+        <ns0:valueArray separator=";">8301.77070000001;40637.65319999998;39721.726200000034;24686.925300000028;78631.78230000018;30293.405999999988;30290.632499999992</ns0:valueArray>
+    </ns0:axis>
+    <ns0:axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="false" unit="" type="date" name="DATE">
+        <ns0:valueArray separator=";">1996-08-28T23:20:00;1996-08-28T22:30:00;1996-08-28T23:25:00;1996-08-28T23:10:00;1996-08-28T23:25:00;1996-08-28T23:00:00;1996-08-28T23:05:00</ns0:valueArray>
+    </ns0:axis>
+    <ns0:axis datatype="TYPE=string" key="false" unit="" type="description" name="PATH">
+        <ns0:valueArray separator=";">Node/4503/Gesamtabfluss.zml;Node/4501/Gesamtabfluss.zml;Node/4502/Gesamtabfluss.zml;Node/4500/Gesamtabfluss.zml;Pegel/Q_Wendlohstrasse.zml;Node/4504/Gesamtabfluss.zml;Node/4505/Gesamtabfluss.zml</ns0:valueArray>
+    </ns0:axis>
+    <ns0:axis datatype="TYPE=string" key="true" unit="" type="nodeID" name="NODE_ID">
+        <ns0:valueArray separator=";">4503;4501;4502;4500;4506;4504;4505</ns0:valueArray>
+    </ns0:axis>
+    <ns0:axis datatype="TYPE=string" key="false" unit="" type="pegel" name="STATION">
+        <ns0:valueArray separator=";">;;;;Pegel Wendlohstrasse;;</ns0:valueArray>
+    </ns0:axis>
+</ns0:observation>
