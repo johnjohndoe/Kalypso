@@ -166,4 +166,9 @@ class DissolvedCatchment
 
     return new CatchmentInfo( catchment, label, lzsID, hydrotopes, totalSealing );
   }
+
+  public OverlayElement getOverlay( )
+  {
+    return m_overlay;
+  }
 }

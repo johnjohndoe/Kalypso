@@ -26,7 +26,6 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ICatchmentInfos;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.ParameterHash;
 
@@ -80,38 +79,10 @@ class CatchmentResolver
     final Catchment[] catchments = dissolver.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      final DissolvedCatchment[] dissolvedInfos = dissolver.getDissolvedInfos( catchment );
-      for( final DissolvedCatchment dissolvedInfo : dissolvedInfos )
-      {
-        // REMARK: it is possible that the whole catchment is covered by the same overlay, so if we only have one, we treat it as the default element
-        final boolean singletonCatchment = dissolvedInfos.length == 1;
-        final CatchmentInfo info = createDerivedCatchment( dissolvedInfo, singletonCatchment );
-        infos.addInfo( info );
-      }
+      final CatchmentResolverWorker worker = new CatchmentResolverWorker( m_model, catchment, dissolver, infos );
+      worker.execute();
     }
 
     return infos;
-  }
-
-  private CatchmentInfo createDerivedCatchment( final DissolvedCatchment dissolvedInfo, final boolean singletonCatchment ) throws NAPreprocessorException
-  {
-    if( !dissolvedInfo.hasDrwbm() || singletonCatchment )
-    {
-      // nothing to do, old catchment remains
-      return dissolvedInfo.createInfo();
-    }
-
-    final Catchment catchment = dissolvedInfo.getCatchment();
-
-    final NaModelManipulator manipulator = new NaModelManipulator( m_model );
-    final Catchment newCatchment = manipulator.insertClonedCatchment( catchment );
-
-    /* changes some properties */
-    newCatchment.setName( dissolvedInfo.getLabel() );
-
-    // TODO: what to change in new catchment?
-    // TODO: change links of catchment
-
-    return dissolvedInfo.createInfo( newCatchment );
   }
 }
