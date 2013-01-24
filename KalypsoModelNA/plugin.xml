@@ -27,7 +27,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}_Channel"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_downStreamNodeMember"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}downStreamNodeMember">
@@ -38,7 +38,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}Catchment"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_entwaesserungsStrangMember"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}entwaesserungsStrangMember">
@@ -49,7 +49,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}Catchment"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_izkn_vers"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}izkn_vers">
@@ -60,7 +60,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}Catchment"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_izkn"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}izkn">
@@ -71,7 +71,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}Catchment"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_grundwasserabflussMember"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}grundwasserabflussMember">
@@ -86,7 +86,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}StorageChannel"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_iknotNodeMember"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}iknotNodeMember">
@@ -97,7 +97,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}StorageChannel"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_downStreamNodeMember_2nd"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}downStreamNodeMember_2nd">
@@ -108,7 +108,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}StorageChannel"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_downStreamNodeMember_3rd"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}downStreamNodeMember_3rd">
@@ -119,7 +119,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}Node"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_downStreamChannelMember"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}downStreamChannelMember">
@@ -130,7 +130,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}Node"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_qqRelatedNode"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}qqRelatedNode">
@@ -141,7 +141,7 @@
               feature="{http://www.tuhh.de/kalypsoNA}Node"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               qname="{virtual}link_branchingMember"
-              value="{http://www.opengis.net/gml}LineString">
+              value="{http://www.opengis.net/gml}MultiCurve">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}branchingMember">
