@@ -147,7 +147,6 @@ class HydrotopeWriter extends AbstractCoreFileWriter
 
       final String formatString = Messages.getString( "HydrotopeWriter.1" ); //$NON-NLS-1$
       final String message = String.format( formatString, catchmentName, countSoilFactors, countSoilLayers, hydrotopeName );
-
       throw new NAPreprocessorException( message );
     }
     return soiltypeName;

@@ -52,6 +52,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  */
 public class Bodenschichtkorrektur extends AbstractNaModelElement
 {
+  public static QName FEATURE_BODENSCHICHTKORREKTUR = new QName( NS_NAMODELL, "bodenschichtkorrektur" ); //$NON-NLS-1$
+
   private static final QName PROP_CINH = new QName( NS_NAMODELL, "cinh" ); //$NON-NLS-1$
 
   private static final QName PROP_CIND = new QName( NS_NAMODELL, "cind" ); //$NON-NLS-1$

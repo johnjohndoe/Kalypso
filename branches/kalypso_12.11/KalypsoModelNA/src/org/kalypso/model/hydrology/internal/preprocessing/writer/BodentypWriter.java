@@ -147,7 +147,7 @@ class BodentypWriter extends AbstractCoreFileWriter
       buffer.format( Locale.US, "%-8s%.1f %.1f", layerName, parameter.getThickness(), parameter.isInterflowFloat() ); //$NON-NLS-1$
 
       // additional drwbm soil type parameters
-      if( parameter instanceof DRWBMSoilLayerParameter )
+      if( false && parameter instanceof DRWBMSoilLayerParameter )
       {
         if( m_calcCoreVersion != null && m_calcCoreVersion.compareTo( VERSION_MIN_DRWBM_SOIL_TYPES ) < 0 )
         {
