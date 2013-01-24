@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="KalypsoFloodPostprocessing">
+  <title>Postprocessing - Ergebnisauswertung</title>
+
+  <indexterm>
+    <primary>Prostprocessing Kalypso Flood Modeller</primary>
+  </indexterm>
+
+  <para>Wenn alle Berechnungen durchgeführt worden sind, kann mit der
+  Ergebnisauswertung begonnen werden. Zum Postprocessing gehören folgende
+  Arbeitsschritte:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para>Fließtiefen verwalten und</para>
+    </listitem>
+
+    <listitem>
+      <para>Risk Modell erzeugen</para>
+    </listitem>
+  </itemizedlist>
+
+  <section id="KalypsoFloodFließtiefen_verwalten">
+    <title>Fließtiefen verwalten</title>
+
+    <indexterm>
+      <primary>Fließtiefen verwalten in Kalypso Flood Modeller</primary>
+    </indexterm>
+
+    <para>Öffnen Sie in der Ansicht 'Aktivitäten' den Baum
+    <guimenu>Ergebnisauswertung</guimenu> und aktivieren Sie mit einem
+    Doppelklick <guimenuitem>Fließtiefen verwalten</guimenuitem> um die
+    dazugehörige Karten Werkzeugansicht zu öffnen. In der nachfolgenden
+    Tabelle werden die Grundfunktionen der Karten Werkzeugansicht
+    erläutert.</para>
+
+    <figure>
+      <title>Karten Werkzeugansicht zum Verwalten der erzeugten
+      Fließtiefen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Flood/Fließtiefen_verwalten_01.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <table>
+      <title>Die Grundfunktionen der Karten Werkzeugansicht</title>
+
+      <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+        <colspec colwidth="1*" />
+
+        <colspec colwidth="2*" />
+
+        <colspec colwidth="5*" />
+
+        <tbody>
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata align="center"
+                             fileref="img/Flood/Icon_Gelaende_Kachel+.png"
+                             scale="110" valign="middle" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Neue Kachel hinzufügen</entry>
+
+            <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+            wird, öffnet sich der zugehörige Assistent. (Siehe <xref
+            linkend="KalypsoFloodFliesstiefen_hinzufuegen" />)</entry>
+          </row>
+
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata align="center"
+                             fileref="img/Flood/Icon_Gelaende_Kachel-.png"
+                             scale="110" valign="middle" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Kachel löschen</entry>
+
+            <entry valign="middle">Zunächst muss die Kachel der Fließtiefen,
+            die gelöscht werden soll in der Tabelle markiert werden. Wenn
+            anschließend der Knopf gedrückt wird, wird das Ereignis aus der
+            Tabelle entfernt.</entry>
+          </row>
+
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata align="center"
+                             fileref="img/Flood/Icon_Gelaende_Kachel_export.png"
+                             scale="110" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Kachel exportieren</entry>
+
+            <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+            wird, öffnet sich der zugehörige Assistent. (Siehe <xref
+            linkend="KalypsoFloodFließtiefendaten_exportieren" />)</entry>
+          </row>
+
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata align="center"
+                             fileref="img/Flood/Icon_Gelaende_Pfeiloben.png"
+                             scale="110" valign="middle" />
+                </imageobject>
+              </mediaobject><mediaobject>
+                <imageobject>
+                  <imagedata align="center"
+                             fileref="img/Flood/Icon_Gelaende_Pfeilunten.png"
+                             scale="110" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Nach oben/ unten
+            verschieben</entry>
+
+            <entry align="left" valign="middle">Mit dieser Funktionalität
+            lässt sich die Hierarchie in der Tabelle verändern. Wenn ein
+            Ereignis in der Tabelle markiert ist und dieser Knopf betätigt
+            wird, dann wird es um eine Stelle weiter nach oben/ unten
+            verschoben. Diese Funktionalität ist nur von Bedeutung, wenn sich
+            die Kacheln von zwei Geländemodellen überschneiden. Es wird dann
+            in dem Bereich der Überschneidung die Kachel angezeigt, die in der
+            Hierarchie weiter oben steht.</entry>
+          </row>
+
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata align="center"
+                             fileref="img/Flood/Icon_Gelaende_Kachel_springe.png"
+                             scale="110" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Springe zu Kachel</entry>
+
+            <entry align="left" valign="middle">Diese Funktionalität stellt
+            eine Verbindung zwischen der Karten Werkzeugansicht und der Karte
+            her. Jedes Geländemodell wird in der Karte als eine Kachel
+            dargestellt (rot umrandet). Es muss zunächst ein Geländemodell in
+            der Tabelle markiert werden. Wenn anschließend dieser Knopf
+            betätigt wird, dann wird die dazugehörige Kachel in der Karte
+            hereingezoomt.</entry>
+          </row>
+
+          <row>
+            <entry><mediaobject>
+                <imageobject>
+                  <imagedata align="center"
+                             fileref="img/Flood/Icon_Gelaende_Farbpalette.png"
+                             scale="110" />
+                </imageobject>
+              </mediaobject></entry>
+
+            <entry align="left" valign="middle">Farbpalette bearbeiten</entry>
+
+            <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+            wird öffnet sich der zugehörige Assistent. (Siehe Einführung
+            Kalypso Flood Modeller 'Farbpalette bearbeiten')</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>Zusätzlich zu der farblichen Unterscheidung werden in der Karte für
+    jeden Punkt die Fließtiefen angezeigt, wenn mit dem Mauszeiger darüber
+    gefahren wird. In der folgenden Abbildung ist diese Funktion dargestellt.
+    Der rote Kasten markiert die Kachel, die in der Karten Werkzeugansicht
+    markiert ist.</para>
+
+    <figure>
+      <title>Darstellung der Kacheln und Fließtiefen in der Karte</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Flood/Fliesstiefen_verwalten_02.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="KalypsoFloodFliesstiefen_hinzufuegen">
+      <title>Neue Fließtiefen hinzufügen</title>
+
+      <indexterm>
+        <primary>Fließtiefen hinzufügen in Kalypso Flood</primary>
+      </indexterm>
+
+      <para>Es besteht die Möglichkeit zu den berechneten Fließtiefen
+      zusätzliche externe Kacheln mit Fließtiefendaten zu importieren.</para>
+
+      <para>Dazu muss in der Karten Werkzeugansicht zunächst der Knopf
+      <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="img/Flood/Icon_Gelaende_Kachel+.png" />
+          </imageobject>
+        </inlinemediaobject> betätigt werden. Anschließend öffnet sich der
+      nachfolgend abgebildete Assistent, in dem im Arbeitsplatz eine Datei im
+      Format <filename>*.asg</filename>, .<filename>*asc</filename> oder
+      anderen Rasterdaten ausgewählt werden können. Durch Definition des
+      Koordinatensystems und den Details wird die Position der Kachel in der
+      Karte festgelegt. Durch Bestätigen mit <guibutton>Finish</guibutton>
+      wird der Rasterdaten-Import abgeschlossen und die importierten
+      Fließtiefen werden in der Tabelle dargestellt.</para>
+
+      <figure>
+        <title>Assistent zum Import von Geländemodellen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Flood/Gelaende_Modell_neu.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="KalypsoFloodFließtiefendaten_exportieren">
+      <title>Kachel exportieren</title>
+
+      <indexterm>
+        <primary>Fließtiefendaten exportieren in
+        Kalypso Flood</primary>
+      </indexterm>
+
+      <para>Um Fließtiefendaten zu exportieren muss in der Karten
+      Werkzeugansicht eine Fließtiefendatei in der Tabelle markiert werden und
+      dann der Knopf <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="img/Flood/Icon_Gelaende_Kachel_export.png" />
+          </imageobject>
+        </inlinemediaobject> betätigt werden. Anschließend öffnet sich der
+      nachfolgend abgebildete Assistent, in dem im Arbeitsplatz der
+      Speicherort und der Name der zu erstellenden Datei im Format
+      .<filename>*asc</filename> festgelegt werden muss. Durch Bestätigen mit
+      <guibutton>Finish</guibutton> wird der Export abgeschlossen.</para>
+
+      <figure>
+        <title>Assistent zum Export von Geländemodellen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Flood/Fliesstiefen_verwalten_Kachelexport.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+  </section>
+
+  <section id="KalypsoFloodRiskModell_erzeugen">
+    <title>Risk Modell erzeugen</title>
+
+    <indexterm>
+      <primary>Risk Modell erzeugen in Kalypso Flood Modeller</primary>
+    </indexterm>
+
+    <para>Öffnen Sie in der Ansicht 'Aktivitäten' den Baum
+    <guimenuitem>Ergebnisauswertung</guimenuitem> und aktivieren Sie mit einem
+    Doppelklick <guimenuitem>Risk Modell erzeugen</guimenuitem>. Es öffnet
+    sich der dazugehörige Assistent in dem ein Ereignis ausgewählt werden
+    muss, für das ein Risk Modell erzeugt werden soll. Durch Bestätigung mit
+    <guibutton>OK</guibutton> öffnet sich ein weiterer Assistent, in dem ein
+    Projektname eingegeben werden muss für die Erzeugung eines neuen Projektes
+    in KalypsoRisko. Mit <guibutton>Finish</guibutton> wird der Assistent
+    abgeschlossen und die KalypsoRisiko Perspektive wird geöffnet.</para>
+
+    <figure>
+      <title>Assistent zum Erzeugen eines Risk Modells</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Flood/RiskModell_erzeugen.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <figure>
+      <title>Assistent zum Erstellen eines neuen Projektes für
+      KalypsoRisko</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Flood/RiskModell_erzeugen_02.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+</chapter>
