@@ -38,14 +38,31 @@
                   </appinfo>
                 </annotation>
                 <sequence>
-                  <element ref="par:DRWBMDefinition" minOccurs="0" maxOccurs="0"/>
+                  <element ref="par:DRWBMDefinition" minOccurs="0" maxOccurs="0" />
                 </sequence>
                 <attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
               </complexType>
             </element>
 
-            <!-- TODO: 1:n link auf knoten/drwbm/xxx -->
-
+            <!-- TODO link auf Zielstrang überschreibt zielstrang des TG -->
+            <!--
+              <element name="entwaesserungsStrangMember" minOccurs="0">
+              <complexType>
+              <sequence>
+              <element ref="na:Catchment" minOccurs="0" maxOccurs="0">
+              <annotation>
+              <documentation>Link to a channel, overlay or catchment (?or node?).
+              REMARK: we use _Feature here, as it is difficult to model this in a generic way (KalypsoUI does not understand choices yet)
+              </documentation>
+              </annotation>
+              </element>
+              </sequence>
+              <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+              </element>
+            -->
+            <!-- TODO: link auf Zielknoten Oberflächenabfluss; überschreibt Zielknoten Oberflächenabfluss am TG -->
+            <!-- TODO multiple links auf Ziel Oberflächenabfluss (Knoten/...??) -->
           </sequence>
         </extension>
       </complexContent>
