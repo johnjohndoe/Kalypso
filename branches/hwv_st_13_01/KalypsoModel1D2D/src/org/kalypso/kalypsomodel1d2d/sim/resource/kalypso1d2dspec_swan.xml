@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="org.kalypso.model1d2d.swan">
+	<input id="simulationPathSWAN" type="xs:string"
+		description="the working directory of the simulation" />
+	<input id="calcCoreExeSWAN" type="xs:string" description="Wave-Calculation-Core executable(default swan.exe)" optional="true" />
+
+	<output id="resultsSWAN" type="xs:anyURI" description="SWAN-result directory" />
+</modelspec>
+ 

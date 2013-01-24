@@ -1,0 +1,124 @@
+<xs:schema 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wb="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+	
+	<!-- ***************************IMPORTS********************************* -->
+	<xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+	/>
+	<!-- xs:import 
+		namespace="http://www.opengis.net/gml" 
+		schemaLocation="D:/congo\eclipse_base/kalypso_workspace/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/ -->
+	<!-- xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+		schemaLocation="simulation_model.xsd"
+	/ -->
+	<!-- **************************INCLUDES********************************** -->
+	<!--xs:include schemaLocation="simulation_model.xsd"/ -->
+	<!--xs:include schemaLocation="simulation_model_flow_resistance.xsd"/>
+	<xs:include schemaLocation="simulation_model_flow_relationship.xsd"/>
+	<xs:include schemaLocation="simulation_model_terrain.xsd"/-->
+	<xs:include schemaLocation="simulation_model_wind.xsd" />
+	<xs:include schemaLocation="simulation_model_discretisation_1d2d.xsd"/>
+	
+	<!-- Static model Model modelling -->
+	<!-- xs:element 
+		name="staticModel1D2D" 
+		type="wb:StaticModelPropertyType1D2D" 
+		substitutionGroup="wb:staticModel"/ -->
+		
+	<xs:complexType name="StaticModelPropertyType1D2D">
+		<xs:annotation>
+			<xs:documentation>
+				To define a static model property for a 1d 2d simulation model
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction base="wb:StaticModelPropertyType">
+				<xs:sequence>
+					<xs:element 
+						ref="wb:StaticModel1D2D"
+						minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:element 
+		name="StaticModel1D2D" 
+		type="wb:StaticModelType1D2D" 
+		substitutionGroup="wb:StaticModel">
+		<xs:annotation>
+			<xs:documentation>
+				Static model element for combined 1D 2D unsteady simualtion  
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+		
+	<xs:complexType 
+		name="StaticModelType1D2D" 
+		abstract="false">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				<html>
+				Define the static model for combined 1D 2D unteady simulation.
+				The type basicaly encapsulate:
+					<ul>
+						<li/> a terrain model, which contains a digital 
+							terrain models,	river pofiles and rougthness
+							area delimitation.
+						<li/>a dicretisation model, which provide an RMA·Kalypso 
+							compatible finite element discretisaion model. 
+						<li/>a flow resistance model, define the flow resistance 
+						properties, mostly correction factors e.g. to compute 
+						real rougthness value from a global rougthness definition.
+						<li/>a flow relation ship model, provide the flow 
+							relationship necessary for a full definition of special
+							elements.
+					</ul>
+				</html>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb:AbstractStaticModelType">
+				<xs:sequence>
+					<xs:element 
+						name="terrainModel"
+						type="wb:TerrainModelPropertyType"/>
+					<xs:element 
+						name="windModel"
+						type="wb:WindModelPropertyType"/>
+					<xs:element 
+						ref="wb:discretisationModel"/>
+					<xs:element 
+						ref="wb:flowResistanceModel"/>
+					<xs:element 
+						ref="wb:flowRelationshipModel"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</xs:schema>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="obs1d2d:ObservationWithSource" style="SWT.NONE"
+	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation" xmlns:swe="http://www.opengis.net/swe"
+	xmlns:om="http://www.opengis.net/om" xmlns:gft="featureview.template.kalypso.org"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
+		grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="4" />
+
+	<!-- REMARK: commented out, as these observations are used within boundary condition, which already have a name and a description. -->
+	<!-- 
+		<gft:label text="Name" visible="true" tooltip="Name" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+		</gft:label>
+		<gft:text editable="true" property="gml:name" tooltip="Name" style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		</gft:text>
+		<gft:label text="Beschreibung" visible="true" tooltip="Beschreibung" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+		</gft:label>
+		<gft:text editable="true" property="gml:description" tooltip="Beschreibung" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="3" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
+		</gft:text>
+	-->
+
+	<gft:tupleResult property="om:result" tooltip="Zeitreihe" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
+			heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+		<gft:toolbar>
+			<gft:command commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand" style="SWT.PUSH" />
+			<gft:command commandId="org.kalypso.ui.tupleResult.pasteFromClipboardCommand" style="SWT.PUSH" />
+			<gft:command commandId="org.kalypso.ui.tupleResult.insertRowCommand" style="SWT.PUSH" />
+			<gft:command commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand" style="SWT.PUSH" />
+		</gft:toolbar>
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"
+			alignment="SWT.LEFT" displayFormat="%1$td.%1$tm.%1$tY %1$tH:%1$tM:%1$tS.%1$tL" parseFormat="dd.MM.yyyy HH:mm:ss.SSS" optional="true" />
+		<!-- Time have to be optional because of W/Q BCs -->
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveHsig"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirection"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WavePeakPeriod"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirectionalSpreading"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"
+			alignment="SWT.RIGHT" displayFormat="%.3f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D"
+			alignment="SWT.RIGHT" displayFormat="%.3f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge2D"
+			alignment="SWT.RIGHT" displayFormat="%.3f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelDownstream"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelUpstream"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+	</gft:tupleResult>
+</gft:featureview>
+

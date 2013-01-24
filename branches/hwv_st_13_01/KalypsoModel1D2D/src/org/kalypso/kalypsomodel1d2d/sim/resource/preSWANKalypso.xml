@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="org.kalypso.simulation.swan.preSWANKalypso">
+	<input id="control" type="xs:anyURI" description="control gml-file" />
+	<input id="mesh" type="xs:anyURI" description="mesh gml-file" />
+	<input id="flowRelationships" type="xs:anyURI" description="flow relationships gml-file" />
+	<input id="scenarioResultMeta" type="xs:anyURI" description="Scenario Result Meta gml-file" />
+	<input id="simulationPathRMA" type="xs:string" description="Path to output of RMA" optional="true" />
+	<input id="wind" type="xs:anyURI" description="wind relationships gml-file" optional="true" />
+	<input id="additionalData" type="xs:anyURI" description="additional coordinates specified as simple txt-file" optional="true" />
+	<input id="windBinaries" type="xs:anyURI" description="wind binaries as zip-file" optional="true" />
+	<input id="calculationUnitID" type="xs:string" description="ID of the (sub)-calculation unit to export" optional="true" />
+	<input id="hotFile" type="xs:anyURI" description="hot start results file" optional="true" />
+	
+
+	<output id="calcCoreExeSWAN" type="xs:string" description="SWAN Kalypso version string" />
+	<output id="simulationPathSWAN" type="xs:anyURI" description="Path to written files" />
+</modelspec>
