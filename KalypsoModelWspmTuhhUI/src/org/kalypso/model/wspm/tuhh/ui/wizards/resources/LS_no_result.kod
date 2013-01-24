@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration
+  xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd"
+  xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <Chart id="ls">
+    <Title>%TITLE%</Title>
+    <Description>%DESCRIPTION%</Description>
+    <Layers>
+      <Layer id="soil">
+        <Provider
+          epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+          <Parameters>
+            <Parameter value="%GMLFILENAME%" name="href" />
+            <Parameter value="" name="gxlpath" />
+            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter
+              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
+              name="domainComponentId" />
+            <Parameter
+              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"
+              name="targetComponentId" />
+          </Parameters>
+        </Provider>
+        <MapperRefs>
+          <DomainAxisRef ref="Station_Axis" />
+          <TargetAxisRef ref="NN_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="line">
+            <Width>2</Width>
+            <LineColor>FFA000</LineColor>
+          </LineStyle>
+          <PointStyle role="point">
+            <Width>6</Width>
+            <Height>6</Height>
+            <FillColor isVisible="true">
+              <Color>C08000</Color>
+            </FillColor>
+            <Stroke isVisible="false"></Stroke>
+          </PointStyle>
+        </Styles>
+      </Layer>
+      <Layer id="Boe_li" visible="false">
+        <Provider
+          epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+          <Parameters>
+            <Parameter value="%GMLFILENAME%" name="href" />
+            <Parameter value="" name="gxlpath" />
+            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter
+              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
+              name="domainComponentId" />
+            <Parameter
+              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li"
+              name="targetComponentId" />
+          </Parameters>
+        </Provider>
+
+        <MapperRefs>
+          <DomainAxisRef ref="Station_Axis" />
+          <TargetAxisRef ref="NN_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="line">
+            <Width>2</Width>
+            <LineColor>C83200</LineColor>
+          </LineStyle>
+          <PointStyle role="point">
+            <Width>6</Width>
+            <Height>6</Height>
+            <FillColor isVisible="true">
+              <Color>641900</Color>
+            </FillColor>
+            <Stroke isVisible="false"></Stroke>
+          </PointStyle>
+        </Styles>
+      </Layer>
+
+      <Layer id="h_BV" visible="true">
+        <Provider
+          epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+          <Parameters>
+            <Parameter value="%GMLFILENAME%" name="href" />
+            <Parameter value="" name="gxlpath" />
+            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter
+              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
+              name="domainComponentId" />
+            <Parameter
+              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV"
+              name="targetComponentId" />
+          </Parameters>
+        </Provider>
+        <MapperRefs>
+          <DomainAxisRef ref="Station_Axis" />
+          <TargetAxisRef ref="NN_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="line">
+            <Width>2</Width>
+            <LineColor>641900</LineColor>
+          </LineStyle>
+          <PointStyle role="point">
+            <Width>6</Width>
+            <Height>6</Height>
+            <FillColor isVisible="true">
+              <Color>C83200</Color>
+            </FillColor>
+            <Stroke isVisible="false"></Stroke>
+          </PointStyle>
+        </Styles>
+      </Layer>
+      <Layer id="Buildings" visible="true">
+        <Provider
+          epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+          <Parameters>
+            <Parameter value="%GMLFILENAME%" name="href" />
+            <Parameter value="" name="gxlpath" />
+            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter
+              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
+              name="domainComponentId" />
+            <Parameter
+              value="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider#Buildings"
+              name="targetComponentId" />
+          </Parameters>
+        </Provider>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="Station_Axis" />
+          <TargetAxisRef ref="NN_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point">
+            <Width>3</Width>
+            <Height>3</Height>
+            <Alpha>40</Alpha>
+            <FillColor isVisible="true">
+              <Color>404040</Color>
+            </FillColor>
+            <Stroke>
+              <LineColor>0080B1</LineColor>
+            </Stroke>
+            <LineStyle role="line" isVisible="false">
+            </LineStyle>
+          </PointStyle>
+        </Styles>
+      </Layer>
+      <Layer id="Boe_re" visible="false">
+        <Provider
+          epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+          <Parameters>
+            <Parameter value="%GMLFILENAME%" name="href" />
+            <Parameter value="" name="gxlpath" />
+            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter
+              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
+              name="domainComponentId" />
+            <Parameter
+              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re"
+              name="targetComponentId" />
+          </Parameters>
+        </Provider>
+        <MapperRefs>
+          <DomainAxisRef ref="Station_Axis" />
+          <TargetAxisRef ref="NN_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="line">
+            <Width>2</Width>
+            <LineColor>C83200</LineColor>
+          </LineStyle>
+          <PointStyle role="point">
+            <Width>6</Width>
+            <Height>6</Height>
+            <FillColor isVisible="true">
+              <Color>641900</Color>
+            </FillColor>
+            <Stroke isVisible="false"></Stroke>
+          </PointStyle>
+        </Styles>
+      </Layer>
+    </Layers>
+
+    <Mappers>
+      <Axis id="Station_Axis">
+        <Provider
+          epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
+        </Provider>
+        <Label>Station [km]</Label>
+        <Direction>NEGATIVE</Direction>
+        <Position>BOTTOM</Position>
+        <PreferredAdjustment before="3" range="94"
+          after="3" />
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+
+      <Axis id="NN_Axis">
+        <Provider
+          epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
+        </Provider>
+        <Label>Höhe [NN+m]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <PreferredAdjustment before="3" range="94"
+          after="3" />
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+    </Mappers>
+    <Renderers>
+      <AxisRenderer id="NumberAxisRenderer">
+        <Provider
+          epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          <Parameters>
+            <Parameter name="inset_tick" value="2" />
+            <Parameter name="inset_label" value="2" />
+            <Parameter name="tick_length" value="5" />
+            <Parameter name="hide_cut" value="true" />
+            <Parameter name="gap" value="5" />
+          </Parameters>
+        </Provider>
+      </AxisRenderer>
+    </Renderers>
+
+  </Chart>
+</ChartConfiguration>
