@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:gistableview xmlns:ns3="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <ns3:layer id="id" featurePath="log" linktype="gml" xlink:type="simple" xlink:href="error.txt" xlink:actuate="onRequest">
+        <ns3:column width="58" name="level" format="" editable="false" alignment="16384"/>
+        <ns3:column width="85" name="name" format="" editable="false" alignment="16384"/>
+        <ns3:column width="453" name="message" format="" editable="false" alignment="16384"/>
+        <ns3:column width="741" name="param" format="" editable="false" alignment="16384"/>
+    </ns3:layer>
+</ns3:gistableview>
+
