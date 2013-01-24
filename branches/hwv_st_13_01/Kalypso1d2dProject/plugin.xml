@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <!-- Project extensions -->
+   <extension
+      point="org.eclipse.core.resources.natures"
+      id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"
+      name="Kalypso1D2DProjectNature">
+      <runtime>
+         <run class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
+      </runtime>
+      <requires-nature
+            id="org.kalypso.afgui.ScenarioHandlingProjectNature">
+      </requires-nature>
+      <requires-nature
+            id="de.renew.workflow.connector.WorkflowProjectNature">
+      </requires-nature>
+   </extension>
+
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta"
+            class="org.kalypso.kalypso1d2d.pjt.views.contentprov.ResultMetaAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter2">
+         </adapter>
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter">
+         </adapter>
+      </factory>
+   </extension>
+
+	<extension
+       point="org.eclipse.ui.newWizards">
+		<category
+            id="org.kalypso.wizard.Create1d2dpjt"
+            name="%org.kalypso.wizard.Create1d2dpjt.name"
+			description="%org.kalypso.wizard.Create1d2dpjt.description"
+            parentCategory="org.kalypso.ui.newwizards.kalypso"/>
+		<wizard
+        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.Create1d2dpjt"
+        class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
+        descriptionImage="icons/kalypso1d2d.png"
+        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+        icon="icons/kalypso1d2d.png"
+        id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
+        name="%org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard.name"
+        project="true">
+		<description>
+				%org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard.description
+		</description>
+		</wizard>
+		<wizard
+        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.Create1d2dpjt"
+        class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard"
+        descriptionImage="icons/kalypso1d2d.png"
+        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+        icon="icons/kalypso1d2d.png"
+        id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard"
+        name="%org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard.name"
+        project="true">
+		<description>
+				%org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard.description
+		</description>
+		</wizard>
+		<wizard
+            class="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
+            icon="icons/kalypso_gmt.gif"
+            id="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
+            name="BaseMap"
+            project="false"/>
+	  	<category
+            id="org.kalypso.kalypsosimulationmodel.ui.shapeimportwizards"
+            name="Kalypso import wizards"/>
+      	<wizard
+            category="org.kalypso.kalypsosimulationmodel.ui.shapeimportwizards"
+            class="org.kalypso.ui.wizards.imports.roughness.ImportWizard"
+            icon="icons/kalypso_gmt.gif"
+            id="org.kalypso.ui.wizards.imports.roughness.ImportWizard"
+            name="Roughness import wizard"
+            project="false"/>
+      	<wizard
+            class="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard"
+            id="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard"
+            name="ElevationWizard"
+            project="false"/>
+        <wizard
+            class="org.kalypso.kalypsomodel1d2d.ui.wizard.windmodel.ImportWindDataWizard"
+            id="org.kalypso.kalypsomodel1d2d.ui.wizard.windmodel.ImportWindDataWizard"
+            name="WindDataWizard"
+            project="false"/>
+      	<wizard
+            class="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
+            id="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
+            name="Observation load"/>
+        <wizard
+              class="org.kalypso.wizards.import1d2d.Import2dWizard"
+              icon="icons/elcl16/1d2d_edit_protocol_view.gif"
+              id="org.kalypso.wizards.import1d2d.ImportWizard"
+              name="Import 1D2D"
+              project="false"/>
+        <wizard
+              class="org.kalypso.wizards.export2d.Export2dWizard"
+              id="org.kalypso.wizards.export2d.ExportWizard"
+              name="Export 2D"
+              project="false"/>
+	</extension>
+     <extension
+           point="org.kalypso.ui.featureViewExtensionControl">
+        <extensionControl
+              class="org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectorControlFactory"
+              id="org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectorControlFactory"/>
+     </extension>
+
+   <extension
+         name="Workflow Views"
+         point="org.eclipse.ui.views">
+       <view
+             allowMultiple="false"
+             class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
+             icon="icons/obj16/repository.gif"
+             id="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView"
+			 description="%org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView.description"
+             name="%org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView.name">
+       </view>
+   </extension>
+
+     <extension point="org.eclipse.ui.handlers">
+
+ 	 <!--*** handlers for scenario management ***-->
+ 	 <!--*** import handlers ***-->
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad"/>
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWindDataHandler"
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__WindDataLoad"/>
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler"
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ProfileImport"/>
+
+ 	 <!--*** general net editing handler ***-->
+
+ 	 <!--*** 1D-editing handlers ***-->
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler"
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm"/>
+	     <handler
+               class="org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler"
+               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap"/>
+
+ 	 <!--*** 2D-editing handlers ***-->
+	     <handler
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
+           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
+	     </handler>
+	     <handler
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen">
+           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
+	     </handler>
+
+	     <handler
+	     	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
+           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
+	     </handler>
+	     
+	     <handler
+	     	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_showWinds">
+           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
+	     </handler>	     
+
+		<!-- // Handler for "Berechnungseinheiten Modellieren"-->
+	     <handler
+	       	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
+               <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
+	     </handler>
+
+	     <!-- // Handler for "Start Calculation Widget"-->
+	     <handler
+	       	  commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView">
+               <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
+	     </handler>
+       <handler
+             class="org.kalypso.kalypso1d2d.pjt.actions.ResultProcessHydrographsHandler"
+             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultProcessHydropgrahs">
+       </handler>
+       <handler
+             class="org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler"
+             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RCDef">
+       </handler>
+       <handler
+             class="org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler"
+             commandId="workflow1d2d_ResultDataManager">
+       </handler>
+       <handler
+             class="org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultMapHandler"
+             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultMap">
+       </handler>
+       <handler
+             class="org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler"
+             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultLengthSectionView">
+       </handler>
+       <handler
+             class="org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler"
+             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultLengthSectionView">
+       </handler>
+       <handler
+             class="org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler"
+             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__GenerateDifferenceResultView">
+       </handler>
+       <handler
+             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ManageResultHydrograph">
+          <class
+                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+             <parameter
+                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                   value="org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget">
+             </parameter>
+             <parameter
+                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+                   value="org.kalypso.kalypso1d2d.pjt">
+             </parameter>
+          </class>
+       </handler>
+	</extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer
+            viewerId="org.kalypso.kalypso1d2d.pjt.views.ResultNavigator">
+            <options>
+            	<!-- Hide the "Link with Editor" action from the toolbar of the viewer -->
+				<property name="org.eclipse.ui.navigator.hideLinkWithEditorAction"
+						  value="true"/>
+				<!-- Hide the "Available Extensions" tab in the "Available Customizations"
+					dialog (available from the "Filters" action -->
+				<!--<property name="org.eclipse.ui.navigator.hideAvailableExtensionsTab"
+						  value="true"/>-->
+			</options>
+      </viewer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <commonFilter
+            activeByDefault="false"
+            description="%de.renew.workflow.connector.filters.kalypso.projects.description"
+            id="de.renew.workflow.connector.filters.kalypso.projects"
+            name="%de.renew.workflow.connector.filters.kalypso.projects.name">
+         <filterExpression>
+    	    <and>
+				<instanceof value="org.eclipse.core.resources.IProject"/>
+				<not>
+					<test
+                	    property="org.eclipse.core.resources.projectNature"
+                    	value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
+                </not>
+	        </and>
+         </filterExpression>
+      </commonFilter>
+      <commonFilter
+            activeByDefault="false"
+            description="%org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter.description"
+            id="org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter"
+            name="%org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter.name">
+         <filterExpression>
+         	   <not>
+               <test
+                     forcePluginActivation="true"
+                     property="org.kalypso.kalypso1d2d.activeCaseUri">
+               </test>
+               </not>
+         </filterExpression>
+      </commonFilter>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.functionProperty">
+      <function
+            class="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction"
+            id="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction"
+            name="Linked-Feature-Property-Fetcher"/>
+      <function
+            class="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+            id="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+            name="ComputeMergedRougnessProperties"/>
+      <function
+            class="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+            id="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+            name="RougnessValuesPropertyFunction"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView">
+         <command
+               commandId="org.kalypso.ui.command.repositoryReload">
+         </command>
+         <separator
+               name="org.kalypso.kalypso1d2d.pjt.views.timeseriesRepository.separator.treeNavigation"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.kalypso.ui.command.repositoryCollapseAll">
+         </command>
+         <separator
+               name="org.kalypso.kalypso1d2d.pjt.views.timeseriesRepository.separator.export"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.kalypso.ui.command.repositoryExportAsFile">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="de.renew.workflow.model.workflowSystem">
+      <workflowSystem
+            definition="etc/workflow.xml"
+            id="workflow1d2d"
+            name="Workflow 1d2d-Model">
+      </workflowSystem>
+   </extension>
+   <extension
+         point="org.kalypso.core.gmlSourceProvider">
+      <provider
+            class="org.kalypso.ui.wizards.results.gmlsource.WspTinProvider"
+            id="org.kalypso.ui.wizards.results.gmlsource.WspTinProvider"
+			description="%org.kalypso.ui.wizards.results.gmlsource.WspTinProvider.description"
+            label="%org.kalypso.ui.wizards.results.gmlsource.WspTinProvider.label">
+         <category
+               id="org.kalypso.core.tin.waterlevel">
+         </category>
+      </provider>
+   </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            icon="icons/kalypso1d2d_small.png"
+            id="org.kalypso.kalypso1d2d.pjt.natureDecorator"
+			description="%org.kalypso.kalypso1d2d.pjt.natureDecorator.description"
+            label="%org.kalypso.kalypso1d2d.pjt.natureDecorator.label"
+            lightweight="true"
+            location="BOTTOM_RIGHT"
+            state="true">
+         <enablement>
+            <and>
+               <objectClass
+                     name="org.eclipse.core.resources.IProject">
+               </objectClass>
+               <objectState
+                     name="projectNature"
+                     value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature">
+               </objectState>
+            </and>
+         </enablement>
+      </decorator>
+   </extension>
+   <extension
+	       point="org.kalypso.core.themeInfo">
+	    <themeInfo
+	          class="org.kalypso.kalypso1d2d.pjt.map.NodeThemeInfo"
+	          id="org.kalypso.kalypso1d2d.pjt.map.NodeThemeInfo">
+	    </themeInfo>
+   </extension>
+   <extension
+         point="org.kalypso.module.kalypsoModule"> 
+      <module
+            class="org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule">
+      </module>
+   </extension>
+</plugin>
