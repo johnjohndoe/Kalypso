@@ -48,7 +48,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}grundwasserabfluss.
- *
+ * 
  * @author Gernot Belger
  */
 public class Grundwasserabfluss extends AbstractNaModelElement
@@ -66,7 +66,12 @@ public class Grundwasserabfluss extends AbstractNaModelElement
 
   public Catchment getNgwzu( )
   {
-    return (Catchment) FeatureHelper.resolveLink( this, LINK_NGWZU, true );
+    return (Catchment)FeatureHelper.resolveLink( this, LINK_NGWZU, true );
+  }
+
+  public void setNgwzu( final Catchment target )
+  {
+    setLink( LINK_NGWZU, target );
   }
 
   public double getGwwi( )
@@ -74,8 +79,13 @@ public class Grundwasserabfluss extends AbstractNaModelElement
     return getDoubleProperty( PROP_GWWI, 0.0 );
   }
 
+  public void setGwwi( final double gwwi )
+  {
+    setProperty( PROP_GWWI, gwwi );
+  }
+
   public Catchment getParrent( )
   {
-    return (Catchment) super.getOwner();
+    return (Catchment)super.getOwner();
   }
 }
