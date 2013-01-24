@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoUIRRM Plug-in
+Bundle-SymbolicName: org.kalypso.ui.rrm; singleton:=true
+Bundle-Version: 13.1.0.qualifier
+Bundle-Activator: org.kalypso.ui.rrm.KalypsoUIRRMPlugin
+Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.kalypso.core,
+ org.eclipse.core.expressions;bundle-version="3.4.100",
+ org.kalypso.ui,
+ org.eclipse.ui.intro,
+ org.kalypso.NACalcJob,
+ org.kalypso.afgui;bundle-version="0.0.0",
+ org.kalypso.project.database.client;bundle-version="1.0.0",
+ org.kalypso.simulation.ui;bundle-version="0.0.1",
+ org.kalypso.model.rrm.project.template;bundle-version="0.0.1",
+ org.kalypso.module;bundle-version="2.3.0",
+ org.kalypso.ModelSimulationBase;bundle-version="2.3.0",
+ org.kalypso.gml.ui;bundle-version="10.10.0"
+Bundle-ActivationPolicy: lazy
+Export-Package: org.kalypso.ui.rrm.extension
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
