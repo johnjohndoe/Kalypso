@@ -1,0 +1,3 @@
+instructions.configure=\
+  addRepository(type:0,name:Kalypso 10.10,location:http${#58}//master.dl.sourceforge.net/project/kalypso/Kalypso/10.10/update-site);\
+  addRepository(type:1,,name:Kalypso 10.10,location:http${#58}//master.dl.sourceforge.net/project/kalypso/Kalypso/10.10/update-site);
