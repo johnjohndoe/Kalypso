@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns0:gistableview xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <ns0:layer id="id" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" linktype="gml" xlink:type="simple" xlink:href="../../calcCase.gml" xlink:actuate="onRequest">
+        <ns0:column width="100" name="description" format="" editable="true" alignment="16384"/>
+        <ns0:column width="54" name="name" format="" editable="false" alignment="16777216"/>
+        <ns0:column width="66" name="generateResult" format="" editable="true" alignment="16384"/>
+        <ns0:column width="66" name="vmin" format="" editable="true" alignment="16777216"/>
+        <ns0:column width="69" name="vmax" format="" editable="true" alignment="16777216"/>
+        <ns0:column width="79" name="sv" format="" editable="true" alignment="16777216"/>
+        <ns0:column width="100" name="hvvsqd" format="" editable="true" alignment="16384"/>
+        <ns0:column width="112" name="downStreamNodeMember" format="" editable="true" alignment="16384"/>
+        <ns0:column width="119" name="iknotNodeMember" format="" editable="true" alignment="16384"/>
+        <ns0:sort propertyName="name" inverse="false"/>
+    </ns0:layer>
+</ns0:gistableview>
+

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns1="obstableview.template.kalypso.org" name="Modellvernetzung">
+    <mapv:layers active="ID_4">
+        <mapv:layer visible="true" name="Knoten - Vernetzung" featurePath="NodeCollectionMember/nodeMember" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:NodeNet:rule:rule_location</templ:legendicon>
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="NodeNet" linktype="sld" xlink:actuate="onRequest" xlink:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:net" xlink:type="simple"/>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Virtuelle Stränge - Vernetzung" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:VChannelNet:rule:rule_placement</templ:legendicon>
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="VChannelNet" linktype="sld" xlink:actuate="onRequest" xlink:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:sld:net" xlink:type="simple"/>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Kalinin-Miljukov Stränge - Vernetzung" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:KMChannelNet:rule:rule_geometry</templ:legendicon>
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="KMChannelNet" linktype="sld" xlink:actuate="onRequest" xlink:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:net" xlink:type="simple"/>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="RHB Stränge - Vernetzung" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:fts:rule:rule_geometry</templ:legendicon>
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="RHBChannelNet" linktype="sld" xlink:actuate="onRequest" xlink:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:sld:net" xlink:type="simple"/>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Teilgebiete - Vernetzung" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:fts_subcatchments_net:rule:rule_geometry</templ:legendicon>
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="SubcatchmentsNet" linktype="sld" xlink:actuate="onRequest" xlink:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:net" xlink:type="simple"/>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Grundwasser - Vernetzung" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_5" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:fts_groundwaterNet:rule:rule_geometry</templ:legendicon>
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="GroundwaterNet" linktype="sld" xlink:actuate="onRequest" xlink:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:groundwaterNet" xlink:type="simple"/>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+    </mapv:layers>
+</mapv:gismapview>

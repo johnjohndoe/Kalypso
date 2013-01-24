@@ -1,0 +1,253 @@
+<project default="fake">
+
+	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: fake                      nur damit das Projekt nicht schreit
+      - - - - - - - - - - - - - - - - - -->
+	<target name="fake" />
+
+	<target name="info">
+		<echo message="project dir ${project.dir}" />
+		<echo message="project url ${project.url}" />
+		<echo message="calc dir    ${calc.dir}" />
+		<echo message="calc url    ${calc.url}" />
+	</target>
+
+
+	<!-- 
+		 ================================= 
+          target: create			Rechenvariante erzeugen
+         ================================= 
+    -->
+	<target name="create" description="Erzeugt eine Rechenvariante">
+		<echo message="Rechenvariante anlegen: ${calc.dir}" />
+		<!-- copy modell -->
+	<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml" />
+        <copy file="${project.dir}/hydrotop.gml" tofile="${calc.dir}/calcHydrotop.gml" />
+	<copy file="${project.dir}/parameter.gml" tofile="${calc.dir}/calcParameter.gml" />
+        <copy file="${project.dir}/.model/observationConf/ombrometer.gml" tofile="${calc.dir}/ombrometer.gml" />
+        <copy file="${project.dir}/.model/observationConf/ObsQMapping.gml"
+              tofile="${calc.dir}/.obsQMapping.gml" />
+        <copy file="${project.dir}/.model/observationConf/ObsQZuMapping.gml"
+              tofile="${calc.dir}/.obsQZuMapping.gml" />
+        <copy file="${project.dir}/.model/observationConf/ObsTMapping.gml"
+              tofile="${calc.dir}/.obsTMapping.gml" />
+        <copy file="${project.dir}/.model/observationConf/ObsEMapping.gml"
+              tofile="${calc.dir}/.obsEMapping.gml" />    	
+		<!-- copy others -->
+		<copy todir="${calc.dir}">
+			<fileset dir="${project.dir}/.templates/calcCase/copy" includes="*/**" excludes="**/.svn/**" />
+		</copy>
+	</target>
+
+	<target name="setProperties" depends="info">
+		<echo message="Variablen einrichten" />
+		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
+			<property name="startsim" featurepath="/" featureProperty="startsimulation" />
+			<property name="startforecast" featurepath="/" featureProperty="startforecast" />
+			<property name="hoursofforecast" featurepath="/" featureProperty="hoursforecast" />
+			<property name="interval.amount" featurepath="/" featureProperty="minutesTimestep" />
+		</kalypso.gmlProperty>
+
+		<echo message="Stunden Vorhersage: ${hoursofforecast}" />
+		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
+			<property name="stopsim" featurepath="/" featureProperty="startforecast" dateoffset="${hoursofforecast}" dateoffsetfield="HOUR_OF_DAY" />
+		</kalypso.gmlProperty>
+
+		<echo message="von           ${startsim}" />
+		<echo message="vorhersage ab ${startforecast}" />
+		<echo message="bis           ${stopsim}" />
+
+		<!-- correct times for filters -->
+		<script language="javascript">
+			intervalAmount = java.lang.Integer.parseInt(project.getProperty("interval.amount"));
+			startsimTime = javax.xml.bind.DatatypeConverter.parseDateTime( startsim );
+			startsimTime.add(java.util.Calendar.MINUTE, -intervalAmount);
+			project.setProperty("startsim", javax.xml.bind.DatatypeConverter.printDateTime( startsimTime ));
+			
+			startforecastTime = javax.xml.bind.DatatypeConverter.parseDateTime( startforecast );
+			startforecastTime.add(java.util.Calendar.MINUTE, 3*intervalAmount);
+			project.setProperty("startforecast", javax.xml.bind.DatatypeConverter.printDateTime( startforecastTime ));
+			
+			stopsimTime = javax.xml.bind.DatatypeConverter.parseDateTime( stopsim );
+			stopsimTime.add(java.util.Calendar.MINUTE, 3*intervalAmount);
+			project.setProperty("stopsim", javax.xml.bind.DatatypeConverter.printDateTime( stopsimTime ));
+		</script>
+
+		<echo message="Hole Zeitreihen ab ${startsim} bis ${startforecast}" />
+
+		<property name="interval.field" value="MINUTE" />
+
+		<echo message="interval.field:  ${interval.field}" />
+		<echo message="interval.amount: ${interval.amount}" />
+
+		<!-- define the filters -->
+		<!-- N: sum-filter -->
+		<property name="filterN" value="?&lt;filter&gt;&lt;intervallFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+		<!-- Q/W: interpolation-filter -->
+		<property name="filterWQ" value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+		<!-- T: intensity/average-filter -->
+		<!-- Temperatur wird als Tageswert benötigt,
+             der hydrologische Tag geht von 7 Uhr bis 7 Uhr, denn
+			 manuelle Pegel werden um 7 Uhr morgens abgelesen -->
+		<property name="intervalT.amount" value="24" />
+		<property name="intervalT.field" value="HOUR_OF_DAY" />
+		<!--
+        <property name="intervalT.start.value" value="7" /> 
+        <property name="intervalT.start.field" value="HOUR_OF_DAY" />
+		-->
+		<property name="filterT" value="?&lt;filter&gt;&lt;intervallFilter amount=&quot;${intervalT.amount}&quot; calendarField=&quot;${intervalT.field}&quot; mode=&quot;intensity&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+
+		<!-- die Filter im Klartext: 
+
+			filterN="?&lt;filter&gt;&lt;intervallFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" 
+			<filter>
+				<intervallFilter amount="minutesTimesteps" calendarField="MINUTE" mode="sum" xmlns="filters.zml.kalypso.org"/>
+			</filter>" 
+			
+			filterQ="?&lt;filter&gt;&lt;intervallFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; mode=&quot;intensity&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+			<filter>
+				<interpolationFilter amount="1" calendarField="HOUR_OF_DAY" defaultStatus="2" defaultValue="0.0" forceFill="true" xmlns="filters.zml.kalypso.org"/>
+			</filter>
+		 -->
+
+		<!--        <echo message="Filter Niederschlag: ${filterN}" />
+        <echo message="Filter Temperatur: ${filterT}" />
+        <echo message="Filter Pegel/Zufluss: ${filterWQ}" />-->
+
+	</target>
+
+	<target name="updateOmbrometer" depends="setProperties">
+		<!-- updateOmbrometer
+						ombrometer von Datacenter (oder lokal)-abholen						
+	     -->
+		<echo message="aktualisiere Ombrometer Zeitreihen im Rechenfall" />
+		<delete dir="${calc.dir}/Niederschlag" />
+		<mkdir dir="${calc.dir}/Niederschlag" />
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ombrometer.gml" featurePath="ombrometerMember" context="${calc.url}" targetobservationdir="${calc.dir}/Niederschlag" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="NRepository" from="${startsim}" to="${startforecast}" />
+		</kalypso.copyObservation>
+	</target>
+	<!--   filter="${filterN}" />-->
+	<!--Filter Zeitschritt!-->
+
+
+	<target name="updatePegelMessung" depends="setProperties">
+		<echo message="aktualisiere Pegel (Messung)" />
+		<delete dir="${calc.dir}/Pegel" />
+		<mkdir dir="${calc.dir}/Pegel" />
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ObsQMapping.gml" featurePath="mappingMember" context="${calc.url}" targetobservationdir="${calc.dir}/Pegel" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="inObservationLink" from="${startsim}" to="${startforecast}" />
+			<!--filter="${filterWQ}"             ohne Filter!!!-->
+			<!-- Vorhersage übernehmen -->
+			<source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
+		</kalypso.copyObservation>
+	</target>
+
+	<target name="updateZuflussMessung" depends="setProperties">
+		<echo message="aktualisiere Zufluesse (Messung)" />
+		<delete dir="${calc.dir}/Zufluss" />
+		<mkdir dir="${calc.dir}/Zufluss" />
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ObsQZuMapping.gml" featurePath="mappingMember" context="${calc.url}" targetobservationdir="${calc.dir}/Zufluss" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="inObservationLink" from="${startsim}" to="${startforecast}" />
+			<!--filter="${filterWQ}"             ohne Filter!!!-->
+			<!-- Vorhersage übernehmen -->
+			<source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
+		</kalypso.copyObservation>
+	</target>
+
+
+	<target name="updateObsT" depends="setProperties">
+		<echo message="aktualisiere Temperaturen (Messung)" />
+		<delete dir="${calc.dir}/Klima" />
+		<mkdir dir="${calc.dir}/Klima" />
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ObsTMapping.gml" featurePath="mappingMember" context="${calc.url}" targetobservationdir="${calc.dir}/Klima" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="inObservationLink" from="${startsim}" to="${startforecast}" />
+			<!-- Vorhersage übernehmen -->
+			<source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
+		</kalypso.copyObservation>
+	</target>
+	<!--  filter="${filterT}"-->
+
+	<target name="updateObsE" depends="setProperties">
+		<echo message="aktualisiere Verdunstung (Messung)" />
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ObsEMapping.gml" featurePath="mappingMember" context="${calc.url}" targetobservationdir="${calc.dir}/Klima" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="inObservationLink" from="${startsim}" to="${startforecast}" />
+			<!-- Vorhersage übernehmen -->
+			<source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
+		</kalypso.copyObservation>
+	</target>
+	<!--  filter="${filterT}"-->
+	<target name="updateAll" depends="updateOmbrometer,updatePegelMessung,updateObsT,updateObsE,updateZuflussMessung" description="Aktualisiert eine Rechenvariante">
+		<echo message="aktualisiere alle Zeitreihen: ${calc.dir}" />
+	</target>
+
+
+	<target name="update" depends="updateAll" description="Aktualisiert eine Rechenvariante">
+		<echo message="aktualisiere Zeitreihen: ${calc.dir}" />
+	</target>
+
+	<target name="setBasicModel" description="Ersetzt das Basismodell durch das Modell in der Rechenvariante">
+		<echo message="Rechenvariante als Basismodell übernehmen: ${calc.dir}" />
+
+		<copy file="${calc.dir}/calcCase.gml" tofile="${project.dir}/modell.gml" />
+		<eclipse.refreshLocal resource="${project.path}/modell.gml" depth="one" />
+		<!--
+        <copy file="${calc.dir}/calcHydrotop.gml" tofile="${project.dir}/hydrotop.gml" />
+        -->
+		
+		<copy file="${calc.dir}/calcParameter.gml" tofile="${project.dir}/parameter.gml" />
+		<eclipse.refreshLocal resource="${project.path}/parameter.gml" depth="one" />
+	</target>
+	<!--
+	    =================================
+	    target: runCalculation
+	    =================================
+	  -->
+    <target name="runCalculation" depends="setProperties" description="Führt die eigentliche Simulationsrechnung durch">
+        <echo message="Berechnung wird durchgeführt: ${calc.path}" />
+    	<kalypso.runCalculation calcCaseFolder="${calc.path}" typeid="KalypsoNA">
+            <input id="MetaSteuerdaten" path=".calculation" relativeToCalcCase="true"/>
+            <input id="Modell" path="calcCase.gml" relativeToCalcCase="true"/>
+            <input id="Control" path="expertControl.gml" relativeToCalcCase="true"/>
+            <input id="Hydrotop" path="calcHydrotop.gml" relativeToCalcCase="true"/>
+            <input id="Parameter" path="calcParameter.gml" relativeToCalcCase="true"/>
+
+            <input id="NiederschlagDir" path="Niederschlag" relativeToCalcCase="true"/>
+            <input id="KlimaDir" path="Klima" relativeToCalcCase="true"/>
+            <input id="ZuflussDir" path="Zufluss" relativeToCalcCase="true"/>
+            <input id="PegelDir" path="Pegel" relativeToCalcCase="true"/>
+            <input id="ErgebnisDir" path="Ergebnisse" relativeToCalcCase="true"/>
+            <input id="LZSIM_IN" path="Anfangswerte" relativeToCalcCase="true"/>   
+            
+            <output id="OUT_ZML" path="Ergebnisse" relativeToCalcCase="true"/>
+
+            <clearAfterCalc path="Ergebnisse/Aktuell" relativeToCalcCase="true" />
+        </kalypso.runCalculation>
+        <antcall target="copyResults" />
+    </target>
+        	
+    <!-- ================================= 
+          target: copyResults   copy results to timestamped dir             
+         ================================= -->
+    <target name="copyResults" description="Copies the results into a time-stamped folder.">
+        <tstamp>
+            <format property="now" pattern="yyyy.MM.dd_(HH_mm_ss)" />
+        </tstamp>
+        	
+        <property name="result.path" value="${calc.path}/Ergebnisse" />
+        <property name="result.dir" value="${calc.dir}/Ergebnisse" />
+        	
+        <property name="result.path.aktuell" value="${result.path}/Aktuell" />
+        <property name="result.dir.aktuell" value="${result.dir}/Aktuell" />
+
+        	<property name="result.dir.time" value="${result.dir}/${now}" />
+        <property name="result.path.time" value="${result.path}/${now}" />
+
+        <echo message="Writing copy of results to: ${result.path.time}" />
+        <copy todir="${result.dir.time}">
+            <fileset dir="${result.dir.aktuell}" includes="**/*" />
+        </copy>
+    </target>        	
+</project>
