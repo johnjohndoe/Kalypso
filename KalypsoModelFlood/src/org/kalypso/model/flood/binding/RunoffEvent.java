@@ -42,32 +42,35 @@ package org.kalypso.model.flood.binding;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Thomas Jung
  */
-public class RunoffEvent extends Feature_Impl implements IRunoffEvent
+public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
 {
-  private final FeatureBindingCollection<ITinReference> m_tinReferences;
+  private final FeatureWrapperCollection<ITinReference> m_tinReferences;
 
-  public RunoffEvent( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public RunoffEvent( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
-    m_tinReferences = new FeatureBindingCollection<>( this, ITinReference.class, QNAME_PROP_TIN_MEMBER );
+    super( featureToBind, IRunoffEvent.QNAME );
+
+    m_tinReferences = new FeatureWrapperCollection<ITinReference>( featureToBind, ITinReference.class, QNAME_PROP_TIN_MEMBER );
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#getResultCoverages()
+   */
   @Override
   public ICoverageCollection getResultCoverages( )
   {
-    final Feature coveragesFeature = (Feature) getProperty( QNAME_PROP_RESULT_COVERAGES );
+    final Feature coveragesFeature = (Feature) getFeature().getProperty( QNAME_PROP_RESULT_COVERAGES );
     if( coveragesFeature == null )
       return internal_createResultCoverages();
 
@@ -77,6 +80,8 @@ public class RunoffEvent extends Feature_Impl implements IRunoffEvent
   /**
    * Creates a new result collection and returns it.<br/>
    * If the result collection already exists, the existing one will be returned.
+   * 
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#createResultCoverages()
    */
   @Override
   public ICoverageCollection createResultCoverages( )
@@ -89,24 +94,30 @@ public class RunoffEvent extends Feature_Impl implements IRunoffEvent
 
   private ICoverageCollection internal_createResultCoverages( )
   {
-    final IRelationType relationType = (IRelationType) getFeatureType().getProperty( QNAME_PROP_RESULT_COVERAGES );
-    final GMLWorkspace workspace = getWorkspace();
-    final Feature newFeature = workspace.createFeature( this, relationType, relationType.getTargetFeatureType() );
+    final IRelationType relationType = (IRelationType) getFeature().getFeatureType().getProperty( QNAME_PROP_RESULT_COVERAGES );
+    final GMLWorkspace workspace = getFeature().getWorkspace();
+    final Feature newFeature = workspace.createFeature( getFeature(), relationType, relationType.getTargetFeatureType() );
     final ICoverageCollection newCollection = (ICoverageCollection) newFeature.getAdapter( ICoverageCollection.class );
     setResultCoverages( newCollection );
     return newCollection;
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#getTins()
+   */
   @Override
-  public IFeatureBindingCollection<ITinReference> getTins( )
+  public IFeatureWrapperCollection<ITinReference> getTins( )
   {
     return m_tinReferences;
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#getDataPath()
+   */
   @Override
   public IPath getDataPath( )
   {
-    final String path = (String) getProperty( QNAME_PROP_DATAPATH );
+    final String path = (String) getFeature().getProperty( QNAME_PROP_DATAPATH );
     if( path == null )
       return null;
 
@@ -116,37 +127,52 @@ public class RunoffEvent extends Feature_Impl implements IRunoffEvent
   @Override
   public void setDataPath( final IPath path )
   {
-    setProperty( QNAME_PROP_DATAPATH, path.toPortableString() );
+    getFeature().setProperty( QNAME_PROP_DATAPATH, path.toPortableString() );
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#setResultCoverages(org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection)
+   */
   @Override
   public void setResultCoverages( final ICoverageCollection collection )
   {
-    setProperty( QNAME_PROP_RESULT_COVERAGES, collection );
+    getFeature().setProperty( QNAME_PROP_RESULT_COVERAGES, collection );
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#isMarkedForProcess()
+   */
   @Override
   public boolean isMarkedForProcessing( )
   {
-    final Boolean value = (Boolean) getProperty( QNAME_PROP_MARKEDFORPROCESSING );
+    final Boolean value = (Boolean) getFeature().getProperty( QNAME_PROP_MARKEDFORPROCESSING );
     return value == null ? false : value.booleanValue();
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#setMarkedForProcess(boolean)
+   */
   @Override
   public void setMarkedForProcessing( final boolean value )
   {
-    setProperty( QNAME_PROP_MARKEDFORPROCESSING, value );
+    getFeature().setProperty( QNAME_PROP_MARKEDFORPROCESSING, value );
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#getReturnPeriod()
+   */
   @Override
   public Integer getReturnPeriod( )
   {
-    return (Integer) getProperty( QNAME_PROP_RETURN_PERIOD );
+    return (Integer) getFeature().getProperty( QNAME_PROP_RETURN_PERIOD );
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#setReturnPeriod(java.lang.Integer)
+   */
   @Override
   public void setReturnPeriod( final Integer value )
   {
-    setProperty( QNAME_PROP_RETURN_PERIOD, value );
+    getFeature().setProperty( QNAME_PROP_RETURN_PERIOD, value );
   }
 }

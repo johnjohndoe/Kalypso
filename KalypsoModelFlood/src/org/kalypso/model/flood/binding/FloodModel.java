@@ -41,44 +41,56 @@
 package org.kalypso.model.flood.binding;
 
 import org.kalypso.afgui.model.UnversionedModel;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * @author Thomas Jung
  */
 public class FloodModel extends UnversionedModel implements IFloodModel
 {
-  private final IFeatureBindingCollection<IFloodPolygon> m_polygones;
+  private final FeatureWrapperCollection<IFloodPolygon> m_polygones;
 
-  private final IFeatureBindingCollection<IRunoffEvent> m_events;
+  private final ICoverageCollection m_coverages;
 
-  public FloodModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  private final FeatureWrapperCollection<IRunoffEvent> m_events;
+
+  public FloodModel( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
-    m_polygones = new FeatureBindingCollection<>( this, IFloodPolygon.class, QNAME_PROP_POLYGONE_MEMBER );
-    m_events = new FeatureBindingCollection<>( this, IRunoffEvent.class, QNAME_PROP_EVENT_MEMBER );
+    super( featureToBind, QNAME );
+
+    m_polygones = new FeatureWrapperCollection<IFloodPolygon>( featureToBind, IFloodPolygon.class, QNAME_PROP_POLYGONE_MEMBER );
+    m_events = new FeatureWrapperCollection<IRunoffEvent>( featureToBind, IRunoffEvent.class, QNAME_PROP_EVENT_MEMBER );
+
+    final Feature coveragesFeature = (Feature) getFeature().getProperty( QNAME_PROP_COVERAGES_MEMBER );
+    m_coverages = (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class );
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IFloodModel#getPolygons()
+   */
   @Override
-  public IFeatureBindingCollection<IFloodPolygon> getPolygons( )
+  public IFeatureWrapperCollection<IFloodPolygon> getPolygons( )
   {
     return m_polygones;
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IFloodModel#getTerrainModel()
+   */
   @Override
   public ICoverageCollection getTerrainModel( )
   {
-    final Feature coveragesFeature = (Feature) getProperty( QNAME_PROP_COVERAGES_MEMBER );
-    return (ICoverageCollection) coveragesFeature;
+    return m_coverages;
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IFloodModel#getEvents()
+   */
   @Override
-  public IFeatureBindingCollection<IRunoffEvent> getEvents( )
+  public IFeatureWrapperCollection<IRunoffEvent> getEvents( )
   {
     return m_events;
   }

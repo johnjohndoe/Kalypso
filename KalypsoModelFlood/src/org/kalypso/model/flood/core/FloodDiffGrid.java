@@ -42,17 +42,19 @@ package org.kalypso.model.flood.core;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
-import org.kalypso.grid.parallel.SequentialBinaryGeoGridReader;
+import org.kalypso.grid.ParallelBinaryGridProcessorBean;
+import org.kalypso.grid.SequentialBinaryGeoGridReader;
 import org.kalypso.model.flood.binding.IFloodClipPolygon;
 import org.kalypso.model.flood.binding.IFloodExtrapolationPolygon;
 import org.kalypso.model.flood.binding.IFloodPolygon;
@@ -61,15 +63,12 @@ import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
-import org.kalypso.transformation.transformer.JTSTransformer;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -79,23 +78,39 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 {
-  private final IFeatureBindingCollection<ITinReference> m_tins;
+  class FloodBean extends ParallelBinaryGridProcessorBean
+  {
+    public FloodBean( final int blockSize )
+    {
+      super( blockSize );
+    }
 
-  private final IFeatureBindingCollection<IFloodPolygon> m_polygons;
+    public GM_Triangle m_triangle = null;
+  }
 
-  private final Map<IFloodExtrapolationPolygon, Double> m_polygonWsps = new HashMap<>();
+  private final IFeatureWrapperCollection<ITinReference> m_tins;
 
-  private double m_min;
+  private final IFeatureWrapperCollection<IFloodPolygon> m_polygons;
 
-  private double m_max;
+  private final Map<IFloodExtrapolationPolygon, Double> m_polygonWsps = new HashMap<IFloodExtrapolationPolygon, Double>();
+
+  private BigDecimal m_min;
+
+  private BigDecimal m_max;
+
+  // private GM_Triangle m_triangle;
 
   private final IRunoffEvent m_event;
 
-  private final JTSTransformer m_gridToPolygonTransformer;
+  private int m_sizeX;
 
-  private final JTSTransformer m_polygonToGridTransformer;
+  @Override
+  protected ParallelBinaryGridProcessorBean createNewBean( )
+  {
+    return new FloodBean( BLOCK_SIZE );
+  }
 
-  public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ITinReference> tins, final IFeatureBindingCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException, GeoGridException
+  public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureWrapperCollection<ITinReference> tins, final IFeatureWrapperCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException
   {
     super( inputGrid, pUrl );
 
@@ -103,45 +118,26 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     m_polygons = polygons;
     m_event = event;
 
-    // REMARK: we assume that the polygons are in the kalypso srs
-    final String polygonSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    final String gridSRS = getSourceCRS();
-
-    m_min = Double.MAX_VALUE;
-    m_max = -Double.MAX_VALUE;
-
     try
     {
-      m_gridToPolygonTransformer = new JTSTransformer( gridSRS, polygonSRS );
-      m_polygonToGridTransformer = new JTSTransformer( polygonSRS, gridSRS );
+      m_sizeX = getDelegate().getSizeX();
     }
-    catch( final FactoryException e )
+    catch( final GeoGridException e )
     {
-      throw new GeoGridException( "Failed to initialize geo transformers", e ); //$NON-NLS-1$
+      e.printStackTrace();
     }
+
+    m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
   }
 
-  @Override
-  protected double getValue( final int x, final int y, final Coordinate crd ) throws GeoGridException
+  private double getValueInternal( final int x, final int y, final int z, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
   {
-    final double z = crd.z;
-    if( Double.isNaN( z ) )
-      return z;
+    final BigDecimal decimal = new BigDecimal( BigInteger.valueOf( z ), m_scale );
+    final double terrainValue = decimal.doubleValue();
 
-    final double value = getValueInternal( x, y, z );
+    // final double terrainValue = super.getValue( x, y );
 
-    /* update min/max */
-    if( !Double.isNaN( value ) )
-    {
-      m_min = Math.min( m_min, value );
-      m_max = Math.max( m_max, value );
-    }
-
-    return value;
-  }
-
-  private double getValueInternal( final int x, final int y, final double terrainValue ) throws GeoGridException
-  {
     if( Double.isNaN( terrainValue ) )
       return Double.NaN;
 
@@ -149,7 +145,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     final Coordinate crd = GeoGridUtilities.calcCoordinateWithoutZ( this, x, y, terrainValue, null );
 
     /* get the wsp value */
-    final double wspValue = getWspValue( crd );
+    final double wspValue = getWspValue( crd, (FloodBean) bean );
 
     /* check polygon stuff */
     // get the polygons
@@ -161,11 +157,14 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     if( containsClipPolygons( polygons ) == true )
       return Double.NaN;
 
+    //    if( !Double.isNaN( wspValue ) )
+    //      return wspValue - terrainValue;
+
     /* - if extrapolation: getExtrapolationsvalue */
     final IFloodExtrapolationPolygon extrapolPolygon = getExtrapolPolygons( polygons );
     if( extrapolPolygon != null )
     {
-      final double extrapolValue = getExtrapolValue( extrapolPolygon );
+      final double extrapolValue = getExtrapolValue( extrapolPolygon, bean );
       return extrapolValue - terrainValue;
     }
 
@@ -185,7 +184,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     return wspValue - terrainValue;
   }
 
-  private double getWspValue( final Coordinate crd )
+  private double getWspValue( final Coordinate crd, final FloodBean bean ) throws GeoGridException
   {
     final GM_Position pos = JTSAdapter.wrap( crd );
 
@@ -197,14 +196,28 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
       {
         final String tinCRS = tinReference.getTin().getCoordinateSystem();
         final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( tinCRS );
-        final GM_Point transformedPoint = (GM_Point)transformer.transform( point );
+        final GM_Point transformedPoint = (GM_Point) transformer.transform( point );
         final GM_Position transPos = transformedPoint.getPosition();
 
-        final double wspValue = tinReference.getValue( transPos );
-        if( !Double.isNaN( wspValue ) )
-          return wspValue;
-      }
+        // we remember the last found triangle...
 
+        if( bean.m_triangle != null && bean.m_triangle.contains( transPos ) == true )
+        {
+          final double wspValue = bean.m_triangle.getValue( transPos );
+          if( !Double.isNaN( wspValue ) )
+            return wspValue;
+        }
+        else
+        {
+          bean.m_triangle = tinReference.getTraingle( transPos );
+          if( bean.m_triangle != null )
+          {
+            final double wspValue = bean.m_triangle.getValue( transPos );
+            if( !Double.isNaN( wspValue ) )
+              return wspValue;
+          }
+        }
+      }
       return Double.NaN;
     }
     catch( final Exception e )
@@ -214,7 +227,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     }
   }
 
-  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon ) throws GeoGridException
+  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
   {
     // REMARK: hash for each polygon its wsp, to we do not need to recalculate it each time
     if( m_polygonWsps.containsKey( polygon ) )
@@ -224,25 +237,15 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     if( refPoint == null )
       return Double.NaN;
 
-    try
-    {
-      final GM_Position position = refPoint.getPosition();
+    final GM_Position position = refPoint.getPosition();
+    final Coordinate crd = JTSAdapter.export( position );
 
-      final Coordinate crd = JTSAdapter.export( position );
+    // get wsp value
+    final double wspValue = getWspValue( crd, (FloodBean) bean );
 
-      final Coordinate gridCrd = m_polygonToGridTransformer.transform( crd );
+    m_polygonWsps.put( polygon, wspValue );
 
-      // get wsp value
-      final double wspValue = getWspValue( gridCrd );
-
-      m_polygonWsps.put( polygon, wspValue );
-
-      return wspValue;
-    }
-    catch( final TransformException e )
-    {
-      throw new GeoGridException( "Failed to transform polygons to srs of grid", e ); //$NON-NLS-1$
-    }
+    return wspValue;
   }
 
   private IFloodExtrapolationPolygon getExtrapolPolygons( final List<IFloodPolygon> polygons )
@@ -250,7 +253,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     for( final IFloodPolygon floodPolygon : polygons )
     {
       if( floodPolygon instanceof IFloodExtrapolationPolygon )
-        return (IFloodExtrapolationPolygon)floodPolygon;
+        return (IFloodExtrapolationPolygon) floodPolygon;
     }
     return null;
   }
@@ -260,7 +263,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     for( final IFloodPolygon floodPolygon : polygons )
     {
       if( floodPolygon instanceof IFloodVolumePolygon )
-        return (IFloodVolumePolygon)floodPolygon;
+        return (IFloodVolumePolygon) floodPolygon;
     }
     return null;
   }
@@ -275,43 +278,91 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     return false;
   }
 
-  private List<IFloodPolygon> getPolygons( final Coordinate crd ) throws GeoGridException
+  private List<IFloodPolygon> getPolygons( final Coordinate crd )
   {
-    try
+    final GM_Position pos = JTSAdapter.wrap( crd );
+
+    final List<IFloodPolygon> list = m_polygons.query( pos );
+    final List<IFloodPolygon> polygonList = new LinkedList<IFloodPolygon>();
+
+    if( list == null || list.size() == 0 )
+      return polygonList;
+    else
     {
-      // REMARK: must transform to srs of polyogons
-      final Coordinate polygonCrd = m_gridToPolygonTransformer.transform( crd );
-      final GM_Position polygonPos = GeometryFactory.createGM_Position( polygonCrd.x, polygonCrd.y );
-
-      final List<IFloodPolygon> list = m_polygons.query( polygonPos );
-
-      if( list == null || list.size() == 0 )
-        return Collections.emptyList();
-
-      final List<IFloodPolygon> polygonList = new LinkedList<>();
       for( final IFloodPolygon polygon : list )
       {
-        if( polygon.contains( polygonPos ) && polygon.getEvents().contains( m_event ) )
+        if( polygon.contains( pos ) && polygon.getEvents().contains( m_event ) )
           polygonList.add( polygon );
       }
+    }
 
-      return polygonList;
-    }
-    catch( final TransformException e )
-    {
-      throw new GeoGridException( "Failed to transform grid position to srs of polygons", e ); //$NON-NLS-1$
-    }
+    return polygonList;
   }
 
   @Override
   public BigDecimal getMin( )
   {
-    return new BigDecimal( m_min ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    return m_min;
   }
 
   @Override
   public BigDecimal getMax( )
   {
-    return new BigDecimal( m_max ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    return m_max;
   }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
+   */
+  @Override
+  public void setMax( final BigDecimal maxValue )
+  {
+    if( maxValue != null )
+      m_max = maxValue;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
+   */
+  @Override
+  public void setMin( final BigDecimal minValue )
+  {
+    if( minValue != null )
+      m_min = minValue;
+  }
+
+  /**
+   * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
+   */
+  @Override
+  public double getValue( final int k, final ParallelBinaryGridProcessorBean bean )
+  {
+    final int x = k % m_sizeX;
+    final int y = k / m_sizeX + bean.m_startPosY;
+
+    double value;
+    try
+    {
+      // convert 4 bytes to integer
+      final int z = ByteUtils.readBEInt( bean.m_blockData, k * 4 );
+
+      if( z == Integer.MIN_VALUE /* NO_DATA */)
+        return Double.NaN;
+      value = getValueInternal( x, y, z, bean );
+    }
+    catch( final GeoGridException e )
+    {
+      e.printStackTrace();
+      return Double.NaN;
+    }
+    if( Double.isNaN( value ) )
+      return Double.NaN;
+
+    /* check min/max */
+    m_min = m_min.min( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+    m_max = m_max.max( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+
+    return value;
+  }
+
 }

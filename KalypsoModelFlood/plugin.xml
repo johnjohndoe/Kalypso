@@ -29,45 +29,40 @@
             name="%org.kalypso.model.flood.workflow">
       </workflowSystem>
    </extension>
-   
-   <!-- Workflow -->
-   <extension point="org.eclipse.ui.commands">
-      <category id="org.kalypso.model.flood.workflow" name="Flood Workflow commands"/>
-      <command id="org.kalypso.model.flood.DataLoad" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.DataLoad.name" description="%org.kalypso.model.flood.DataLoad.description" />
-      <command id="org.kalypso.model.flood.ManageWaterlevelData" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.ManageWaterlevelData.name" description="%org.kalypso.model.flood.ManageWaterlevelData.description" />
-      <command id="org.kalypso.model.flood.ManageDTMData" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.ManageDTMData.name" description="%org.kalypso.model.flood.ManageDTMData.description" />
-      <command id="org.kalypso.model.flood.PolygonEditing" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.PolygonEditing.name" description="%org.kalypso.model.flood.PolygonEditing.description" />
-      <command id="org.kalypso.model.flood.ProcessFloodModel" categoryId="org.kalypso.model.flood.workflow"  name="%org.kalypso.model.flood.ProcessFloodModel.name" description="%org.kalypso.model.flood.ProcessFloodModel.description"/>
-      <command id="org.kalypso.model.flood.Postprocessing" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.Postprocessing.name" description="%org.kalypso.model.flood.Postprocessing.description"/>
-      <command id="org.kalypso.model.flood.VisualizeDepthData" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.VisualizeDepthData.name" description="%org.kalypso.model.flood.VisualizeDepthData.description"/>
-      <command id="org.kalypso.model.flood.GenerateRiskModel" categoryId="org.kalypso.model.flood.workflow" name="%org.kalypso.model.flood.GenerateRiskModel.name" description="%org.kalypso.model.flood.GenerateRiskModel.description"/>
-   </extension>
-   
-   <extension point="org.eclipse.ui.commandImages">
-   
-      <image commandId="org.kalypso.model.flood.DataLoad" icon="icons/workflow/DataLoad.gif"/>
-      <image commandId="org.kalypso.model.flood.ManageWaterlevelData" icon="icons/workflow/ManageWaterlevelData.gif"/>
-      <image commandId="org.kalypso.model.flood.ManageDTMData" icon="icons/workflow/ManageDTMData.gif"/>
-      <image commandId="org.kalypso.model.flood.PolygonEditing" icon="icons/workflow/PolygonEditing.gif"/>
-      <image commandId="org.kalypso.model.flood.ProcessFloodModel" icon="icons/workflow/ProcessFloodModel.gif"/>
-      <image commandId="org.kalypso.model.flood.Postprocessing" icon="icons/workflow/Postprocessing.png"/>
-      <image commandId="org.kalypso.model.flood.VisualizeDepthData" icon="icons/workflow/VisualizeDepthData.gif"/>
-      <image commandId="org.kalypso.model.flood.GenerateRiskModel" icon="icons/workflow/GenerateRiskModel.gif"/>
-   </extension>
-   
-   <extension point="org.eclipse.ui.handlers">
+   <extension
+         point="org.eclipse.ui.handlers">
 
       <!-- Handler for workflow.xml: non-existing commandId is ok here --> 
-      <handler commandId="org.kalypso.model.flood.ManageWaterlevelData">
-         <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-            <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.model.flood.ui.map.EventManagementWidget"/>
+      <handler
+            commandId="org.kalypso.model.flood.ManageWaterlevelData">
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.EventManagementWidget">
+            </parameter>
          </class>
       </handler>
-      <handler class="org.kalypso.model.flood.handlers.VisualizeGridDataHandler" commandId="org.kalypso.model.flood.ManageDTMData"/>
-      <handler class="org.kalypso.model.flood.handlers.PolygonEditingHandler" commandId="org.kalypso.model.flood.PolygonEditing"/>
-      <handler class="org.kalypso.model.flood.handlers.ProcessFloodModelHandler" commandId="org.kalypso.model.flood.ProcessFloodModel"/>
-      <handler class="org.kalypso.model.flood.handlers.VisualizeDepthDataHandler" commandId="org.kalypso.model.flood.VisualizeDepthData"/>
-      <handler class="org.kalypso.model.flood.handlers.GenerateRiskModelHandler" commandId="org.kalypso.model.flood.GenerateRiskModel"/>
+      <handler
+            class="org.kalypso.model.flood.handlers.VisualizeGridDataHandler"
+            commandId="org.kalypso.model.flood.ManageDTMData">
+      </handler>
+      <handler
+            class="org.kalypso.model.flood.handlers.PolygonEditingHandler"
+            commandId="org.kalypso.model.flood.PolygonEditing">
+      </handler>
+      <handler
+            class="org.kalypso.model.flood.handlers.ProcessFloodModelHandler"
+            commandId="org.kalypso.model.flood.ProcessFloodModel">
+      </handler>
+      <handler
+            class="org.kalypso.model.flood.handlers.VisualizeDepthDataHandler"
+            commandId="org.kalypso.model.flood.VisualizeDepthData">
+      </handler>
+      <handler
+            class="org.kalypso.model.flood.handlers.GenerateRiskModelHandler"
+            commandId="org.kalypso.model.flood.GenerateRiskModel">
+      </handler>
 
       <!-- Flood-Polygons -->
       <handler
@@ -155,6 +150,36 @@
                modelPath="models/flood.gml">
          </scenarioDatum>
       </dataSet>
+   </extension>
+   <extension
+       id="org.kalypso.core.adapters"
+       name="KalypsoFlood adapter factory"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.model.flood.binding.KalypsoFloodAdapterFactory">
+         <adapter
+               type="org.kalypso.model.flood.binding.IFloodModel">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.IFloodPolygon">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.IFloodExtrapolationPolygon">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.IFloodClipPolygon">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.IFloodVolumePolygon">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.IRunoffEvent">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.ITinReference">
+         </adapter>
+      </factory>
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
@@ -254,6 +279,7 @@
       <category
             id="org.kalypso.model.flood.newwizard"
             name="%org.kalypso.model.flood.newwizard"
+            description= "%org.kalypso.model.flood.newwizard.description"
             parentCategory="org.kalypso.ui.newwizards.kalypso">
       </category>
       <wizard
@@ -318,32 +344,5 @@
         <image commandId="org.kalypso.model.flood.command.createExtrapolationPolygon" icon="icons/elcl16/create_flood_polygon_extrapolation.gif"/>
         <image commandId="org.kalypso.model.flood.command.createClipPolygon" icon="icons/elcl16/create_flood_polygon_clip.gif"/>
         <image commandId="org.kalypso.model.flood.command.createVolumePolygon" icon="icons/elcl16/create_flood_polygon_volume.gif"/>
-     </extension>
-     <extension
-           point="org.kalypso.deegree.featureBinding">
-        <feature
-              class="org.kalypso.model.flood.binding.FloodClipPolygon"
-              qname="{org.kalypso.model.flood}FloodClipPolygon">
-        </feature>
-        <feature
-              class="org.kalypso.model.flood.binding.FloodExtrapolationPolygon"
-              qname="{org.kalypso.model.flood}FloodExtrapolationPolygon">
-        </feature>
-        <feature
-              class="org.kalypso.model.flood.binding.FloodVolumePolygon"
-              qname="{org.kalypso.model.flood}FloodVolumePolygon">
-        </feature>
-        <feature
-              class="org.kalypso.model.flood.binding.FloodModel"
-              qname="{org.kalypso.model.flood}FloodModel">
-        </feature>
-        <feature
-              class="org.kalypso.model.flood.binding.RunoffEvent"
-              qname="{org.kalypso.model.flood}RunoffEvent">
-        </feature>
-        <feature
-              class="org.kalypso.model.flood.binding.TinReference"
-              qname="{org.kalypso.model.flood}TinReference">
-        </feature>
      </extension>
 </plugin>

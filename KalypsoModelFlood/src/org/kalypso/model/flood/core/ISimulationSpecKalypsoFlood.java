@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.core;
 
+import org.apache.commons.lang.NotImplementedException;
 
 /**
  * @author Dejan Antanaskovic
@@ -66,7 +67,7 @@ public interface ISimulationSpecKalypsoFlood
         case EVENTS_BASE_FOLDER:
           return "events"; //$NON-NLS-1$
         default:
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
       }
     }
   }

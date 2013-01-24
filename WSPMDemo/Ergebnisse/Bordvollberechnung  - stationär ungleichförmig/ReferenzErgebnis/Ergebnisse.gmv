@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns0:gistreeview xmlns:ns0="gistreeview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <ns0:input id="qIntervallResults.gml" featureXPath="id( 'root' )/{org.kalypso.model.wspm.tuhh}resultMember" featurePath="" linktype="gml" xlink:type="simple" xlink:href="Daten/qIntervallResults.gml"/>
-</ns0:gistreeview>
-

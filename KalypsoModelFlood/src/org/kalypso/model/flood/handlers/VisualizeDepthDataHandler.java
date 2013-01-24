@@ -3,23 +3,28 @@ package org.kalypso.model.flood.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
+import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.model.flood.i18n.Messages;
+import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
-import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
 
-public class VisualizeDepthDataHandler extends AbstractHandler
+public class VisualizeDepthDataHandler extends AbstractHandler implements IHandler
 {
+
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -49,7 +54,7 @@ public class VisualizeDepthDataHandler extends AbstractHandler
     if( mapModell != null )
     {
       // get "Wasserspiegellagen" cascading theme
-      final IKalypsoCascadingTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.3" ), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.3" ), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
       if( wspTheme != null )
       {
         mapModell.activateTheme( wspTheme );

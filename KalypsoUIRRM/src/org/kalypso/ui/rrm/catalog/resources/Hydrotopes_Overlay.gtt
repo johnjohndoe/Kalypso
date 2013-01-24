@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rrmHydo="http://sourceforge.kalypso.org/schemata/hydrology/hydrotopeOverlay" >
-  <layer id="id" featurePath="elementMembers" linktype="gml" xlink:type="simple" xlink:href=".models/overlay.gml" xlink:actuate="onRequest">
-    <column name="gml:name" editable="false" width="100" alignment="SWT.LEFT"/>
-    <column name="gml:description" editable="false" width="300" alignment="SWT.LEFT"/>
-    <column name="rrmHydo:lnkDefinition" editable="false" width="200" alignment="SWT.LEFT"/>
-    <sort propertyName="name" inverse="false"/>
-  </layer>
-</gistableview>

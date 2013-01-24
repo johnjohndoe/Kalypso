@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org">
-    <layer featurePath="NodeCollectionMember/nodeMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column editable="false" name="num" width="100"/>
-        <column editable="true" name="generateResult" width="100"/>
-        <column editable="true" name="name" width="100"/>
-    </layer>
-</gistableview>
-

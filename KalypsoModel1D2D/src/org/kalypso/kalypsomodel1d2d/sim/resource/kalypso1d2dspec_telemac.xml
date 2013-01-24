@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="org.kalypso.model1d2d.telemac">
-	<input id="simulationPathTelemac" type="xs:string"
-		description="the working directory of the simulation" />
-	<input id="calcCoreExeTelemac" type="xs:string" description="Telemac calculation core execution string executable" optional="true" />
-
-	<output id="resultsTelemac" type="xs:anyURI" description="Telemac-result directory" />
-</modelspec>
- 
