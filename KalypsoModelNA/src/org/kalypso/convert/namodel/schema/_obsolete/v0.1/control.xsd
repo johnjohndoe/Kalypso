@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.na.control" version="0.1" xmlns:na="org.kalypso.na.control" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<element name="NAControl" type="na:_NAControlType"/>
+	<complexType name="_NAControlBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="_NAControlType">
+		<complexContent>
+			<extension base="na:_NAControlBaseType">
+                <sequence>
+                    <element name="startsimulation" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Start der Simulation</label>
+								<tooltip>Startzeitpunkt der Modellrechung</tooltip>
+								<description></description>
+							</documentation>
+						</annotation>
+                    </element>
+                    <element name="startforecast" type="dateTime">
+   						<annotation>
+							<documentation xml:lang="de">
+								<label>Start der Vorhersage</label>
+								<tooltip>Startzeitpunkt der Vorhersagerechnung</tooltip>
+								<description></description>
+							</documentation>
+						</annotation>
+                    </element>
+                    <element name="editor" type="string">
+   						<annotation>
+							<documentation xml:lang="de">
+								<label>Ersteller</label>
+								<tooltip>Name des Erstellers</tooltip>
+								<description></description>
+							</documentation>
+						</annotation>
+                    </element>
+                    <element name="description" type="string">
+   						<annotation>
+							<documentation xml:lang="de">
+								<label>Beschreibung</label>
+								<tooltip>Kurzbeschreibung dieses Rechenfalls</tooltip>
+								<description></description>
+							</documentation>
+						</annotation>
+                    </element>
+                    <element name="comment" type="string">
+   						<annotation>
+							<documentation xml:lang="de">
+								<label>Kommentar</label>
+								<tooltip>Langbeschreibung dieses Rechenfalls</tooltip>
+								<description></description>
+							</documentation>
+						</annotation>
+                    </element>
+                    <element name="calctime" type="dateTime">
+                       	<annotation>
+							<documentation xml:lang="de">
+								<label>Erstellungszeitpunkt</label>
+								<tooltip>Zeitpunkt der Erstellung des Rechenfalls</tooltip>
+								<description></description>
+							</documentation>
+						</annotation>
+                    </element>
+                </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

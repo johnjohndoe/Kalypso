@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
+<schema xmlns:ini="http://www.tuhh.de/initialValues" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org"
+  xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/initialValues" elementFormDefault="qualified" version="0.8">
+
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="obslink.zml.kalypso.org" />
+  <import namespace="inline.zml.kalypso.org" />
+
+  <element name="InitialValues" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="iniDate" type="dateTime" />
+            <element name="catchmentMember" type="ini:CatchmentAssociationType" minOccurs="0" maxOccurs="unbounded" />
+            <element name="channelMember" type="ini:ChannelAssociationType" minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <!--___Catchment_________________________________________________ -->
+  <complexType name="CatchmentAssociationType">
+    <sequence>
+      <element ref="ini:Catchment" />
+    </sequence>
+  </complexType>
+
+  <element name="Catchment" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="featureId" type="string" />
+            <element name="geometry" type="gml:PolygonPropertyType" minOccurs="0" />
+            <element name="h" type="double" />
+            <!--TODO:Ist dies der wassergehalt? -->
+            <element name="ws" type="double" />
+            <element name="hgws" type="double" />
+            <element name="qb" type="double" />
+            <element name="hyd" type="ini:bofAssociationType" maxOccurs="unbounded" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <!--___Channel_________________________________________________ -->
+  <complexType name="ChannelAssociationType">
+    <sequence>
+      <element ref="ini:Channel" />
+    </sequence>
+  </complexType>
+
+  <element name="Channel" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="featureId" type="string" />
+            <element name="geometry" type="gml:LineStringPropertyType" minOccurs="0" />
+            <element name="qgs" type="double" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <complexType name="bofAssociationType">
+    <sequence>
+      <element ref="ini:IniHyd" />
+    </sequence>
+  </complexType>
+
+  <element name="IniHyd" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="featureId" type="string" />
+            <element name="bi" type="double" />
+            <element name="bofs" type="double" maxOccurs="10" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+</schema>
