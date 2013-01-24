@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapv:gismapview  xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ns11="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org">
+    <mapv:translator id="commons.msgGetString">
+        <class>org.kalypso.model.wspm.tuhh.core:org.kalypso.model.wspm.tuhh.core.i18n.MapMessages</class>
+    </mapv:translator>
+    <mapv:layers active="ID_2">
+        <mapv:layer visible="true" name="%resultmap.layer.simplified_flood_points" id="ID_4" featurePath="#fid#root/wspPointMember[WspPoint]" linktype="gml" xlink:type="simple" xlink:href="Daten/Überschwemmungslinie.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="%resultmap.layer.simplified_model_border_points" id="ID_6" featurePath="#fid#root/wspPointMember[WspPoint]" linktype="gml" xlink:type="simple" xlink:href="Daten/Modellgrenzen.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="true" name="%resultmap.layer.profiles" id="ID_2" featurePath="%FID%/reachSegmentMember[ProfileReachSegmentWspmTuhhSteadyState]" linktype="gml" xlink:type="simple" xlink:href="../../../modell.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="true" name="%resultmap.layer.simplified.flood_line" id="ID_5" featurePath="#fid#root" linktype="gml" xlink:type="simple" xlink:href="Daten/Überschwemmungslinie.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="%resultmap.layer.simplified_model_border_line" id="ID_7" featurePath="#fid#root" linktype="gml" xlink:type="simple" xlink:href="Daten/Modellgrenzen.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="Triangulierter Wasserpiegel" featurePath="#fid#root" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="Daten/WspTin.gml" xlink:type="simple">
+            <templ:style linktype="sld" xlink:actuate="onRequest" xlink:href="Daten/WspTin.sld" xlink:type="simple"/>
+        </mapv:layer>
+        <!-- TODO: reference a composite-layer of background data (user editable) and move this map into the code -->
+    </mapv:layers>
+</mapv:gismapview>
