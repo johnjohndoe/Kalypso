@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.model.rcm.v2" version="2" xmlns:rcm="org.kalypso.model.rcm.v2" xmlns:gml="http://www.opengis.net/gml" xmlns:filter="org.kalypso.zml.core.filter" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <annotation>
+    <documentation xml:lang="en"><![CDATA[Rainfall Catchment Model.<br>
+A general approach to generate rainfall for catchment areas.]]>
+    </documentation>
+  </annotation>
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="org.kalypso.zml.core.filter" />
+
+  <element name="RainfallCatchmentModel" type="rcm:RainfallCatchmentModelType" substitutionGroup="gml:_Feature">
+    <annotation>
+      <documentation xml:lang="en"><![CDATA[The rainfall generationdefines how to generate the rainfall for a set of catchments. I.e. it defines how to generate
+a timeseries for each catchment area.]]></documentation>
+    </annotation>
+  </element>
+  <complexType name="RainfallCatchmentModelType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="info" type="string" minOccurs="0"></element>
+          <element name="log" type="anyURI" minOccurs="0"></element>
+          <element name="targetMember" type="rcm:TargetPropertyType" minOccurs="0"></element>
+          <element name="metadataMember" type="rcm:MetadataPropertyType" minOccurs="0" maxOccurs="unbounded"></element>
+          <element name="generatorMember" type="rcm:RainfallGeneratorPropertyType" minOccurs="1" maxOccurs="unbounded"></element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="TargetPropertyType">
+    <sequence minOccurs="0">
+      <element ref="rcm:Target" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+
+  <element name="Target" substitutionGroup="gml:_Feature">
+    <annotation>
+      <documentation xml:lang="en"><![CDATA[This element represents one abstract possibility to generate rainfall for catchments. A generator must be able to return a timeserie for any given area (defined by a polygon geometry).]]></documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="catchments" type="gml:FeaturePropertyType"></element>
+            <element name="featurePath" type="string"></element>
+
+            <element name="observationPath" type="string" minOccurs="0"></element>
+            <!-- FIXME: use gml filter instead here -->
+            <element name="filter" type="string" minOccurs="0"></element>
+            <!-- TODO: would be nice to use TimePeriodPropertyType here -->
+            <element name="period" type="rcm:DateRangePropertyType" minOccurs="0">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[The time interval for which to create rainfall from this generator.]]></documentation>
+              </annotation>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <complexType name="RainfallGeneratorPropertyType">
+    <sequence minOccurs="0">
+      <element ref="rcm:RainfallGenerator" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+
+  <element name="RainfallGenerator" type="rcm:RainfallGeneratorType" substitutionGroup="gml:_Feature" abstract="true">
+    <annotation>
+      <documentation xml:lang="en"><![CDATA[This element represents one abstract possibility to generate rainfall for catchments. A generator must be able to return a timeserie for any given area (defined by a polygon geometry).]]></documentation>
+    </annotation>
+  </element>
+  <complexType name="RainfallGeneratorType" abstract="true">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <!-- TODO: would be nice to use TimePeriodPropertyType here -->
+          <element name="period" type="rcm:DateRangePropertyType">
+            <annotation>
+              <documentation xml:lang="en"><![CDATA[The time interval for which to create rainfall from this generator.]]></documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="OmbrometerRainfallGenerator" substitutionGroup="rcm:RainfallGenerator">
+    <annotation>
+      <documentation xml:lang="en"><![CDATA[This generator creates the rainfall from ombrometer stations (each corresponding to a timeserie), with attached (thiessen) polygones that define the affected area of this station.]]></documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="rcm:RainfallGeneratorType">
+          <sequence>
+            <element name="ombrometerCollection" type="gml:FeaturePropertyType">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Refers to any feature that contains the ombrometer-features. Probably an external xlink.]]></documentation>
+              </annotation>
+            </element>
+            <element name="ombrometerFeaturePath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to the given ombrometer collection. Denotes the list of given ombrometer features.]]></documentation>
+              </annotation>
+            </element>
+            <element name="timeseriesLinkPath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature. Denotes a timeseries link that contains the attached timeserie of this ombrometer.]]></documentation>
+              </annotation>
+            </element>
+            <element name="filterMember" minOccurs="0" maxOccurs="unbounded">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Filters that will be applied to the read timeseries. Multiple filters will be applied in the given order.]]></documentation>
+              </annotation>
+              <complexType>
+                <sequence>
+                  <element ref="filter:AbstractZmlFilter"/>
+                </sequence>
+              </complexType>
+            </element>
+            <element name="areaPath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature. Denotes the affected area of the corresponding ombrometer.]]></documentation>
+              </annotation>
+            </element>
+            <element name="catchmentAreaPath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to a catchment feature. Denotes the area of the corresponding catchment.]]></documentation>
+              </annotation>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="InverseDistanceRainfallGenerator" substitutionGroup="rcm:RainfallGenerator">
+    <annotation>
+      <documentation xml:lang="en"><![CDATA[This generator creates the rainfall from ombrometer stations (each corresponding to a timeserie), using the inverse distance weighting.]]></documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="rcm:RainfallGeneratorType">
+          <sequence>
+            <element name="ombrometerCollection" type="gml:FeaturePropertyType">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Refers to any feature that contains the ombrometer-features. Probably an external xlink.]]></documentation>
+              </annotation>
+            </element>
+            <element name="ombrometerFeaturePath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to the given ombrometer collection. Denotes the list of given ombrometer features.]]></documentation>
+              </annotation>
+            </element>
+            <element name="timeseriesLinkPath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature. Denotes a timeseries link that contains the attached timeserie of this ombrometer.]]></documentation>
+              </annotation>
+            </element>
+            <element name="filterMember" minOccurs="0" maxOccurs="unbounded">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Filters that will be applied to the read timeseries. Multiple filters will be applied in the given order.]]></documentation>
+              </annotation>
+              <complexType>
+                <sequence>
+                  <element ref="filter:AbstractZmlFilter"/>
+                </sequence>
+              </complexType>
+            </element>
+            <element name="stationLocationPath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature. Denotes the station location of the corresponding ombrometer.]]></documentation>
+              </annotation>
+            </element>
+            <element name="numberOmbrometers" type="integer">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[The number of ombrometers, which should be included in the inverse distance weighting.]]></documentation>
+              </annotation>
+            </element>
+            <element name="catchmentAreaPath" type="string">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Feature path relative to a catchment feature. Denotes the area of the corresponding catchment.]]></documentation>
+              </annotation>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+
+  <complexType name="MetadataPropertyType">
+    <sequence minOccurs="0">
+      <element ref="rcm:Metadata" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+
+  <element name="Metadata" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="value" type="string" minOccurs="0"></element>
+            <element name="catchmentProperty" type="QName" minOccurs="0">
+              <annotation>
+                <documentation xml:lang="en"><![CDATA[Property of a catchment. The value will be copied as metadat into the resulting timeseries. If set, the property 'value' will be ignored.]]></documentation>
+              </annotation>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+    <!--  TODO: Move into commons? -->
+  <complexType name="DateRangePropertyType">
+    <sequence minOccurs="0">
+      <element ref="rcm:DateRange" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+
+  <element name="DateRange" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="from" type="rcm:dateOrPattern"></element>
+            <element name="to" type="rcm:dateOrPattern"></element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <simpleType name="dateOrPattern">
+    <union memberTypes="dateTime string" />
+  </simpleType>
+
+</schema>
