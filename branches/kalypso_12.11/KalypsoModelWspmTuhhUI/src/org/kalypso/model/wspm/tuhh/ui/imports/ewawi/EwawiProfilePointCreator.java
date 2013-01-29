@@ -75,7 +75,7 @@ public class EwawiProfilePointCreator
     for( final EwawiProLine proLine : proLines )
     {
       final EwawiProfilePoint profilePoint = EwawiUtilities.createProfilePoint( m_staIndex, proLine );
-      final SHPPoint shape = profilePoint.getShape();
+      final SHPPoint shape = profilePoint.getShapeIdealized();
 
       final String id = String.format( "%d", proLine.getPunktNummer() ); //$NON-NLS-1$
       final String comment = EwawiUtilities.getRecordDescription( proLine );
