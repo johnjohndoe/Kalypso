@@ -102,7 +102,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class TriangulateGeometryWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private TriangulationBuilder m_builder;
+  private TriangulationBuilder m_builder = new TriangulationBuilder();
 
   private boolean m_modePolygon = true;
 
@@ -128,15 +128,14 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
   public TriangulateGeometryWidget( )
   {
-    super( Messages.getString("TriangulateGeometryWidget.9"), Messages.getString("TriangulateGeometryWidget.9") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "TriangulateGeometryWidget.9" ), Messages.getString( "TriangulateGeometryWidget.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
-    m_builder = new TriangulationBuilder( mapPanel );
-    reinit();
+    repaintMap();
   }
 
   final void reinit( )
@@ -162,10 +161,10 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     m_boundaryGeometryBuilder = new PolygonGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
     m_breaklineGeometryBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
 
+    m_builder.setMapPanel( mapPanel );
     m_builder.reset();
 
     m_nodesNameConversionMap.clear();
-
     repaintMap();
   }
 
@@ -454,6 +453,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
+    reinit();
     final ScrolledForm form = toolkit.createScrolledForm( parent );
     final DatabindingForm binding = new DatabindingForm( form, toolkit );
     final Composite body = form.getBody();

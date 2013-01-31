@@ -115,10 +115,8 @@ public class TriangulationBuilder extends AbstractModelObject
 
   private IMapPanel m_mapPanel;
 
-  public TriangulationBuilder( final IMapPanel mapPanel )
+  public TriangulationBuilder( )
   {
-    m_mapPanel = mapPanel;
-
     final Fill fill = StyleFactory.createFill( new Color( 255, 255, 255 ) );
     fill.setOpacity( 0.0 );
     final Stroke polyStroke = StyleFactory.createStroke( new Color( 255, 20, 20 ) );
@@ -130,6 +128,11 @@ public class TriangulationBuilder extends AbstractModelObject
     lineStroke.setWidth( 2 );
     lineStroke.setOpacity( 0.5 );
     m_lineSymb.setStroke( lineStroke );
+  }
+
+  public void setMapPanel( final IMapPanel mapPanel )
+  {
+    m_mapPanel = mapPanel;
   }
 
   public double getMaxArea( )
@@ -171,7 +174,8 @@ public class TriangulationBuilder extends AbstractModelObject
   {
     final boolean oldValue = m_noSteinerOnBoundary;
     m_noSteinerOnBoundary = noSteiner;
-    m_mapPanel.invalidateMap();
+    if( m_mapPanel != null )
+      m_mapPanel.invalidateMap();
     firePropertyChange( PROPERTY_NO_STEINER_ON_BOUNDARY, oldValue, noSteiner );
   }
 
@@ -180,7 +184,8 @@ public class TriangulationBuilder extends AbstractModelObject
     if( m_breaklines == null )
       m_breaklines = GeometryFactory.createGM_MultiCurve( new GM_Curve[0], breakline.getCoordinateSystem() );
     m_breaklines.add( breakline );
-    m_mapPanel.invalidateMap();
+    if( m_mapPanel != null )
+      m_mapPanel.invalidateMap();
   }
 
   public GM_MultiCurve getBreaklines( )
@@ -198,7 +203,8 @@ public class TriangulationBuilder extends AbstractModelObject
     if( m_boundaryGeom == null )
       m_boundaryGeom = GeometryFactory.createGM_MultiSurface( new GM_Polygon[0], boundary.getCoordinateSystem() );
     m_boundaryGeom.add( boundary );
-    m_mapPanel.invalidateMap();
+    if( m_mapPanel != null )
+      m_mapPanel.invalidateMap();
     firePropertyChange( PROPERTY_BOUNDARY, null, m_boundaryGeom );
   }
 
@@ -241,7 +247,8 @@ public class TriangulationBuilder extends AbstractModelObject
     m_breaklines = null;
     m_boundaryGeom = null;
     m_tin = null;
-    m_mapPanel.invalidateMap();
+    if( m_mapPanel != null )
+      m_mapPanel.invalidateMap();
   }
 
   public void paint( final Graphics g, final GeoTransform projection, IProgressMonitor pm ) throws CoreException
@@ -298,7 +305,8 @@ public class TriangulationBuilder extends AbstractModelObject
     }
 
     m_tin = triangulatedSurface;
-    m_mapPanel.invalidateMap();
+    if( m_mapPanel != null )
+      m_mapPanel.invalidateMap();
     // make sure that equals is not called on tin, always fires an event
     firePropertyChange( PROPERTY_TIN, null, m_tin );
   }

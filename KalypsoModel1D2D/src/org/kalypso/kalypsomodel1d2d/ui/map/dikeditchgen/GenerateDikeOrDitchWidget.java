@@ -87,7 +87,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
 
   private Point m_currentPoint;
 
-  private TriangulationBuilder m_tinBuilder;
+  private TriangulationBuilder m_tinBuilder = new TriangulationBuilder();
 
   private double m_currentZ = Double.NaN;
 
@@ -118,7 +118,7 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     if( mapPanel != null )
     {
       final Section section = toolkit.createSection( body, ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR );
-      section.setText( Messages.getString("GenerateDikeOrDitchWidget_0") ); //$NON-NLS-1$
+      section.setText( Messages.getString( "GenerateDikeOrDitchWidget_0" ) ); //$NON-NLS-1$
       section.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
       final Composite sectionComposite = toolkit.createComposite( section, SWT.NONE );
@@ -138,6 +138,8 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
     final TriangulateGeometryComposite triangulateGeometryComposite = new TriangulateGeometryComposite( toolkit, binding, m_tinBuilder, m_discModelWorkspace );
     triangulateGeometryComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
+    reinit();
+
     return body;
   }
 
@@ -146,18 +148,18 @@ public class GenerateDikeOrDitchWidget extends AbstractWidget implements IWidget
   {
     super.activate( commandPoster, mapPanel );
     m_discModelWorkspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );
-    m_tinBuilder = new TriangulationBuilder( mapPanel );
+    m_tinBuilder.setMapPanel( mapPanel );
     final IKalypsoLayerModell mapModell = mapPanel.getMapModell();
     final String coordinateSystem = mapModell.getCoordinatesSystem();
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d)m_discModelWorkspace.getRootFeature();
     m_pointSnapper = new PointSnapper( discModel, mapPanel );
     m_networkBuilder = new PolygonGeometryBuilder( 0, coordinateSystem );
-    reinit();
+    mapPanel.invalidateMap();
   }
 
   private void reinit( )
   {
-    final String mode = Messages.getString("GenerateDikeOrDitchWidget_1"); //$NON-NLS-1$
+    final String mode = Messages.getString( "GenerateDikeOrDitchWidget_1" ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_toolTipRenderer.setTooltip( mode );
     m_networkBuilder.reset();

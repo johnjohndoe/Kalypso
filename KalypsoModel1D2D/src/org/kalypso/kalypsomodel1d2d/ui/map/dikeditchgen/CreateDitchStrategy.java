@@ -96,7 +96,7 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
   }
 
   @Override
-  public IStatus createMesh( final TriangulationBuilder tinBuilder )
+  public IStatus createMesh( final TriangulationBuilder tinBuilder ) throws CoreException
   {
     IObservableValue modelTinObservable = null;
     try
@@ -126,11 +126,7 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
     }
     catch( final GM_Exception e )
     {
-      return StatusUtilities.statusFromThrowable( e );
-    }
-    catch( final CoreException e )
-    {
-      return e.getStatus();
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
     finally
     {
@@ -164,7 +160,7 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
 
               final String coordinateSystem = mesh.getCoordinateSystem();
               final List<GM_Triangle> triangles = new ArrayList<>( mesh.size() );
-              final SubMonitor monitor = SubMonitor.convert( pm, Messages.getString("CreateDitchStrategy.0"), triangles.size() ); //$NON-NLS-1$
+              final SubMonitor monitor = SubMonitor.convert( pm, Messages.getString( "CreateDitchStrategy.0" ), triangles.size() ); //$NON-NLS-1$
               for( final GM_Triangle triangle : mesh )
               {
                 ProgressUtilities.worked( monitor, 1 );
@@ -191,7 +187,7 @@ public class CreateDitchStrategy extends AbstractCreateStructuredNetworkStrategy
           }
         } );
         if( !result.isOK() )
-          StatusDialog.open( shell, result, Messages.getString("CreateDitchStrategy.0") ); //$NON-NLS-1$
+          StatusDialog.open( shell, result, Messages.getString( "CreateDitchStrategy.0" ) ); //$NON-NLS-1$
       }
     };
     return tinAssignedListener;

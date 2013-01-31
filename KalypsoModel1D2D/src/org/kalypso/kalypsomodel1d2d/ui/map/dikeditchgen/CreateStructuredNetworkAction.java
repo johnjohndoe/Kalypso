@@ -40,9 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
@@ -52,17 +59,17 @@ import org.kalypso.kalypsomodel1d2d.i18n.Messages;
  */
 public class CreateStructuredNetworkAction extends Action
 {
-  private TriangulationBuilder m_builder;
+  protected TriangulationBuilder m_builder;
 
-  private CreateStructuredNetworkStrategy m_strategy;
+  protected CreateStructuredNetworkStrategy m_strategy;
 
   public CreateStructuredNetworkAction( final TriangulationBuilder builder, final CreateStructuredNetworkStrategy strategy )
   {
     m_builder = builder;
     m_strategy = strategy;
 
-    setText( Messages.getString("CreateStructuredNetworkAction.0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("CreateStructuredNetworkAction.1") ); //$NON-NLS-1$
+    setText( Messages.getString( "CreateStructuredNetworkAction.0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "CreateStructuredNetworkAction.1" ) ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.OK ) );
@@ -71,12 +78,18 @@ public class CreateStructuredNetworkAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    m_strategy.createMesh( m_builder );
-    // TODO: encapsulate into operation?
-//    final Shell shell = event.widget.getDisplay().getActiveShell();
-//    final IStatus result = ProgressUtilities.busyCursorWhile( operation );
-//    if( !result.isOK() )
-//      StatusDialog.open( shell, result, getText() );
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+    final IStatus result = ProgressUtilities.busyCursorWhile( new ICoreRunnableWithProgress()
+    {
+
+      @Override
+      public IStatus execute( IProgressMonitor monitor ) throws CoreException
+      {
+        return m_strategy.createMesh( m_builder );
+      }
+    } );
+    if( !result.isOK() )
+      StatusDialog.open( shell, result, getText() );
   }
 
 }
