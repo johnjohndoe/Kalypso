@@ -21,6 +21,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.dikeditchgen;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
@@ -63,9 +64,9 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
 
   final double m_innerElevation;
 
-  private Geometry m_network;
+  private final Geometry m_network;
 
-  public CreateDikeStrategy( Geometry network, final double outerLeftWidth, final double outerRightWidth, final double innerWidth, final double innerElevation, final IElevationModel elevationModel )
+  public CreateDikeStrategy( final Geometry network, final double outerLeftWidth, final double outerRightWidth, final double innerWidth, final double innerElevation, final IElevationModel elevationModel )
   {
     m_network = network;
     m_outerLeftWidth = outerLeftWidth;
@@ -91,7 +92,7 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
     else
     {
       final GM_Polygon[] allSurfaces = ((GM_MultiSurface)outerRing).getAllSurfaces();
-      for( GM_Polygon polygon : allSurfaces )
+      for( final GM_Polygon polygon : allSurfaces )
         builder.addBoundary( polygon );
     }
   }
@@ -167,13 +168,13 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
   }
 
   @Override
-  public Control createControl( Composite body, FormToolkit toolkit, IMapModell mapModell )
+  public Control createControl( final Composite body, final FormToolkit toolkit, final IMapModell mapModell )
   {
     return null;
   }
 
   @Override
-  public IStatus createMesh( TriangulationBuilder tinBuilder )
+  public IStatus createMesh( final TriangulationBuilder tinBuilder ) throws CoreException
   {
     try
     {
@@ -181,9 +182,9 @@ public class CreateDikeStrategy implements CreateStructuredNetworkStrategy
       addBreaklines( tinBuilder );
       tinBuilder.finish();
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
-      return StatusUtilities.statusFromThrowable( e );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
     return Status.OK_STATUS;
   }
