@@ -79,8 +79,8 @@ public class EwawiProfilePointMarkerCreator
 
   private String findMarkerID( final String code )
   {
-    // BUK
-    if( code.equals( "EWAWI_8" ) ) //$NON-NLS-1$ 
+    // Schnittpunkt Wasserspiegel - Gelände
+    if( code.equals( "EWAWI_0" ) ) //$NON-NLS-1$ 
       return IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
 
     // BOK
